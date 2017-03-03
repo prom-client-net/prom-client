@@ -1,0 +1,41 @@
+﻿{
+  "title": "Prometheus.Client",
+  "version": "1.0.0-alpha1",
+
+  "packOptions": {
+    "summary": ".NET client for prometheus.io",
+    "tags": [ "prometheus", "metrics"],
+    "owners": [ "phnx47" ],
+    "projectUrl": "https://github.com/phnx47/Prometheus.Client",
+    "licenseUrl": "https://opensource.org/licenses/MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/phnx47/Prometheus.Client"
+    }
+  },
+  "authors": [ "Sergey Kuznetsov" ],
+  "description": ".NET client for prometheus.io",
+  "copyright": "2017 © Sergey Kuznetsov",
+  "dependencies": {
+    "protobuf-net": "2.1.0"
+  },
+  "frameworks": {
+    "net4.5": {
+      "dependencies": {
+        "Microsoft.Owin": "3.0.1"
+      }
+    },
+    "netstandard1.3": {
+      "buildOptions": {
+        "define": [ "COREFX" ]
+      },
+      "dependencies": {
+        "Microsoft.AspNetCore.Http.Abstractions": "1.1.0",
+        "System.Diagnostics.Process": "4.3.0",
+        "System.Reactive.Core": "3.1.1",
+        "System.Reactive.Interfaces": "3.1.1",
+        "System.Runtime": "4.3.0"
+      }
+    }
+  }
+}
