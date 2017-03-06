@@ -29,10 +29,7 @@ namespace Prometheus.Client.Internal
             var other = (LabelValues) obj;
 
             if (other._values.Length != _values.Length) return false;
-            for (var i = 0; i < _values.Length; i++)
-                if (_values[i] != other._values[i]) return false;
-
-            return true;
+            return !_values.Where((t, i) => t != other._values[i]).Any();
         }
 
         public override int GetHashCode()

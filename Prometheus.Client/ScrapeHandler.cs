@@ -28,20 +28,6 @@ namespace Prometheus.Client
             }
         }
 
-        public static string ProcessScrapeRequest(
-            IEnumerable<MetricFamily> collected,
-            string contentType)
-        {
-            if (contentType == ProtoContentType)
-            {
-                throw new NotImplementedException();
-            }
-            else
-            {
-                return AsciiFormatter.Format(collected);
-            }
-        }
-
         public static string GetContentType(IEnumerable<string> acceptHeaders)
         {
             return ProtobufAccepted(acceptHeaders) ? ProtoContentType : TextContentType;

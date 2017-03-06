@@ -6,57 +6,40 @@ namespace Prometheus.Client
 {
     public interface ICounter
     {
-        void Inc(double increment = 1);
+        void Inc(double increment = 1.0D);
         double Value { get; }
     }
 
     public class Counter : Collector<Counter.Child>, ICounter
     {
-
         internal Counter(string name, string help, string[] labelNames)
             : base(name, help, labelNames)
         {
         }
 
-        public void Inc(double increment = 1)
+        public void Inc(double increment = 1.0D)
         {
             Unlabelled.Inc(increment);
         }
 
-        public class Child : Client.Advanced.Child, ICounter
+        public class Child : Advanced.Child, ICounter
         {
-            private double _value;
-            private readonly object _lock = new object();
+            private ThreadSafeDouble _value;
 
             protected override void Populate(Metric metric)
             {
-                metric.counter = new Prometheus.Advanced.DataContracts.Counter();
-                metric.counter.value = Value;
+                metric.counter = new Prometheus.Advanced.DataContracts.Counter {value = Value};
             }
 
-            public void Inc(double increment = 1)
+            public void Inc(double increment = 1.0D)
             {
-                if (increment < 0)
-                {
+                if (increment < 0.0D)
                     throw new InvalidOperationException("Counter cannot go down");
-                }
 
-                lock (_lock)
-                {
-                    _value += increment;
-                }
+                _value.Add(increment);
             }
 
-            public double Value
-            {
-                get
-                {
-                    lock (_lock)
-                    {
-                        return _value;
-                    }
-                }
-            }
+            public double Value => _value.Value;
         }
 
         public double Value => Unlabelled.Value;

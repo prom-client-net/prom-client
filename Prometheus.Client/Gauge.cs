@@ -7,9 +7,9 @@ namespace Prometheus.Client
     public interface IGauge
     {
         double Value { get; }
-        void Inc(double increment = 1);
+        void Inc(double increment = 1.0D);
         void Set(double val);
-        void Dec(double decrement = 1);
+        void Dec(double decrement = 1.0D);
     }
 
     public class Gauge : Collector<Gauge.Child>, IGauge
@@ -21,7 +21,7 @@ namespace Prometheus.Client
 
         protected override MetricType Type => MetricType.GAUGE;
 
-        public void Inc(double increment = 1)
+        public void Inc(double increment = 1.0D)
         {
             Unlabelled.Inc(increment);
         }
@@ -32,7 +32,7 @@ namespace Prometheus.Client
         }
 
 
-        public void Dec(double decrement = 1)
+        public void Dec(double decrement = 1.0D)
         {
             Unlabelled.Dec(decrement);
         }
@@ -42,46 +42,30 @@ namespace Prometheus.Client
 
         public class Child : Advanced.Child, IGauge
         {
-            private readonly object _lock = new object();
-            private double _value;
+            private ThreadSafeDouble _value;
 
-            public void Inc(double increment = 1)
+            public void Inc(double increment = 1.0D)
             {
-                lock (_lock)
-                {
-                    _value += increment;
-                }
+                _value.Add(increment);
             }
 
             public void Set(double val)
             {
-                Interlocked.Exchange(ref _value, val);
+                _value.Value = val;
             }
 
 
-            public void Dec(double decrement = 1)
+            public void Dec(double decrement = 1.0D)
             {
                 Inc(-decrement);
             }
 
-            public double Value
-            {
-                get
-                {
-                    lock (_lock)
-                    {
-                        return _value;
-                    }
-                }
-            }
+            public double Value => _value.Value;
+
 
             protected override void Populate(Metric metric)
             {
-                metric.gauge = new Prometheus.Advanced.DataContracts.Gauge();
-                lock (_lock)
-                {
-                    metric.gauge.value = _value;
-                }
+                metric.gauge = new Prometheus.Advanced.DataContracts.Gauge { value = Value };
             }
         }
     }

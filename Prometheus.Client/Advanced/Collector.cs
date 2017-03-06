@@ -22,6 +22,12 @@ namespace Prometheus.Client.Advanced
 
         protected abstract MetricType Type { get; }
 
+        public string Name { get; }
+
+        public string[] LabelNames { get; }
+
+        protected T Unlabelled => _unlabelledLazy.Value;
+
         public T Labels(params string[] labelValues)
         {
             var key = new LabelValues(LabelNames, labelValues);
@@ -37,8 +43,6 @@ namespace Prometheus.Client.Advanced
                 return child;
             });
         }
-
-        protected T Unlabelled => _unlabelledLazy.Value;
 
         protected Collector(string name, string help, string[] labelNames)
         {
@@ -65,10 +69,6 @@ namespace Prometheus.Client.Advanced
 
             _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(EmptyLabelValues));
         }
-
-        public string Name { get; }
-
-        public string[] LabelNames { get; private set; }
 
         public MetricFamily Collect()
         {

@@ -17,10 +17,9 @@ namespace Prometheus.Client.Advanced
         private Gauge _workingSet;
         private Gauge _privateMemorySize;
         private Counter _cpuTotal;
-
         private Gauge _startTime;
-
         private Gauge _numThreads;
+        private Gauge _pid;
 
         public DotNetStatsCollector()
         {
@@ -44,8 +43,8 @@ namespace Prometheus.Client.Advanced
             _virtualMemorySize = Metrics.CreateGauge("process_windows_virtual_bytes", "Process virtual memory size");
             _workingSet = Metrics.CreateGauge("process_windows_working_set", "Process working set");
             _privateMemorySize = Metrics.CreateGauge("process_windows_private_bytes", "Process private memory size");
-            //            _openHandles = Metrics.CreateGauge("process_windows_open_handles", "Number of open handles");
             _numThreads = Metrics.CreateGauge("process_windows_num_threads", "Total number of threads");
+            _pid = Metrics.CreateGauge("process_windows_processid", "Process ID");
 
             // .net specific metrics
             _totalMemory = Metrics.CreateGauge("dotnet_totalmemory", "Total known allocated memory");
@@ -53,12 +52,15 @@ namespace Prometheus.Client.Advanced
 
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             _startTime.Set((_process.StartTime.ToUniversalTime() - epoch).TotalSeconds);
+            _pid.Set(_process.Id);
         }
 
         public void UpdateMetrics()
         {
             try
             {
+                _process.Refresh();
+
                 for (var gen = 0; gen <= GC.MaxGeneration; gen++)
                 {
                     var collectionCount = _collectionCounts[gen];
@@ -70,7 +72,6 @@ namespace Prometheus.Client.Advanced
                 _workingSet.Set(_process.WorkingSet64);
                 _privateMemorySize.Set(_process.PrivateMemorySize64);
                 _cpuTotal.Inc(_process.TotalProcessorTime.TotalSeconds - _cpuTotal.Value);
-
                 _numThreads.Set(_process.Threads.Count);
             }
             catch (Exception)
