@@ -2,11 +2,15 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Prometheus.Advanced.DataContracts;
 
+[assembly: InternalsVisibleTo("Prometheus.Client.Tests")]
+
 namespace Prometheus.Client.Internal
 {
+    
     internal class AsciiFormatter
     {
         public static void Format(Stream destination, IEnumerable<MetricFamily> metrics)
