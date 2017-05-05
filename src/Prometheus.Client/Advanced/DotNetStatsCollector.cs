@@ -28,7 +28,7 @@ namespace Prometheus.Client.Advanced
 
         public void RegisterMetrics()
         {
-            var collectionCountsParent = Metrics.CreateCounter("dotnet_collection_count_total", "GC collection count", new[] { "generation" });
+            var collectionCountsParent = Metrics.CreateCounter("dotnet_collection_count_total", "GC collection count", "generation");
 
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
             {

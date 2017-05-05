@@ -7,7 +7,7 @@ namespace Prometheus.Client
 {
     public static class Metrics
     {
-        private static readonly MetricFactory DefaultFactory = new MetricFactory(PrometheusCollectorRegistry.Instance);
+        private static readonly MetricFactory DefaultFactory = new MetricFactory(CollectorRegistry.Instance);
 
         public static Counter CreateCounter(string name, string help, params string[] labelNames)
         {

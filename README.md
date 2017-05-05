@@ -2,7 +2,16 @@
 
 This is an experimental dot net core version (unofficial).
 
-Its a fork of [ceepeeuk](https://github.com/ceepeeuk/prometheus-net) fork of prometheus-net.
+Its a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
+
+
+## Quik start
+
+Nuget package: [Prometheus.Client](https://www.nuget.org/packages/Prometheus.Client)
+
+OWIN: [Prometheus.Client.Owin](https://www.nuget.org/packages/Prometheus.Client.Owin)
+
+MetricServer: [Prometheus.Client.MetricServer](https://www.nuget.org/packages/Prometheus.Client.MetricServer)
 
 
 ```csharp
@@ -17,17 +26,33 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 ```
 
-Tested on dotnet core netstandard1.3.
+Or just this:
+
+```csharp
+
+[Route("[controller]")]
+public class MetricsController: Controller
+{
+    [HttpGet]
+    public IActionResult Get()
+    {
+        var registry = CollectorRegistry.Instance;
+        var acceptHeaders = Request.Headers["Accept"];
+        var contentType = ScrapeHandler.GetContentType(acceptHeaders);
+        Response.ContentType = contentType;
+        var s = ScrapeHandler.ProcessScrapeRequest(registry.CollectAll(), contentType);
+        return new OkObjectResult(s);
+    }
+}
+
+```
+
+
 
 See prometheus [here](http://prometheus.io/)
 
-# Installation
 
-Nuget package: [Prometheus.Client](https://www.nuget.org/packages/Prometheus.Client)
-
->Install-Package Prometheus.Client
-
-## Instrumenting
+### Instrumenting
 
 Four types of metric are offered: Counter, Gauge, Summary and Histogram.
 See the documentation on [metric types](http://prometheus.io/docs/concepts/metric_types/)
@@ -99,5 +124,5 @@ For simple usage the API uses static classes, which - in unit tests - can cause 
 To address this you can add this line to your test setup:
 
 ```csharp
-PrometheusCollectorRegistry.Instance.Clear();
+CollectorRegistry.Instance.Clear();
 ```

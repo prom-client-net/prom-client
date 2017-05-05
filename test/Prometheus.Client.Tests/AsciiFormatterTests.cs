@@ -14,7 +14,7 @@ namespace Prometheus.Client.Tests
         [InlineData("simple-label-value-1")]
         [InlineData("with\nlinebreaks")]
         [InlineData("with\nlinebreaks and \\slashes and quotes \"")]
-        public void family_should_be_formatted_to_one_line(string labelValue)
+        public void Family_Should_Be_Formatted_To_One_Line(string labelValue)
         {
             using (var ms = new MemoryStream())
             {
@@ -22,7 +22,7 @@ namespace Prometheus.Client.Tests
                 {
                     name = "family1",
                     help = "help",
-                    type = MetricType.COUNTER,
+                    type = MetricType.COUNTER
                 };
 
                 var metricCounter = new Prometheus.Advanced.DataContracts.Counter { value = 100 };
@@ -31,7 +31,7 @@ namespace Prometheus.Client.Tests
                     counter = metricCounter,
                     label = new List<LabelPair>
                     {
-                        new LabelPair {name = "label1", value = labelValue }
+                        new LabelPair { name = "label1", value = labelValue }
                     }
                 });
 

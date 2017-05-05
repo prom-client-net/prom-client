@@ -6,9 +6,9 @@ using Prometheus.Advanced.DataContracts;
 
 namespace Prometheus.Client.Advanced
 {
-    public class PrometheusCollectorRegistry : ICollectorRegistry
+    public class CollectorRegistry : ICollectorRegistry
     {
-        public static readonly PrometheusCollectorRegistry Instance = new PrometheusCollectorRegistry();
+        public static readonly CollectorRegistry Instance = new CollectorRegistry();
         private readonly ConcurrentDictionary<string, ICollector> _collectors = new ConcurrentDictionary<string, ICollector>();
         private readonly List<IOnDemandCollector> _onDemandCollectors = new List<IOnDemandCollector>();
 

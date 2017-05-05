@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Prometheus.Advanced.DataContracts;
 using Prometheus.Client.Advanced;
 using Xunit;
 
@@ -10,11 +9,11 @@ namespace Prometheus.Client.Tests
     {
         public MetricsTests()
         {
-            PrometheusCollectorRegistry.Instance.Clear();
+            CollectorRegistry.Instance.Clear();
         }
 
         [Fact]
-        public void api_usage()
+        public void Api_Usage()
         {
             var gauge = Metrics.CreateGauge("name1", "help1");
             gauge.Inc();
@@ -39,9 +38,16 @@ namespace Prometheus.Client.Tests
             counter.Labels("a").Inc(1.1);
             Assert.Equal(4.4, counter.Labels("a").Value);
         }
-        
+
         [Fact]
-        public void counter_collection()
+        public void Cannot_Create_Metrics_With_The_Same_Name_But_Different_Labels()
+        {
+            Metrics.CreateGauge("name1", "h");
+            Assert.Throws<InvalidOperationException>(() => Metrics.CreateCounter("name1", "h", "label1"));
+        }
+
+        [Fact]
+        public void Counter_Collection()
         {
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
 
@@ -49,7 +55,7 @@ namespace Prometheus.Client.Tests
             counter.Inc(3.2);
             counter.Labels("abc").Inc(3.2);
 
-            MetricFamily[] exported = PrometheusCollectorRegistry.Instance.CollectAll().ToArray();
+            var exported = CollectorRegistry.Instance.CollectAll().ToArray();
 
             Assert.Equal(1, exported.Length);
             var familiy1 = exported[0];
@@ -69,7 +75,7 @@ namespace Prometheus.Client.Tests
 
             Assert.Equal(4.2, metrics[0].counter.value);
             Assert.Equal(0, metrics[0].label.Count);
-            
+
             Assert.Equal(3.2, metrics[1].counter.value);
             var labelPairs = metrics[1].label;
             Assert.Equal(1, labelPairs.Count);
@@ -78,22 +84,22 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void custom_registry()
+        public void Custom_Registry()
         {
-            var myRegistry = new PrometheusCollectorRegistry();
+            var myRegistry = new CollectorRegistry();
             var counter1 = Metrics.WithCustomRegistry(myRegistry).CreateCounter("counter1", "help1"); //registered on a custom registry
-            
+
             var counter2 = Metrics.CreateCounter("counter1", "help1"); //created on different registry - same name is hence permitted
 
             counter1.Inc(3);
             counter2.Inc(4);
 
             Assert.Equal(3, myRegistry.CollectAll().ToArray()[0].metric[0].counter.value); //counter1 == 3
-            Assert.Equal(4, PrometheusCollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value); //counter2 == 4
+            Assert.Equal(4, CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value); //counter2 == 4
         }
 
         [Fact]
-        public void gauge_collection()
+        public void Gauge_Collection()
         {
             var gauge = Metrics.CreateGauge("name1", "help1");
 
@@ -102,7 +108,7 @@ namespace Prometheus.Client.Tests
             gauge.Set(4);
             gauge.Dec(0.2);
 
-            var exported = PrometheusCollectorRegistry.Instance.CollectAll().ToArray();
+            var exported = CollectorRegistry.Instance.CollectAll().ToArray();
 
             Assert.Equal(1, exported.Length);
             var familiy1 = exported[0];
@@ -120,11 +126,11 @@ namespace Prometheus.Client.Tests
 
             Assert.Equal(3.8, metrics[0].gauge.value);
         }
-      
+
         [Fact]
-        public void histogram_tests()
+        public void Histogram_Tests()
         {
-            Histogram histogram = Metrics.CreateHistogram("hist1", "help", new []{ 1.0, 2.0, 3.0});
+            var histogram = Metrics.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
             histogram.Observe(1.5);
             histogram.Observe(2.5);
             histogram.Observe(1);
@@ -147,41 +153,20 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void summary_tests()
+        public void Label_Names()
         {
-            var summary = Metrics.CreateSummary("summ1", "help");
+            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my-metric"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my!metric"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my%metric"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1", null, "le"));
+            Metrics.CreateGauge("a", "help1", "my:metric");
+            Metrics.CreateGauge("b", "help1", "good_name");
 
-            summary.Observe(1);
-            summary.Observe(2);
-            summary.Observe(3);
-
-            var metric = summary.Collect().metric[0];
-            Assert.NotNull(metric.summary);
-            Assert.Equal(3ul, metric.summary.sample_count);
-            Assert.Equal(6, metric.summary.sample_sum);
+            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("c", "help1", "__reserved"));
         }
 
         [Fact]
-        public void same_labels_return_same_instance()
-        {
-            var gauge = Metrics.CreateGauge("name1", "help1", "label1");
-            
-            var labelled1 = gauge.Labels("1");
-
-            var labelled2 = gauge.Labels("1");
-
-            Assert.Same(labelled1, labelled2);
-        }
-
-        [Fact]
-        public void cannot_create_metrics_with_the_same_name_but_different_labels()
-        {
-            Metrics.CreateGauge("name1", "h");
-            Assert.Throws<InvalidOperationException>(() => Metrics.CreateCounter("name1", "h", "label1"));
-        }
-
-        [Fact]
-        public void metric_names()
+        public void Metric_Names()
         {
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("my-metric", "help"));
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("my!metric", "help"));
@@ -194,16 +179,30 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void label_names()
+        public void Same_Labels_Return_Same_Instance()
         {
-            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my-metric"));
-            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my!metric"));
-            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my%metric"));
-            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1", null, "le"));
-            Metrics.CreateGauge("a", "help1", "my:metric");
-            Metrics.CreateGauge("b", "help1", "good_name");
+            var gauge = Metrics.CreateGauge("name1", "help1", "label1");
 
-            Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("c", "help1", "__reserved"));
+            var labelled1 = gauge.Labels("1");
+
+            var labelled2 = gauge.Labels("1");
+
+            Assert.Same(labelled1, labelled2);
+        }
+
+        [Fact]
+        public void Summary_Tests()
+        {
+            var summary = Metrics.CreateSummary("summ1", "help");
+
+            summary.Observe(1);
+            summary.Observe(2);
+            summary.Observe(3);
+
+            var metric = summary.Collect().metric[0];
+            Assert.NotNull(metric.summary);
+            Assert.Equal(3ul, metric.summary.sample_count);
+            Assert.Equal(6, metric.summary.sample_sum);
         }
     }
 }
