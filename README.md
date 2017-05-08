@@ -1,4 +1,4 @@
-# Prometheus .NET Client
+# Prometheus.Client
 
 [![Build status](https://ci.appveyor.com/api/projects/status/ik6p8hv9he1cl0a9?svg=true)](https://ci.appveyor.com/project/phnx47/prometheus-client) [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![NuGet Badge](https://buildstats.info/nuget/Prometheus.Client)](https://www.nuget.org/packages/Prometheus.Client/) 
 
@@ -21,14 +21,12 @@ MetricServer: [Prometheus.Client.MetricServer](https://www.nuget.org/packages/Pr
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
 {
     var options = new PrometheusOptions();
-    options.MapPath = "metrics";
-    options.Collectors.Add(new DotNetStatsCollector());
     app.UsePrometheusServer(options);
 }
 
 ```
 
-Or just this:
+Or Standalone this:
 
 ```csharp
 
