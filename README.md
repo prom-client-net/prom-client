@@ -1,5 +1,7 @@
 # Prometheus .NET Client
 
+[![Build status](https://ci.appveyor.com/api/projects/status/ik6p8hv9he1cl0a9?svg=true)](https://ci.appveyor.com/project/phnx47/prometheus-client) [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) [![NuGet Badge](https://buildstats.info/nuget/Prometheus.Client)](https://www.nuget.org/packages/Prometheus.Client/) 
+
 This is an experimental dot net core version (unofficial).
 
 Its a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)

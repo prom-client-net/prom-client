@@ -1,0 +1,16 @@
+version: '{build}-{branch}'
+image: Visual Studio 2017
+clone_folder: c:\projects\prometheus.client
+build_script:
+- cmd: dotnet restore src\Prometheus.Client && dotnet pack src\Prometheus.Client -c Release --include-symbols
+test_script:
+- cmd: dotnet restore test\Prometheus.Client.Tests && dotnet test test\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj
+artifacts:
+- path: '**\*.nupkg'
+  name: All Nupkg
+deploy:
+- provider: NuGet
+  api_key:
+    secure: vukCl5k+S4fJtqeYNiB9ufy/NUCw+60cPcqnPoqvykBjSo8Ub8QtEfZNN9qvj5Jh
+  on:
+    appveyor_repo_tag: true
