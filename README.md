@@ -30,19 +30,23 @@ Or just this:
 
 ```csharp
 
-[Route("[controller]")]
-public class MetricsController: Controller
+[HttpGet]
+public IActionResult Get()
 {
-    [HttpGet]
-    public IActionResult Get()
+    var registry = CollectorRegistry.Instance;
+    var acceptHeaders = Request.Headers["Accept"];
+    var contentType = ScrapeHandler.GetContentType(acceptHeaders);
+    Response.ContentType = contentType;
+    string content;
+
+    using (var outputStream = new MemoryStream())
     {
-        var registry = CollectorRegistry.Instance;
-        var acceptHeaders = Request.Headers["Accept"];
-        var contentType = ScrapeHandler.GetContentType(acceptHeaders);
-        Response.ContentType = contentType;
-        var s = ScrapeHandler.ProcessScrapeRequest(registry.CollectAll(), contentType);
-        return new OkObjectResult(s);
+        var collected = registry.CollectAll();
+        ScrapeHandler.ProcessScrapeRequest(collected, contentType, outputStream);
+        content = Encoding.UTF8.GetString(outputStream.ToArray());
     }
+
+    return Ok(content);
 }
 
 ```
