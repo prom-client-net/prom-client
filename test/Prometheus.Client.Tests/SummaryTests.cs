@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Prometheus.Advanced.DataContracts;
 using Prometheus.Client.Internal;
 using Prometheus.Client.SummaryImpl;
+using Prometheus.Contracts;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -86,10 +86,10 @@ namespace Prometheus.Client.Tests
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             var sum = new Summary("test_summary", "helpless", new string[0], objectives: new List<QuantileEpsilonPair> {new QuantileEpsilonPair(0.1d, 0.001d)}, maxAge: TimeSpan.FromSeconds(100), ageBuckets: 10);
-            var child = new Summary.Child();
+            var child = new Summary.ThisChild();
             child.Init(sum, LabelValues.Empty, baseTime);
 
-            Prometheus.Advanced.DataContracts.Summary m;
+            Contracts.Summary m;
             var metric = new Metric();
 
             for (var i = 0; i < 1000; i++)

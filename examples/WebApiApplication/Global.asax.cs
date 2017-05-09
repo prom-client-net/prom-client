@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
-using Prometheus.Client.Advanced;
+
+using Prometheus.Client.Collectors;
 
 namespace WebApiApplication
 {
@@ -7,7 +8,7 @@ namespace WebApiApplication
     {
         protected void Application_Start()
         {
-            CollectorRegistry.Instance.RegisterOnDemandCollectors(new[] { new DotNetStatsCollector() });
+            CollectorRegistry.Instance.RegisterOnDemandCollectors(new IOnDemandCollector[] { new DotNetStatsCollector(), new WindowsDotNetStatsCollector(), new PerfCounterCollector()   });
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

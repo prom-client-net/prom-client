@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client

@@ -2,9 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Advanced.DataContracts;
+using Prometheus.Contracts;
 
-namespace Prometheus.Client.Advanced
+
+namespace Prometheus.Client.Collectors
 {
     public class CollectorRegistry : ICollectorRegistry
     {

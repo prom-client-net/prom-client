@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Advanced.DataContracts;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Internal;
 using Prometheus.Client.SummaryImpl;
+using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -13,7 +13,7 @@ namespace Prometheus.Client
         void Observe(double val);
     }
 
-    public class Summary : Collector<Summary.Child>, ISummary
+    public class Summary : Collector<Summary.ThisChild>, ISummary
     {
         // Label that defines the quantile in a summary.
         private const string QuantileLabel = "quantile";
@@ -78,7 +78,7 @@ namespace Prometheus.Client
             Unlabelled.Observe(val);
         }
 
-        public class Child : Advanced.Child, ISummary
+        public class ThisChild : Child, ISummary
         {
             // Protects hotBuf and hotBufExpTime.
             private readonly object _bufLock = new object();
@@ -123,7 +123,7 @@ namespace Prometheus.Client
             private QuantileStream[] _streams;
             private double _sum;
 
-            private Prometheus.Advanced.DataContracts.Summary _wireMetric;
+            private Contracts.Summary _wireMetric;
 
             public void Observe(double val)
             {
@@ -162,7 +162,7 @@ namespace Prometheus.Client
 
                 Array.Sort(_sortedObjectives);
 
-                _wireMetric = new Prometheus.Advanced.DataContracts.Summary();
+                _wireMetric = new Contracts.Summary();
 
                 foreach (var quantileEpsilonPair in _objectives)
                     _wireMetric.quantile.Add(new Quantile
@@ -178,7 +178,7 @@ namespace Prometheus.Client
 
             internal void Populate(Metric metric, DateTime now)
             {
-                var summary = new Prometheus.Advanced.DataContracts.Summary();
+                var summary = new Contracts.Summary();
                 var quantiles = new Quantile[_objectives.Count];
 
                 lock (_bufLock)

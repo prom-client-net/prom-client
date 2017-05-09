@@ -1,6 +1,6 @@
-using Prometheus.Advanced.DataContracts;
+using Prometheus.Contracts;
 
-namespace Prometheus.Client.Advanced
+namespace Prometheus.Client.Collectors
 {
     public interface ICollector
     {

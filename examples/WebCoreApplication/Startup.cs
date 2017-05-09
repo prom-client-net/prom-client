@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 
 namespace WebCoreApplication
 {
@@ -18,7 +18,7 @@ namespace WebCoreApplication
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            CollectorRegistry.Instance.RegisterOnDemandCollectors(new[] { new DotNetStatsCollector() });
+            CollectorRegistry.Instance.RegisterOnDemandCollectors(new IOnDemandCollector[] { new DotNetStatsCollector(), new WindowsDotNetStatsCollector() });
         }
 
         public IConfigurationRoot Configuration { get; }

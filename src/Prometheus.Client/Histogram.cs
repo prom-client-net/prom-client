@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using Prometheus.Advanced.DataContracts;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -11,7 +11,7 @@ namespace Prometheus.Client
         void Observe(double val);
     }
 
-    public class Histogram : Collector<Histogram.Child>, IHistogram
+    public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
         private static readonly double[] DefaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
         private readonly double[] _buckets;
@@ -43,7 +43,7 @@ namespace Prometheus.Client
             }
         }
 
-        public class Child : Advanced.Child, IHistogram
+        public class ThisChild : Child, IHistogram
         {
             private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);
             private ThreadSafeLong[] _bucketCounts;
@@ -59,7 +59,7 @@ namespace Prometheus.Client
 
             protected override void Populate(Metric metric)
             {
-                var wireMetric = new Prometheus.Advanced.DataContracts.Histogram { sample_count = 0L };
+                var wireMetric = new Contracts.Histogram { sample_count = 0L };
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using Prometheus.Advanced.DataContracts;
+using Prometheus.Contracts;
 
 [assembly: InternalsVisibleTo("Prometheus.Client.Tests")]
 

@@ -5,7 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Web.Http;
 using Prometheus.Client;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 
 namespace WebApiApplication.Controllers
 {

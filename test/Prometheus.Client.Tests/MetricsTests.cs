@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 using Xunit;
 
 namespace Prometheus.Client.Tests

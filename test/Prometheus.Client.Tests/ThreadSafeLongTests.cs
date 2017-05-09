@@ -1,4 +1,4 @@
-﻿using Prometheus.Client.Advanced;
+﻿using Prometheus.Client.Internal;
 using Xunit;
 
 namespace Prometheus.Client.Tests

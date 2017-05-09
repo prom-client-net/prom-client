@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Prometheus.Advanced.DataContracts;
+using Prometheus.Contracts;
 
 namespace Prometheus.Client.SummaryImpl
 {

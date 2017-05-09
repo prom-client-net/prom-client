@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.SummaryImpl;
 
-namespace Prometheus.Client.Advanced
+namespace Prometheus.Client
 {
     public class MetricFactory
     {

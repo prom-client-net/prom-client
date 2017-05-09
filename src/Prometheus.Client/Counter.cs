@@ -1,6 +1,7 @@
 using System;
-using Prometheus.Advanced.DataContracts;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
+using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -10,7 +11,7 @@ namespace Prometheus.Client
         double Value { get; }
     }
 
-    public class Counter : Collector<Counter.Child>, ICounter
+    public class Counter : Collector<Counter.ThisChild>, ICounter
     {
         internal Counter(string name, string help, string[] labelNames)
             : base(name, help, labelNames)
@@ -22,13 +23,13 @@ namespace Prometheus.Client
             Unlabelled.Inc(increment);
         }
 
-        public class Child : Advanced.Child, ICounter
+        public class ThisChild : Child, ICounter
         {
             private ThreadSafeDouble _value;
 
             protected override void Populate(Metric metric)
             {
-                metric.counter = new Prometheus.Advanced.DataContracts.Counter {value = Value};
+                metric.counter = new Contracts.Counter {value = Value};
             }
 
             public void Inc(double increment = 1.0D)

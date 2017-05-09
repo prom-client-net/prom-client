@@ -1,9 +1,12 @@
 ﻿using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace Prometheus.Client.Advanced
+[assembly: InternalsVisibleTo("Prometheus.Client.Tests")]
+
+namespace Prometheus.Client.Internal
 {
-    public struct ThreadSafeLong
+    internal struct ThreadSafeLong
     {
         private long _value;
 
@@ -14,14 +17,8 @@ namespace Prometheus.Client.Advanced
 
         public long Value
         {
-            get
-            {
-                return Interlocked.Read(ref _value);
-            }
-            set
-            {
-                Interlocked.Exchange(ref _value, value);
-            }
+            get => Interlocked.Read(ref _value);
+            set => Interlocked.Exchange(ref _value, value);
         }
 
         public void Add(long increment)

@@ -1,6 +1,6 @@
-﻿using System.Threading;
-using Prometheus.Advanced.DataContracts;
-using Prometheus.Client.Advanced;
+﻿using Prometheus.Client.Collectors;
+using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -12,7 +12,7 @@ namespace Prometheus.Client
         void Dec(double decrement = 1.0D);
     }
 
-    public class Gauge : Collector<Gauge.Child>, IGauge
+    public class Gauge : Collector<Gauge.ThisChild>, IGauge
     {
         internal Gauge(string name, string help, string[] labelNames)
             : base(name, help, labelNames)
@@ -40,7 +40,7 @@ namespace Prometheus.Client
         public double Value => Unlabelled.Value;
 
 
-        public class Child : Advanced.Child, IGauge
+        public class ThisChild : Child, IGauge
         {
             private ThreadSafeDouble _value;
 
@@ -65,7 +65,7 @@ namespace Prometheus.Client
 
             protected override void Populate(Metric metric)
             {
-                metric.gauge = new Prometheus.Advanced.DataContracts.Gauge { value = Value };
+                metric.gauge = new Contracts.Gauge { value = Value };
             }
         }
     }

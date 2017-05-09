@@ -2,7 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Prometheus.Client;
-using Prometheus.Client.Advanced;
+using Prometheus.Client.Collectors;
 
 
 namespace WebCoreApplication.Controllers

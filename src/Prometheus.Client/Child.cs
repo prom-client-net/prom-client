@@ -1,8 +1,8 @@
-using Prometheus.Advanced;
-using Prometheus.Advanced.DataContracts;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 
-namespace Prometheus.Client.Advanced
+namespace Prometheus.Client
 {
     public abstract class Child
     {

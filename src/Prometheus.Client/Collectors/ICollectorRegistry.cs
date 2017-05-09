@@ -1,7 +1,7 @@
-﻿using Prometheus.Advanced.DataContracts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Prometheus.Contracts;
 
-namespace Prometheus.Client.Advanced
+namespace Prometheus.Client.Collectors
 {
     public interface ICollectorRegistry
     {

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
-using Prometheus.Advanced;
-using Prometheus.Advanced.DataContracts;
 using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 
-namespace Prometheus.Client.Advanced
+namespace Prometheus.Client.Collectors
 {
     public abstract class Collector<T> : ICollector where T : Child, new()
     {

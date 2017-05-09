@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Prometheus.Advanced.DataContracts;
 using Prometheus.Client.Internal;
+using Prometheus.Contracts;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -25,7 +25,7 @@ namespace Prometheus.Client.Tests
                     type = MetricType.COUNTER
                 };
 
-                var metricCounter = new Prometheus.Advanced.DataContracts.Counter { value = 100 };
+                var metricCounter = new Contracts.Counter { value = 100 };
                 metricFamily.metric.Add(new Metric
                 {
                     counter = metricCounter,

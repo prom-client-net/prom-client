@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace Prometheus.Client.Advanced
+[assembly: InternalsVisibleTo("Prometheus.Client.Tests")]
+
+namespace Prometheus.Client.Internal
 {
-    public struct ThreadSafeDouble
+    internal struct ThreadSafeDouble
     {
         private long _value;
 
@@ -15,14 +18,8 @@ namespace Prometheus.Client.Advanced
 
         public double Value
         {
-            get
-            {
-                return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _value));
-            }
-            set
-            {
-                Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
-            }
+            get => BitConverter.Int64BitsToDouble(Interlocked.Read(ref _value));
+            set => Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
         }
 
         public void Add(double increment)
