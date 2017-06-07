@@ -11,25 +11,39 @@ namespace Prometheus.Client.Internal
         private readonly string[] _values;
         internal readonly List<LabelPair> WireLabels = new List<LabelPair>();
 
-
-        public LabelValues(IReadOnlyCollection<string> names, string[] values)
+        public LabelValues(IReadOnlyCollection<string> names, IReadOnlyList<string> values)
         {
-            if (names.Count != values.Length)
+            if (values == null)
+                throw new InvalidOperationException("Label values is null");
+
+            if (names.Count != values.Count)
                 throw new InvalidOperationException("Label values must be of same length as label names");
-            _values = values;
-            WireLabels.AddRange(names.Zip(values, (s, s1) => new LabelPair {name = s, value = s1}));
+
+            _values = new string[values.Count];
+            for (var i = 0; i < values.Count; i++)
+                _values[i] = values[i] ?? "";
+
+            WireLabels.AddRange(names.Zip(values, (s, s1) => new LabelPair { name = s, value = s1 }));
         }
 
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            var other = (LabelValues) obj;
+            if (ReferenceEquals(null, obj))
+                return false;
 
-            if (other._values.Length != _values.Length) return false;
-            return !_values.Where((t, i) => t != other._values[i]).Any();
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (obj.GetType() != GetType())
+                return false;
+
+            var labelValues = (LabelValues)obj;
+
+            if (labelValues._values.Length != _values.Length)
+                return false;
+
+            return !_values.Where((t, i) => t != labelValues._values[i]).Any();
         }
 
         public override int GetHashCode()

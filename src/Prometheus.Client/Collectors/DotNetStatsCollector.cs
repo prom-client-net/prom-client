@@ -19,7 +19,7 @@ namespace Prometheus.Client.Collectors
 
 
         /// <summary>
-        /// Constructors
+        ///     Constructors
         /// </summary>
         public DotNetStatsCollector()
         {
@@ -27,7 +27,6 @@ namespace Prometheus.Client.Collectors
         }
 
         /// <inheritdoc />
-       
         public void RegisterMetrics()
         {
             _perfErrors = Metrics.CreateCounter("dotnet_collection_errors_total", "Total number of errors that occured during collections");
@@ -43,7 +42,6 @@ namespace Prometheus.Client.Collectors
 
             // .net specific metrics
             _totalMemory = Metrics.CreateGauge("dotnet_totalmemory", "Total known allocated memory");
-            
 
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             _startTime.Set((_process.StartTime.ToUniversalTime() - epoch).TotalSeconds);

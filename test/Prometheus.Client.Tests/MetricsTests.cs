@@ -40,6 +40,24 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void Null_Labels()
+        {
+            var counter = Metrics.CreateCounter("name2", "help2", "label1", "label2");
+
+            try
+            {
+                counter.Labels(null).Inc();
+                Assert.True(false);
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+
+            counter.Labels("param1", null).Inc(); // not down
+        }
+
+        [Fact]
         public void Cannot_Create_Metrics_With_The_Same_Name_But_Different_Labels()
         {
             Metrics.CreateGauge("name1", "h");
