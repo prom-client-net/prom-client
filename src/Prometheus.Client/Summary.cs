@@ -8,11 +8,23 @@ using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
+    /// <summary>
+    ///     Summary metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#summary
+    ///     </remarks>
+    /// </summary>
     public interface ISummary
     {
         void Observe(double val);
     }
 
+    /// <summary>
+    ///     Summary metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#summary
+    ///     </remarks>
+    /// </summary>
     public class Summary : Collector<Summary.ThisChild>, ISummary
     {
         // Label that defines the quantile in a summary.
@@ -34,11 +46,14 @@ namespace Prometheus.Client
 
         // Default duration for which observations stay relevant
         private static readonly TimeSpan DefMaxAge = TimeSpan.FromMinutes(10);
+
         private readonly int _ageBuckets;
         private readonly int _bufCap;
         private readonly TimeSpan _maxAge;
 
         private readonly IList<QuantileEpsilonPair> _objectives;
+
+        protected override MetricType Type => MetricType.SUMMARY;
 
         internal Summary(
             string name,
@@ -71,8 +86,6 @@ namespace Prometheus.Client
                 throw new ArgumentException($"{QuantileLabel} is a reserved label name");
         }
 
-        protected override MetricType Type => MetricType.SUMMARY;
-
         public void Observe(double val)
         {
             Unlabelled.Observe(val);
@@ -82,9 +95,11 @@ namespace Prometheus.Client
         {
             // Protects hotBuf and hotBufExpTime.
             private readonly object _bufLock = new object();
+
             // Protects every other moving part.
             // Lock bufMtx before mtx if both are needed.
             private readonly object _lock = new object();
+
             private readonly QuantileComparer _quantileComparer = new QuantileComparer();
 
             // AgeBuckets is the number of buckets used to exclude observations that
@@ -102,6 +117,7 @@ namespace Prometheus.Client
             // is the internal buffer size of the underlying package
             // "github.com/bmizerany/perks/quantile").      
             private int _bufCap;
+
             private SampleBuffer _coldBuf;
             private uint _count;
             private QuantileStream _headStream;
@@ -113,11 +129,13 @@ namespace Prometheus.Client
             // MaxAge defines the duration for which an observation stays relevant
             // for the summary. Must be positive. The default value is DefMaxAge.
             private TimeSpan _maxAge;
+
             // Objectives defines the quantile rank estimates with their respective
             // absolute error. If Objectives[q] = e, then the value reported
             // for q will be the φ-quantile value for some φ between q-e and q+e.
             // The default value is DefObjectives.
             private IList<QuantileEpsilonPair> _objectives = new List<QuantileEpsilonPair>();
+
             private double[] _sortedObjectives;
             private TimeSpan _streamDuration;
             private QuantileStream[] _streams;
@@ -139,10 +157,10 @@ namespace Prometheus.Client
             {
                 base.Init(parent, labelValues);
 
-                _objectives = ((Summary) parent)._objectives;
-                _maxAge = ((Summary) parent)._maxAge;
-                _ageBuckets = ((Summary) parent)._ageBuckets;
-                _bufCap = ((Summary) parent)._bufCap;
+                _objectives = ((Summary)parent)._objectives;
+                _maxAge = ((Summary)parent)._maxAge;
+                _ageBuckets = ((Summary)parent)._ageBuckets;
+                _bufCap = ((Summary)parent)._bufCap;
 
                 _sortedObjectives = new double[_objectives.Count];
                 _hotBuf = new SampleBuffer(_bufCap);

@@ -6,11 +6,23 @@ using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
+    /// <summary>
+    ///     Histogram metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#histogram
+    ///     </remarks>
+    /// </summary>
     public interface IHistogram
     {
         void Observe(double val);
     }
 
+    /// <summary>
+    ///     Histogram metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#histogram
+    ///     </remarks>
+    /// </summary>
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
         private static readonly double[] DefaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
@@ -94,6 +106,9 @@ namespace Prometheus.Client
             }
         }
 
+        /// <summary>
+        ///     Metric Type
+        /// </summary>
         protected override MetricType Type => MetricType.HISTOGRAM;
 
         public void Observe(double val)

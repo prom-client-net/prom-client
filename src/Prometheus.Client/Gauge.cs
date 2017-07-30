@@ -4,6 +4,12 @@ using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
+    /// <summary>
+    ///     Gauge metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#gauge
+    ///     </remarks>
+    /// </summary>
     public interface IGauge
     {
         double Value { get; }
@@ -12,6 +18,12 @@ namespace Prometheus.Client
         void Dec(double decrement = 1.0D);
     }
 
+    /// <summary>
+    ///     Gauge metric type
+    ///     <remarks>
+    ///         https://prometheus.io/docs/concepts/metric_types/#gauge
+    ///     </remarks>
+    /// </summary>
     public class Gauge : Collector<Gauge.ThisChild>, IGauge
     {
         internal Gauge(string name, string help, string[] labelNames)

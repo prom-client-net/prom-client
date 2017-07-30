@@ -43,17 +43,7 @@ namespace Prometheus.Client.Tests
         public void Null_Labels()
         {
             var counter = Metrics.CreateCounter("name2", "help2", "label1", "label2");
-
-            try
-            {
-                counter.Labels(null).Inc();
-                Assert.True(false);
-            }
-            catch (InvalidOperationException)
-            {
-
-            }
-
+            Assert.Throws<InvalidOperationException>(() => counter.Labels(null).Inc());
             counter.Labels("param1", null).Inc(); // not down
         }
 
