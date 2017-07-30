@@ -23,14 +23,7 @@ namespace Prometheus.Client.Internal
 
         public void Add(long increment)
         {
-            while (true)
-            {
-                long initialValue = _value;
-                long computedValue = initialValue + increment;
-
-                if (initialValue == Interlocked.CompareExchange(ref _value, computedValue, initialValue))
-                    return;
-            }
+            Interlocked.Add(ref _value, increment);
         }
 
         public override string ToString()

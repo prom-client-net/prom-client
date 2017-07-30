@@ -26,12 +26,13 @@ namespace Prometheus.Client.Internal
         {
             while (true)
             {
-                long initialValue = _value;
-                double computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
+                var initialValue = Interlocked.Read(ref _value);
+                var computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
 
                 if (initialValue == Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), initialValue))
                     return;
             }
+
         }
 
         public override string ToString()
