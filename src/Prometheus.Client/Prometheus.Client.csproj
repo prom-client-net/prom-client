@@ -4,7 +4,7 @@
     <Description>.NET client for prometheus.io.</Description>
     <Copyright>2017 © Sergey Kuznetsov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <VersionPrefix>1.1.2</VersionPrefix>
     <Authors>Sergey Kuznetsov</Authors>
     <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
     <AssemblyName>Prometheus.Client</AssemblyName>
