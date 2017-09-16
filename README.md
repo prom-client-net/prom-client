@@ -30,24 +30,24 @@ Or Standalone this:
 
 ```csharp
 
-[HttpGet]
-public IActionResult Get()
-{
-    var registry = CollectorRegistry.Instance;
-    var acceptHeaders = Request.Headers["Accept"];
-    var contentType = ScrapeHandler.GetContentType(acceptHeaders);
-    Response.ContentType = contentType;
-    string content;
-
-    using (var outputStream = new MemoryStream())
+    [Route("[controller]")]
+    public class MetricsController : Controller
     {
-        var collected = registry.CollectAll();
-        ScrapeHandler.ProcessScrapeRequest(collected, contentType, outputStream);
-        content = Encoding.UTF8.GetString(outputStream.ToArray());
+        [HttpGet]
+        public void Get()
+        {
+            var registry = CollectorRegistry.Instance;
+            var acceptHeaders = Request.Headers["Accept"];
+            var contentType = ScrapeHandler.GetContentType(acceptHeaders);
+            Response.ContentType = contentType;
+            Response.StatusCode = 200;
+            using (var outputStream = Response.Body)
+            {
+                var collected = registry.CollectAll();
+                ScrapeHandler.ProcessScrapeRequest(collected, contentType, outputStream);
+            }
+        }
     }
-
-    return Ok(content);
-}
 
 ```
 
