@@ -11,9 +11,9 @@ Its a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
 
 Nuget package: [Prometheus.Client](https://www.nuget.org/packages/Prometheus.Client)
 
-OWIN: [Prometheus.Client.Owin](https://www.nuget.org/packages/Prometheus.Client.Owin)
+OWIN: [Prometheus.Client.Owin](https://github.com/phnx47/Prometheus.Client.Owin)
 
-MetricServer: [Prometheus.Client.MetricServer](https://www.nuget.org/packages/Prometheus.Client.MetricServer)
+MetricServer: [Prometheus.Client.MetricServer](https://github.com/phnx47/Prometheus.Client.MetricServer)
 
 
 ```csharp
