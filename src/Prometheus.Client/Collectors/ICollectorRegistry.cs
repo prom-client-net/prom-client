@@ -10,5 +10,7 @@ namespace Prometheus.Client.Collectors
         bool Remove(ICollector collector);
 
         IEnumerable<MetricFamily> CollectAll();
+
+        void RegisterOnDemandCollectors(IEnumerable<IOnDemandCollector> onDemandCollectors);
     }
 }

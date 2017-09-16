@@ -1,4 +1,4 @@
-﻿#if !COREFX
+﻿#if !NETSTANDART13
 
 using System;
 using System.Collections.Generic;
