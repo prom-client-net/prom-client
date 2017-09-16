@@ -5,9 +5,10 @@ namespace Prometheus.Client.SummaryImpl
 {
     public class SampleStream
     {
-        public double N;
-        readonly List<Sample> _samples = new List<Sample>();
-        readonly Invariant _invariant;
+        private readonly List<Sample> _samples = new List<Sample>();
+        private readonly Invariant _invariant;
+
+        public double N { get; set; }
 
         public SampleStream(Invariant invariant)
         {
