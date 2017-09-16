@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Mime;
-using System.Text;
+﻿using System.Web;
 using System.Web.Http;
 using Prometheus.Client;
 using Prometheus.Client.Collectors;
@@ -13,30 +8,22 @@ namespace WebApiApplication.Controllers
     public class MetricsController : ApiController
     {
         [HttpGet]
-        public HttpResponseMessage Get()
+        public IHttpActionResult Get()
         {
             var registry = CollectorRegistry.Instance;
             var acceptHeaders = Request.Headers.GetValues("Accept");
-
             var contentType = ScrapeHandler.GetContentType(acceptHeaders);
+            var reponse = HttpContext.Current.Response;
+            reponse.ContentType = contentType;
+            reponse.StatusCode = 200;
 
-         
-            string content;
-
-            using (var outputStream = new MemoryStream())
+            using (var outputStream = reponse.OutputStream)
             {
                 var collected = registry.CollectAll();
                 ScrapeHandler.ProcessScrapeRequest(collected, contentType, outputStream);
-                content = Encoding.ASCII.GetString(outputStream.ToArray());
             }
 
-
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-
-            response.Content = new StringContent(content, Encoding.UTF8, contentType);
-
-
-            return response;
+            return Ok();
 
         }
     }
