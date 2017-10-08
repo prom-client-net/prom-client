@@ -11,6 +11,7 @@ namespace Prometheus.Client.Collectors
     /// </summary>
     public class PerfCounterCollector : IOnDemandCollector
     {
+        private readonly MetricFactory _metricFactory;
         private const string MemCat = ".NET CLR Memory";
         private const string ProcCat = "Process";
 
@@ -31,11 +32,22 @@ namespace Prometheus.Client.Collectors
         private readonly string _instanceName;
         private Counter _perfErrors;
 
+
         /// <summary>
         ///     Constructor
         /// </summary>
         public PerfCounterCollector()
+            : this(Metrics.DefaultFactory)
         {
+
+        }
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        public PerfCounterCollector(MetricFactory metricFactory)
+        {
+            _metricFactory = metricFactory;
             var currentProcess = Process.GetCurrentProcess();
             _instanceName = currentProcess.ProcessName;
             if (IsLinux())
@@ -55,7 +67,7 @@ namespace Prometheus.Client.Collectors
                 RegisterPerfCounter(category, name);
             }
 
-            _perfErrors = Metrics.CreateCounter("performance_counter_errors_total", "Total number of errors that occured during performance counter collections");
+            _perfErrors = _metricFactory.CreateCounter("performance_counter_errors_total", "Total number of errors that occured during performance counter collections");
         }
 
         /// <summary>
@@ -81,7 +93,7 @@ namespace Prometheus.Client.Collectors
 
         private void RegisterPerfCounter(string category, string name)
         {
-            var gauge = Metrics.CreateGauge(GetName(category, name), GetHelp(name));
+            var gauge = _metricFactory.CreateGauge(GetName(category, name), GetHelp(name));
             _collectors.Add(Tuple.Create(gauge, new PerformanceCounter(category, name, _instanceName)));
         }
 

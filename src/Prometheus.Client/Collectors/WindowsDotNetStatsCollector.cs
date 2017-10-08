@@ -8,6 +8,7 @@ namespace Prometheus.Client.Collectors
     /// </summary>
     public class WindowsDotNetStatsCollector : IOnDemandCollector
     {
+        private readonly MetricFactory _metricFactory;
         private readonly Process _process;
         private Gauge _numThreads;
 
@@ -17,25 +18,36 @@ namespace Prometheus.Client.Collectors
         private Gauge _virtualMemorySize;
         private Gauge _workingSet;
 
+
         /// <summary>
         ///     Constructors
         /// </summary>
         public WindowsDotNetStatsCollector()
+            : this(Metrics.DefaultFactory)
         {
+
+        }
+
+        /// <summary>
+        ///     Constructors
+        /// </summary>
+        public WindowsDotNetStatsCollector(MetricFactory metricFactory)
+        {
+            _metricFactory = metricFactory;
             _process = Process.GetCurrentProcess();
         }
 
         /// <inheritdoc />
         public void RegisterMetrics()
         {
-            _perfErrors = Metrics.CreateCounter("dotnet_collection_errors_total", "Total number of errors that occured during collections");
+            _perfErrors = _metricFactory.CreateCounter("dotnet_collection_errors_total", "Total number of errors that occured during collections");
 
             // Windows specific metrics
-            _virtualMemorySize = Metrics.CreateGauge("process_windows_virtual_bytes", "Process virtual memory size");
-            _workingSet = Metrics.CreateGauge("process_windows_working_set", "Process working set");
-            _privateMemorySize = Metrics.CreateGauge("process_windows_private_bytes", "Process private memory size");
-            _numThreads = Metrics.CreateGauge("process_windows_num_threads", "Total number of threads");
-            _pid = Metrics.CreateGauge("process_windows_processid", "Process ID");
+            _virtualMemorySize = _metricFactory.CreateGauge("process_windows_virtual_bytes", "Process virtual memory size");
+            _workingSet = _metricFactory.CreateGauge("process_windows_working_set", "Process working set");
+            _privateMemorySize = _metricFactory.CreateGauge("process_windows_private_bytes", "Process private memory size");
+            _numThreads = _metricFactory.CreateGauge("process_windows_num_threads", "Total number of threads");
+            _pid = _metricFactory.CreateGauge("process_windows_processid", "Process ID");
             _pid.Set(_process.Id);
         }
 
