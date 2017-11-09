@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public sealed class AsciiFormatterTests
+    public sealed class TextFormatterTests
     {
         [Theory]
         [InlineData("simple-label-value-1")]
@@ -35,7 +35,7 @@ namespace Prometheus.Client.Tests
                     }
                 });
 
-                AsciiFormatter.Format(ms, new[]
+                TextFormatter.Format(ms, new[]
                 {
                     metricFamily
                 });

@@ -10,13 +10,14 @@ using Prometheus.Contracts;
 
 namespace Prometheus.Client.Internal
 {
-    
-    internal class AsciiFormatter
+    internal static class TextFormatter
     {
+        private static readonly Encoding _encoding = new UTF8Encoding(false);
+
         public static void Format(Stream destination, IEnumerable<MetricFamily> metrics)
         {
             var metricFamilys = metrics.ToArray();
-            using (var streamWriter = new StreamWriter(destination, Encoding.UTF8))
+            using (var streamWriter = new StreamWriter(destination, _encoding))
             {
                 streamWriter.NewLine = "\n";
                 foreach (var metricFamily in metricFamilys)

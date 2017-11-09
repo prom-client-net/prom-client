@@ -24,7 +24,7 @@ namespace Prometheus.Client
             }
             else
             {
-                AsciiFormatter.Format(outputStream, collected);
+                TextFormatter.Format(outputStream, collected);
             }
         }
 
