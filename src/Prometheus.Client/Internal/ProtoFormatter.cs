@@ -6,7 +6,7 @@ using ProtoBuf;
 
 namespace Prometheus.Client.Internal
 {
-    internal class ProtoFormatter
+    internal static class ProtoFormatter
     {
         public static void Format(Stream destination, IEnumerable<MetricFamily> metrics)
         {

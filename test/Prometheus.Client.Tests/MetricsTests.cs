@@ -90,6 +90,50 @@ namespace Prometheus.Client.Tests
             Assert.Equal("label1", labelPairs[0].name);
             Assert.Equal("abc", labelPairs[0].value);
         }
+        
+        [Fact]
+        public void Counter_Reset_UnLabeled()
+        {
+            var counter = Metrics.CreateCounter("name1", "help1");
+            
+            counter.Inc();
+            counter.Inc(3.2);
+            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
+            Assert.Equal(4.2, counterValue);
+
+            counter.Reset();
+            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
+            
+            Assert.Equal(0, counterValue);
+            
+            counter.Inc();
+            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
+            Assert.Equal(1, counterValue);  
+        }
+        
+        [Fact]
+        public void Counter_Reset_Labeled()
+        {
+            var counter = Metrics.CreateCounter("name1", "help1", "label1");
+            
+            counter.Inc(3.4);
+            counter.Labels("label1").Inc(3.2);
+
+            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
+            Assert.Equal(3.2, counterValue);
+
+            counter.Labels("label1").Reset();
+            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
+            
+            Assert.Equal(0, counterValue);
+            
+            counter.Labels("label1").Inc();
+            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
+            Assert.Equal(1, counterValue);  
+            
+            var unlabelledValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
+            Assert.Equal(3.4, unlabelledValue);  
+        }
 
         [Fact]
         public void Custom_Registry()

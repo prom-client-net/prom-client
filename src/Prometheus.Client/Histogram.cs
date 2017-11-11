@@ -25,10 +25,11 @@ namespace Prometheus.Client
     /// </summary>
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
-        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
+        private static readonly double[] _defaultBuckets = {.005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10};
         private readonly double[] _buckets;
 
-        internal Histogram(string name, string help, string[] labelNames, double[] buckets = null) : base(name, help, labelNames)
+        internal Histogram(string name, string help, string[] labelNames, double[] buckets = null)
+            : base(name, help, labelNames)
         {
             if (labelNames.Any(l => l == "le"))
             {
@@ -43,16 +44,26 @@ namespace Prometheus.Client
 
             if (!double.IsPositiveInfinity(_buckets[_buckets.Length - 1]))
             {
-                _buckets = _buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
+                _buckets = _buckets.Concat(new[] {double.PositiveInfinity}).ToArray();
             }
 
-            for (int i = 1; i < _buckets.Length; i++)
+            for (var i = 1; i < _buckets.Length; i++)
             {
                 if (_buckets[i] <= _buckets[i - 1])
                 {
                     throw new ArgumentException("Bucket values must be increasing");
                 }
             }
+        }
+
+        /// <summary>
+        ///     Metric Type
+        /// </summary>
+        protected override MetricType Type => MetricType.HISTOGRAM;
+
+        public void Observe(double val)
+        {
+            Unlabelled.Observe(val);
         }
 
         public class ThisChild : Child, IHistogram
@@ -65,17 +76,17 @@ namespace Prometheus.Client
             {
                 base.Init(parent, labelValues);
 
-                _upperBounds = ((Histogram)parent)._buckets;
+                _upperBounds = ((Histogram) parent)._buckets;
                 _bucketCounts = new ThreadSafeLong[_upperBounds.Length];
             }
 
             protected override void Populate(Metric metric)
             {
-                var wireMetric = new Contracts.Histogram { sample_count = 0L };
+                var wireMetric = new Contracts.Histogram {sample_count = 0L};
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {
-                    wireMetric.sample_count += (ulong)_bucketCounts[i].Value;
+                    wireMetric.sample_count += (ulong) _bucketCounts[i].Value;
                     wireMetric.bucket.Add(new Bucket
                     {
                         upper_bound = _upperBounds[i],
@@ -104,16 +115,6 @@ namespace Prometheus.Client
                 }
                 _sum.Add(val);
             }
-        }
-
-        /// <summary>
-        ///     Metric Type
-        /// </summary>
-        protected override MetricType Type => MetricType.HISTOGRAM;
-
-        public void Observe(double val)
-        {
-            Unlabelled.Observe(val);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Prometheus.Client
         private const int DefBufCap = 500;
 
         // Default Summary quantile values.
-        public static readonly IList<QuantileEpsilonPair> DefObjectives = new List<QuantileEpsilonPair>
+        public static readonly IReadOnlyCollection<QuantileEpsilonPair> DefObjectives = new List<QuantileEpsilonPair>
         {
             new QuantileEpsilonPair(0.5, 0.05),
             new QuantileEpsilonPair(0.9, 0.01),
@@ -65,13 +65,13 @@ namespace Prometheus.Client
             int? bufCap = null)
             : base(name, help, labelNames)
         {
-            _objectives = objectives ?? DefObjectives;
+            _objectives = objectives ?? DefObjectives.ToList();
             _maxAge = maxAge ?? _defMaxAge;
             _ageBuckets = ageBuckets ?? DefAgeBuckets;
             _bufCap = bufCap ?? DefBufCap;
 
             if (_objectives.Count == 0)
-                _objectives = DefObjectives;
+                _objectives = DefObjectives.ToList();
 
             if (_maxAge < TimeSpan.Zero)
                 throw new ArgumentException($"Illegal max age {_maxAge}");
