@@ -166,7 +166,7 @@ namespace Prometheus.Client.Tests
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my-metric"));
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my!metric"));
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my%metric"));
-            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1", null, "le"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1",  "le"));
             Metrics.CreateGauge("a", "help1", "my:metric");
             Metrics.CreateGauge("b", "help1", "good_name");
 

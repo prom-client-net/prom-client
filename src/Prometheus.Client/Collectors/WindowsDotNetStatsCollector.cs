@@ -13,7 +13,6 @@ namespace Prometheus.Client.Collectors
         private Gauge _numThreads;
 
         private Counter _perfErrors;
-        private Gauge _pid;
         private Gauge _privateMemorySize;
         private Gauge _virtualMemorySize;
         private Gauge _workingSet;
@@ -47,8 +46,7 @@ namespace Prometheus.Client.Collectors
             _workingSet = _metricFactory.CreateGauge("process_windows_working_set", "Process working set");
             _privateMemorySize = _metricFactory.CreateGauge("process_windows_private_bytes", "Process private memory size");
             _numThreads = _metricFactory.CreateGauge("process_windows_num_threads", "Total number of threads");
-            _pid = _metricFactory.CreateGauge("process_windows_processid", "Process ID");
-            _pid.Set(_process.Id);
+            _metricFactory.CreateGauge("process_windows_processid", "Process ID").Set(_process.Id);
         }
 
         /// <inheritdoc />

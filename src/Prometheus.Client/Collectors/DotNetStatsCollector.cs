@@ -14,8 +14,6 @@ namespace Prometheus.Client.Collectors
         private readonly Process _process;
         private Counter _cpuTotal;
         private Counter _perfErrors;
-
-        private Gauge _startTime;
         private Gauge _totalMemory;
 
 
@@ -47,15 +45,14 @@ namespace Prometheus.Client.Collectors
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
                 _collectionCounts.Add(collectionCountsParent.Labels(gen.ToString()));
 
-            // Metrics that make sense to compare between all operating systems
-            _startTime = _metricFactory.CreateGauge("process_start_time_seconds", "Start time of the process since unix epoch in seconds");
             _cpuTotal = _metricFactory.CreateCounter("process_cpu_seconds_total", "Total user and system CPU time spent in seconds");
 
             // .net specific metrics
             _totalMemory = _metricFactory.CreateGauge("dotnet_totalmemory", "Total known allocated memory");
 
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            _startTime.Set((_process.StartTime.ToUniversalTime() - epoch).TotalSeconds);
+            _metricFactory.CreateGauge("process_start_time_seconds", "Start time of the process since unix epoch in seconds")
+                .Set((_process.StartTime.ToUniversalTime() - epoch).TotalSeconds);
         }
 
         public void UpdateMetrics()
@@ -71,7 +68,6 @@ namespace Prometheus.Client.Collectors
                 }
 
                 _totalMemory.Set(GC.GetTotalMemory(false));
-
                 _cpuTotal.Inc(_process.TotalProcessorTime.TotalSeconds - _cpuTotal.Value);
             }
             catch (Exception)

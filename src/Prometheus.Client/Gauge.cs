@@ -13,9 +13,11 @@ namespace Prometheus.Client
     public interface IGauge
     {
         double Value { get; }
-        void Inc(double increment = 1.0D);
+        void Inc();
+        void Inc(double increment);
         void Set(double val);
-        void Dec(double decrement = 1.0D);
+        void Dec();
+        void Dec(double decrement);
     }
 
     /// <summary>
@@ -33,7 +35,12 @@ namespace Prometheus.Client
 
         protected override MetricType Type => MetricType.GAUGE;
 
-        public void Inc(double increment = 1.0D)
+        public void Inc()
+        {
+            Inc(1.0D);
+        }
+
+        public void Inc(double increment)
         {
             Unlabelled.Inc(increment);
         }
@@ -43,8 +50,12 @@ namespace Prometheus.Client
             Unlabelled.Set(val);
         }
 
+        public void Dec()
+        {
+            Dec(1.0D);
+        }
 
-        public void Dec(double decrement = 1.0D)
+        public void Dec(double decrement)
         {
             Unlabelled.Dec(decrement);
         }
@@ -56,7 +67,12 @@ namespace Prometheus.Client
         {
             private ThreadSafeDouble _value;
 
-            public void Inc(double increment = 1.0D)
+            public void Inc()
+            {
+                Inc(1.0D);
+            }
+
+            public void Inc(double increment)
             {
                 _value.Add(increment);
             }
@@ -66,8 +82,13 @@ namespace Prometheus.Client
                 _value.Value = val;
             }
 
+            public void Dec()
+            {
+                Dec(1.0D);
+            }
 
-            public void Dec(double decrement = 1.0D)
+
+            public void Dec(double decrement)
             {
                 Inc(-decrement);
             }

@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Prometheus.Contracts;
 
 namespace Prometheus.Client.Internal
 {
-    public class LabelValues
+    public class LabelValues : IEquatable<LabelValues>
     {
         public static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
         private readonly string[] _values;
@@ -23,27 +24,26 @@ namespace Prometheus.Client.Internal
             for (var i = 0; i < values.Count; i++)
                 _values[i] = values[i] ?? "";
 
-            WireLabels.AddRange(names.Zip(values, (s, s1) => new LabelPair { name = s, value = s1 }));
+            WireLabels.AddRange(names.Zip(values, (s, s1) => new LabelPair {name = s, value = s1}));
         }
 
-
-        public override bool Equals(object obj)
+        public bool Equals(LabelValues labelValues)
         {
-            if (ReferenceEquals(null, obj))
-                return false;
-
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            if (obj.GetType() != GetType())
-                return false;
-
-            var labelValues = (LabelValues)obj;
-
-            if (labelValues._values.Length != _values.Length)
+            if (labelValues?._values.Length != _values.Length)
                 return false;
 
             return !_values.Where((t, i) => t != labelValues._values[i]).Any();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (!(obj is LabelValues labelValues))
+                return false;
+
+            return Equals(labelValues);
         }
 
         public override int GetHashCode()
@@ -56,7 +56,13 @@ namespace Prometheus.Client.Internal
 
         public override string ToString()
         {
-            throw new NotSupportedException();
+            var sb = new StringBuilder();
+            foreach (var label in WireLabels)
+            {
+                sb.AppendFormat("{0}={1}, ", label.name, label.value);
+            }
+
+            return sb.ToString();
         }
     }
 }

@@ -13,7 +13,8 @@ namespace Prometheus.Client
     /// </summary>
     public interface ICounter
     {
-        void Inc(double increment = 1.0D);
+        void Inc();
+        void Inc(double increment);
         double Value { get; }
     }
 
@@ -30,7 +31,12 @@ namespace Prometheus.Client
         {
         }
 
-        public void Inc(double increment = 1.0D)
+        public void Inc()
+        {
+            Inc(1.0D);
+        }
+        
+        public void Inc(double increment)
         {
             Unlabelled.Inc(increment);
         }
@@ -44,7 +50,12 @@ namespace Prometheus.Client
                 metric.counter = new Contracts.Counter { value = Value };
             }
 
-            public void Inc(double increment = 1.0D)
+            public void Inc()
+            {
+                Inc(1.0D);
+            }
+            
+            public void Inc(double increment)
             {
                 if (increment < 0.0D)
                     throw new InvalidOperationException("Counter cannot go down");

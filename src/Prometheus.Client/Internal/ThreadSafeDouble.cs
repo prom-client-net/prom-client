@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Prometheus.Client.Internal
 {
-    internal struct ThreadSafeDouble
+    internal struct ThreadSafeDouble : IEquatable<ThreadSafeDouble>
     {
         private long _value;
 
@@ -38,11 +38,16 @@ namespace Prometheus.Client.Internal
         {
             return Value.ToString(CultureInfo.InvariantCulture);
         }
-
+        
+        public bool Equals(ThreadSafeDouble threadSafeLong)
+        {
+            return Value.Equals(threadSafeLong.Value);
+        }
+        
         public override bool Equals(object obj)
         {
             if (obj is ThreadSafeDouble d)
-                return Value.Equals(d.Value);
+                return Equals(d);
 
             return Value.Equals(obj);
         }

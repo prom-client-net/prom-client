@@ -14,12 +14,10 @@ namespace Prometheus.Client.Collectors
         private readonly string _help;
         private readonly Lazy<T> _unlabelledLazy;
 
-        // ReSharper disable StaticFieldInGenericType
-        private static readonly Regex _metricName = new Regex(MetricNameRe);
-        private static readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
-        private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
-        private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
-        // ReSharper restore StaticFieldInGenericType
+        private readonly Regex _metricName = new Regex(MetricNameRe);
+        private readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
+        private readonly Regex _reservedLabelRegex = new Regex("^__.*$");
+        private readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected abstract MetricType Type { get; }
 

@@ -38,7 +38,12 @@ namespace Prometheus.Client
             return (Summary) _registry.GetOrAdd(metric);
         }
 
-        public Histogram CreateHistogram(string name, string help, double[] buckets = null, params string[] labelNames)
+        public Histogram CreateHistogram(string name, string help, params string[] labelNames)
+        {
+            return CreateHistogram(name, help, null, labelNames);
+        }
+        
+        public Histogram CreateHistogram(string name, string help, double[] buckets, params string[] labelNames)
         {
             var metric = new Histogram(name, help, labelNames, buckets);
             return (Histogram) _registry.GetOrAdd(metric);

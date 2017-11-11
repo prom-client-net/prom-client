@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -6,7 +7,7 @@ using System.Threading;
 
 namespace Prometheus.Client.Internal
 {
-    internal struct ThreadSafeLong
+    internal struct ThreadSafeLong : IEquatable<ThreadSafeLong>
     {
         private long _value;
 
@@ -31,10 +32,15 @@ namespace Prometheus.Client.Internal
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
+        public bool Equals(ThreadSafeLong threadSafeLong)
+        {
+            return Value.Equals(threadSafeLong.Value);
+        }
+        
         public override bool Equals(object obj)
         {
             if (obj is ThreadSafeLong l)
-                return Value.Equals(l.Value);
+                return Equals(l);
 
             return Value.Equals(obj);
         }

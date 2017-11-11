@@ -7,7 +7,7 @@ namespace WebCoreApplication.Controllers
     [Route("[controller]")]
     public class HistogramController : Controller
     {
-        private readonly Histogram _histogram = Metrics.CreateHistogram("test_hist", "help_text", null, "params1");
+        private readonly Histogram _histogram = Metrics.CreateHistogram("test_hist", "help_text", "params1");
 
         [HttpGet]
         public IActionResult Get()

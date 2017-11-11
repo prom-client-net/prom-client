@@ -47,7 +47,15 @@ namespace Prometheus.Client
         /// <summary>
         ///     Create Histogram in default MetricFactory
         /// </summary>
-        public static Histogram CreateHistogram(string name, string help, double[] buckets = null, params string[] labelNames)
+        public static Histogram CreateHistogram(string name, string help, params string[] labelNames)
+        {
+            return CreateHistogram(name, help, null, labelNames);
+        }
+        
+        /// <summary>
+        ///     Create Histogram in default MetricFactory
+        /// </summary>
+        public static Histogram CreateHistogram(string name, string help, double[] buckets, params string[] labelNames)
         {
             return DefaultFactory.CreateHistogram(name, help, buckets, labelNames);
         }
