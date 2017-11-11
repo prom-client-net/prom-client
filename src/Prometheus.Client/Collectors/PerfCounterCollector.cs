@@ -1,4 +1,4 @@
-﻿#if !NETSTANDART13
+﻿#if NET45
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Prometheus.Client.Collectors
         private const string MemCat = ".NET CLR Memory";
         private const string ProcCat = "Process";
 
-        private static readonly string[] StandardPerfCounters =
+        private static readonly string[] _standardPerfCounters =
         {
             MemCat, "Gen 0 heap size",
             MemCat, "Gen 1 heap size",
@@ -59,10 +59,10 @@ namespace Prometheus.Client.Collectors
         /// </summary>
         public void RegisterMetrics()
         {
-            for (var i = 0; i < StandardPerfCounters.Length; i += 2)
+            for (var i = 0; i < _standardPerfCounters.Length; i += 2)
             {
-                var category = StandardPerfCounters[i];
-                var name = StandardPerfCounters[i + 1];
+                var category = _standardPerfCounters[i];
+                var name = _standardPerfCounters[i + 1];
 
                 RegisterPerfCounter(category, name);
             }

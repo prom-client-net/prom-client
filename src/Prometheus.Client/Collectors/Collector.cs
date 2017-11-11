@@ -15,10 +15,10 @@ namespace Prometheus.Client.Collectors
         private readonly Lazy<T> _unlabelledLazy;
 
         // ReSharper disable StaticFieldInGenericType
-        private static readonly Regex MetricName = new Regex(MetricNameRe);
-        private static readonly Regex LabelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
-        private static readonly Regex ReservedLabelRegex = new Regex("^__.*$");
-        private static readonly LabelValues EmptyLabelValues = new LabelValues(new string[0], new string[0]);
+        private static readonly Regex _metricName = new Regex(MetricNameRe);
+        private static readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
+        private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
+        private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
         // ReSharper restore StaticFieldInGenericType
 
         protected abstract MetricType Type { get; }
@@ -51,24 +51,24 @@ namespace Prometheus.Client.Collectors
             _help = help;
             LabelNames = labelNames;
 
-            if (!MetricName.IsMatch(name))
+            if (!_metricName.IsMatch(name))
             {
                 throw new ArgumentException("Metric name must match regex: " + MetricNameRe);
             }
 
             foreach (var labelName in labelNames)
             {
-                if (!LabelNameRegex.IsMatch(labelName))
+                if (!_labelNameRegex.IsMatch(labelName))
                 {
                     throw new ArgumentException("Invalid label name!");
                 }
-                if (ReservedLabelRegex.IsMatch(labelName))
+                if (_reservedLabelRegex.IsMatch(labelName))
                 {
                     throw new ArgumentException("Labels starting with double underscore are reserved!");
                 }
             }
 
-            _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(EmptyLabelValues));
+            _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(_emptyLabelValues));
         }
 
         public MetricFamily Collect()

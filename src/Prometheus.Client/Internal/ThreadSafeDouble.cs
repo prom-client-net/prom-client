@@ -32,7 +32,6 @@ namespace Prometheus.Client.Internal
                 if (initialValue == Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), initialValue))
                     return;
             }
-
         }
 
         public override string ToString()
@@ -42,8 +41,8 @@ namespace Prometheus.Client.Internal
 
         public override bool Equals(object obj)
         {
-            if (obj is ThreadSafeDouble)
-                return Value.Equals(((ThreadSafeDouble)obj).Value);
+            if (obj is ThreadSafeDouble d)
+                return Value.Equals(d.Value);
 
             return Value.Equals(obj);
         }

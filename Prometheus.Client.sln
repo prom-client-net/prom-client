@@ -17,6 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebCoreApplication", "examples\WebCoreApplication\WebCoreApplication.csproj", "{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7847B574-86FF-4D13-ADD9-85C6D37A86B9}"
+ProjectSection(SolutionItems) = preProject
+	appveyor.yml = appveyor.yml
+	.gitignore = .gitignore
+	.gitattributes = .gitattributes
+	LICENSE = LICENSE
+	README.md = README.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

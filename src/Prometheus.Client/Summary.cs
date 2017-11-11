@@ -45,7 +45,7 @@ namespace Prometheus.Client
         };
 
         // Default duration for which observations stay relevant
-        private static readonly TimeSpan DefMaxAge = TimeSpan.FromMinutes(10);
+        private static readonly TimeSpan _defMaxAge = TimeSpan.FromMinutes(10);
 
         private readonly int _ageBuckets;
         private readonly int _bufCap;
@@ -66,7 +66,7 @@ namespace Prometheus.Client
             : base(name, help, labelNames)
         {
             _objectives = objectives ?? DefObjectives;
-            _maxAge = maxAge ?? DefMaxAge;
+            _maxAge = maxAge ?? _defMaxAge;
             _ageBuckets = ageBuckets ?? DefAgeBuckets;
             _bufCap = bufCap ?? DefBufCap;
 

@@ -4,7 +4,7 @@
 
 This is .NET version (unofficial). Support .net45 and .netstandart1.3
 
-Its a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
+It's a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
 
 
 ## Quik start

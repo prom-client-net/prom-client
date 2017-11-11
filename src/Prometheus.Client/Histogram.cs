@@ -25,7 +25,7 @@ namespace Prometheus.Client
     /// </summary>
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
-        private static readonly double[] DefaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
+        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
         private readonly double[] _buckets;
 
         internal Histogram(string name, string help, string[] labelNames, double[] buckets = null) : base(name, help, labelNames)
@@ -34,7 +34,7 @@ namespace Prometheus.Client
             {
                 throw new ArgumentException("'le' is a reserved label name");
             }
-            _buckets = buckets ?? DefaultBuckets;
+            _buckets = buckets ?? _defaultBuckets;
 
             if (_buckets.Length == 0)
             {

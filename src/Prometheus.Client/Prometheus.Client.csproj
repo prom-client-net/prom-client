@@ -1,44 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <Description>.NET client for prometheus.io.</Description>
-    <Copyright>2017 © Sergey Kuznetsov</Copyright>
-    <AssemblyTitle>Prometheus.Client</AssemblyTitle>
-    <VersionPrefix>1.2.2</VersionPrefix>
-    <Authors>Sergey Kuznetsov</Authors>
-    <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
-    <AssemblyName>Prometheus.Client</AssemblyName>
-    <PackageId>Prometheus.Client</PackageId>
-    <PackageTags>prometheus;metrics</PackageTags>
-    <PackageIconUrl>https://image.ibb.co/k4Sc0k/prometheus.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/phnx47/Prometheus.Client</PackageProjectUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/phnx47/Prometheus.Client</RepositoryUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>1591</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="2.3.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDART13</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="System.Diagnostics.Process">
-      <Version>4.3.0</Version>
-    </PackageReference>
-  </ItemGroup>
-
+    <PropertyGroup>
+        <Description>.NET client for prometheus.io.</Description>
+        <Copyright>2017 © Sergey Kuznetsov</Copyright>
+        <AssemblyTitle>Prometheus.Client</AssemblyTitle>
+        <VersionPrefix>1.2.3</VersionPrefix>
+        <Authors>Sergey Kuznetsov</Authors>
+        <TargetFrameworks>net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+        <AssemblyName>Prometheus.Client</AssemblyName>
+        <PackageId>Prometheus.Client</PackageId>
+        <PackageTags>prometheus;metrics</PackageTags>
+        <PackageIconUrl>https://image.ibb.co/k4Sc0k/prometheus.png</PackageIconUrl>
+        <PackageProjectUrl>https://github.com/phnx47/Prometheus.Client</PackageProjectUrl>
+        <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/phnx47/Prometheus.Client</RepositoryUrl>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="protobuf-net" Version="2.3.2"/>
+    </ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+        <Reference Include="System"/>
+        <Reference Include="Microsoft.CSharp"/>
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+        <PackageReference Include="System.Diagnostics.Process">
+            <Version>4.3.0</Version>
+        </PackageReference>
+    </ItemGroup>
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+        <DefineConstants>$(DefineConstants);NET45</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+        <DefineConstants>$(DefineConstants);NETSTANDART13</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+        <DefineConstants>$(DefineConstants);NETSTANDART20</DefineConstants>
+    </PropertyGroup>
 </Project>
