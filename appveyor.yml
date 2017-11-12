@@ -15,7 +15,6 @@ deploy:
     secure: vukCl5k+S4fJtqeYNiB9ufy/NUCw+60cPcqnPoqvykBjSo8Ub8QtEfZNN9qvj5Jh
   artifact: NuGet
   on:
-    branch: master
     appveyor_repo_tag: true
 - provider: NuGet
   server: https://www.myget.org/F/phnx47-beta/api/v2/package

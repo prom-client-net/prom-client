@@ -71,7 +71,7 @@ namespace Prometheus.Client.Collectors
 
         public MetricFamily Collect()
         {
-            var result = new MetricFamily()
+            var result = new MetricFamily
             {
                 name = Name,
                 help = _help,
