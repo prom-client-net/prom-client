@@ -6,30 +6,37 @@ using Prometheus.Contracts;
 
 namespace Prometheus.Client.Internal
 {
-    public class LabelValues : IEquatable<LabelValues>
+    internal struct LabelValues : IEquatable<LabelValues>
     {
-        public static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
+        private readonly int _hashCode;
         private readonly string[] _values;
-        internal readonly List<LabelPair> WireLabels = new List<LabelPair>();
 
-        public LabelValues(IReadOnlyCollection<string> names, IReadOnlyList<string> values)
+        internal static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
+        internal readonly List<LabelPair> WireLabels;
+
+        public LabelValues(string[] names, string[] values)
         {
             if (values == null)
                 throw new InvalidOperationException("Label values is null");
 
-            if (names.Count != values.Count)
+            if (names.Length != values.Length)
                 throw new InvalidOperationException("Label values must be of same length as label names");
 
-            _values = new string[values.Count];
-            for (var i = 0; i < values.Count; i++)
+            _values = values;
+
+            for (var i = 0; i < values.Length; i++)
                 _values[i] = values[i] ?? "";
 
-            WireLabels.AddRange(names.Zip(values, (s, s1) => new LabelPair {name = s, value = s1}));
+            WireLabels = new List<LabelPair>(names.Zip(values, (s, s1) => new LabelPair {name = s, value = s1}));
+
+            // Calculating the hash code is fast but we don't need to re-calculate it for each comparison this object is involved in.
+            // Label values are fixed- caluclate it once up-front and remember the value.
+            _hashCode = CalculateHashCode(_values);
         }
 
         public bool Equals(LabelValues labelValues)
         {
-            if (labelValues?._values.Length != _values.Length)
+            if (labelValues._values.Length != _values.Length)
                 return false;
 
             return !_values.Where((t, i) => t != labelValues._values[i]).Any();
@@ -46,14 +53,6 @@ namespace Prometheus.Client.Internal
             return Equals(labelValues);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return _values.Aggregate(1, (current, val) => current ^ (val.GetHashCode() * 397));
-            }
-        }
-
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -63,6 +62,24 @@ namespace Prometheus.Client.Internal
             }
 
             return sb.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return _hashCode;
+        }
+
+        private static int CalculateHashCode(string[] values)
+        {
+            unchecked
+            {
+                var hashCode = 1;
+                for (var i = 0; i < values.Length; i++)
+                {
+                    hashCode ^= values[i].GetHashCode() * 397;
+                }
+                return hashCode;
+            }
         }
     }
 }

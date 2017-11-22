@@ -33,7 +33,7 @@ namespace Prometheus.Client.BenchmarkTests
         }
 
         [Benchmark]
-        public void Counter_Labels_Old()
+        public void Counter_Labels_New()
         {
             _counter.Labels("label_one_val", "label_two_val", "label_three_val", "label_four_val").Inc();
         }
