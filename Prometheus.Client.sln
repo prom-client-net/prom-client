@@ -5,15 +5,11 @@ VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D994EEE1-3786-4FDF-8A49-76D8B9819A29}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2D96C0A4-CA7D-49E1-AB75-967CFEBB1EC6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{E4FCD5AF-30E0-4194-A7CC-875967A45A53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiApplication", "examples\WebApiApplication\WebApiApplication.csproj", "{22C001AB-416F-4BA0-9F93-870ED8EFE294}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client", "src\Prometheus.Client\Prometheus.Client.csproj", "{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Tests", "test\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebCoreApplication", "examples\WebCoreApplication\WebCoreApplication.csproj", "{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}"
 EndProject
@@ -25,6 +21,12 @@ ProjectSection(SolutionItems) = preProject
 	LICENSE = LICENSE
 	README.md = README.md
 EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FE42C2D5-9D20-44A2-A9ED-477527A832AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Tests", "tests\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{B11769F3-421B-4B79-A883-335331847542}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.BenchmarkTests", "tests\Prometheus.Client.BenchmarkTests\Prometheus.Client.BenchmarkTests.csproj", "{3F220CD9-38AC-4378-8A21-EF0E7A630862}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,14 +42,18 @@ Global
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B11769F3-421B-4B79-A883-335331847542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B11769F3-421B-4B79-A883-335331847542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B11769F3-421B-4B79-A883-335331847542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B11769F3-421B-4B79-A883-335331847542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F220CD9-38AC-4378-8A21-EF0E7A630862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F220CD9-38AC-4378-8A21-EF0E7A630862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F220CD9-38AC-4378-8A21-EF0E7A630862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F220CD9-38AC-4378-8A21-EF0E7A630862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,7 +61,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{22C001AB-416F-4BA0-9F93-870ED8EFE294} = {E4FCD5AF-30E0-4194-A7CC-875967A45A53}
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E} = {D994EEE1-3786-4FDF-8A49-76D8B9819A29}
-		{6BE45D44-1C0F-41C5-BC87-53938FD6FCFE} = {2D96C0A4-CA7D-49E1-AB75-967CFEBB1EC6}
 		{C5BE25DF-83C1-44FC-82C2-43A6A5F63A6A} = {E4FCD5AF-30E0-4194-A7CC-875967A45A53}
+		{B11769F3-421B-4B79-A883-335331847542} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
+		{3F220CD9-38AC-4378-8A21-EF0E7A630862} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 	EndGlobalSection
 EndGlobal

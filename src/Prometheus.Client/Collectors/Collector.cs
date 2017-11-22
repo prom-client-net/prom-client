@@ -8,25 +8,21 @@ namespace Prometheus.Client.Collectors
 {
     public abstract class Collector<T> : ICollector where T : Child, new()
     {
-        private const string MetricNameRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-
-        private readonly ConcurrentDictionary<LabelValues, T> _labelledMetrics = new ConcurrentDictionary<LabelValues, T>();
+        private const string _metricNameRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
         private readonly string _help;
+        private readonly ConcurrentDictionary<LabelValues, T> _labelledMetrics = new ConcurrentDictionary<LabelValues, T>();
         private readonly Lazy<T> _unlabelledLazy;
-
-        private readonly Regex _metricName = new Regex(MetricNameRe);
+        private readonly Regex _metricName = new Regex(_metricNameRe);
         private readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
         private readonly Regex _reservedLabelRegex = new Regex("^__.*$");
         private readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected abstract MetricType Type { get; }
-
-        public string Name { get; }
-
-        public string[] LabelNames { get; }
-
         protected T Unlabelled => _unlabelledLazy.Value;
 
+        public string Name { get; }
+        public string[] LabelNames { get; }
+        
         public T Labels(params string[] labelValues)
         {
             var key = new LabelValues(LabelNames, labelValues);
@@ -51,7 +47,7 @@ namespace Prometheus.Client.Collectors
 
             if (!_metricName.IsMatch(name))
             {
-                throw new ArgumentException("Metric name must match regex: " + MetricNameRe);
+                throw new ArgumentException("Metric name must match regex: " + _metricNameRe);
             }
 
             foreach (var labelName in labelNames)
