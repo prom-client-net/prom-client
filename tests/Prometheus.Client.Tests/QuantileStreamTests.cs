@@ -20,7 +20,7 @@ namespace Prometheus.Client.Tests
         private readonly double[] _lowQuantiles = { 0.01, 0.1, 0.5 };
         private readonly double[] _highQuantiles = { 0.99, 0.9, 0.5 };
 
-        private const double RelativeEpsilon = 0.01;
+        private const double _relativeEpsilon = 0.01;
 
         private static double[] PopulateStream(QuantileStream stream, Random random)
         {
@@ -75,8 +75,8 @@ namespace Prometheus.Client.Tests
                 var n = (double)a.Length;
                 var k = (int)(qu * n);
 
-                var lowerRank = (int)((1 - RelativeEpsilon) * qu * n);
-                var upperRank = (int)Math.Ceiling((1 + RelativeEpsilon) * qu * n);
+                var lowerRank = (int)((1 - _relativeEpsilon) * qu * n);
+                var upperRank = (int)Math.Ceiling((1 + _relativeEpsilon) * qu * n);
 
                 var w = a[k - 1];
                 var min = a[lowerRank - 1];
@@ -99,8 +99,8 @@ namespace Prometheus.Client.Tests
                 var n = (double)a.Length;
                 var k = (int)(qu * n);
 
-                var lowerRank = (int)((1 - (1 + RelativeEpsilon) * (1 - qu)) * n);
-                var upperRank = (int)Math.Ceiling((1 - (1 - RelativeEpsilon) * (1 - qu)) * n);
+                var lowerRank = (int)((1 - (1 + _relativeEpsilon) * (1 - qu)) * n);
+                var upperRank = (int)Math.Ceiling((1 - (1 - _relativeEpsilon) * (1 - qu)) * n);
                 var w = a[k - 1];
                 var min = a[lowerRank - 1];
                 var max = a[upperRank - 1];
@@ -124,7 +124,7 @@ namespace Prometheus.Client.Tests
         public void TestHighBiasedQuery()
         {
             var random = new Random(42);
-            var s = QuantileStream.NewHighBiased(RelativeEpsilon);
+            var s = QuantileStream.NewHighBiased(_relativeEpsilon);
             var a = PopulateStream(s, random);
             VerifyHighPercsWithRelativeEpsilon(a, s);
         }
@@ -133,7 +133,7 @@ namespace Prometheus.Client.Tests
         public void TestLowBiasedQuery()
         {
             var random = new Random(42);
-            var s = QuantileStream.NewLowBiased(RelativeEpsilon);
+            var s = QuantileStream.NewLowBiased(_relativeEpsilon);
             var a = PopulateStream(s, random);
             VerifyLowPercsWithRelativeEpsilon(a, s);
         }

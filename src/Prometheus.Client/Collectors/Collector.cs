@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
-using Prometheus.Client.Internal;
 using Prometheus.Contracts;
+
+// ReSharper disable StaticMemberInGenericType
 
 namespace Prometheus.Client.Collectors
 {
     public abstract class Collector<T> : ICollector where T : Child, new()
     {
-        private const string _metricNameRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
+        private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
+        
         private readonly string _help;
-       
         private readonly Lazy<T> _unlabelledLazy;
-        private readonly Regex _metricName = new Regex(_metricNameRe);
-        private readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
-        private readonly Regex _reservedLabelRegex = new Regex("^__.*$");
-        private readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
+        
+        private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
+        private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
+        private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected readonly ConcurrentDictionary<LabelValues, T> LabelledMetrics = new ConcurrentDictionary<LabelValues, T>();
         protected abstract MetricType Type { get; }
@@ -46,21 +47,16 @@ namespace Prometheus.Client.Collectors
             _help = help;
             LabelNames = labelNames;
 
-            if (!_metricName.IsMatch(name))
-            {
-                throw new ArgumentException("Metric name must match regex: " + _metricNameRe);
-            }
-
+            if (!_metricNameLabelRegex.IsMatch(name))
+                throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
+            
             foreach (var labelName in labelNames)
             {
-                if (!_labelNameRegex.IsMatch(labelName))
-                {
-                    throw new ArgumentException("Invalid label name!");
-                }
+                if (!_metricNameLabelRegex.IsMatch(labelName))
+                    throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
+                
                 if (_reservedLabelRegex.IsMatch(labelName))
-                {
-                    throw new ArgumentException("Labels starting with double underscore are reserved!");
-                }
+                    throw new ArgumentException("Labels starting with double underscore are reserved!"); 
             }
 
             _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(_emptyLabelValues));
@@ -72,7 +68,7 @@ namespace Prometheus.Client.Collectors
             {
                 name = Name,
                 help = _help,
-                type = Type,
+                type = Type
             };
 
             foreach (var child in LabelledMetrics.Values)

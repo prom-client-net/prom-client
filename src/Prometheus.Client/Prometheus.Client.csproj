@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>.NET client for prometheus.io.</Description>
+    <Description>.NET client for prometheus.io</Description>
     <Copyright>2017 © Sergey Kuznetsov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
     <VersionPrefix>1.3.1</VersionPrefix>
     <Authors>Sergey Kuznetsov</Authors>
-    <TargetFrameworks>net45;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net45;netstandard1.3;netstandard2.0</TargetFrameworks>
     <AssemblyName>Prometheus.Client</AssemblyName>
     <PackageId>Prometheus.Client</PackageId>
     <PackageTags>prometheus;metrics</PackageTags>

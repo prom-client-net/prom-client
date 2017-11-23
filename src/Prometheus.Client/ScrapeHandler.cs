@@ -9,16 +9,16 @@ namespace Prometheus.Client
 {
     public static class ScrapeHandler
     {
-        private const string ProtoContentType = "application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited";
-        private const string TextContentType = "text/plain; version=0.0.4";
-        private const string ProtoAcceptType = "application/vnd.google.protobuf";
+        private const string _protoContentType = "application/vnd.google.protobuf; proto=io.prometheus.client.MetricFamily; encoding=delimited";
+        private const string _textContentType = "text/plain; version=0.0.4";
+        private const string _protoAcceptType = "application/vnd.google.protobuf";
 
         public static void ProcessScrapeRequest(
             IEnumerable<MetricFamily> collected,
             string contentType,
             Stream outputStream)
         {
-            if (contentType == ProtoContentType)
+            if (contentType == _protoContentType)
             {
                 ProtoFormatter.Format(outputStream, collected);
             }
@@ -30,7 +30,7 @@ namespace Prometheus.Client
 
         public static string GetContentType(IEnumerable<string> acceptHeaders)
         {
-            return ProtobufAccepted(acceptHeaders) ? ProtoContentType : TextContentType;
+            return ProtobufAccepted(acceptHeaders) ? _protoContentType : _textContentType;
         }
 
         private static bool ProtobufAccepted(IEnumerable<string> acceptTypesHeader)
@@ -41,7 +41,7 @@ namespace Prometheus.Client
             var splitParams = acceptTypesHeader.Select(_ => _.Split(';'));
             var acceptTypes = splitParams.Select(_ => _.First()).ToList();
 
-            return acceptTypes.Any(_ => _.Equals(ProtoAcceptType, StringComparison.OrdinalIgnoreCase));
+            return acceptTypes.Any(_ => _.Equals(_protoAcceptType, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -28,13 +28,13 @@ namespace Prometheus.Client
     public class Summary : Collector<Summary.ThisChild>, ISummary
     {
         // Label that defines the quantile in a summary.
-        private const string QuantileLabel = "quantile";
+        private const string _quantileLabel = "quantile";
 
         // Default number of buckets used to calculate the age of observations
-        private const int DefAgeBuckets = 5;
+        private const int _defAgeBuckets = 5;
 
         // Standard buffer size for collecting Summary observations
-        private const int DefBufCap = 500;
+        private const int _defBufCap = 500;
 
         // Default Summary quantile values.
         public static readonly IReadOnlyCollection<QuantileEpsilonPair> DefObjectives = new List<QuantileEpsilonPair>
@@ -67,8 +67,8 @@ namespace Prometheus.Client
         {
             _objectives = objectives ?? DefObjectives.ToList();
             _maxAge = maxAge ?? _defMaxAge;
-            _ageBuckets = ageBuckets ?? DefAgeBuckets;
-            _bufCap = bufCap ?? DefBufCap;
+            _ageBuckets = ageBuckets ?? _defAgeBuckets;
+            _bufCap = bufCap ?? _defBufCap;
 
             if (_objectives.Count == 0)
                 _objectives = DefObjectives.ToList();
@@ -77,13 +77,13 @@ namespace Prometheus.Client
                 throw new ArgumentException($"Illegal max age {_maxAge}");
 
             if (_ageBuckets == 0)
-                _ageBuckets = DefAgeBuckets;
+                _ageBuckets = _defAgeBuckets;
 
             if (_bufCap == 0)
-                _bufCap = DefBufCap;
+                _bufCap = _defBufCap;
 
-            if (labelNames.Any(_ => _ == QuantileLabel))
-                throw new ArgumentException($"{QuantileLabel} is a reserved label name");
+            if (labelNames.Any(_ => _ == _quantileLabel))
+                throw new ArgumentException($"{_quantileLabel} is a reserved label name");
         }
 
         public void Observe(double val)

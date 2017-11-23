@@ -12,20 +12,20 @@ namespace Prometheus.Client.Collectors
     public class PerfCounterCollector : IOnDemandCollector
     {
         private readonly MetricFactory _metricFactory;
-        private const string MemCat = ".NET CLR Memory";
-        private const string ProcCat = "Process";
+        private const string _memCat = ".NET CLR Memory";
+        private const string _procCat = "Process";
 
         private static readonly string[] _standardPerfCounters =
         {
-            MemCat, "Gen 0 heap size",
-            MemCat, "Gen 1 heap size",
-            MemCat, "Gen 2 heap size",
-            MemCat, "Large Object Heap size",
-            MemCat, "% Time in GC",
-            ProcCat, "% Processor Time",
-            ProcCat, "Private Bytes",
-            ProcCat, "Working Set",
-            ProcCat, "Virtual Bytes"
+            _memCat, "Gen 0 heap size",
+            _memCat, "Gen 1 heap size",
+            _memCat, "Gen 2 heap size",
+            _memCat, "Large Object Heap size",
+            _memCat, "% Time in GC",
+            _procCat, "% Processor Time",
+            _procCat, "Private Bytes",
+            _procCat, "Working Set",
+            _procCat, "Virtual Bytes"
         };
 
         private readonly List<Tuple<Gauge, PerformanceCounter>> _collectors = new List<Tuple<Gauge, PerformanceCounter>>();
