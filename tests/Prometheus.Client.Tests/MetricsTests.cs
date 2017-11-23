@@ -92,49 +92,28 @@ namespace Prometheus.Client.Tests
         }
         
         [Fact]
-        public void Counter_Reset_UnLabeled()
+        public void Counter_Reset()
         {
-            var counter = Metrics.CreateCounter("name1", "help1");
+            var counter = Metrics.CreateCounter("name1", "help1", "label1");
             
             counter.Inc();
             counter.Inc(3.2);
+            counter.Labels("test").Inc(1);
             var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
             Assert.Equal(4.2, counterValue);
 
             counter.Reset();
-            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
-            
+            var metricFamily = CollectorRegistry.Instance.CollectAll().ToArray()[0];
+            counterValue = metricFamily.metric[0].counter.value;
+            var counterValueLabeled = metricFamily.metric[1].counter.value;
             Assert.Equal(0, counterValue);
+            Assert.Equal(0, counterValueLabeled);
             
             counter.Inc();
             counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
-            Assert.Equal(1, counterValue);  
+            Assert.Equal(1, counterValue);      
         }
         
-        [Fact]
-        public void Counter_Reset_Labeled()
-        {
-            var counter = Metrics.CreateCounter("name1", "help1", "label1");
-            
-            counter.Inc(3.4);
-            counter.Labels("label1").Inc(3.2);
-
-            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
-            Assert.Equal(3.2, counterValue);
-
-            counter.Labels("label1").Reset();
-            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
-            
-            Assert.Equal(0, counterValue);
-            
-            counter.Labels("label1").Inc();
-            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[1].counter.value;
-            Assert.Equal(1, counterValue);  
-            
-            var unlabelledValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].metric[0].counter.value;
-            Assert.Equal(3.4, unlabelledValue);  
-        }
-
         [Fact]
         public void Custom_Registry()
         {

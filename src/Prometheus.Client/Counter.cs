@@ -16,7 +16,6 @@ namespace Prometheus.Client
         void Inc();
         void Inc(double increment);
         double Value { get; }
-        void Reset();
     }
 
     /// <summary>
@@ -46,7 +45,11 @@ namespace Prometheus.Client
         
         public void Reset()
         {
-            Unlabelled.Reset();
+            Unlabelled.ResetValue();
+            foreach (var labelledMetric in LabelledMetrics)
+            {
+                labelledMetric.Value.ResetValue();
+            }
         }
 
         protected override MetricType Type => MetricType.COUNTER;
@@ -75,7 +78,7 @@ namespace Prometheus.Client
 
             public double Value => _value.Value;
             
-            public void Reset()
+            internal void ResetValue()
             {
                 _value.Value = 0.0D;
             }

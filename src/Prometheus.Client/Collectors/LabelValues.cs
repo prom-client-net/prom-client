@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Prometheus.Contracts;
 
-namespace Prometheus.Client.Internal
+namespace Prometheus.Client.Collectors
 {
-    internal struct LabelValues : IEquatable<LabelValues>
+    public struct LabelValues : IEquatable<LabelValues>
     {
         private readonly int _hashCode;
         private readonly string[] _values;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.SummaryImpl;
 using Prometheus.Contracts;
 using Xunit;

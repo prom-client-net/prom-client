@@ -10,13 +10,14 @@ namespace Prometheus.Client.Collectors
     {
         private const string _metricNameRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
         private readonly string _help;
-        private readonly ConcurrentDictionary<LabelValues, T> _labelledMetrics = new ConcurrentDictionary<LabelValues, T>();
+       
         private readonly Lazy<T> _unlabelledLazy;
         private readonly Regex _metricName = new Regex(_metricNameRe);
         private readonly Regex _labelNameRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$");
         private readonly Regex _reservedLabelRegex = new Regex("^__.*$");
         private readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
+        protected readonly ConcurrentDictionary<LabelValues, T> LabelledMetrics = new ConcurrentDictionary<LabelValues, T>();
         protected abstract MetricType Type { get; }
         protected T Unlabelled => _unlabelledLazy.Value;
 
@@ -31,7 +32,7 @@ namespace Prometheus.Client.Collectors
 
         private T GetOrAddLabelled(LabelValues key)
         {
-            return _labelledMetrics.GetOrAdd(key, labels1 =>
+            return LabelledMetrics.GetOrAdd(key, labels1 =>
             {
                 var child = new T();
                 child.Init(this, labels1);
@@ -74,7 +75,7 @@ namespace Prometheus.Client.Collectors
                 type = Type,
             };
 
-            foreach (var child in _labelledMetrics.Values)
+            foreach (var child in LabelledMetrics.Values)
             {
                 result.metric.Add(child.Collect());
             }
