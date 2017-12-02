@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.Internal;
-using Prometheus.Contracts;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -20,18 +20,18 @@ namespace Prometheus.Client.Tests
             {
                 var metricFamily = new MetricFamily
                 {
-                    name = "family1",
-                    help = "help",
-                    type = MetricType.COUNTER
+                    Name = "family1",
+                    Help = "help",
+                    Type = MetricType.Counter
                 };
 
-                var metricCounter = new Contracts.Counter { value = 100 };
-                metricFamily.metric.Add(new Metric
+                var metricCounter = new Contracts.Counter { Value = 100 };
+                metricFamily.Metrics.Add(new Metric
                 {
-                    counter = metricCounter,
-                    label = new List<LabelPair>
+                    Counter = metricCounter,
+                    Labels = new List<LabelPair>
                     {
-                        new LabelPair { name = "label1", value = labelValue }
+                        new LabelPair { Name = "label1", Value = labelValue }
                     }
                 });
 

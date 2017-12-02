@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Prometheus.Contracts;
+using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.Collectors
 {
@@ -27,7 +27,7 @@ namespace Prometheus.Client.Collectors
             for (var i = 0; i < values.Length; i++)
                 _values[i] = values[i] ?? "";
 
-            WireLabels = new List<LabelPair>(names.Zip(values, (s, s1) => new LabelPair {name = s, value = s1}));
+            WireLabels = new List<LabelPair>(names.Zip(values, (s, s1) => new LabelPair {Name = s, Value = s1}));
 
             // Calculating the hash code is fast but we don't need to re-calculate it for each comparison this object is involved in.
             // Label values are fixed- caluclate it once up-front and remember the value.
@@ -58,7 +58,7 @@ namespace Prometheus.Client.Collectors
             var sb = new StringBuilder();
             foreach (var label in WireLabels)
             {
-                sb.AppendFormat("{0}={1}, ", label.name, label.value);
+                sb.AppendFormat("{0}={1}, ", label.Name, label.Value);
             }
 
             return sb.ToString();

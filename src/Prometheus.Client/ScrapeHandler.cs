@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.Internal;
-using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.SummaryImpl;
-using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -53,7 +52,7 @@ namespace Prometheus.Client
 
         private readonly IList<QuantileEpsilonPair> _objectives;
 
-        protected override MetricType Type => MetricType.SUMMARY;
+        protected override MetricType Type => MetricType.Summary;
 
         internal Summary(
             string name,
@@ -183,7 +182,7 @@ namespace Prometheus.Client
                 _wireMetric = new Contracts.Summary();
 
                 foreach (var quantileEpsilonPair in _objectives)
-                    _wireMetric.quantile.Add(new Quantile
+                    _wireMetric.Quantiles.Add(new Quantile
                     {
                         quantile = quantileEpsilonPair.Quantile
                     });
@@ -206,8 +205,8 @@ namespace Prometheus.Client
                         // Swap bufs even if hotBuf is empty to set new hotBufExpTime.
                         SwapBufs(now);
                         FlushColdBuf();
-                        summary.sample_count = _count;
-                        summary.sample_sum = _sum;
+                        summary.SampleCount = _count;
+                        summary.SampleSum = _sum;
 
                         for (var idx = 0; idx < _sortedObjectives.Length; idx++)
                         {
@@ -217,7 +216,7 @@ namespace Prometheus.Client
                             quantiles[idx] = new Quantile
                             {
                                 quantile = rank,
-                                value = q
+                                Value = q
                             };
                         }
                     }
@@ -227,9 +226,9 @@ namespace Prometheus.Client
                     Array.Sort(quantiles, _quantileComparer);
 
                 foreach (var quantile in quantiles)
-                    summary.quantile.Add(quantile);
+                    summary.Quantiles.Add(quantile);
 
-                metric.summary = summary;
+                metric.Summary = summary;
             }
 
             /// <summary>

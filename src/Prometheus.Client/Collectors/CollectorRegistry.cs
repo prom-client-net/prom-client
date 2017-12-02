@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Contracts;
+using Prometheus.Client.Contracts;
 
 
 namespace Prometheus.Client.Collectors

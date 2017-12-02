@@ -1,6 +1,6 @@
 ﻿using Prometheus.Client.Collectors;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.Internal;
-using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -33,7 +33,7 @@ namespace Prometheus.Client
         {
         }
 
-        protected override MetricType Type => MetricType.GAUGE;
+        protected override MetricType Type => MetricType.Gauge;
 
         public void Inc()
         {
@@ -98,7 +98,7 @@ namespace Prometheus.Client
 
             protected override void Populate(Metric metric)
             {
-                metric.gauge = new Contracts.Gauge { value = Value };
+                metric.Gauge = new Contracts.Gauge { Value = Value };
             }
         }
     }

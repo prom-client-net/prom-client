@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.Internal;
-using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -59,7 +59,7 @@ namespace Prometheus.Client
         /// <summary>
         ///     Metric Type
         /// </summary>
-        protected override MetricType Type => MetricType.HISTOGRAM;
+        protected override MetricType Type => MetricType.Histogram;
 
         public void Observe(double val)
         {
@@ -82,30 +82,29 @@ namespace Prometheus.Client
 
             protected override void Populate(Metric metric)
             {
-                var wireMetric = new Contracts.Histogram {sample_count = 0L};
+                var wireMetric = new Contracts.Histogram {SampleCount = 0L};
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {
-                    wireMetric.sample_count += (ulong) _bucketCounts[i].Value;
-                    wireMetric.bucket.Add(new Bucket
+                    wireMetric.SampleCount += (ulong) _bucketCounts[i].Value;
+                    wireMetric.Buckets.Add(new Bucket
                     {
-                        upper_bound = _upperBounds[i],
-                        cumulative_count = wireMetric.sample_count
+                        UpperBound = _upperBounds[i],
+                        CumulativeCount = wireMetric.SampleCount
                     });
                 }
-                wireMetric.sample_sum = _sum.Value;
+                wireMetric.SampleSum = _sum.Value;
 
-                metric.histogram = wireMetric;
+                metric.Histogram = wireMetric;
             }
 
             public void Observe(double val)
             {
                 if (double.IsNaN(val))
-                {
                     return;
-                }
+                
 
-                for (int i = 0; i < _upperBounds.Length; i++)
+                for (var i = 0; i < _upperBounds.Length; i++)
                 {
                     if (val <= _upperBounds[i])
                     {

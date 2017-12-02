@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.SummaryImpl;
-using Prometheus.Contracts;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -49,11 +49,11 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.Collect().metric.Single().summary;
+            var m = sum.Collect().Metrics.Single().Summary;
 
-            Assert.Equal(mutations * concLevel, (int) m.sample_count);
+            Assert.Equal(mutations * concLevel, (int) m.SampleCount);
 
-            var got = m.sample_sum;
+            var got = m.SampleSum;
             var want = sampleSum;
 
             Assert.True(Math.Abs(got - want) / want <= 0.001);
@@ -65,8 +65,8 @@ namespace Prometheus.Client.Tests
             {
                 var wantQ = Summary.DefObjectives.ElementAt(i);
                 var epsilon = wantQ.Epsilon;
-                var gotQ = m.quantile[i].quantile;
-                var gotV = m.quantile[i].value;
+                var gotQ = m.Quantiles[i].quantile;
+                var gotV = m.Quantiles[i].Value;
                 var minMax = GetBounds(allVars, wantQ.Quantile, epsilon);
 
                 Assert.False(double.IsNaN(gotQ));
@@ -100,8 +100,8 @@ namespace Prometheus.Client.Tests
                 if (i % 10 == 0)
                 {
                     child.Populate(metric, now);
-                    m = metric.summary;
-                    var got = m.quantile[0].value;
+                    m = metric.Summary;
+                    var got = m.Quantiles[0].Value;
                     var want = Math.Max((double) i / 10, (double) i - 90);
 
                     Assert.True(Math.Abs(got - want) <= 1, $"{i}. got {got} want {want}");
@@ -110,9 +110,9 @@ namespace Prometheus.Client.Tests
 
             // Wait for MaxAge without observations and make sure quantiles are NaN.
             child.Populate(metric, baseTime.AddSeconds(1000).AddSeconds(100));
-            m = metric.summary;
+            m = metric.Summary;
 
-            Assert.True(double.IsNaN(m.quantile[0].value));
+            Assert.True(double.IsNaN(m.Quantiles[0].Value));
         }
 
         [Fact]
@@ -136,22 +136,22 @@ namespace Prometheus.Client.Tests
             }
             var metric = new Metric();
             summary.Populate(metric, DateTime.UtcNow);
-            var m = metric.summary;
+            var m = metric.Summary;
 
-            Assert.Equal(numObservations * numIterations, (int) m.sample_count);
-            Assert.Equal(expectedSum, m.sample_sum);
+            Assert.Equal(numObservations * numIterations, (int) m.SampleCount);
+            Assert.Equal(expectedSum, m.SampleSum);
 
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.5)).value >= 50 - 2);
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.5)).value <= 50 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.5)).Value >= 50 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.5)).Value <= 50 + 2);
 
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.9)).value >= 90 - 2);
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.9)).value <= 90 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.9)).Value >= 90 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.9)).Value <= 90 + 2);
 
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.99)).value >= 99 - 2);
-            Assert.True(m.quantile.Single(_ => _.quantile.Equals(0.99)).value <= 99 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.99)).Value >= 99 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.99)).Value <= 99 + 2);
         }
 
-        static Tuple<double, double> GetBounds(double[] vars, double q, double epsilon)
+        private static Tuple<double, double> GetBounds(double[] vars, double q, double epsilon)
         {
             // TODO: This currently tolerates an error of up to 2*ε. The error must
             // be at most ε, but for some reason, it's sometimes slightly

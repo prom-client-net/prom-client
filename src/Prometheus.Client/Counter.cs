@@ -1,7 +1,7 @@
 using System;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Contracts;
 using Prometheus.Client.Internal;
-using Prometheus.Contracts;
 
 namespace Prometheus.Client
 {
@@ -52,7 +52,7 @@ namespace Prometheus.Client
             }
         }
 
-        protected override MetricType Type => MetricType.COUNTER;
+        protected override MetricType Type => MetricType.Counter;
         
         public class ThisChild : Child, ICounter
         {
@@ -60,7 +60,7 @@ namespace Prometheus.Client
 
             protected override void Populate(Metric metric)
             {
-                metric.counter = new Contracts.Counter { value = Value };
+                metric.Counter = new Contracts.Counter { Value = Value };
             }
 
             public void Inc()

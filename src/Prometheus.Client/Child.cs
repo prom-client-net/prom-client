@@ -1,6 +1,5 @@
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Internal;
-using Prometheus.Contracts;
+using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client
 {
@@ -19,7 +18,7 @@ namespace Prometheus.Client
         {
             var metric = new Metric();
             Populate(metric);
-            metric.label = _labelValues.WireLabels;
+            metric.Labels = _labelValues.WireLabels;
             return metric;
         }
     }

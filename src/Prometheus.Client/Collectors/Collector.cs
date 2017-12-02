@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
-using Prometheus.Contracts;
+using Prometheus.Client.Contracts;
 
 // ReSharper disable StaticMemberInGenericType
 
@@ -66,14 +66,14 @@ namespace Prometheus.Client.Collectors
         {
             var result = new MetricFamily
             {
-                name = Name,
-                help = _help,
-                type = Type
+                Name = Name,
+                Help = _help,
+                Type = Type
             };
 
             foreach (var child in LabelledMetrics.Values)
             {
-                result.metric.Add(child.Collect());
+                result.Metrics.Add(child.Collect());
             }
 
             return result;

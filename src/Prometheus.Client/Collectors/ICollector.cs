@@ -1,4 +1,4 @@
-using Prometheus.Contracts;
+using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.Collectors
 {
