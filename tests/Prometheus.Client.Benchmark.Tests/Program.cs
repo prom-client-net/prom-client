@@ -6,7 +6,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using RunMode = BenchmarkDotNet.Jobs.RunMode;
 
-namespace Prometheus.Client.BenchmarkTests
+namespace Prometheus.Client.Benchmark.Tests
 {
     public static class Program
     {
@@ -33,7 +33,7 @@ namespace Prometheus.Client.BenchmarkTests
         }
 
         [Benchmark]
-        public void Counter_Labels_New()
+        public void Counter_Labels()
         {
             _counter.Labels("label_one_val", "label_two_val", "label_three_val", "label_four_val").Inc();
         }

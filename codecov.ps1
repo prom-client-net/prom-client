@@ -1,0 +1,1 @@
+codecov -f .\coverage.xml -t $env:codecov_token
