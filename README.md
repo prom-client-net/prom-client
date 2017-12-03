@@ -9,7 +9,7 @@
 
 .NET Client library(unofficial) for [https://prometheus.io/](prometheus.io)  
 
-Support .net45, .netstandart1.3 and .netstandart2.0
+Support .net45, .netstandard1.3 and .netstandard2.0
 
 It's a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
 
