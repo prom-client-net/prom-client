@@ -17,6 +17,9 @@
     <RepositoryUrl>https://github.com/phnx47/Prometheus.Client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
