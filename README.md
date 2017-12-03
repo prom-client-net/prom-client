@@ -13,15 +13,24 @@ Support .net45, .netstandart1.3 and .netstandart2.0
 
 It's a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
 
+## Installation
+
+    Install-Package Prometheus.Client
+
+
+Extension for WEB: [Prometheus.Client.Owin](https://github.com/phnx47/Prometheus.Client.Owin)
+
+	Install-Package Prometheus.Client.Owin
+
+Extension for Standalone host: [Prometheus.Client.MetricServer](https://github.com/phnx47/Prometheus.Client.MetricServer)
+
+	Install-Package Prometheus.Client.MetricServer
+
+Extension for collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/phnx47/Prometheus.Client.HttpRequestDurations)
+
+	Install-Package Prometheus.Client.HttpRequestDurations
 
 ## Quik start
-
-Nuget package: [Prometheus.Client](https://www.nuget.org/packages/Prometheus.Client)
-
-OWIN: [Prometheus.Client.Owin](https://github.com/phnx47/Prometheus.Client.Owin)
-
-MetricServer: [Prometheus.Client.MetricServer](https://github.com/phnx47/Prometheus.Client.MetricServer)
-
 
 ```csharp
 
@@ -33,7 +42,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 ```
 
-Or Standalone this:
+Without extensions:
 
 ```csharp
 
