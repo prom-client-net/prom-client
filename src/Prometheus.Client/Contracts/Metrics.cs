@@ -4,7 +4,7 @@
 
 // https://github.com/mgravell/protobuf-net
 // https://protogensite.azurewebsites.net/
-// add 's' for Labels, line 197
+// change 232 line: add 'set'
 
 // ReSharper disable All
 #pragma warning disable CS1591, CS0612, CS3021
@@ -13,8 +13,12 @@ namespace Prometheus.Client.Contracts
 {
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class LabelPair
+    public partial class LabelPair : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"name")]
         [global::System.ComponentModel.DefaultValue("")]
         public string Name
@@ -40,8 +44,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Gauge
+    public partial class Gauge : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"value")]
         public double Value
         {
@@ -55,8 +63,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Counter
+    public partial class Counter : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"value")]
         public double Value
         {
@@ -70,8 +82,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Quantile
+    public partial class Quantile : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1)]
         public double quantile
         {
@@ -95,8 +111,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Summary
+    public partial class Summary : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"sample_count")]
         public ulong SampleCount
         {
@@ -123,8 +143,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Untyped
+    public partial class Untyped : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"value")]
         public double Value
         {
@@ -138,8 +162,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Histogram
+    public partial class Histogram : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"sample_count")]
         public ulong SampleCount
         {
@@ -166,8 +194,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Bucket
+    public partial class Bucket : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"cumulative_count")]
         public ulong CumulativeCount
         {
@@ -191,8 +223,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Metric
+    public partial class Metric : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"label")]
         public global::System.Collections.Generic.List<LabelPair> Labels { get; set; } = new global::System.Collections.Generic.List<LabelPair>();
 
@@ -224,8 +260,12 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class MetricFamily
+    public partial class MetricFamily : global::ProtoBuf.IExtensible
     {
+        private global::ProtoBuf.IExtension __pbn__extensionData;
+        global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+            => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
+
         [global::ProtoBuf.ProtoMember(1, Name = @"name")]
         [global::System.ComponentModel.DefaultValue("")]
         public string Name
