@@ -7,11 +7,11 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7e275fc9eb5d4f47896a3b6eb28c8536)](https://www.codacy.com/app/phnx47/Prometheus.Client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=phnx47/Prometheus.Client&amp;utm_campaign=Badge_Grade)
 [![Build status](https://ci.appveyor.com/api/projects/status/ik6p8hv9he1cl0a9?svg=true)](https://ci.appveyor.com/project/phnx47/prometheus-client) [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
-.NET Client library(unofficial) for [https://prometheus.io/](prometheus.io)  
+.NET Client library(unofficial) for [prometheus.io](https://prometheus.io/)  
 
 Support .net45, .netstandard1.3 and .netstandard2.0
 
-It's a fork of [prometheus-net](https://github.com/andrasm/prometheus-net)
+It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net)
 
 ## Installation
 
