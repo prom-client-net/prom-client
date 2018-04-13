@@ -4,7 +4,7 @@ namespace Prometheus.Client.Collectors
 {
     public interface ICollector
     {
-        MetricFamily Collect();
+        CMetricFamily Collect();
 
         string Name { get; }
 

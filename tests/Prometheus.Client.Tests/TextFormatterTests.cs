@@ -18,20 +18,20 @@ namespace Prometheus.Client.Tests
         {
             using (var ms = new MemoryStream())
             {
-                var metricFamily = new MetricFamily
+                var metricFamily = new CMetricFamily
                 {
                     Name = "family1",
                     Help = "help",
-                    Type = MetricType.Counter
+                    Type = CMetricType.Counter
                 };
 
-                var metricCounter = new Contracts.Counter { Value = 100 };
-                metricFamily.Metrics.Add(new Metric
+                var metricCounter = new Contracts.CCounter { Value = 100 };
+                metricFamily.Metrics.Add(new CMetric
                 {
-                    Counter = metricCounter,
-                    Labels = new List<LabelPair>
+                    CCounter = metricCounter,
+                    Labels = new List<CLabelPair>
                     {
-                        new LabelPair { Name = "label1", Value = labelValue }
+                        new CLabelPair { Name = "label1", Value = labelValue }
                     }
                 });
 

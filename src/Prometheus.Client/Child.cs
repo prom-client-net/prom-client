@@ -12,11 +12,11 @@ namespace Prometheus.Client
             _labelValues = labelValues;
         }
 
-        protected abstract void Populate(Metric metric);
+        protected abstract void Populate(CMetric cMetric);
 
-        internal Metric Collect()
+        internal CMetric Collect()
         {
-            var metric = new Metric();
+            var metric = new CMetric();
             Populate(metric);
             metric.Labels = _labelValues.WireLabels;
             return metric;

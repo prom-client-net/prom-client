@@ -3,11 +3,11 @@ using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.SummaryImpl
 {
-    internal class QuantileComparer : IComparer<Quantile>
+    internal class QuantileComparer : IComparer<CQuantile>
     {
-        public int Compare(Quantile x, Quantile y)
+        public int Compare(CQuantile x, CQuantile y)
         {
-            return x.quantile.CompareTo(y.quantile);
+            return x.Quantile.CompareTo(y.Quantile);
         }
     }
 }

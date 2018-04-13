@@ -59,7 +59,7 @@ namespace Prometheus.Client
         /// <summary>
         ///     Metric Type
         /// </summary>
-        protected override MetricType Type => MetricType.Histogram;
+        protected override CMetricType Type => CMetricType.Histogram;
 
         public void Observe(double val)
         {
@@ -80,14 +80,14 @@ namespace Prometheus.Client
                 _bucketCounts = new ThreadSafeLong[_upperBounds.Length];
             }
 
-            protected override void Populate(Metric metric)
+            protected override void Populate(CMetric cMetric)
             {
-                var wireMetric = new Contracts.Histogram {SampleCount = 0L};
+                var wireMetric = new Contracts.CHistogram {SampleCount = 0L};
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {
                     wireMetric.SampleCount += (ulong) _bucketCounts[i].Value;
-                    wireMetric.Buckets.Add(new Bucket
+                    wireMetric.Buckets.Add(new CBucket
                     {
                         UpperBound = _upperBounds[i],
                         CumulativeCount = wireMetric.SampleCount
@@ -95,7 +95,7 @@ namespace Prometheus.Client
                 }
                 wireMetric.SampleSum = _sum.Value;
 
-                metric.Histogram = wireMetric;
+                cMetric.CHistogram = wireMetric;
             }
 
             public void Observe(double val)

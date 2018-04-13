@@ -52,15 +52,15 @@ namespace Prometheus.Client
             }
         }
 
-        protected override MetricType Type => MetricType.Counter;
+        protected override CMetricType Type => CMetricType.Counter;
         
         public class ThisChild : Child, ICounter
         {
             private ThreadSafeDouble _value;
 
-            protected override void Populate(Metric metric)
+            protected override void Populate(CMetric cMetric)
             {
-                metric.Counter = new Contracts.Counter { Value = Value };
+                cMetric.CCounter = new Contracts.CCounter { Value = Value };
             }
 
             public void Inc()

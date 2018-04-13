@@ -14,7 +14,7 @@ namespace Prometheus.Client.Internal
     {
         private static readonly Encoding _encoding = new UTF8Encoding(false);
 
-        public static void Format(Stream destination, IEnumerable<MetricFamily> metrics)
+        public static void Format(Stream destination, IEnumerable<CMetricFamily> metrics)
         {
             var metricFamilys = metrics.ToArray();
             using (var streamWriter = new StreamWriter(destination, _encoding))
@@ -25,7 +25,7 @@ namespace Prometheus.Client.Internal
             }
         }
 
-        internal static string Format(IEnumerable<MetricFamily> metrics)
+        internal static string Format(IEnumerable<CMetricFamily> metrics)
         {
             var metricFamilys = metrics.ToArray();
             var s = new StringBuilder();
@@ -35,100 +35,100 @@ namespace Prometheus.Client.Internal
             return s.ToString();
         }
 
-        private static void WriteFamily(StreamWriter streamWriter, MetricFamily metricFamily)
+        private static void WriteFamily(StreamWriter streamWriter, CMetricFamily cMetricFamily)
         {
-            streamWriter.WriteLine("# HELP {0} {1}", metricFamily.Name, metricFamily.Help);
-            streamWriter.WriteLine("# TYPE {0} {1}", metricFamily.Name, metricFamily.Type);
-            foreach (var metric in metricFamily.Metrics)
-                WriteMetric(streamWriter, metricFamily, metric);
+            streamWriter.WriteLine("# HELP {0} {1}", cMetricFamily.Name, cMetricFamily.Help);
+            streamWriter.WriteLine("# TYPE {0} {1}", cMetricFamily.Name, cMetricFamily.Type);
+            foreach (var metric in cMetricFamily.Metrics)
+                WriteMetric(streamWriter, cMetricFamily, metric);
         }
 
-        private static string WriteFamily(MetricFamily metricFamily)
+        private static string WriteFamily(CMetricFamily cMetricFamily)
         {
             var s = new StringBuilder();
-            s.AppendLine($"# HELP {metricFamily.Name} {metricFamily.Help}");
-            s.AppendLine($"# TYPE {metricFamily.Name} {metricFamily.Type}");
-            foreach (var metric in metricFamily.Metrics)
-                s.Append(WriteMetric(metricFamily, metric));
+            s.AppendLine($"# HELP {cMetricFamily.Name} {cMetricFamily.Help}");
+            s.AppendLine($"# TYPE {cMetricFamily.Name} {cMetricFamily.Type}");
+            foreach (var metric in cMetricFamily.Metrics)
+                s.Append(WriteMetric(cMetricFamily, metric));
             return s.ToString();
         }
 
-        private static void WriteMetric(StreamWriter streamWriter, MetricFamily family, Metric metric)
+        private static void WriteMetric(StreamWriter streamWriter, CMetricFamily family, CMetric cMetric)
         {
             var familyName = family.Name;
 
-            if (metric.Gauge != null)
+            if (cMetric.CGauge != null)
             {
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Gauge.Value, metric.Labels));
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CGauge.Value, cMetric.Labels));
             }
-            else if (metric.Counter != null)
+            else if (cMetric.CCounter != null)
             {
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Counter.Value, metric.Labels));
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CCounter.Value, cMetric.Labels));
             }
-            else if (metric.Summary != null)
+            else if (cMetric.CSummary != null)
             {
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Summary.SampleSum, metric.Labels, "_sum"));
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Summary.SampleCount, metric.Labels, "_count"));
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CSummary.SampleSum, cMetric.Labels, "_sum"));
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CSummary.SampleCount, cMetric.Labels, "_count"));
 
-                foreach (var quantileValuePair in metric.Summary.Quantiles)
+                foreach (var quantileValuePair in cMetric.CSummary.Quantiles)
                 {
-                    var quantile = double.IsPositiveInfinity(quantileValuePair.quantile) ? "+Inf" : quantileValuePair.quantile.ToString(CultureInfo.InvariantCulture);
-                    streamWriter.WriteLine(SimpleValue(familyName, quantileValuePair.Value, metric.Labels.Concat(new[] {new LabelPair {Name = "quantile", Value = quantile}})));
+                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile) ? "+Inf" : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
+                    streamWriter.WriteLine(SimpleValue(familyName, quantileValuePair.Value, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "quantile", Value = quantile}})));
                 }
             }
-            else if (metric.Histogram != null)
+            else if (cMetric.CHistogram != null)
             {
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Histogram.SampleSum, metric.Labels, "_sum"));
-                streamWriter.WriteLine(SimpleValue(familyName, metric.Histogram.SampleCount, metric.Labels, "_count"));
-                foreach (var bucket in metric.Histogram.Buckets)
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CHistogram.SampleSum, cMetric.Labels, "_sum"));
+                streamWriter.WriteLine(SimpleValue(familyName, cMetric.CHistogram.SampleCount, cMetric.Labels, "_count"));
+                foreach (var bucket in cMetric.CHistogram.Buckets)
                 {
                     var value = double.IsPositiveInfinity(bucket.UpperBound) ? "+Inf" : bucket.UpperBound.ToString(CultureInfo.InvariantCulture);
-                    streamWriter.WriteLine(SimpleValue(familyName, bucket.CumulativeCount, metric.Labels.Concat(new[] {new LabelPair {Name = "le", Value = value}}), "_bucket"));
+                    streamWriter.WriteLine(SimpleValue(familyName, bucket.CumulativeCount, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "le", Value = value}}), "_bucket"));
                 }
             }
         }
 
-        private static string WriteMetric(MetricFamily family, Metric metric)
+        private static string WriteMetric(CMetricFamily family, CMetric cMetric)
         {
             var s = new StringBuilder();
             var familyName = family.Name;
 
-            if (metric.Gauge != null)
+            if (cMetric.CGauge != null)
             {
-                s.AppendLine(SimpleValue(familyName, metric.Gauge.Value, metric.Labels));
+                s.AppendLine(SimpleValue(familyName, cMetric.CGauge.Value, cMetric.Labels));
             }
-            else if (metric.Counter != null)
+            else if (cMetric.CCounter != null)
             {
-                s.AppendLine(SimpleValue(familyName, metric.Counter.Value, metric.Labels));
+                s.AppendLine(SimpleValue(familyName, cMetric.CCounter.Value, cMetric.Labels));
             }
-            else if (metric.Summary != null)
+            else if (cMetric.CSummary != null)
             {
-                s.AppendLine(SimpleValue(familyName, metric.Summary.SampleSum, metric.Labels, "_sum"));
-                s.AppendLine(SimpleValue(familyName, metric.Summary.SampleCount, metric.Labels, "_count"));
+                s.AppendLine(SimpleValue(familyName, cMetric.CSummary.SampleSum, cMetric.Labels, "_sum"));
+                s.AppendLine(SimpleValue(familyName, cMetric.CSummary.SampleCount, cMetric.Labels, "_count"));
 
-                foreach (var quantileValuePair in metric.Summary.Quantiles)
+                foreach (var quantileValuePair in cMetric.CSummary.Quantiles)
                 {
-                    var quantile = double.IsPositiveInfinity(quantileValuePair.quantile) ? "+Inf" : quantileValuePair.quantile.ToString(CultureInfo.InvariantCulture);
-                    s.AppendLine(SimpleValue(familyName, quantileValuePair.Value, metric.Labels.Concat(new[] {new LabelPair {Name = "quantile", Value = quantile}})));
+                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile) ? "+Inf" : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
+                    s.AppendLine(SimpleValue(familyName, quantileValuePair.Value, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "quantile", Value = quantile}})));
                 }
             }
-            else if (metric.Histogram != null)
+            else if (cMetric.CHistogram != null)
             {
-                s.AppendLine(SimpleValue(familyName, metric.Histogram.SampleSum, metric.Labels, "_sum"));
-                s.AppendLine(SimpleValue(familyName, metric.Histogram.SampleCount, metric.Labels, "_count"));
-                foreach (var bucket in metric.Histogram.Buckets)
+                s.AppendLine(SimpleValue(familyName, cMetric.CHistogram.SampleSum, cMetric.Labels, "_sum"));
+                s.AppendLine(SimpleValue(familyName, cMetric.CHistogram.SampleCount, cMetric.Labels, "_count"));
+                foreach (var bucket in cMetric.CHistogram.Buckets)
                 {
                     var value = double.IsPositiveInfinity(bucket.UpperBound) ? "+Inf" : bucket.UpperBound.ToString(CultureInfo.InvariantCulture);
-                    s.AppendLine(SimpleValue(familyName, bucket.CumulativeCount, metric.Labels.Concat(new[] {new LabelPair {Name = "le", Value = value}}), "_bucket"));
+                    s.AppendLine(SimpleValue(familyName, bucket.CumulativeCount, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "le", Value = value}}), "_bucket"));
                 }
             }
 
             return s.ToString();
         }
 
-        private static string WithLabels(string familyName, IEnumerable<LabelPair> labels)
+        private static string WithLabels(string familyName, IEnumerable<CLabelPair> labels)
         {
-            var labelPairs = labels as LabelPair[] ?? labels.ToArray();
+            var labelPairs = labels as CLabelPair[] ?? labels.ToArray();
             if (labelPairs.Length == 0)
                 return familyName;
             return $"{familyName}{{{string.Join(",", labelPairs.Select(l => $"{l.Name}=\"{EscapeValue(l.Value)}\""))}}}";
@@ -139,7 +139,7 @@ namespace Prometheus.Client.Internal
             return val.Replace("\\", @"\\").Replace("\n", @"\n").Replace("\"", @"\""");
         }
 
-        private static string SimpleValue(string family, double value, IEnumerable<LabelPair> labels, string namePostfix = null)
+        private static string SimpleValue(string family, double value, IEnumerable<CLabelPair> labels, string namePostfix = null)
         {
             return $"{WithLabels(family + (namePostfix ?? ""), labels)} {value.ToString(CultureInfo.InvariantCulture)}";
         }

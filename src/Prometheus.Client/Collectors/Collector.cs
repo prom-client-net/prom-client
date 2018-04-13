@@ -19,7 +19,7 @@ namespace Prometheus.Client.Collectors
         private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected readonly ConcurrentDictionary<LabelValues, T> LabelledMetrics = new ConcurrentDictionary<LabelValues, T>();
-        protected abstract MetricType Type { get; }
+        protected abstract CMetricType Type { get; }
         protected T Unlabelled => _unlabelledLazy.Value;
 
         public string Name { get; }
@@ -62,9 +62,9 @@ namespace Prometheus.Client.Collectors
             _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(_emptyLabelValues));
         }
 
-        public MetricFamily Collect()
+        public CMetricFamily Collect()
         {
-            var result = new MetricFamily
+            var result = new CMetricFamily
             {
                 Name = Name,
                 Help = _help,

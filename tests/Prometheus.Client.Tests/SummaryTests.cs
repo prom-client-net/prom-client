@@ -49,7 +49,7 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.Collect().Metrics.Single().Summary;
+            var m = sum.Collect().Metrics.Single().CSummary;
 
             Assert.Equal(mutations * concLevel, (int) m.SampleCount);
 
@@ -65,7 +65,7 @@ namespace Prometheus.Client.Tests
             {
                 var wantQ = Summary.DefObjectives.ElementAt(i);
                 var epsilon = wantQ.Epsilon;
-                var gotQ = m.Quantiles[i].quantile;
+                var gotQ = m.Quantiles[i].Quantile;
                 var gotV = m.Quantiles[i].Value;
                 var minMax = GetBounds(allVars, wantQ.Quantile, epsilon);
 
@@ -89,8 +89,8 @@ namespace Prometheus.Client.Tests
             var child = new Summary.ThisChild();
             child.Init(sum, LabelValues.Empty, baseTime);
 
-            Contracts.Summary m;
-            var metric = new Metric();
+            Contracts.CSummary m;
+            var metric = new CMetric();
 
             for (var i = 0; i < 1000; i++)
             {
@@ -100,7 +100,7 @@ namespace Prometheus.Client.Tests
                 if (i % 10 == 0)
                 {
                     child.Populate(metric, now);
-                    m = metric.Summary;
+                    m = metric.CSummary;
                     var got = m.Quantiles[0].Value;
                     var want = Math.Max((double) i / 10, (double) i - 90);
 
@@ -110,7 +110,7 @@ namespace Prometheus.Client.Tests
 
             // Wait for MaxAge without observations and make sure quantiles are NaN.
             child.Populate(metric, baseTime.AddSeconds(1000).AddSeconds(100));
-            m = metric.Summary;
+            m = metric.CSummary;
 
             Assert.True(double.IsNaN(m.Quantiles[0].Value));
         }
@@ -134,21 +134,21 @@ namespace Prometheus.Client.Tests
                     expectedSum += observation;
                 }
             }
-            var metric = new Metric();
+            var metric = new CMetric();
             summary.Populate(metric, DateTime.UtcNow);
-            var m = metric.Summary;
+            var m = metric.CSummary;
 
             Assert.Equal(numObservations * numIterations, (int) m.SampleCount);
             Assert.Equal(expectedSum, m.SampleSum);
 
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.5)).Value >= 50 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.5)).Value <= 50 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.5)).Value >= 50 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.5)).Value <= 50 + 2);
 
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.9)).Value >= 90 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.9)).Value <= 90 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.9)).Value >= 90 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.9)).Value <= 90 + 2);
 
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.99)).Value >= 99 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.quantile.Equals(0.99)).Value <= 99 + 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.99)).Value >= 99 - 2);
+            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.99)).Value <= 99 + 2);
         }
 
         private static Tuple<double, double> GetBounds(double[] vars, double q, double epsilon)

@@ -13,7 +13,7 @@ namespace Prometheus.Client.Contracts
 {
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class LabelPair : global::ProtoBuf.IExtensible
+    public partial class CLabelPair : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -44,7 +44,7 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Gauge : global::ProtoBuf.IExtensible
+    public partial class CGauge : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -63,7 +63,7 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Counter : global::ProtoBuf.IExtensible
+    public partial class CCounter : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -82,14 +82,14 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Quantile : global::ProtoBuf.IExtensible
+    public partial class CQuantile : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
-        [global::ProtoBuf.ProtoMember(1)]
-        public double quantile
+        [global::ProtoBuf.ProtoMember(1, Name = @"quantile")]
+        public double Quantile
         {
             get { return __pbn__quantile.GetValueOrDefault(); }
             set { __pbn__quantile = value; }
@@ -111,7 +111,7 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Summary : global::ProtoBuf.IExtensible
+    public partial class CSummary : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -138,12 +138,12 @@ namespace Prometheus.Client.Contracts
         private double? __pbn__SampleSum;
 
         [global::ProtoBuf.ProtoMember(3, Name = @"quantile")]
-        public global::System.Collections.Generic.List<Quantile> Quantiles { get; } = new global::System.Collections.Generic.List<Quantile>();
+        public global::System.Collections.Generic.List<CQuantile> Quantiles { get; } = new global::System.Collections.Generic.List<CQuantile>();
 
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Untyped : global::ProtoBuf.IExtensible
+    public partial class CUntyped : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -162,7 +162,7 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Histogram : global::ProtoBuf.IExtensible
+    public partial class CHistogram : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -189,12 +189,12 @@ namespace Prometheus.Client.Contracts
         private double? __pbn__SampleSum;
 
         [global::ProtoBuf.ProtoMember(3, Name = @"bucket")]
-        public global::System.Collections.Generic.List<Bucket> Buckets { get; } = new global::System.Collections.Generic.List<Bucket>();
+        public global::System.Collections.Generic.List<CBucket> Buckets { get; } = new global::System.Collections.Generic.List<CBucket>();
 
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Bucket : global::ProtoBuf.IExtensible
+    public partial class CBucket : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -223,29 +223,29 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class Metric : global::ProtoBuf.IExtensible
+    public partial class CMetric : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
         [global::ProtoBuf.ProtoMember(1, Name = @"label")]
-        public global::System.Collections.Generic.List<LabelPair> Labels { get; set; } = new global::System.Collections.Generic.List<LabelPair>();
+        public global::System.Collections.Generic.List<CLabelPair> Labels { get; set; } = new global::System.Collections.Generic.List<CLabelPair>();
 
         [global::ProtoBuf.ProtoMember(2, Name = @"gauge")]
-        public Gauge Gauge { get; set; }
+        public CGauge CGauge { get; set; }
 
         [global::ProtoBuf.ProtoMember(3, Name = @"counter")]
-        public Counter Counter { get; set; }
+        public CCounter CCounter { get; set; }
 
         [global::ProtoBuf.ProtoMember(4, Name = @"summary")]
-        public Summary Summary { get; set; }
+        public CSummary CSummary { get; set; }
 
         [global::ProtoBuf.ProtoMember(5, Name = @"untyped")]
-        public Untyped Untyped { get; set; }
+        public CUntyped CUntyped { get; set; }
 
         [global::ProtoBuf.ProtoMember(7, Name = @"histogram")]
-        public Histogram Histogram { get; set; }
+        public CHistogram CHistogram { get; set; }
 
         [global::ProtoBuf.ProtoMember(6, Name = @"timestamp_ms")]
         public long TimestampMs
@@ -260,7 +260,7 @@ namespace Prometheus.Client.Contracts
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public partial class MetricFamily : global::ProtoBuf.IExtensible
+    public partial class CMetricFamily : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -289,23 +289,23 @@ namespace Prometheus.Client.Contracts
         private string __pbn__Help;
 
         [global::ProtoBuf.ProtoMember(3, Name = @"type")]
-        [global::System.ComponentModel.DefaultValue(MetricType.Counter)]
-        public MetricType Type
+        [global::System.ComponentModel.DefaultValue(CMetricType.Counter)]
+        public CMetricType Type
         {
-            get { return __pbn__Type ?? MetricType.Counter; }
+            get { return __pbn__Type ?? CMetricType.Counter; }
             set { __pbn__Type = value; }
         }
         public bool ShouldSerializeType() => __pbn__Type != null;
         public void ResetType() => __pbn__Type = null;
-        private MetricType? __pbn__Type;
+        private CMetricType? __pbn__Type;
 
         [global::ProtoBuf.ProtoMember(4, Name = @"metric")]
-        public global::System.Collections.Generic.List<Metric> Metrics { get; } = new global::System.Collections.Generic.List<Metric>();
+        public global::System.Collections.Generic.List<CMetric> Metrics { get; } = new global::System.Collections.Generic.List<CMetric>();
 
     }
 
     [global::ProtoBuf.ProtoContract()]
-    public enum MetricType
+    public enum CMetricType
     {
         [global::ProtoBuf.ProtoEnum(Name = @"COUNTER")]
         Counter = 0,

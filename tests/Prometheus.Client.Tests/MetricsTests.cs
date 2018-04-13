@@ -74,17 +74,17 @@ namespace Prometheus.Client.Tests
 
             foreach (var metric in metrics)
             {
-                Assert.Null(metric.Gauge);
-                Assert.Null(metric.Histogram);
-                Assert.Null(metric.Summary);
-                Assert.Null(metric.Untyped);
-                Assert.NotNull(metric.Counter);
+                Assert.Null(metric.CGauge);
+                Assert.Null(metric.CHistogram);
+                Assert.Null(metric.CSummary);
+                Assert.Null(metric.CUntyped);
+                Assert.NotNull(metric.CCounter);
             }
 
-            Assert.Equal(4.2, metrics[0].Counter.Value);
+            Assert.Equal(4.2, metrics[0].CCounter.Value);
             Assert.Equal(0, metrics[0].Labels.Count);
 
-            Assert.Equal(3.2, metrics[1].Counter.Value);
+            Assert.Equal(3.2, metrics[1].CCounter.Value);
             var labelPairs = metrics[1].Labels;
             Assert.Equal(1, labelPairs.Count);
             Assert.Equal("label1", labelPairs[0].Name);
@@ -99,18 +99,18 @@ namespace Prometheus.Client.Tests
             counter.Inc();
             counter.Inc(3.2);
             counter.Labels("test").Inc(1);
-            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].Counter.Value;
+            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
             Assert.Equal(4.2, counterValue);
 
             counter.Reset();
             var metricFamily = CollectorRegistry.Instance.CollectAll().ToArray()[0];
-            counterValue = metricFamily.Metrics[0].Counter.Value;
-            var counterValueLabeled = metricFamily.Metrics[1].Counter.Value;
+            counterValue = metricFamily.Metrics[0].CCounter.Value;
+            var counterValueLabeled = metricFamily.Metrics[1].CCounter.Value;
             Assert.Equal(0, counterValue);
             Assert.Equal(0, counterValueLabeled);
             
             counter.Inc();
-            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].Counter.Value;
+            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
             Assert.Equal(1, counterValue);      
         }
         
@@ -125,8 +125,8 @@ namespace Prometheus.Client.Tests
             counter1.Inc(3);
             counter2.Inc(4);
 
-            Assert.Equal(3, myRegistry.CollectAll().ToArray()[0].Metrics[0].Counter.Value); //counter1 == 3
-            Assert.Equal(4, CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].Counter.Value); //counter2 == 4
+            Assert.Equal(3, myRegistry.CollectAll().ToArray()[0].Metrics[0].CCounter.Value); //counter1 == 3
+            Assert.Equal(4, CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value); //counter2 == 4
         }
 
         [Fact]
@@ -148,14 +148,14 @@ namespace Prometheus.Client.Tests
             Assert.Equal(1, metrics.Count);
             foreach (var metric in metrics)
             {
-                Assert.Null(metric.Counter);
-                Assert.Null(metric.Histogram);
-                Assert.Null(metric.Summary);
-                Assert.Null(metric.Untyped);
-                Assert.NotNull(metric.Gauge);
+                Assert.Null(metric.CCounter);
+                Assert.Null(metric.CHistogram);
+                Assert.Null(metric.CSummary);
+                Assert.Null(metric.CUntyped);
+                Assert.NotNull(metric.CGauge);
             }
 
-            Assert.Equal(3.8, metrics[0].Gauge.Value);
+            Assert.Equal(3.8, metrics[0].CGauge.Value);
         }
 
         [Fact]
@@ -173,14 +173,14 @@ namespace Prometheus.Client.Tests
             histogram.Observe(3.9);
 
             var metric = histogram.Collect().Metrics[0];
-            Assert.NotNull(metric.Histogram);
-            Assert.Equal(9ul, metric.Histogram.SampleCount);
-            Assert.Equal(16.7, metric.Histogram.SampleSum);
-            Assert.Equal(4, metric.Histogram.Buckets.Count);
-            Assert.Equal(2ul, metric.Histogram.Buckets[0].CumulativeCount);
-            Assert.Equal(5ul, metric.Histogram.Buckets[1].CumulativeCount);
-            Assert.Equal(8ul, metric.Histogram.Buckets[2].CumulativeCount);
-            Assert.Equal(9ul, metric.Histogram.Buckets[3].CumulativeCount);
+            Assert.NotNull(metric.CHistogram);
+            Assert.Equal(9ul, metric.CHistogram.SampleCount);
+            Assert.Equal(16.7, metric.CHistogram.SampleSum);
+            Assert.Equal(4, metric.CHistogram.Buckets.Count);
+            Assert.Equal(2ul, metric.CHistogram.Buckets[0].CumulativeCount);
+            Assert.Equal(5ul, metric.CHistogram.Buckets[1].CumulativeCount);
+            Assert.Equal(8ul, metric.CHistogram.Buckets[2].CumulativeCount);
+            Assert.Equal(9ul, metric.CHistogram.Buckets[3].CumulativeCount);
         }
 
         [Fact]
@@ -231,9 +231,9 @@ namespace Prometheus.Client.Tests
             summary.Observe(3);
 
             var metric = summary.Collect().Metrics[0];
-            Assert.NotNull(metric.Summary);
-            Assert.Equal(3ul, metric.Summary.SampleCount);
-            Assert.Equal(6, metric.Summary.SampleSum);
+            Assert.NotNull(metric.CSummary);
+            Assert.Equal(3ul, metric.CSummary.SampleCount);
+            Assert.Equal(6, metric.CSummary.SampleSum);
         }
     }
 }

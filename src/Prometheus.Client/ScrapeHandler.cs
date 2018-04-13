@@ -14,7 +14,7 @@ namespace Prometheus.Client
         private const string _protoAcceptType = "application/vnd.google.protobuf";
 
         public static void ProcessScrapeRequest(
-            IEnumerable<MetricFamily> collected,
+            IEnumerable<CMetricFamily> collected,
             string contentType,
             Stream outputStream)
         {

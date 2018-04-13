@@ -8,7 +8,7 @@ namespace Prometheus.Client.Internal
 {
     internal static class ProtoFormatter
     {
-        public static void Format(Stream destination, IEnumerable<MetricFamily> metrics)
+        public static void Format(Stream destination, IEnumerable<CMetricFamily> metrics)
         {
             var metricFamilys = metrics.ToArray();
             foreach (var metricFamily in metricFamilys)

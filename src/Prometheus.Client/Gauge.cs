@@ -33,7 +33,7 @@ namespace Prometheus.Client
         {
         }
 
-        protected override MetricType Type => MetricType.Gauge;
+        protected override CMetricType Type => CMetricType.Gauge;
 
         public void Inc()
         {
@@ -96,9 +96,9 @@ namespace Prometheus.Client
             public double Value => _value.Value;
 
 
-            protected override void Populate(Metric metric)
+            protected override void Populate(CMetric cMetric)
             {
-                metric.Gauge = new Contracts.Gauge { Value = Value };
+                cMetric.CGauge = new Contracts.CGauge { Value = Value };
             }
         }
     }

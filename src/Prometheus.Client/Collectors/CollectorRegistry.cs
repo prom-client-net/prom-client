@@ -23,7 +23,7 @@ namespace Prometheus.Client.Collectors
             }
         }
 
-        public IEnumerable<MetricFamily> CollectAll()
+        public IEnumerable<CMetricFamily> CollectAll()
         {
             foreach (var onDemandCollector in _onDemandCollectors)
             {

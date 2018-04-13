@@ -52,7 +52,7 @@ namespace Prometheus.Client
 
         private readonly IList<QuantileEpsilonPair> _objectives;
 
-        protected override MetricType Type => MetricType.Summary;
+        protected override CMetricType Type => CMetricType.Summary;
 
         internal Summary(
             string name,
@@ -140,7 +140,7 @@ namespace Prometheus.Client
             private QuantileStream[] _streams;
             private double _sum;
 
-            private Contracts.Summary _wireMetric;
+            private Contracts.CSummary _wireMetric;
 
             public void Observe(double val)
             {
@@ -179,24 +179,24 @@ namespace Prometheus.Client
 
                 Array.Sort(_sortedObjectives);
 
-                _wireMetric = new Contracts.Summary();
+                _wireMetric = new Contracts.CSummary();
 
                 foreach (var quantileEpsilonPair in _objectives)
-                    _wireMetric.Quantiles.Add(new Quantile
+                    _wireMetric.Quantiles.Add(new CQuantile
                     {
-                        quantile = quantileEpsilonPair.Quantile
+                        Quantile = quantileEpsilonPair.Quantile
                     });
             }
 
-            protected override void Populate(Metric metric)
+            protected override void Populate(CMetric cMetric)
             {
-                Populate(metric, DateTime.UtcNow);
+                Populate(cMetric, DateTime.UtcNow);
             }
 
-            internal void Populate(Metric metric, DateTime now)
+            internal void Populate(CMetric cMetric, DateTime now)
             {
-                var summary = new Contracts.Summary();
-                var quantiles = new Quantile[_objectives.Count];
+                var summary = new Contracts.CSummary();
+                var quantiles = new CQuantile[_objectives.Count];
 
                 lock (_bufLock)
                 {
@@ -213,9 +213,9 @@ namespace Prometheus.Client
                             var rank = _sortedObjectives[idx];
                             var q = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
 
-                            quantiles[idx] = new Quantile
+                            quantiles[idx] = new CQuantile
                             {
-                                quantile = rank,
+                                Quantile = rank,
                                 Value = q
                             };
                         }
@@ -228,7 +228,7 @@ namespace Prometheus.Client
                 foreach (var quantile in quantiles)
                     summary.Quantiles.Add(quantile);
 
-                metric.Summary = summary;
+                cMetric.CSummary = summary;
             }
 
             /// <summary>
