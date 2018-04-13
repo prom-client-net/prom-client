@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>.NET client for prometheus.io</Description>
-    <Copyright>2017 © Sergey Kuznetsov</Copyright>
+    <Copyright>2018 © Sergey Kuznetsov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
     <VersionPrefix>1.4.2</VersionPrefix>
     <Authors>Sergey Kuznetsov</Authors>
@@ -37,11 +37,5 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDART13</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDART20</DefineConstants>
   </PropertyGroup>
 </Project>
