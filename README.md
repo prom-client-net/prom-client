@@ -5,7 +5,8 @@
 
 [![codecov](https://codecov.io/gh/phnx47/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/phnx47/Prometheus.Client)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7e275fc9eb5d4f47896a3b6eb28c8536)](https://www.codacy.com/app/phnx47/Prometheus.Client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=phnx47/Prometheus.Client&amp;utm_campaign=Badge_Grade)
-[![Build status](https://ci.appveyor.com/api/projects/status/ik6p8hv9he1cl0a9?svg=true)](https://ci.appveyor.com/project/phnx47/prometheus-client) [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
+[![Build status](https://ci.appveyor.com/api/projects/status/cyvjrbn46ju827a9/branch/master?svg=true)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
 .NET Client library(unofficial) for [prometheus.io](https://prometheus.io/)  
 
