@@ -33,6 +33,13 @@ Extension for collect http request duration from all requests: [Prometheus.Clien
 
 ## Quik start
 
+[Examples](https://github.com/PrometheusClientNet/Prometheus.Client.Examples)
+
+[Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
+
+
+With Prometheus.Client.Owin:
+
 ```csharp
 
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
@@ -68,9 +75,6 @@ Without extensions:
 
 ```
 
-
-
-See prometheus [here](http://prometheus.io/)
 
 
 ### Instrumenting
