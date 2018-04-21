@@ -3,7 +3,7 @@
     <Description>.NET client for prometheus.io</Description>
     <Copyright>2018 © Sergey Kuznetsov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
-    <VersionPrefix>1.4.2</VersionPrefix>
+    <VersionPrefix>1.4.3</VersionPrefix>
     <Authors>Sergey Kuznetsov</Authors>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.3;netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net45;netstandard1.3;netstandard2.0</TargetFrameworks>
@@ -13,6 +13,7 @@
     <PackageIconUrl>https://image.ibb.co/k4Sc0k/prometheus.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/phnx47/Prometheus.Client</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/PrometheusClientNet/Prometheus.Client/releases</PackageReleaseNotes>  
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/phnx47/Prometheus.Client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
