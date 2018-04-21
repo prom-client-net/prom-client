@@ -3,7 +3,7 @@ image: Visual Studio 2017
 
 environment:
   codecov_token:
-    secure: c4DdGMVjNUkHPhOFX7Ldbq5Wqq5AxZ37eDEff2TIkWF2yOekErQlBaNNXzbW3yqt
+    secure: 9r326GKcztgp9eYioLRPaiZq2MHgCs/xaJk17JCtMDkwnZsaOQOJeJDWen3OTLse
 
 skip_commits:
   files:
@@ -32,14 +32,14 @@ artifacts:
 deploy:
 - provider: NuGet
   api_key:
-    secure: vukCl5k+S4fJtqeYNiB9ufy/NUCw+60cPcqnPoqvykBjSo8Ub8QtEfZNN9qvj5Jh
+    secure: zRa2gcYSMh0ddc8hB61BbGf7Z3Zx0y106S4XIkOWPPAFg3DmNP4qt+9LEDgKXteO
   artifact: NuGet
   on:
     appveyor_repo_tag: true   
 - provider: NuGet
   server: https://www.myget.org/F/phnx47-beta/api/v2/package
   api_key:
-    secure: sra89qUYhiuc146gUszl0lg1u3tWG1Zc65B7lgVuZlIfxyq/3w4q3mkXeBiLpNA5
+    secure: Smuwoi47XyX6b6x66VpPnnL96F3cl1nukALrFnZo1Oony38dzouByG7pnt6DX4HT
   symbol_server: https://www.myget.org/F/phnx47-beta/symbols/api/v2/package
   artifact: MyGet
   on:

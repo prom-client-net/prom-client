@@ -15,20 +15,20 @@ It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net
 
 ## Installation
 
-    Install-Package Prometheus.Client
+    dotnet add package Prometheus.Client
 
 
 Extension for WEB: [Prometheus.Client.Owin](https://github.com/phnx47/Prometheus.Client.Owin)
 
-	Install-Package Prometheus.Client.Owin
+	dotnet add package Prometheus.Client.Owin
 
 Extension for Standalone host: [Prometheus.Client.MetricServer](https://github.com/phnx47/Prometheus.Client.MetricServer)
 
-	Install-Package Prometheus.Client.MetricServer
+	dotnet add package Prometheus.Client.MetricServer
 
 Extension for collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/phnx47/Prometheus.Client.HttpRequestDurations)
 
-	Install-Package Prometheus.Client.HttpRequestDurations
+	dotnet add package Prometheus.Client.HttpRequestDurations
 
 ## Quik start
 
