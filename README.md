@@ -19,15 +19,19 @@ It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net
     dotnet add package Prometheus.Client
 
 
-Extension for WEB: [Prometheus.Client.Owin](https://github.com/phnx47/Prometheus.Client.Owin)
+Extension for WEB [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
 
 	dotnet add package Prometheus.Client.Owin
+	
+Extension for WEB: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
+	
+	dotnet add package Prometheus.Client.AspNetCore
 
-Extension for Standalone host: [Prometheus.Client.MetricServer](https://github.com/phnx47/Prometheus.Client.MetricServer)
+Extension for Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
 
 	dotnet add package Prometheus.Client.MetricServer
 
-Extension for collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/phnx47/Prometheus.Client.HttpRequestDurations)
+Extension for collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
 
 	dotnet add package Prometheus.Client.HttpRequestDurations
 
@@ -38,14 +42,13 @@ Extension for collect http request duration from all requests: [Prometheus.Clien
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
 
-With Prometheus.Client.Owin:
+With Prometheus.Client.AspNetCore:
 
 ```csharp
 
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
 {
-    var options = new PrometheusOptions();
-    app.UsePrometheusServer(options);
+    app.UsePrometheusServer();
 }
 
 ```
