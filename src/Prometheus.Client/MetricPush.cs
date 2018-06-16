@@ -9,7 +9,9 @@ namespace Prometheus.Client
 {
     public class MetricPush
     {
-        public static string ContentType = "text/plain; version=0.0.4";
+        protected MetricPush(){}
+
+        private static readonly string ContentType = "text/plain; version=0.0.4";
 
         /// <summary>
         /// Push metrics to single pushgateway endpoint
@@ -34,9 +36,10 @@ namespace Prometheus.Client
         /// <returns></returns>
         public static async Task PushAsync(string[] endpoints, string job, string instance, string contentType)
         {
+            string cntType = null;
             if (string.IsNullOrEmpty(contentType))
             {
-                contentType = ContentType;
+                cntType = ContentType;
             }
             if (string.IsNullOrEmpty(job))
             {
@@ -45,7 +48,7 @@ namespace Prometheus.Client
 
             var metrics = CollectorRegistry.Instance.CollectAll();
             var memoryStream = new MemoryStream();
-            ScrapeHandler.ProcessScrapeRequest(metrics, contentType, memoryStream);
+            ScrapeHandler.ProcessScrapeRequest(metrics, cntType, memoryStream);
             memoryStream.Position = 0;
             var streamContent = new StreamContent(memoryStream);
 
