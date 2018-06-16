@@ -23,6 +23,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1591</NoWarn>
+    <Version>1.5.2</Version>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
@@ -35,6 +36,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.3.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>
