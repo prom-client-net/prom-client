@@ -9,7 +9,7 @@ namespace Prometheus.Client
 {
     public class MetricPush
     {
-        public const string ContentType = "text/plain; version=0.0.4";
+        public static string ContentType = "text/plain; version=0.0.4";
 
         /// <summary>
         /// Push metrics to single pushgateway endpoint
@@ -19,9 +19,9 @@ namespace Prometheus.Client
         /// <param name="instance">instance</param>
         /// <param name="contentType">Content-Type</param>
         /// <returns></returns>
-        public async Task PushAsync(string endpoint, string job, string instance, string contentType = ContentType)
+        public static async Task PushAsync(string endpoint, string job, string instance, string contentType)
         {
-            await PushAsync(new[] {endpoint}, job, instance, contentType);
+            await PushAsync(new[] {endpoint}, job, instance, contentType).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -32,8 +32,12 @@ namespace Prometheus.Client
         /// <param name="instance">instance name</param>
         /// <param name="contentType">content-type</param>
         /// <returns></returns>
-        public async Task PushAsync(string[] endpoints, string job, string instance, string contentType = ContentType)
+        public static async Task PushAsync(string[] endpoints, string job, string instance, string contentType)
         {
+            if (string.IsNullOrEmpty(contentType))
+            {
+                contentType = ContentType;
+            }
             if (string.IsNullOrEmpty(job))
             {
                 throw new ArgumentNullException(nameof(job));
@@ -69,11 +73,11 @@ namespace Prometheus.Client
                 tasks.Add(httpClient.PostAsync(targetUrl, streamContent));
             }
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             foreach (var task in tasks)
             {
-                var response = await task;
+                var response = await task.ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
             }
         }
