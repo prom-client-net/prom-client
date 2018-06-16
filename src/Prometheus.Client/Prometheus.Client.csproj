@@ -13,7 +13,7 @@
     <PackageIconUrl>https://image.ibb.co/k4Sc0k/prometheus.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/PrometheusClientNet/Prometheus.Client</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <PackageReleaseNotes>https://github.com/PrometheusClientNet/Prometheus.Client/releases</PackageReleaseNotes>  
+    <PackageReleaseNotes>https://github.com/PrometheusClientNet/Prometheus.Client/releases</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/PrometheusClientNet/Prometheus.Client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
