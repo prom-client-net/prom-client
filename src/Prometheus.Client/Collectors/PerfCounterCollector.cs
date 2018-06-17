@@ -39,7 +39,6 @@ namespace Prometheus.Client.Collectors
         public PerfCounterCollector()
             : this(Metrics.DefaultFactory)
         {
-
         }
 
         /// <summary>
@@ -67,7 +66,8 @@ namespace Prometheus.Client.Collectors
                 RegisterPerfCounter(category, name);
             }
 
-            _perfErrors = _metricFactory.CreateCounter("performance_counter_errors_total", "Total number of errors that occured during performance counter collections");
+            _perfErrors = _metricFactory.CreateCounter("performance_counter_errors_total",
+                "Total number of errors that occured during performance counter collections");
         }
 
         /// <summary>

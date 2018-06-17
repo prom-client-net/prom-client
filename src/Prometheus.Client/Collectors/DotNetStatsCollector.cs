@@ -23,7 +23,6 @@ namespace Prometheus.Client.Collectors
         public DotNetStatsCollector()
             : this(Metrics.DefaultFactory)
         {
-            
         }
 
         /// <summary>

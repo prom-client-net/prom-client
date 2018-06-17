@@ -29,7 +29,7 @@ namespace Prometheus.Client.Collectors
             {
                 onDemandCollector.UpdateMetrics();
             }
-            
+
             foreach (var value in _collectors.Values)
             {
                 var c = value.Collect();

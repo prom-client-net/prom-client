@@ -156,10 +156,10 @@ namespace Prometheus.Client
             {
                 base.Init(parent, labelValues);
 
-                _objectives = ((Summary)parent)._objectives;
-                _maxAge = ((Summary)parent)._maxAge;
-                _ageBuckets = ((Summary)parent)._ageBuckets;
-                _bufCap = ((Summary)parent)._bufCap;
+                _objectives = ((Summary) parent)._objectives;
+                _maxAge = ((Summary) parent)._maxAge;
+                _ageBuckets = ((Summary) parent)._ageBuckets;
+                _bufCap = ((Summary) parent)._bufCap;
 
                 _sortedObjectives = new double[_objectives.Count];
                 _hotBuf = new SampleBuffer(_bufCap);

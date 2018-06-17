@@ -46,12 +46,12 @@ namespace Prometheus.Client.Tests
 
             foreach (var target in _targets)
             {
-                var n = (double)a.Length;
-                var k = (int)(target.Quantile * n);
-                var lower = (int)((target.Quantile - target.Epsilon) * n);
+                var n = (double) a.Length;
+                var k = (int) (target.Quantile * n);
+                var lower = (int) ((target.Quantile - target.Epsilon) * n);
                 if (lower < 1)
                     lower = 1;
-                var upper = (int)Math.Ceiling((target.Quantile + target.Epsilon) * n);
+                var upper = (int) Math.Ceiling((target.Quantile + target.Epsilon) * n);
                 if (upper > a.Length)
                     upper = a.Length;
 
@@ -72,11 +72,11 @@ namespace Prometheus.Client.Tests
 
             foreach (var qu in _lowQuantiles)
             {
-                var n = (double)a.Length;
-                var k = (int)(qu * n);
+                var n = (double) a.Length;
+                var k = (int) (qu * n);
 
-                var lowerRank = (int)((1 - _relativeEpsilon) * qu * n);
-                var upperRank = (int)Math.Ceiling((1 + _relativeEpsilon) * qu * n);
+                var lowerRank = (int) ((1 - _relativeEpsilon) * qu * n);
+                var upperRank = (int) Math.Ceiling((1 + _relativeEpsilon) * qu * n);
 
                 var w = a[k - 1];
                 var min = a[lowerRank - 1];
@@ -96,11 +96,11 @@ namespace Prometheus.Client.Tests
 
             foreach (var qu in _highQuantiles)
             {
-                var n = (double)a.Length;
-                var k = (int)(qu * n);
+                var n = (double) a.Length;
+                var k = (int) (qu * n);
 
-                var lowerRank = (int)((1 - (1 + _relativeEpsilon) * (1 - qu)) * n);
-                var upperRank = (int)Math.Ceiling((1 - (1 - _relativeEpsilon) * (1 - qu)) * n);
+                var lowerRank = (int) ((1 - (1 + _relativeEpsilon) * (1 - qu)) * n);
+                var upperRank = (int) Math.Ceiling((1 - (1 - _relativeEpsilon) * (1 - qu)) * n);
                 var w = a[k - 1];
                 var min = a[lowerRank - 1];
                 var max = a[upperRank - 1];

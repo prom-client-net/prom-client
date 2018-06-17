@@ -32,7 +32,8 @@ namespace Prometheus.Client
             return (Summary) _registry.GetOrAdd(metric);
         }
 
-        public Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        public Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+            int? bufCap)
         {
             var metric = new Summary(name, help, labelNames, objectives, maxAge, ageBuckets, bufCap);
             return (Summary) _registry.GetOrAdd(metric);
@@ -42,7 +43,7 @@ namespace Prometheus.Client
         {
             return CreateHistogram(name, help, null, labelNames);
         }
-        
+
         public Histogram CreateHistogram(string name, string help, double[] buckets, params string[] labelNames)
         {
             var metric = new Histogram(name, help, labelNames, buckets);

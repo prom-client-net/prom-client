@@ -38,12 +38,12 @@ namespace Prometheus.Client.Internal
         {
             return Value.ToString(CultureInfo.InvariantCulture);
         }
-        
+
         public bool Equals(ThreadSafeDouble threadSafeLong)
         {
             return Value.Equals(threadSafeLong.Value);
         }
-        
+
         public override bool Equals(object obj)
         {
             if (obj is ThreadSafeDouble d)
