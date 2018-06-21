@@ -97,7 +97,7 @@ namespace Prometheus.Client
             Exception exception = null;
             foreach (var task in tasks)
             {
-                var response = await task;
+                var response = await task.ConfigureAwait(false);
                 try
                 {
                     response.EnsureSuccessStatusCode();

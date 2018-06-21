@@ -54,6 +54,11 @@ namespace Prometheus.Client.Tests
     {
         protected BaseMetricPushServiceTest()
         {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             Arrange();
             Act();
         }
@@ -81,7 +86,7 @@ namespace Prometheus.Client.Tests
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            return await _handler(request);
+            return await _handler(request).ConfigureAwait(false);
         }
     }
 }
