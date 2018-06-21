@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Prometheus.Client.Internal
         public static void Format(Stream destination, IEnumerable<CMetricFamily> metrics)
         {
             var metricFamilys = metrics.ToArray();
-            using (var streamWriter = new StreamWriter(destination, _encoding))
+            using (var streamWriter = new StreamWriter(destination, _encoding, 1024, true))
             {
                 streamWriter.NewLine = "\n";
                 foreach (var metricFamily in metricFamilys)
