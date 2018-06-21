@@ -39,7 +39,8 @@ namespace Prometheus.Client
         /// <summary>
         ///     Create Summary in default MetricFactory
         /// </summary>
-        public static Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        public static Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge,
+            int? ageBuckets, int? bufCap)
         {
             return DefaultFactory.CreateSummary(name, help, labelNames, objectives, maxAge, ageBuckets, bufCap);
         }
@@ -51,7 +52,7 @@ namespace Prometheus.Client
         {
             return CreateHistogram(name, help, null, labelNames);
         }
-        
+
         /// <summary>
         ///     Create Histogram in default MetricFactory
         /// </summary>

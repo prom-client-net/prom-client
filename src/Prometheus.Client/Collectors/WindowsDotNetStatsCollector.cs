@@ -24,7 +24,6 @@ namespace Prometheus.Client.Collectors
         public WindowsDotNetStatsCollector()
             : this(Metrics.DefaultFactory)
         {
-
         }
 
         /// <summary>

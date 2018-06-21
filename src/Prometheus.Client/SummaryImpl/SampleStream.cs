@@ -24,7 +24,7 @@ namespace Prometheus.Client.SummaryImpl
 
             double r = 0;
             var i = 0;
-            
+
             for (var sampleIdx = 0; sampleIdx < samples.Count; sampleIdx++)
             {
                 var sample = samples[sampleIdx];
@@ -36,13 +36,16 @@ namespace Prometheus.Client.SummaryImpl
                     if (c.Value > sample.Value)
                     {
                         // Insert at position i
-                        _samples.Insert(i, new Sample {Value = sample.Value, Width = sample.Width, Delta = Math.Max(sample.Delta, Math.Floor(_invariant(this, r))-1)});
+                        _samples.Insert(i,
+                            new Sample { Value = sample.Value, Width = sample.Width, Delta = Math.Max(sample.Delta, Math.Floor(_invariant(this, r)) - 1) });
                         i++;
                         goto inserted;
                     }
+
                     r += c.Width;
                 }
-                _samples.Add(new Sample {Value = sample.Value, Width = sample.Width, Delta = 0});
+
+                _samples.Add(new Sample { Value = sample.Value, Width = sample.Width, Delta = 0 });
                 i++;
 
                 inserted:
@@ -89,12 +92,12 @@ namespace Prometheus.Client.SummaryImpl
             N = 0;
         }
 
-        public int Count => (int)N;
+        public int Count => (int) N;
 
         public double Query(double q)
         {
-            var t = Math.Ceiling(q*N);
-            t += Math.Ceiling(_invariant(this, t)/2);
+            var t = Math.Ceiling(q * N);
+            t += Math.Ceiling(_invariant(this, t) / 2);
             var p = _samples[0];
             double r = 0;
 

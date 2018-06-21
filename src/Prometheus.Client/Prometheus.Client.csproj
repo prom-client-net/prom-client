@@ -3,7 +3,7 @@
     <Description>.NET client for prometheus.io</Description>
     <Copyright>2018 © Sergey Kuznetsov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
-    <VersionPrefix>1.5.1</VersionPrefix>
+    <VersionPrefix>1.5.3</VersionPrefix>
     <Authors>Sergey Kuznetsov</Authors>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.3;netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net45;netstandard1.3;netstandard2.0</TargetFrameworks>
@@ -13,7 +13,7 @@
     <PackageIconUrl>https://image.ibb.co/k4Sc0k/prometheus.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/PrometheusClientNet/Prometheus.Client</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <PackageReleaseNotes>https://github.com/PrometheusClientNet/Prometheus.Client/releases</PackageReleaseNotes>  
+    <PackageReleaseNotes>https://github.com/PrometheusClientNet/Prometheus.Client/releases</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/PrometheusClientNet/Prometheus.Client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -36,9 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.3.7" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>

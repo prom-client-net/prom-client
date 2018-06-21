@@ -36,7 +36,7 @@ namespace Prometheus.Client.Internal
         {
             return Value.Equals(threadSafeLong.Value);
         }
-        
+
         public override bool Equals(object obj)
         {
             if (obj is ThreadSafeLong l)
