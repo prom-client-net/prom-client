@@ -25,7 +25,7 @@ namespace Prometheus.Client
     /// </summary>
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
-        private static readonly double[] _defaultBuckets = {.005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10};
+        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
         private readonly double[] _buckets;
 
         internal Histogram(string name, string help, string[] labelNames, double[] buckets = null)
@@ -35,6 +35,7 @@ namespace Prometheus.Client
             {
                 throw new ArgumentException("'le' is a reserved label name");
             }
+
             _buckets = buckets ?? _defaultBuckets;
 
             if (_buckets.Length == 0)
@@ -44,7 +45,7 @@ namespace Prometheus.Client
 
             if (!double.IsPositiveInfinity(_buckets[_buckets.Length - 1]))
             {
-                _buckets = _buckets.Concat(new[] {double.PositiveInfinity}).ToArray();
+                _buckets = _buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
             }
 
             for (var i = 1; i < _buckets.Length; i++)
@@ -82,7 +83,7 @@ namespace Prometheus.Client
 
             protected override void Populate(CMetric cMetric)
             {
-                var wireMetric = new Contracts.CHistogram {SampleCount = 0L};
+                var wireMetric = new Contracts.CHistogram { SampleCount = 0L };
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {
@@ -93,6 +94,7 @@ namespace Prometheus.Client
                         CumulativeCount = wireMetric.SampleCount
                     });
                 }
+
                 wireMetric.SampleSum = _sum.Value;
 
                 cMetric.CHistogram = wireMetric;
@@ -102,7 +104,7 @@ namespace Prometheus.Client
             {
                 if (double.IsNaN(val))
                     return;
-                
+
 
                 for (var i = 0; i < _upperBounds.Length; i++)
                 {
@@ -112,6 +114,7 @@ namespace Prometheus.Client
                         break;
                     }
                 }
+
                 _sum.Add(val);
             }
         }

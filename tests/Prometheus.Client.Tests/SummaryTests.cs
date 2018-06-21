@@ -85,7 +85,8 @@ namespace Prometheus.Client.Tests
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            var sum = new Summary("test_summary", "helpless", new string[0], objectives: new List<QuantileEpsilonPair> {new QuantileEpsilonPair(0.1d, 0.001d)}, maxAge: TimeSpan.FromSeconds(100), ageBuckets: 10);
+            var sum = new Summary("test_summary", "helpless", new string[0],
+                objectives: new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, maxAge: TimeSpan.FromSeconds(100), ageBuckets: 10);
             var child = new Summary.ThisChild();
             child.Init(sum, LabelValues.Empty, baseTime);
 
@@ -134,6 +135,7 @@ namespace Prometheus.Client.Tests
                     expectedSum += observation;
                 }
             }
+
             var metric = new CMetric();
             summary.Populate(metric, DateTime.UtcNow);
             var m = metric.CSummary;

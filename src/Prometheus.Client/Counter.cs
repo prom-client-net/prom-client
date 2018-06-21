@@ -35,14 +35,14 @@ namespace Prometheus.Client
         {
             Inc(1.0D);
         }
-        
+
         public void Inc(double increment)
         {
             Unlabelled.Inc(increment);
         }
 
         public double Value => Unlabelled.Value;
-        
+
         public void Reset()
         {
             Unlabelled.ResetValue();
@@ -53,7 +53,7 @@ namespace Prometheus.Client
         }
 
         protected override CMetricType Type => CMetricType.Counter;
-        
+
         public class ThisChild : Child, ICounter
         {
             private ThreadSafeDouble _value;
@@ -67,7 +67,7 @@ namespace Prometheus.Client
             {
                 Inc(1.0D);
             }
-            
+
             public void Inc(double increment)
             {
                 if (increment < 0.0D)
@@ -77,7 +77,7 @@ namespace Prometheus.Client
             }
 
             public double Value => _value.Value;
-            
+
             internal void ResetValue()
             {
                 _value.Value = 0.0D;

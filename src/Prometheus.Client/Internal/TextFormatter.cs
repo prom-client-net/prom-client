@@ -72,8 +72,11 @@ namespace Prometheus.Client.Internal
 
                 foreach (var quantileValuePair in cMetric.CSummary.Quantiles)
                 {
-                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile) ? "+Inf" : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
-                    streamWriter.WriteLine(SimpleValue(familyName, quantileValuePair.Value, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "quantile", Value = quantile}})));
+                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile)
+                        ? "+Inf"
+                        : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
+                    streamWriter.WriteLine(SimpleValue(familyName, quantileValuePair.Value,
+                        cMetric.Labels.Concat(new[] { new CLabelPair { Name = "quantile", Value = quantile } })));
                 }
             }
             else if (cMetric.CHistogram != null)
@@ -83,7 +86,8 @@ namespace Prometheus.Client.Internal
                 foreach (var bucket in cMetric.CHistogram.Buckets)
                 {
                     var value = double.IsPositiveInfinity(bucket.UpperBound) ? "+Inf" : bucket.UpperBound.ToString(CultureInfo.InvariantCulture);
-                    streamWriter.WriteLine(SimpleValue(familyName, bucket.CumulativeCount, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "le", Value = value}}), "_bucket"));
+                    streamWriter.WriteLine(SimpleValue(familyName, bucket.CumulativeCount,
+                        cMetric.Labels.Concat(new[] { new CLabelPair { Name = "le", Value = value } }), "_bucket"));
                 }
             }
         }
@@ -108,8 +112,11 @@ namespace Prometheus.Client.Internal
 
                 foreach (var quantileValuePair in cMetric.CSummary.Quantiles)
                 {
-                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile) ? "+Inf" : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
-                    s.AppendLine(SimpleValue(familyName, quantileValuePair.Value, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "quantile", Value = quantile}})));
+                    var quantile = double.IsPositiveInfinity(quantileValuePair.Quantile)
+                        ? "+Inf"
+                        : quantileValuePair.Quantile.ToString(CultureInfo.InvariantCulture);
+                    s.AppendLine(SimpleValue(familyName, quantileValuePair.Value,
+                        cMetric.Labels.Concat(new[] { new CLabelPair { Name = "quantile", Value = quantile } })));
                 }
             }
             else if (cMetric.CHistogram != null)
@@ -119,7 +126,8 @@ namespace Prometheus.Client.Internal
                 foreach (var bucket in cMetric.CHistogram.Buckets)
                 {
                     var value = double.IsPositiveInfinity(bucket.UpperBound) ? "+Inf" : bucket.UpperBound.ToString(CultureInfo.InvariantCulture);
-                    s.AppendLine(SimpleValue(familyName, bucket.CumulativeCount, cMetric.Labels.Concat(new[] {new CLabelPair {Name = "le", Value = value}}), "_bucket"));
+                    s.AppendLine(SimpleValue(familyName, bucket.CumulativeCount, cMetric.Labels.Concat(new[] { new CLabelPair { Name = "le", Value = value } }),
+                        "_bucket"));
                 }
             }
 

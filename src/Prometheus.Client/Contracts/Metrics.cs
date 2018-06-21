@@ -11,11 +11,11 @@
 
 namespace Prometheus.Client.Contracts
 {
-
     [global::ProtoBuf.ProtoContract()]
     public partial class CLabelPair : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -40,13 +40,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeValue() => __pbn__Value != null;
         public void ResetValue() => __pbn__Value = null;
         private string __pbn__Value;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CGauge : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -59,13 +59,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeValue() => __pbn__Value != null;
         public void ResetValue() => __pbn__Value = null;
         private double? __pbn__Value;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CCounter : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -78,13 +78,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeValue() => __pbn__Value != null;
         public void ResetValue() => __pbn__Value = null;
         private double? __pbn__Value;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CQuantile : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -107,13 +107,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeValue() => __pbn__Value != null;
         public void ResetValue() => __pbn__Value = null;
         private double? __pbn__Value;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CSummary : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -139,13 +139,13 @@ namespace Prometheus.Client.Contracts
 
         [global::ProtoBuf.ProtoMember(3, Name = @"quantile")]
         public global::System.Collections.Generic.List<CQuantile> Quantiles { get; } = new global::System.Collections.Generic.List<CQuantile>();
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CUntyped : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -158,13 +158,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeValue() => __pbn__Value != null;
         public void ResetValue() => __pbn__Value = null;
         private double? __pbn__Value;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CHistogram : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -190,13 +190,13 @@ namespace Prometheus.Client.Contracts
 
         [global::ProtoBuf.ProtoMember(3, Name = @"bucket")]
         public global::System.Collections.Generic.List<CBucket> Buckets { get; } = new global::System.Collections.Generic.List<CBucket>();
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CBucket : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -219,13 +219,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeUpperBound() => __pbn__UpperBound != null;
         public void ResetUpperBound() => __pbn__UpperBound = null;
         private double? __pbn__UpperBound;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CMetric : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -256,13 +256,13 @@ namespace Prometheus.Client.Contracts
         public bool ShouldSerializeTimestampMs() => __pbn__TimestampMs != null;
         public void ResetTimestampMs() => __pbn__TimestampMs = null;
         private long? __pbn__TimestampMs;
-
     }
 
     [global::ProtoBuf.ProtoContract()]
     public partial class CMetricFamily : global::ProtoBuf.IExtensible
     {
         private global::ProtoBuf.IExtension __pbn__extensionData;
+
         global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
             => global::ProtoBuf.Extensible.GetExtensionObject(ref __pbn__extensionData, createIfMissing);
 
@@ -301,7 +301,6 @@ namespace Prometheus.Client.Contracts
 
         [global::ProtoBuf.ProtoMember(4, Name = @"metric")]
         public global::System.Collections.Generic.List<CMetric> Metrics { get; } = new global::System.Collections.Generic.List<CMetric>();
-
     }
 
     [global::ProtoBuf.ProtoContract()]
@@ -318,7 +317,6 @@ namespace Prometheus.Client.Contracts
         [global::ProtoBuf.ProtoEnum(Name = @"HISTOGRAM")]
         Histogram = 4,
     }
-
 }
 
 #pragma warning restore CS1591, CS0612, CS3021

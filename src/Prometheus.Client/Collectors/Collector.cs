@@ -10,10 +10,10 @@ namespace Prometheus.Client.Collectors
     public abstract class Collector<T> : ICollector where T : Child, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-        
+
         private readonly string _help;
         private readonly Lazy<T> _unlabelledLazy;
-        
+
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
         private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
@@ -24,7 +24,7 @@ namespace Prometheus.Client.Collectors
 
         public string Name { get; }
         public string[] LabelNames { get; }
-        
+
         public T Labels(params string[] labelValues)
         {
             var key = new LabelValues(LabelNames, labelValues);
@@ -49,14 +49,14 @@ namespace Prometheus.Client.Collectors
 
             if (!_metricNameLabelRegex.IsMatch(name))
                 throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
-            
+
             foreach (var labelName in labelNames)
             {
                 if (!_metricNameLabelRegex.IsMatch(labelName))
                     throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
-                
+
                 if (_reservedLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Labels starting with double underscore are reserved!"); 
+                    throw new ArgumentException("Labels starting with double underscore are reserved!");
             }
 
             _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(_emptyLabelValues));

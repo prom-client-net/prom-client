@@ -27,7 +27,7 @@ namespace Prometheus.Client.Collectors
             for (var i = 0; i < values.Length; i++)
                 _values[i] = values[i] ?? "";
 
-            WireLabels = new List<CLabelPair>(names.Zip(values, (s, s1) => new CLabelPair {Name = s, Value = s1}));
+            WireLabels = new List<CLabelPair>(names.Zip(values, (s, s1) => new CLabelPair { Name = s, Value = s1 }));
 
             // Calculating the hash code is fast but we don't need to re-calculate it for each comparison this object is involved in.
             // Label values are fixed- caluclate it once up-front and remember the value.
@@ -78,6 +78,7 @@ namespace Prometheus.Client.Collectors
                 {
                     hashCode ^= values[i].GetHashCode() * 397;
                 }
+
                 return hashCode;
             }
         }

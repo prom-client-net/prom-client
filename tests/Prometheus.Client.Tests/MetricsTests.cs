@@ -90,12 +90,12 @@ namespace Prometheus.Client.Tests
             Assert.Equal("label1", labelPairs[0].Name);
             Assert.Equal("abc", labelPairs[0].Value);
         }
-        
+
         [Fact]
         public void Counter_Reset()
         {
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
-            
+
             counter.Inc();
             counter.Inc(3.2);
             counter.Labels("test").Inc(1);
@@ -108,12 +108,12 @@ namespace Prometheus.Client.Tests
             var counterValueLabeled = metricFamily.Metrics[1].CCounter.Value;
             Assert.Equal(0, counterValue);
             Assert.Equal(0, counterValueLabeled);
-            
+
             counter.Inc();
             counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
-            Assert.Equal(1, counterValue);      
+            Assert.Equal(1, counterValue);
         }
-        
+
         [Fact]
         public void Custom_Registry()
         {
@@ -189,7 +189,7 @@ namespace Prometheus.Client.Tests
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my-metric"));
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my!metric"));
             Assert.Throws<ArgumentException>(() => Metrics.CreateGauge("a", "help1", "my%metric"));
-            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1",  "le"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateHistogram("a", "help1", "le"));
             Metrics.CreateGauge("a", "help1", "my:metric");
             Metrics.CreateGauge("b", "help1", "good_name");
 

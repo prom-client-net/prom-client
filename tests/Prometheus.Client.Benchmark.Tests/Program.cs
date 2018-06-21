@@ -15,8 +15,8 @@ namespace Prometheus.Client.Benchmark.Tests
             var config = DefaultConfig.Instance
                 .With(new Job("X64-Core-RyuJit", RunMode.Medium, EnvMode.Core)
                 {
-                    Accuracy = {RemoveOutliers = false},
-                    Env = {Runtime = Runtime.Core, Platform = Platform.X64, Jit = Jit.RyuJit},
+                    Accuracy = { RemoveOutliers = false },
+                    Env = { Runtime = Runtime.Core, Platform = Platform.X64, Jit = Jit.RyuJit },
                 }).With(MemoryDiagnoser.Default);
 
             BenchmarkRunner.Run<CounterBenchmark>(config);
