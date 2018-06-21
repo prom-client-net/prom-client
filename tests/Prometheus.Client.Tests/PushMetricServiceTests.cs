@@ -15,7 +15,6 @@ namespace Prometheus.Client.Tests
     {
         private MockedMetricPushService _pushService;
         private ICollectorRegistry _metrics;
-        private MetricFactory _metricFactory;
         private string _result;
         public override void Act()
         {
@@ -26,8 +25,8 @@ namespace Prometheus.Client.Tests
         public override void Arrange()
         {
             _metrics = new CollectorRegistry();
-            _metricFactory = new MetricFactory(_metrics);
-            var counter = _metricFactory.CreateCounter("test_counter", "just a simple test counter", "Color", "Size");
+            var metricFactory = new MetricFactory(_metrics);
+            var counter = metricFactory.CreateCounter("test_counter", "just a simple test counter", "Color", "Size");
             counter.Labels("White", "XXS").Inc();
             counter.Labels("Black", "XXL").Inc();
 
