@@ -69,7 +69,6 @@ namespace Prometheus.Client.Tests
 
     public class MockedMetricPushService : MetricPushService
     {
-        public MockedMetricPushService() : base() { }
         protected override HttpMessageHandler MessageHandler => Handler;
         public MessageHandler Handler { get; } = new MessageHandler();
     }
