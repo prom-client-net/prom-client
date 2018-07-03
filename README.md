@@ -8,11 +8,14 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/cyvjrbn46ju827a9/branch/master?svg=true)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
-.NET Client library(unofficial) for [prometheus.io](https://prometheus.io/)  
-
-Support .net45, .netstandard1.3 and .netstandard2.0
+.NET Client library for [prometheus.io](https://prometheus.io/)  
 
 It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net)
+
+- Support .net45, .netstandard1.3 and .netstandard2.0
+- Prometheus.Client has only basic functionality for reduce the number of dependencies. Use only the required modules
+- prometheus-net didn't develop a long time.This is alternative was created with the possibility of rapid development.
+
 
 ## Installation
 
@@ -154,3 +157,10 @@ To address this you can add this line to your test setup:
 ```csharp
 CollectorRegistry.Instance.Clear();
 ```
+
+## Contribute
+
+Contributions to the package are always welcome!
+
+* Report any bugs or issues you find on the [issue tracker](https://github.com/PrometheusClientNet/Prometheus.Client/issues).
+* You can grab the source code at the package's [git repository](https://github.com/PrometheusClientNet/Prometheus.Client).
