@@ -18,12 +18,7 @@ namespace Prometheus.Client
         double Value { get; }
     }
 
-    /// <summary>
-    ///     Counter metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#counter
-    ///     </remarks>
-    /// </summary>
+    /// <inheritdoc cref="ICounter" />
     public class Counter : Collector<Counter.ThisChild>, ICounter
     {
         internal Counter(string name, string help, string[] labelNames)
@@ -60,7 +55,7 @@ namespace Prometheus.Client
 
             protected override void Populate(CMetric cMetric)
             {
-                cMetric.CCounter = new Contracts.CCounter { Value = Value };
+                cMetric.CCounter = new CCounter { Value = Value };
             }
 
             public void Inc()

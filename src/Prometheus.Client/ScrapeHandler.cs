@@ -19,13 +19,9 @@ namespace Prometheus.Client
             Stream outputStream)
         {
             if (contentType == _protoContentType)
-            {
                 ProtoFormatter.Format(outputStream, collected);
-            }
             else
-            {
                 TextFormatter.Format(outputStream, collected);
-            }
         }
 
         public static string GetContentType(IEnumerable<string> acceptHeaders)

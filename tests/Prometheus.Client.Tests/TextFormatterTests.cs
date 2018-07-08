@@ -25,7 +25,7 @@ namespace Prometheus.Client.Tests
                     Type = CMetricType.Counter
                 };
 
-                var metricCounter = new Contracts.CCounter { Value = 100 };
+                var metricCounter = new CCounter { Value = 100 };
                 metricFamily.Metrics.Add(new CMetric
                 {
                     CCounter = metricCounter,

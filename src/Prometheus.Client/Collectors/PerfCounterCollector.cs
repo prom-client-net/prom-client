@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace Prometheus.Client.Collectors
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Collects metrics on standard Performance Counters
     /// </summary>

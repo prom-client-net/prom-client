@@ -20,12 +20,7 @@ namespace Prometheus.Client
         void Dec(double decrement);
     }
 
-    /// <summary>
-    ///     Gauge metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#gauge
-    ///     </remarks>
-    /// </summary>
+    /// <inheritdoc cref="IGauge" />
     public class Gauge : Collector<Gauge.ThisChild>, IGauge
     {
         internal Gauge(string name, string help, string[] labelNames)
@@ -98,7 +93,7 @@ namespace Prometheus.Client
 
             protected override void Populate(CMetric cMetric)
             {
-                cMetric.CGauge = new Contracts.CGauge { Value = Value };
+                cMetric.CGauge = new CGauge { Value = Value };
             }
         }
     }

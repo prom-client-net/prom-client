@@ -17,12 +17,7 @@ namespace Prometheus.Client
         void Observe(double val);
     }
 
-    /// <summary>
-    ///     Histogram metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#histogram
-    ///     </remarks>
-    /// </summary>
+    /// <inheritdoc cref="IHistogram" />
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
         private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
@@ -83,7 +78,7 @@ namespace Prometheus.Client
 
             protected override void Populate(CMetric cMetric)
             {
-                var wireMetric = new Contracts.CHistogram { SampleCount = 0L };
+                var wireMetric = new CHistogram { SampleCount = 0L };
 
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {

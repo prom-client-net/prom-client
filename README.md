@@ -1,7 +1,8 @@
 # Prometheus.Client
 
 [![MyGet](https://img.shields.io/myget/phnx47-beta/vpre/Prometheus.Client.svg)](https://www.myget.org/feed/phnx47-beta/package/nuget/Prometheus.Client)
-[![NuGet Badge](https://buildstats.info/nuget/Prometheus.Client)](https://www.nuget.org/packages/Prometheus.Client/) 
+[![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
+[![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 
 [![codecov](https://codecov.io/gh/phnx47/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/phnx47/Prometheus.Client)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7e275fc9eb5d4f47896a3b6eb28c8536)](https://www.codacy.com/app/phnx47/Prometheus.Client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=phnx47/Prometheus.Client&amp;utm_campaign=Badge_Grade)

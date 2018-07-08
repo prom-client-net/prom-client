@@ -18,12 +18,7 @@ namespace Prometheus.Client
         void Observe(double val);
     }
 
-    /// <summary>
-    ///     Summary metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#summary
-    ///     </remarks>
-    /// </summary>
+    /// <inheritdoc cref="ISummary" />
     public class Summary : Collector<Summary.ThisChild>, ISummary
     {
         // Label that defines the quantile in a summary.
@@ -140,7 +135,7 @@ namespace Prometheus.Client
             private QuantileStream[] _streams;
             private double _sum;
 
-            private Contracts.CSummary _wireMetric;
+            private CSummary _wireMetric;
 
             public void Observe(double val)
             {
@@ -179,7 +174,7 @@ namespace Prometheus.Client
 
                 Array.Sort(_sortedObjectives);
 
-                _wireMetric = new Contracts.CSummary();
+                _wireMetric = new CSummary();
 
                 foreach (var quantileEpsilonPair in _objectives)
                     _wireMetric.Quantiles.Add(new CQuantile
@@ -195,7 +190,7 @@ namespace Prometheus.Client
 
             internal void Populate(CMetric cMetric, DateTime now)
             {
-                var summary = new Contracts.CSummary();
+                var summary = new CSummary();
                 var quantiles = new CQuantile[_objectives.Count];
 
                 lock (_bufLock)

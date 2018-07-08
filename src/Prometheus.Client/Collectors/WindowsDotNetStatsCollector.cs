@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace Prometheus.Client.Collectors
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Windows specific metrics .net
     /// </summary>

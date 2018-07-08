@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace Prometheus.Client.Collectors
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Collects metrics on .net without performance counters
     /// </summary>

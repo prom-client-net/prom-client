@@ -90,7 +90,7 @@ namespace Prometheus.Client.Tests
             var child = new Summary.ThisChild();
             child.Init(sum, LabelValues.Empty, baseTime);
 
-            Contracts.CSummary m;
+            CSummary m;
             var metric = new CMetric();
 
             for (var i = 0; i < 1000; i++)
