@@ -11,31 +11,36 @@
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
 
-It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net)
+It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but:
 
-- Support .net45, .netstandard1.3 and .netstandard2.0
-- Prometheus.Client has only basic functionality for reduce the number of dependencies. Use only the required modules
+- Support .net45, .netstandard1.3 and .netstandard2.0, not only .netstandard2.0.
+- Prometheus.Client has only basic functionality for reduce the number of dependencies. Use only the required modules.
 - prometheus-net didn't develop a long time.This is alternative was created with the possibility of rapid development.
 
 
 ## Installation
 
     dotnet add package Prometheus.Client
+	
+## Extensions
 
-
-Extension for WEB [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
+Owin Middleware for net45 [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
 
 	dotnet add package Prometheus.Client.Owin
 	
-Extension for WEB: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
+AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
 	
 	dotnet add package Prometheus.Client.AspNetCore
 
-Extension for Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
+Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
 
 	dotnet add package Prometheus.Client.MetricServer
+	
+Push metrics to a PushGateaway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
 
-Extension for collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
+	dotnet add package Prometheus.Client.MetricPusher
+
+Collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
 
 	dotnet add package Prometheus.Client.HttpRequestDurations
 
