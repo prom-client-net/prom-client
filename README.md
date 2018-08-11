@@ -11,11 +11,15 @@
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
 
-It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but:
+It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), 
+prometheus-net didn't develop a long time. This is alternative was created with the possibility of rapid development:
 
-- Support .net45, .netstandard1.3 and .netstandard2.0, not only .netstandard2.0.
-- Prometheus.Client has only basic functionality for reduce the number of dependencies. Use only the required modules.
-- prometheus-net didn't develop a long time.This is alternative was created with the possibility of rapid development.
+- Support <img src="https://img.shields.io/badge/.net-4.5-green.svg"></img>, <img src="https://img.shields.io/badge/.netstandard-1.3-green.svg"></img> 
+and <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>. This library always will be support legacy versions.
+- More Extensions. Extensions extracted to packages. 
+- There are differences in the internal implementation: MetricServer, MetricPusher, Middlware.
+- Each build is publish to MyGet. There is an opportunity to test development versions.
+- All developments in prometheus-net will be analyzed and will implement as necessary.
 
 
 ## Installation
@@ -155,18 +159,18 @@ counter.Labels("GET", "/").Inc();
 counter.Labels("POST", "/cancel").Inc();
 ```
 
-## Unit testing
-For simple usage the API uses static classes, which - in unit tests - can cause errors like this: "A collector with name '<NAME>' has already been registered!"
-
-To address this you can add this line to your test setup:
-
-```csharp
-CollectorRegistry.Instance.Clear();
-```
-
 ## Contribute
 
 Contributions to the package are always welcome!
 
 * Report any bugs or issues you find on the [issue tracker](https://github.com/PrometheusClientNet/Prometheus.Client/issues).
 * You can grab the source code at the package's [git repository](https://github.com/PrometheusClientNet/Prometheus.Client).
+
+## Support
+
+If you are having problems, send a mail to [prometheus@phnx47.net](mailto://prometheus@phnx47.net). We will try to help you.
+
+
+## License
+
+All contents of this package are licensed under the [MIT license](https://opensource.org/licenses/MIT).
