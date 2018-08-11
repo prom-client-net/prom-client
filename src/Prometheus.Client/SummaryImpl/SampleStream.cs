@@ -25,10 +25,9 @@ namespace Prometheus.Client.SummaryImpl
             double r = 0;
             var i = 0;
 
-            for (var sampleIdx = 0; sampleIdx < samples.Count; sampleIdx++)
+            foreach (var sample in samples)
             {
-                var sample = samples[sampleIdx];
-
+                var inserted = false;
                 for (; i < _samples.Count; i++)
                 {
                     var c = _samples[i];
@@ -37,18 +36,32 @@ namespace Prometheus.Client.SummaryImpl
                     {
                         // Insert at position i
                         _samples.Insert(i,
-                            new Sample { Value = sample.Value, Width = sample.Width, Delta = Math.Max(sample.Delta, Math.Floor(_invariant(this, r)) - 1) });
+                            new Sample
+                            {
+                                Value = sample.Value, 
+                                Width = sample.Width, 
+                                Delta = Math.Max(sample.Delta, Math.Floor(_invariant(this, r)) - 1)
+                            });
+                        
                         i++;
-                        goto inserted;
+                        inserted = true;
+                        break;
                     }
 
                     r += c.Width;
                 }
 
-                _samples.Add(new Sample { Value = sample.Value, Width = sample.Width, Delta = 0 });
-                i++;
-
-                inserted:
+                if (!inserted)
+                {
+                    _samples.Add(new Sample
+                    {
+                        Value = sample.Value,
+                        Width = sample.Width,
+                        Delta = 0
+                    });
+                    i++;
+                }
+                
                 N += sample.Width;
                 r += sample.Width;
             }
@@ -56,7 +69,7 @@ namespace Prometheus.Client.SummaryImpl
             Compress();
         }
 
-        void Compress()
+        private void Compress()
         {
             if (_samples.Count < 2)
                 return;

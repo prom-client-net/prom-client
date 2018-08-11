@@ -23,11 +23,11 @@ namespace Prometheus.Client.SummaryImpl
 
     public class QuantileStream
     {
-        readonly SampleStream _sampleStream;
-        readonly List<Sample> _samples;
+        private readonly SampleStream _sampleStream;
+        private readonly List<Sample> _samples;
         private bool _sorted;
 
-        QuantileStream(SampleStream sampleStream, List<Sample> samples, bool sorted)
+        private QuantileStream(SampleStream sampleStream, List<Sample> samples, bool sorted)
         {
             _sampleStream = sampleStream;
             _samples = samples;
@@ -82,15 +82,13 @@ namespace Prometheus.Client.SummaryImpl
             {
                 var m = double.MaxValue;
 
-                for (var i = 0; i < targets.Count; i++)
+                foreach (var target in targets)
                 {
-                    var target = targets[i];
-
                     double f;
                     if (target.Quantile * stream.N <= r)
-                        f = (2 * target.Epsilon * r) / target.Quantile;
+                        f = 2 * target.Epsilon * r / target.Quantile;
                     else
-                        f = (2 * target.Epsilon * (stream.N - r)) / (1 - target.Quantile);
+                        f = 2 * target.Epsilon * (stream.N - r) / (1 - target.Quantile);
 
                     if (f < m)
                         m = f;
@@ -105,7 +103,7 @@ namespace Prometheus.Client.SummaryImpl
             Insert(new Sample { Value = value, Width = 1 });
         }
 
-        void Insert(Sample sample)
+        private void Insert(Sample sample)
         {
             _samples.Add(sample);
             _sorted = false;
@@ -113,14 +111,14 @@ namespace Prometheus.Client.SummaryImpl
                 Flush();
         }
 
-        void Flush()
+        private void Flush()
         {
             MaybeSort();
             _sampleStream.Merge(_samples);
             _samples.Clear();
         }
 
-        void MaybeSort()
+        private void MaybeSort()
         {
             if (!_sorted)
             {
@@ -129,7 +127,7 @@ namespace Prometheus.Client.SummaryImpl
             }
         }
 
-        static int SampleComparison(Sample lhs, Sample rhs)
+        private static int SampleComparison(Sample lhs, Sample rhs)
         {
             return lhs.Value.CompareTo(rhs.Value);
         }
