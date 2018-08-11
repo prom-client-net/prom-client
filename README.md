@@ -20,6 +20,7 @@ and <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>. T
 - There are differences in the internal implementation: MetricServer, MetricPusher, Middlware.
 - Each build is publish to MyGet. There is an opportunity to test development versions.
 - All developments in prometheus-net will be analyzed and will implement as necessary.
+- The goal is to be able to flexibly write extensions. And keep the speed of development.
 
 
 ## Installation
