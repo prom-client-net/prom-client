@@ -25,7 +25,7 @@ namespace Prometheus.Client.Tests
             gauge.Dec(0.2);
             Assert.Equal(3.8, gauge.Value);
 
-            Assert.Throws<InvalidOperationException>(() => gauge.Labels("1"));
+            Assert.Throws<ArgumentException>(() => gauge.Labels("1"));
 
             var counter = Metrics.CreateCounter("name2", "help2", "label1");
             counter.Inc();
@@ -43,8 +43,9 @@ namespace Prometheus.Client.Tests
         public void Null_Labels()
         {
             var counter = Metrics.CreateCounter("name2", "help2", "label1", "label2");
-            Assert.Throws<InvalidOperationException>(() => counter.Labels(null).Inc());
-            counter.Labels("param1", null).Inc(); // not down
+            Assert.Throws<ArgumentException>(() => counter.Labels().Inc());
+            Assert.Throws<ArgumentException>(() => counter.Labels(null).Inc());
+            Assert.Throws<ArgumentException>(() => counter.Labels("param1", null).Inc());
         }
 
         [Fact]

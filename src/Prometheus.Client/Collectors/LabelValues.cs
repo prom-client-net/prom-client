@@ -17,15 +17,15 @@ namespace Prometheus.Client.Collectors
         public LabelValues(string[] names, string[] values)
         {
             if (values == null)
-                throw new InvalidOperationException("Label values is null");
+                throw new ArgumentException("Values cannot be null");
 
             if (names.Length != values.Length)
-                throw new InvalidOperationException("Label values must be of same length as label names");
+                throw new ArgumentException("Incorrect number of labels");
 
+            if (values.Any(value => value == null))
+                throw new ArgumentException("Label cannot be null");
+            
             _values = values;
-
-            for (var i = 0; i < values.Length; i++)
-                _values[i] = values[i] ?? "";
 
             WireLabels = new List<CLabelPair>(names.Zip(values, (s, s1) => new CLabelPair { Name = s, Value = s1 }));
 
@@ -73,13 +73,7 @@ namespace Prometheus.Client.Collectors
         {
             unchecked
             {
-                var hashCode = 1;
-                for (var i = 0; i < values.Length; i++)
-                {
-                    hashCode ^= values[i].GetHashCode() * 397;
-                }
-
-                return hashCode;
+                return values.Aggregate(1, (current, t) => current ^ t.GetHashCode() * 397);
             }
         }
     }
