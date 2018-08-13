@@ -44,15 +44,15 @@ namespace Prometheus.Client.Tests
         {
             var counter = Metrics.CreateCounter("name2", "help2", "label1", "label2");
             Assert.Throws<ArgumentException>(() => counter.Labels().Inc());
-            Assert.Throws<ArgumentException>(() => counter.Labels(null).Inc());
-            Assert.Throws<ArgumentException>(() => counter.Labels("param1", null).Inc());
+            Assert.Throws<ArgumentNullException>(() => counter.Labels(null).Inc());
+            Assert.Throws<ArgumentNullException>(() => counter.Labels("param1", null).Inc());
         }
 
         [Fact]
         public void Cannot_Create_Metrics_With_The_Same_Name_But_Different_Labels()
         {
             Metrics.CreateGauge("name1", "h");
-            Assert.Throws<InvalidOperationException>(() => Metrics.CreateCounter("name1", "h", "label1"));
+            Assert.Throws<ArgumentException>(() => Metrics.CreateCounter("name1", "h", "label1"));
         }
 
         [Fact]

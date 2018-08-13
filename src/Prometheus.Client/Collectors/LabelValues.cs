@@ -17,13 +17,13 @@ namespace Prometheus.Client.Collectors
         public LabelValues(string[] names, string[] values)
         {
             if (values == null)
-                throw new ArgumentException("Values cannot be null");
+                throw new ArgumentNullException(nameof(values), "Labels cannot be null");
 
             if (names.Length != values.Length)
                 throw new ArgumentException("Incorrect number of labels");
 
             if (values.Any(value => value == null))
-                throw new ArgumentException("Label cannot be null");
+                throw new ArgumentNullException(nameof(values), "Label cannot be null");
             
             _values = values;
 

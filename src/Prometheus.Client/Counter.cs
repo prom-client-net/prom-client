@@ -66,7 +66,7 @@ namespace Prometheus.Client
             public void Inc(double increment)
             {
                 if (increment < 0.0D)
-                    throw new InvalidOperationException("Counter cannot go down");
+                    throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
                 _value.Add(increment);
             }

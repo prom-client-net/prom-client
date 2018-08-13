@@ -260,7 +260,7 @@ namespace Prometheus.Client
             private void SwapBufs(DateTime now)
             {
                 if (!_coldBuf.IsEmpty)
-                    throw new InvalidOperationException("coldBuf is not empty");
+                    throw new ArgumentException("coldBuf is not empty");
 
                 var temp = _hotBuf;
                 _hotBuf = _coldBuf;

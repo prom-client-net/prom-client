@@ -35,7 +35,7 @@ namespace Prometheus.Client.SummaryImpl
         public void Append(double value)
         {
             if (Position >= Capacity)
-                throw new InvalidOperationException("Buffer is full");
+                throw new ArgumentException("Buffer is full");
 
             _buffer[Position++] = value;
         }

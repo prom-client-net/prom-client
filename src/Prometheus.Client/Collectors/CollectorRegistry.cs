@@ -47,7 +47,7 @@ namespace Prometheus.Client.Collectors
             var collectorToUse = _collectors.GetOrAdd(collector.Name, collector);
 
             if (!collector.LabelNames.SequenceEqual(collectorToUse.LabelNames))
-                throw new InvalidOperationException("Collector with same name must have same label names");
+                throw new ArgumentException("Collector with same name must have same label names");
 
             return collectorToUse;
         }
