@@ -1,23 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
 using Prometheus.Client.SummaryImpl;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    /// <summary>
-    ///     Summary metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#summary
-    ///     </remarks>
-    /// </summary>
-    public interface ISummary
-    {
-        void Observe(double val);
-    }
-
     /// <inheritdoc cref="ISummary" />
     public class Summary : Collector<Summary.ThisChild>, ISummary
     {

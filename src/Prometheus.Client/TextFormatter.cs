@@ -11,7 +11,7 @@ namespace Prometheus.Client
     {
         private static readonly Encoding _encoding = new UTF8Encoding(false);
 
-        public static void Format(Stream destination, IEnumerable<CMetricFamily> metrics)
+        public static void Format(Stream destination, CMetricFamily[] metrics)
         {
             var metricFamilys = metrics.ToArray();
             using (var streamWriter = new StreamWriter(destination, _encoding, 1024, true))

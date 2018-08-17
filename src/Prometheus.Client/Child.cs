@@ -1,5 +1,7 @@
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {

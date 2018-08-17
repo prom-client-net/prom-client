@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Prometheus.Client.Collectors.Abstractions;
 
 namespace Prometheus.Client.Collectors
 {

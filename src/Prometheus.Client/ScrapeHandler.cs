@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using Prometheus.Client.Contracts;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Collectors.Abstractions;
 
 namespace Prometheus.Client
 {
-    public static class ScrapeHandler
+    public class ScrapeHandler
     {
-    
-        public static void ProcessScrapeRequest(
-            IEnumerable<CMetricFamily> collected,
-            Stream outputStream)
+        public static void Process(ICollectorRegistry registry, Stream outputStream)
         {
-            TextFormatter.Format(outputStream, collected);
+            var collected = registry.CollectAll();
+            TextFormatter.Format(outputStream, collected.ToArray());
         }
 
-
-      
+        public static MemoryStream Process(ICollectorRegistry registry)
+        {
+            // leave open
+            var stream = new MemoryStream();
+            var collected = registry.CollectAll();
+            TextFormatter.Format(stream, collected.ToArray());
+            stream.Position = 0;
+            return stream;
+        }
     }
 }

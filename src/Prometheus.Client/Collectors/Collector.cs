@@ -1,41 +1,51 @@
 using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.Tools;
 
 // ReSharper disable StaticMemberInGenericType
 
 namespace Prometheus.Client.Collectors
 {
-    public abstract class Collector<T> : ICollector where T : Child, new()
+    public abstract class Collector<TChild> : ICollector where TChild : Child, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
 
         private readonly string _help;
-        private readonly Lazy<T> _unlabelledLazy;
+        private readonly Lazy<TChild> _unlabelledLazy;
 
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
         private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
-        protected readonly ConcurrentDictionary<LabelValues, T> LabelledMetrics = new ConcurrentDictionary<LabelValues, T>();
+        protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
         protected abstract CMetricType Type { get; }
-        protected T Unlabelled => _unlabelledLazy.Value;
+        protected TChild Unlabelled => _unlabelledLazy.Value;
 
         public string Name { get; }
         public string[] LabelNames { get; }
 
-        public T Labels(params string[] labelValues)
+        /// <summary>
+        ///     Analog WithLabels for compatible with old version
+        /// </summary>
+        public TChild Labels(params string[] labelValues) => WithLabels(labelValues);
+
+        /// <summary>
+        ///     Metric with Label Values
+        /// </summary>
+        public TChild WithLabels(params string[] labelValues)
         {
             var key = new LabelValues(LabelNames, labelValues);
             return GetOrAddLabelled(key);
         }
 
-        private T GetOrAddLabelled(LabelValues key)
+        private TChild GetOrAddLabelled(LabelValues key)
         {
             return LabelledMetrics.GetOrAdd(key, labels1 =>
             {
-                var child = new T();
+                var child = new TChild();
                 child.Init(this, labels1);
                 return child;
             });
@@ -59,7 +69,7 @@ namespace Prometheus.Client.Collectors
                     throw new ArgumentException("Labels starting with double underscore are reserved!");
             }
 
-            _unlabelledLazy = new Lazy<T>(() => GetOrAddLabelled(_emptyLabelValues));
+            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(_emptyLabelValues));
         }
 
         public CMetricFamily Collect()

@@ -1,23 +1,11 @@
 using System;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Contracts;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    /// <summary>
-    ///     Counter metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#counter
-    ///     </remarks>
-    /// </summary>
-    public interface ICounter
-    {
-        void Inc();
-        void Inc(double increment);
-        double Value { get; }
-    }
-
     /// <inheritdoc cref="ICounter" />
     public class Counter : Collector<Counter.ThisChild>, ICounter
     {
@@ -42,9 +30,7 @@ namespace Prometheus.Client
         {
             Unlabelled.ResetValue();
             foreach (var labelledMetric in LabelledMetrics)
-            {
-                labelledMetric.Value.ResetValue();
-            }
+                labelledMetric.Value.ResetValue();          
         }
 
         protected override CMetricType Type => CMetricType.Counter;

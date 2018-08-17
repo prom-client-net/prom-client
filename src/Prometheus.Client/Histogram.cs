@@ -1,22 +1,13 @@
 using System;
 using System.Linq;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    /// <summary>
-    ///     Histogram metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#histogram
-    ///     </remarks>
-    /// </summary>
-    public interface IHistogram
-    {
-        void Observe(double val);
-    }
-
     /// <inheritdoc cref="IHistogram" />
     public class Histogram : Collector<Histogram.ThisChild>, IHistogram
     {
@@ -27,29 +18,20 @@ namespace Prometheus.Client
             : base(name, help, labelNames)
         {
             if (labelNames.Any(l => l == "le"))
-            {
                 throw new ArgumentException("'le' is a reserved label name");
-            }
 
             _buckets = buckets ?? _defaultBuckets;
 
             if (_buckets.Length == 0)
-            {
                 throw new ArgumentException("Histogram must have at least one bucket");
-            }
 
             if (!double.IsPositiveInfinity(_buckets[_buckets.Length - 1]))
-            {
                 _buckets = _buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
-            }
 
-            for (var i = 1; i < _buckets.Length; i++)
-            {
+
+            for (int i = 1; i < _buckets.Length; i++)
                 if (_buckets[i] <= _buckets[i - 1])
-                {
                     throw new ArgumentException("Bucket values must be increasing");
-                }
-            }
         }
 
         /// <summary>
@@ -64,9 +46,25 @@ namespace Prometheus.Client
 
         public class ThisChild : Child, IHistogram
         {
-            private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);
             private ThreadSafeLong[] _bucketCounts;
+            private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);
             private double[] _upperBounds;
+
+            public void Observe(double val)
+            {
+                if (double.IsNaN(val))
+                    return;
+
+
+                for (int i = 0; i < _upperBounds.Length; i++)
+                    if (val <= _upperBounds[i])
+                    {
+                        _bucketCounts[i].Add(1);
+                        break;
+                    }
+
+                _sum.Add(val);
+            }
 
             internal override void Init(ICollector parent, LabelValues labelValues)
             {
@@ -83,8 +81,8 @@ namespace Prometheus.Client
                     SampleCount = 0L,
                     Buckets = new CBucket[_bucketCounts.Length]
                 };
-                
-                for (var i = 0; i < _bucketCounts.Length; i++)
+
+                for (int i = 0; i < _bucketCounts.Length; i++)
                 {
                     wireMetric.SampleCount += (ulong) _bucketCounts[i].Value;
                     wireMetric.Buckets[i] = new CBucket
@@ -97,24 +95,6 @@ namespace Prometheus.Client
                 wireMetric.SampleSum = _sum.Value;
 
                 cMetric.CHistogram = wireMetric;
-            }
-
-            public void Observe(double val)
-            {
-                if (double.IsNaN(val))
-                    return;
-
-
-                for (var i = 0; i < _upperBounds.Length; i++)
-                {
-                    if (val <= _upperBounds[i])
-                    {
-                        _bucketCounts[i].Add(1);
-                        break;
-                    }
-                }
-
-                _sum.Add(val);
             }
         }
     }

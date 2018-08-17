@@ -1,6 +1,6 @@
 using Prometheus.Client.Contracts;
 
-namespace Prometheus.Client.Collectors
+namespace Prometheus.Client.Collectors.Abstractions
 {
     public interface ICollector
     {

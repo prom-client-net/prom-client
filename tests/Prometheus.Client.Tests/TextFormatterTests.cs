@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Prometheus.Client.Contracts;
-using Prometheus.Client.Internal;
 using Xunit;
 
 namespace Prometheus.Client.Tests

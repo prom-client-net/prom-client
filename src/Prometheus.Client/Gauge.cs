@@ -1,25 +1,10 @@
-﻿using Prometheus.Client.Collectors;
+﻿using Prometheus.Client.Abstractions;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Contracts;
-using Prometheus.Client.Internal;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    /// <summary>
-    ///     Gauge metric type
-    ///     <remarks>
-    ///         https://prometheus.io/docs/concepts/metric_types/#gauge
-    ///     </remarks>
-    /// </summary>
-    public interface IGauge
-    {
-        double Value { get; }
-        void Inc();
-        void Inc(double increment);
-        void Set(double val);
-        void Dec();
-        void Dec(double decrement);
-    }
-
     /// <inheritdoc cref="IGauge" />
     public class Gauge : Collector<Gauge.ThisChild>, IGauge
     {

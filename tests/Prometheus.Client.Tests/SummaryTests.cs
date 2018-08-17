@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Contracts;
 using Prometheus.Client.SummaryImpl;
+using Prometheus.Client.Tools;
 using Xunit;
 
 namespace Prometheus.Client.Tests

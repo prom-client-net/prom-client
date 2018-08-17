@@ -5,7 +5,7 @@ using System.Threading;
 
 [assembly: InternalsVisibleTo("Prometheus.Client.Tests")]
 
-namespace Prometheus.Client.Internal
+namespace Prometheus.Client.Tools
 {
     internal struct ThreadSafeDouble : IEquatable<ThreadSafeDouble>
     {

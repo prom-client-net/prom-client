@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
 
 
@@ -11,29 +12,27 @@ namespace Prometheus.Client.Collectors
     {
         public static readonly CollectorRegistry Instance = new CollectorRegistry();
         private readonly ConcurrentDictionary<string, ICollector> _collectors = new ConcurrentDictionary<string, ICollector>();
-        private readonly List<IOnDemandCollector> _onDemandCollectors = new List<IOnDemandCollector>();
+        private List<IOnDemandCollector> _onDemandCollectors;
 
-        public void RegisterOnDemandCollectors(IEnumerable<IOnDemandCollector> onDemandCollectors)
+        public void RegisterOnDemandCollectors(List<IOnDemandCollector> onDemandCollectors)
         {
-            _onDemandCollectors.AddRange(onDemandCollectors);
+            _onDemandCollectors = onDemandCollectors;
 
             foreach (var onDemandCollector in _onDemandCollectors)
-            {
                 onDemandCollector.RegisterMetrics();
-            }
         }
 
         public IEnumerable<CMetricFamily> CollectAll()
         {
-            foreach (var onDemandCollector in _onDemandCollectors)
-            {
-                onDemandCollector.UpdateMetrics();
-            }
+            if (_onDemandCollectors != null)
+                foreach (var onDemandCollector in _onDemandCollectors)
+                    onDemandCollector.UpdateMetrics();
 
             foreach (var value in _collectors.Values)
             {
                 var c = value.Collect();
-                if (c != null) yield return c;
+                if (c != null)
+                    yield return c;
             }
         }
 
@@ -54,8 +53,7 @@ namespace Prometheus.Client.Collectors
 
         public bool Remove(ICollector collector)
         {
-            ICollector dummy;
-            return _collectors.TryRemove(collector.Name, out dummy);
+            return _collectors.TryRemove(collector.Name, out _);
         }
     }
 }

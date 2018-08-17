@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Client.Collectors
+﻿namespace Prometheus.Client.Collectors.Abstractions
 {
     /// <summary>
     ///     interface for On Demand Collector

@@ -13,7 +13,5 @@ namespace Prometheus.Client.Contracts
         public CUntyped CUntyped { get; set; }
 
         public CHistogram CHistogram { get; set; }
-
-        public long TimestampMs { get; set; }
     }
 }
