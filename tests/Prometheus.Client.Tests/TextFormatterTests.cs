@@ -26,14 +26,17 @@ namespace Prometheus.Client.Tests
                 };
 
                 var metricCounter = new CCounter { Value = 100 };
-                metricFamily.Metrics.Add(new CMetric
+                metricFamily.Metrics = new[]
                 {
-                    CCounter = metricCounter,
-                    Labels = new List<CLabelPair>
+                    new CMetric
                     {
-                        new CLabelPair { Name = "label1", Value = labelValue }
+                        CCounter = metricCounter,
+                        Labels = new[]
+                        {
+                            new CLabelPair { Name = "label1", Value = labelValue }
+                        }
                     }
-                });
+                };
 
                 TextFormatter.Format(ms, new[]
                 {
@@ -49,6 +52,7 @@ namespace Prometheus.Client.Tests
                         Console.WriteLine(line);
                         linesCount += 1;
                     }
+
                     Assert.Equal(3, linesCount);
                 }
             }

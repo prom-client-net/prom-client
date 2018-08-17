@@ -33,9 +33,6 @@
       <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="2.3.7" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);NET45</DefineConstants>
   </PropertyGroup>

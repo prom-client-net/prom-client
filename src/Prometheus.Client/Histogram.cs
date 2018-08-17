@@ -78,16 +78,20 @@ namespace Prometheus.Client
 
             protected override void Populate(CMetric cMetric)
             {
-                var wireMetric = new CHistogram { SampleCount = 0L };
-
+                var wireMetric = new CHistogram
+                {
+                    SampleCount = 0L,
+                    Buckets = new CBucket[_bucketCounts.Length]
+                };
+                
                 for (var i = 0; i < _bucketCounts.Length; i++)
                 {
                     wireMetric.SampleCount += (ulong) _bucketCounts[i].Value;
-                    wireMetric.Buckets.Add(new CBucket
+                    wireMetric.Buckets[i] = new CBucket
                     {
                         UpperBound = _upperBounds[i],
                         CumulativeCount = wireMetric.SampleCount
-                    });
+                    };
                 }
 
                 wireMetric.SampleSum = _sum.Value;

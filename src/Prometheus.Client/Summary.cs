@@ -174,13 +174,12 @@ namespace Prometheus.Client
 
                 Array.Sort(_sortedObjectives);
 
-                _wireMetric = new CSummary();
-
-                foreach (var quantileEpsilonPair in _objectives)
-                    _wireMetric.Quantiles.Add(new CQuantile
+                _wireMetric = new CSummary { Quantiles = new CQuantile[_objectives.Count] };
+                for (int i = 0; i < _objectives.Count; i++)
+                    _wireMetric.Quantiles[i] = new CQuantile
                     {
-                        Quantile = quantileEpsilonPair.Quantile
-                    });
+                        Quantile = _objectives[i].Quantile
+                    };
             }
 
             protected override void Populate(CMetric cMetric)
@@ -190,8 +189,10 @@ namespace Prometheus.Client
 
             internal void Populate(CMetric cMetric, DateTime now)
             {
-                var summary = new CSummary();
-                var quantiles = new CQuantile[_objectives.Count];
+                cMetric.CSummary = new CSummary
+                {
+                    Quantiles = new CQuantile[_objectives.Count]
+                };
 
                 lock (_bufLock)
                 {
@@ -200,15 +201,15 @@ namespace Prometheus.Client
                         // Swap bufs even if hotBuf is empty to set new hotBufExpTime.
                         SwapBufs(now);
                         FlushColdBuf();
-                        summary.SampleCount = _count;
-                        summary.SampleSum = _sum;
+                        cMetric.CSummary.SampleCount = _count;
+                        cMetric.CSummary.SampleSum = _sum;
 
                         for (var idx = 0; idx < _sortedObjectives.Length; idx++)
                         {
                             var rank = _sortedObjectives[idx];
                             var q = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
 
-                            quantiles[idx] = new CQuantile
+                            cMetric.CSummary.Quantiles[idx] = new CQuantile
                             {
                                 Quantile = rank,
                                 Value = q
@@ -217,13 +218,8 @@ namespace Prometheus.Client
                     }
                 }
 
-                if (quantiles.Length > 0)
-                    Array.Sort(quantiles, _quantileComparer);
-
-                foreach (var quantile in quantiles)
-                    summary.Quantiles.Add(quantile);
-
-                cMetric.CSummary = summary;
+                if (cMetric.CSummary.Quantiles.Length > 0)
+                    Array.Sort(cMetric.CSummary.Quantiles, _quantileComparer);
             }
 
             /// <summary>

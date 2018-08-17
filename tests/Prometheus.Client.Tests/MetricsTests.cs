@@ -71,7 +71,7 @@ namespace Prometheus.Client.Tests
             Assert.Equal("name1", familiy1.Name);
             Assert.Equal("help1", familiy1.Help);
             var metrics = familiy1.Metrics;
-            Assert.Equal(2, metrics.Count);
+            Assert.Equal(2, metrics.Length);
 
             foreach (var metric in metrics)
             {
@@ -83,11 +83,11 @@ namespace Prometheus.Client.Tests
             }
 
             Assert.Equal(4.2, metrics[0].CCounter.Value);
-            Assert.Equal(0, metrics[0].Labels.Count);
+            Assert.Equal(0, metrics[0].Labels.Length);
 
             Assert.Equal(3.2, metrics[1].CCounter.Value);
             var labelPairs = metrics[1].Labels;
-            Assert.Equal(1, labelPairs.Count);
+            Assert.Equal(1, labelPairs.Length);
             Assert.Equal("label1", labelPairs[0].Name);
             Assert.Equal("abc", labelPairs[0].Value);
         }
@@ -146,7 +146,7 @@ namespace Prometheus.Client.Tests
             var familiy1 = exported[0];
             Assert.Equal("name1", familiy1.Name);
             var metrics = familiy1.Metrics;
-            Assert.Equal(1, metrics.Count);
+            Assert.Equal(1, metrics.Length);
             foreach (var metric in metrics)
             {
                 Assert.Null(metric.CCounter);
@@ -177,7 +177,7 @@ namespace Prometheus.Client.Tests
             Assert.NotNull(metric.CHistogram);
             Assert.Equal(9ul, metric.CHistogram.SampleCount);
             Assert.Equal(16.7, metric.CHistogram.SampleSum);
-            Assert.Equal(4, metric.CHistogram.Buckets.Count);
+            Assert.Equal(4, metric.CHistogram.Buckets.Length);
             Assert.Equal(2ul, metric.CHistogram.Buckets[0].CumulativeCount);
             Assert.Equal(5ul, metric.CHistogram.Buckets[1].CumulativeCount);
             Assert.Equal(8ul, metric.CHistogram.Buckets[2].CumulativeCount);

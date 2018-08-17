@@ -68,12 +68,15 @@ namespace Prometheus.Client.Collectors
             {
                 Name = Name,
                 Help = _help,
-                Type = Type
+                Type = Type,
+                Metrics = new CMetric[LabelledMetrics.Values.Count]
             };
 
+            var i = 0;
             foreach (var child in LabelledMetrics.Values)
             {
-                result.Metrics.Add(child.Collect());
+                result.Metrics[i] = child.Collect();
+                i++;
             }
 
             return result;
