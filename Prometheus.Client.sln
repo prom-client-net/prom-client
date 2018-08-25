@@ -14,10 +14,6 @@ ProjectSection(SolutionItems) = preProject
 	.gitattributes = .gitattributes
 	LICENSE = LICENSE
 	README.md = README.md
-	metrics.proto = metrics.proto
-	test.ps1 = test.ps1
-	codecov.ps1 = codecov.ps1
-	build.ps1 = build.ps1
 	pack.ps1 = pack.ps1
 	.editorconfig = .editorconfig
 EndProjectSection
@@ -25,8 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FE42C2D5-9D20-44A2-A9ED-477527A832AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Tests", "tests\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{B11769F3-421B-4B79-A883-335331847542}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Benchmark.Tests", "tests\Prometheus.Client.Benchmark.Tests\Prometheus.Client.Benchmark.Tests.csproj", "{47DB2F66-889F-4CC5-84C0-F0E2D37896BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +36,6 @@ Global
 		{B11769F3-421B-4B79-A883-335331847542}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B11769F3-421B-4B79-A883-335331847542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B11769F3-421B-4B79-A883-335331847542}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47DB2F66-889F-4CC5-84C0-F0E2D37896BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47DB2F66-889F-4CC5-84C0-F0E2D37896BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47DB2F66-889F-4CC5-84C0-F0E2D37896BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47DB2F66-889F-4CC5-84C0-F0E2D37896BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +43,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E} = {D994EEE1-3786-4FDF-8A49-76D8B9819A29}
 		{B11769F3-421B-4B79-A883-335331847542} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
-		{47DB2F66-889F-4CC5-84C0-F0E2D37896BE} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 	EndGlobalSection
 EndGlobal

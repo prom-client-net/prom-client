@@ -33,7 +33,7 @@ namespace Prometheus.Client
         private static void WriteMetric(StreamWriter streamWriter, CMetricFamily family, CMetric cMetric)
         {
             var familyName = family.Name;
-
+        
             if (cMetric.CGauge != null)
             {
                 streamWriter.WriteLine(SimpleValue(familyName, cMetric.CGauge.Value, cMetric.Labels));

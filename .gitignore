@@ -8,5 +8,3 @@ bin
 obj
 packages
 .idea
-
-**/BenchmarkDotNet.Artifacts/*
