@@ -1,1 +1,0 @@
-OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -oldStyle -targetargs:"test ./tests/Prometheus.Client.Tests/Prometheus.Client.Tests.csproj" -filter:"+[Prometheus.Client*]* -[*.Tests]*" -output:".\coverage.xml"
