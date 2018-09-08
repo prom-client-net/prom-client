@@ -17,8 +17,14 @@ namespace Prometheus.Client.Collectors
         private Counter _cpuTotal;
         private Counter _perfErrors;
         private Gauge _totalMemory;
+        
+        private Gauge _numThreads;
+        private Gauge _privateMemorySize;
+        private Gauge _virtualMemorySize;
+        private Gauge _workingSet;
 
 
+        /// <inheritdoc />
         /// <summary>
         ///     Constructors
         /// </summary>
@@ -54,6 +60,14 @@ namespace Prometheus.Client.Collectors
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             _metricFactory.CreateGauge("process_start_time_seconds", "Start time of the process since unix epoch in seconds")
                 .Set((_process.StartTime.ToUniversalTime() - epoch).TotalSeconds);
+            
+            
+            _virtualMemorySize = _metricFactory.CreateGauge("process_virtual_bytes", "Process virtual memory size");
+            _workingSet = _metricFactory.CreateGauge("process_working_set", "Process working set");
+            _privateMemorySize = _metricFactory.CreateGauge("process_private_bytes", "Process private memory size");
+            _numThreads = _metricFactory.CreateGauge("process_num_threads", "Total number of threads");
+            
+            _metricFactory.CreateGauge("process_processid", "Process ID").Set(_process.Id); // todo: Untyped
         }
 
         public void UpdateMetrics()
@@ -70,6 +84,11 @@ namespace Prometheus.Client.Collectors
 
                 _totalMemory.Set(GC.GetTotalMemory(false));
                 _cpuTotal.Inc(_process.TotalProcessorTime.TotalSeconds - _cpuTotal.Value);
+                
+                _virtualMemorySize.Set(_process.VirtualMemorySize64);
+                _workingSet.Set(_process.WorkingSet64);
+                _privateMemorySize.Set(_process.PrivateMemorySize64);
+                _numThreads.Set(_process.Threads.Count);
             }
             catch (Exception)
             {

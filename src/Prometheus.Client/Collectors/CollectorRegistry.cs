@@ -5,7 +5,6 @@ using System.Linq;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
 
-
 namespace Prometheus.Client.Collectors
 {
     public class CollectorRegistry : ICollectorRegistry
