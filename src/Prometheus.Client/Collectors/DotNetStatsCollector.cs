@@ -40,9 +40,7 @@ namespace Prometheus.Client.Collectors
 
             var collectionCountsParent = _metricFactory.CreateCounter("dotnet_collection_count_total", "GC collection count", "generation");
 
-            // .net specific metrics
             _totalMemory = _metricFactory.CreateGauge("dotnet_totalmemory", "Total known allocated memory");
-
 
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
                 _collectionCounts.Add(collectionCountsParent.Labels(gen.ToString()));
