@@ -45,7 +45,7 @@ Push metrics to a PushGateaway: [Prometheus.Client.MetricPusher](https://github.
 
 	dotnet add package Prometheus.Client.MetricPusher
 
-Collect http request duration from all requests: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
+Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
 
 	dotnet add package Prometheus.Client.HttpRequestDurations
 
@@ -71,27 +71,34 @@ Without extensions:
 
 ```csharp
 
-    [Route("[controller]")]
-    public class MetricsController : Controller
+[Route("[controller]")]
+public class MetricsController : Controller
+{
+    [HttpGet]
+    public void Get()
     {
-        [HttpGet]
-        public void Get()
+        Response.StatusCode = 200;
+        using (var outputStream = Response.Body)
         {
-            var registry = CollectorRegistry.Instance;
-            var acceptHeaders = Request.Headers["Accept"];
-            var contentType = ScrapeHandler.GetContentType(acceptHeaders);
-            Response.ContentType = contentType;
-            Response.StatusCode = 200;
-            using (var outputStream = Response.Body)
-            {
-                var collected = registry.CollectAll();
-                ScrapeHandler.ProcessScrapeRequest(collected, contentType, outputStream);
-            }
+            ScrapeHandler.Process(CollectorRegistry.Instance, outputStream);
         }
     }
+}
 
 ```
 
+For collect http requests, use Prometheus.Client.HttpRequestDurations.
+It does not depend of Prometheus.Client.AspNetCore, however together it's very convenient to use:
+
+```csharp
+
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
+{
+    app.UsePrometheusServer();
+    app.UsePrometheusRequestDurations(); 
+}
+
+```
 
 
 ### Instrumenting
