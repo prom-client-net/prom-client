@@ -25,7 +25,7 @@ namespace Prometheus.Client
         private static void WriteFamily(StreamWriter streamWriter, CMetricFamily cMetricFamily)
         {
             streamWriter.WriteLine("# HELP {0} {1}", cMetricFamily.Name, cMetricFamily.Help);
-            streamWriter.WriteLine("# TYPE {0} {1}", cMetricFamily.Name, cMetricFamily.Type);
+            streamWriter.WriteLine("# TYPE {0} {1}", cMetricFamily.Name, cMetricFamily.Type.ToString().ToLower());
             foreach (var metric in cMetricFamily.Metrics)
                 WriteMetric(streamWriter, cMetricFamily, metric);
         }
