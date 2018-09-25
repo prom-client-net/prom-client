@@ -66,7 +66,7 @@ namespace Prometheus.Client.Tests
 
             var exported = CollectorRegistry.Instance.CollectAll().ToArray();
 
-            Assert.Equal(1, exported.Length);
+            Assert.Single(exported);
             var familiy1 = exported[0];
             Assert.Equal("name1", familiy1.Name);
             Assert.Equal("help1", familiy1.Help);
@@ -83,11 +83,11 @@ namespace Prometheus.Client.Tests
             }
 
             Assert.Equal(4.2, metrics[0].CCounter.Value);
-            Assert.Equal(0, metrics[0].Labels.Length);
+            Assert.Empty(metrics[0].Labels);
 
             Assert.Equal(3.2, metrics[1].CCounter.Value);
             var labelPairs = metrics[1].Labels;
-            Assert.Equal(1, labelPairs.Length);
+            Assert.Single(labelPairs);
             Assert.Equal("label1", labelPairs[0].Name);
             Assert.Equal("abc", labelPairs[0].Value);
         }
@@ -142,11 +142,11 @@ namespace Prometheus.Client.Tests
 
             var exported = CollectorRegistry.Instance.CollectAll().ToArray();
 
-            Assert.Equal(1, exported.Length);
+            Assert.Single(exported);
             var familiy1 = exported[0];
             Assert.Equal("name1", familiy1.Name);
             var metrics = familiy1.Metrics;
-            Assert.Equal(1, metrics.Length);
+            Assert.Single(metrics);
             foreach (var metric in metrics)
             {
                 Assert.Null(metric.CCounter);

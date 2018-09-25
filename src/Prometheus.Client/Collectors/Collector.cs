@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
-using Prometheus.Client.Tools;
 
 // ReSharper disable StaticMemberInGenericType
 
