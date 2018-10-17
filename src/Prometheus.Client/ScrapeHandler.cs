@@ -4,7 +4,7 @@ using Prometheus.Client.Collectors.Abstractions;
 
 namespace Prometheus.Client
 {
-    public class ScrapeHandler
+    public static class ScrapeHandler
     {
         public static void Process(ICollectorRegistry registry, Stream outputStream)
         {
