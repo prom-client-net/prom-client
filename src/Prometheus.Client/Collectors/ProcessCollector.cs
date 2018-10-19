@@ -56,7 +56,7 @@ namespace Prometheus.Client.Collectors
             _privateMemorySize = _metricFactory.CreateGauge("process_private_bytes", "Process private memory size.");
             _numThreads = _metricFactory.CreateGauge("process_num_threads", "Total number of threads.");
             
-            _metricFactory.CreateGauge("process_processid", "Process ID.").Set(_process.Id); // todo: Untyped           
+            _metricFactory.CreateGauge("process_processid", "Process ID").Set(_process.Id); // todo: Untyped           
         }
 
         public void UpdateMetrics()
