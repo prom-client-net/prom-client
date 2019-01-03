@@ -6,6 +6,7 @@ namespace Prometheus.Client
 {
     public abstract class Child
     {
+        protected long? Timestamp;
         private LabelValues _labelValues;
 
         internal virtual void Init(ICollector parent, LabelValues labelValues)
@@ -20,6 +21,7 @@ namespace Prometheus.Client
             var metric = new CMetric();
             Populate(metric);
             metric.Labels = _labelValues.WireLabels;
+            metric.Timestamp = Timestamp;
             return metric;
         }
     }

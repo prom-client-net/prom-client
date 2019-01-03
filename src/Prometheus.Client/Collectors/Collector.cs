@@ -8,18 +8,23 @@ using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.Collectors
 {
-    public abstract class Collector<TChild> : ICollector where TChild : Child, new()
+    public abstract class Collector<TChild> : ICollector
+        where TChild : Child, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
 
-        private readonly string _help;
+       
+      
         private readonly Lazy<TChild> _unlabelledLazy;
 
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
         private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
+        protected readonly string Help;
+        protected readonly bool IncludeTimestamp;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
+        
         protected abstract CMetricType Type { get; }
         protected TChild Unlabelled => _unlabelledLazy.Value;
 
@@ -51,9 +56,15 @@ namespace Prometheus.Client.Collectors
         }
 
         protected Collector(string name, string help, string[] labelNames)
+            : this(name, help, false, labelNames)
+        {
+        }
+
+        protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
         {
             Name = name;
-            _help = help;
+            Help = help;
+            IncludeTimestamp = includeTimestamp;
             LabelNames = labelNames;
 
             if (!_metricNameLabelRegex.IsMatch(name))
@@ -76,10 +87,11 @@ namespace Prometheus.Client.Collectors
             var result = new CMetricFamily
             {
                 Name = Name,
-                Help = _help,
+                Help = Help,
                 Type = Type,
                 Metrics = new CMetric[LabelledMetrics.Values.Count]
             };
+            
 
             var i = 0;
             foreach (var child in LabelledMetrics.Values)

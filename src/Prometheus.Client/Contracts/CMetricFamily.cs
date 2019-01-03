@@ -5,7 +5,7 @@ namespace Prometheus.Client.Contracts
         public string Name { get; set; }
 
         public string Help { get; set; }
-
+        
         public CMetricType Type { get; set; }
 
         public CMetric[] Metrics { get; set; }
