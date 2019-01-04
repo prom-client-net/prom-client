@@ -45,16 +45,16 @@ namespace Prometheus.Client
 
             if (metric.CGauge != null)
             {
-                WriteMetricValue(streamWriter, familyName, null, metric.CGauge.Value, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, null, metric.CGauge.Value, metric.Timestamp, metric.Labels);
             }
             else if (metric.CCounter != null)
             {
-                WriteMetricValue(streamWriter, familyName, null, metric.CCounter.Value, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, null, metric.CCounter.Value, metric.Timestamp, metric.Labels);
             }
             else if (metric.CSummary != null)
             {
-                WriteMetricValue(streamWriter, familyName, "_sum", metric.CSummary.SampleSum, metric.Labels);
-                WriteMetricValue(streamWriter, familyName, "_count", metric.CSummary.SampleCount, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, "_sum", metric.CSummary.SampleSum, metric.Timestamp, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, "_count", metric.CSummary.SampleCount, metric.Timestamp, metric.Labels);
 
                 foreach (var quantileValuePair in metric.CSummary.Quantiles)
                 {
@@ -65,13 +65,13 @@ namespace Prometheus.Client
                         new CLabelPair { Name = "quantile", Value = quantile }
                     }).ToArray();
 
-                    WriteMetricValue(streamWriter, familyName, null, quantileValuePair.Value, quantileLabels);
+                    WriteMetricValue(streamWriter, familyName, null, quantileValuePair.Value, metric.Timestamp, quantileLabels);
                 }
             }
             else if (metric.CHistogram != null)
             {
-                WriteMetricValue(streamWriter, familyName, "_sum", metric.CHistogram.SampleSum, metric.Labels);
-                WriteMetricValue(streamWriter, familyName, "_count", metric.CHistogram.SampleCount, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, "_sum", metric.CHistogram.SampleSum, metric.Timestamp, metric.Labels);
+                WriteMetricValue(streamWriter, familyName, "_count", metric.CHistogram.SampleCount, metric.Timestamp, metric.Labels);
 
                 foreach (var bucket in metric.CHistogram.Buckets)
                 {
@@ -82,12 +82,12 @@ namespace Prometheus.Client
                         new CLabelPair { Name = "le", Value = value }
                     }).ToArray();
 
-                    WriteMetricValue(streamWriter, familyName, "_bucket", bucket.CumulativeCount, bucketLabels);
+                    WriteMetricValue(streamWriter, familyName, "_bucket", bucket.CumulativeCount, metric.Timestamp, bucketLabels);
                 }
             }
         }
 
-        private static void WriteMetricValue(StreamWriter writer, string familyName, string postfix, double value, CLabelPair[] labels)
+        private static void WriteMetricValue(StreamWriter writer, string familyName, string postfix, double value, long? timestamp, CLabelPair[] labels)
         {
             writer.Write(familyName);
 
@@ -117,7 +117,15 @@ namespace Prometheus.Client
             }
 
             writer.Write(' ');
-            writer.WriteLine(value.ToString(CultureInfo.InvariantCulture));
+            writer.Write(value.ToString(CultureInfo.InvariantCulture));
+            
+            if (timestamp.HasValue)
+            {
+                writer.Write(' ');
+                writer.Write(timestamp.Value);
+            }
+
+            writer.WriteLine();
         }
 
 
