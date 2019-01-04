@@ -88,7 +88,7 @@ namespace Prometheus.Client.Tests
             var sum = new Summary("test_summary", "helpless", new string[0],
                 objectives: new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, maxAge: TimeSpan.FromSeconds(100), ageBuckets: 10);
             var child = new Summary.ThisChild();
-            child.Init(sum, LabelValues.Empty, baseTime);
+            child.Init(sum, LabelValues.Empty, false, baseTime);
 
             CSummary m;
             var metric = new CMetric();

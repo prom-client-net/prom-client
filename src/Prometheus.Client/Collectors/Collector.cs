@@ -19,7 +19,7 @@ namespace Prometheus.Client.Collectors
         private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected readonly string Help;
-        protected readonly bool IncludeTimestamp;
+        private readonly bool _includeTimestamp;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
         
         protected abstract CMetricType Type { get; }
@@ -32,7 +32,7 @@ namespace Prometheus.Client.Collectors
         {
             Name = name;
             Help = help;
-            IncludeTimestamp = includeTimestamp;
+            _includeTimestamp = includeTimestamp;
             LabelNames = labelNames;
 
             if (!_metricNameLabelRegex.IsMatch(name))
@@ -69,7 +69,7 @@ namespace Prometheus.Client.Collectors
             return LabelledMetrics.GetOrAdd(key, labels1 =>
             {
                 var child = new TChild();
-                child.Init(this, labels1);
+                child.Init(this, labels1, _includeTimestamp);
                 return child;
             });
         }

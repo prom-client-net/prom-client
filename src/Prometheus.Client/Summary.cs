@@ -146,14 +146,14 @@ namespace Prometheus.Client
                 Observe(val, DateTime.UtcNow);
             }
 
-            internal override void Init(ICollector parent, LabelValues labelValues)
+            internal override void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp)
             {
-                Init(parent, labelValues, DateTime.UtcNow);
+                Init(parent, labelValues, includeTimestamp, DateTime.UtcNow);
             }
 
-            internal void Init(ICollector parent, LabelValues labelValues, DateTime now)
+            internal void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp, DateTime now)
             {
-                base.Init(parent, labelValues);
+                base.Init(parent, labelValues, includeTimestamp);
 
                 _objectives = ((Summary) parent)._objectives;
                 _maxAge = ((Summary) parent)._maxAge;
@@ -240,6 +240,9 @@ namespace Prometheus.Client
 
                     if (_hotBuf.IsFull)
                         Flush(now);
+                    
+                    if (IncludeTimestamp)
+                        SetTimestamp();
                 }
             }
 

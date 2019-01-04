@@ -13,7 +13,7 @@ namespace Prometheus.Client
             : this(name, help, false, labelNames)
         {
         }
-        
+
         internal Counter(string name, string help, bool includeTimestamp, string[] labelNames)
             : base(name, help, includeTimestamp, labelNames)
         {
@@ -35,7 +35,7 @@ namespace Prometheus.Client
         {
             Unlabelled.ResetValue();
             foreach (var labelledMetric in LabelledMetrics)
-                labelledMetric.Value.ResetValue();          
+                labelledMetric.Value.ResetValue();
         }
 
         protected override CMetricType Type => CMetricType.Counter;
@@ -60,6 +60,9 @@ namespace Prometheus.Client
                     throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
                 _value.Add(increment);
+
+                if (IncludeTimestamp)
+                    SetTimestamp();
             }
 
             public double Value => _value.Value;

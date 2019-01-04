@@ -60,11 +60,15 @@ namespace Prometheus.Client
             public void Inc(double increment)
             {
                 _value.Add(increment);
+                if (IncludeTimestamp)
+                    SetTimestamp();
             }
 
             public void Set(double val)
             {
                 _value.Value = val;
+                if (IncludeTimestamp)
+                    SetTimestamp();
             }
 
             public void Dec()

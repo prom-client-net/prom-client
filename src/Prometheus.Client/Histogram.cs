@@ -18,7 +18,7 @@ namespace Prometheus.Client
             : this(name, help, false, labelNames, buckets)
         {
         }
-        
+
         internal Histogram(string name, string help, bool includeTimestamp, string[] labelNames, double[] buckets = null)
             : base(name, help, includeTimestamp, labelNames)
         {
@@ -69,11 +69,14 @@ namespace Prometheus.Client
                     }
 
                 _sum.Add(val);
+                
+                if (IncludeTimestamp)
+                    SetTimestamp();
             }
 
-            internal override void Init(ICollector parent, LabelValues labelValues)
+            internal override void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp)
             {
-                base.Init(parent, labelValues);
+                base.Init(parent, labelValues, includeTimestamp);
 
                 _upperBounds = ((Histogram) parent)._buckets;
                 _bucketCounts = new ThreadSafeLong[_upperBounds.Length];
