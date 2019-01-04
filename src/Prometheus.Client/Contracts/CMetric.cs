@@ -9,6 +9,7 @@ namespace Prometheus.Client.Contracts
         public CCounter CCounter { get; set; }
 
         public CSummary CSummary { get; set; }
+        
 
         public CUntyped CUntyped { get; set; }
 
