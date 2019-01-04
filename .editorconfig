@@ -7,7 +7,8 @@ insert_final_newline = true
 
 [*.cs]
 indent_size = 4
-insert_final_newline = true
+# code style settings:
+dotnet_sort_system_directives_first = true
 
 [*.csproj]
 indent_size = 2
@@ -20,7 +21,3 @@ indent_size = 2
 
 [{*.sh, *.ps1}]
 indent_size = 2
-
-# code style settings:
-[*.{cs}]
-dotnet_sort_system_directives_first = true
