@@ -9,7 +9,12 @@ namespace Prometheus.Client
     public class Gauge : Collector<Gauge.ThisChild>, IGauge
     {
         internal Gauge(string name, string help, string[] labelNames)
-            : base(name, help, labelNames)
+            : this(name, help, false, labelNames)
+        {
+        }
+        
+        internal Gauge(string name, string help, bool includeTimestamp, string[] labelNames)
+            : base(name, help, includeTimestamp, labelNames)
         {
         }
 

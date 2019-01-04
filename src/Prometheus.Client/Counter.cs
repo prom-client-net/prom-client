@@ -10,7 +10,12 @@ namespace Prometheus.Client
     public class Counter : Collector<Counter.ThisChild>, ICounter
     {
         internal Counter(string name, string help, string[] labelNames)
-            : base(name, help, labelNames)
+            : this(name, help, false, labelNames)
+        {
+        }
+        
+        internal Counter(string name, string help, bool includeTimestamp, string[] labelNames)
+            : base(name, help, includeTimestamp, labelNames)
         {
         }
 

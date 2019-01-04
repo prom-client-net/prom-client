@@ -15,7 +15,12 @@ namespace Prometheus.Client
         private readonly double[] _buckets;
 
         internal Histogram(string name, string help, string[] labelNames, double[] buckets = null)
-            : base(name, help, labelNames)
+            : this(name, help, false, labelNames, buckets)
+        {
+        }
+        
+        internal Histogram(string name, string help, bool includeTimestamp, string[] labelNames, double[] buckets = null)
+            : base(name, help, includeTimestamp, labelNames)
         {
             if (labelNames.Any(l => l == "le"))
                 throw new ArgumentException("'le' is a reserved label name");

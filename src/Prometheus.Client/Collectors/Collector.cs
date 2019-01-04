@@ -12,9 +12,6 @@ namespace Prometheus.Client.Collectors
         where TChild : Child, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-
-       
-      
         private readonly Lazy<TChild> _unlabelledLazy;
 
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
@@ -31,6 +28,28 @@ namespace Prometheus.Client.Collectors
         public string Name { get; }
         public string[] LabelNames { get; }
 
+        protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
+        {
+            Name = name;
+            Help = help;
+            IncludeTimestamp = includeTimestamp;
+            LabelNames = labelNames;
+
+            if (!_metricNameLabelRegex.IsMatch(name))
+                throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
+
+            foreach (var labelName in labelNames)
+            {
+                if (!_metricNameLabelRegex.IsMatch(labelName))
+                    throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
+
+                if (_reservedLabelRegex.IsMatch(labelName))
+                    throw new ArgumentException("Labels starting with double underscore are reserved!");
+            }
+
+            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(_emptyLabelValues));
+        }
+        
         /// <summary>
         ///     Analog WithLabels for compatible with old version
         /// </summary>
@@ -55,33 +74,6 @@ namespace Prometheus.Client.Collectors
             });
         }
 
-        protected Collector(string name, string help, string[] labelNames)
-            : this(name, help, false, labelNames)
-        {
-        }
-
-        protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
-        {
-            Name = name;
-            Help = help;
-            IncludeTimestamp = includeTimestamp;
-            LabelNames = labelNames;
-
-            if (!_metricNameLabelRegex.IsMatch(name))
-                throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
-
-            foreach (var labelName in labelNames)
-            {
-                if (!_metricNameLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
-
-                if (_reservedLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Labels starting with double underscore are reserved!");
-            }
-
-            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(_emptyLabelValues));
-        }
-
         public CMetricFamily Collect()
         {
             var result = new CMetricFamily
@@ -92,8 +84,7 @@ namespace Prometheus.Client.Collectors
                 Metrics = new CMetric[LabelledMetrics.Values.Count]
             };
             
-
-            var i = 0;
+            var i = 0;            
             foreach (var child in LabelledMetrics.Values)
             {
                 result.Metrics[i] = child.Collect();

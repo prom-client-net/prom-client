@@ -48,7 +48,20 @@ namespace Prometheus.Client
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
             int? bufCap = null)
-            : base(name, help, labelNames)
+            : this(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap)
+        {
+        }
+
+        internal Summary(
+            string name,
+            string help,
+            bool includeTimestamp,
+            string[] labelNames,
+            IList<QuantileEpsilonPair> objectives = null,
+            TimeSpan? maxAge = null,
+            int? ageBuckets = null,
+            int? bufCap = null)
+            : base(name, help, includeTimestamp, labelNames)
         {
             _objectives = objectives ?? DefObjectives.ToList();
             _maxAge = maxAge ?? _defMaxAge;
