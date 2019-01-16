@@ -14,11 +14,26 @@ namespace Prometheus.Client
         public static readonly MetricFactory DefaultFactory = new MetricFactory(CollectorRegistry.Instance);
 
         /// <summary>
-        ///     Create Counter in default MetricFactory
+        ///     Create Counter
         /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public static Counter CreateCounter(string name, string help, params string[] labelNames)
         {
             return DefaultFactory.CreateCounter(name, help, labelNames);
+        }
+        
+        /// <summary>
+        ///     Create  Counter
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return DefaultFactory.CreateCounter(name, help, includeTimestamp, labelNames);
         }
 
         /// <summary>

@@ -14,9 +14,27 @@ namespace Prometheus.Client
             _registry = registry;
         }
 
+        /// <summary>
+        ///     Create Counter
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public Counter CreateCounter(string name, string help, params string[] labelNames)
         {
-            var metric = new Counter(name, help, labelNames);
+            return CreateCounter(name, help, false, labelNames);
+        }
+
+        /// <summary>
+        ///     Create  Counter
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            var metric = new Counter(name, help, includeTimestamp, labelNames);
             return (Counter) _registry.GetOrAdd(metric);
         }
 
