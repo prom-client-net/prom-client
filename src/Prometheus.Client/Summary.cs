@@ -43,18 +43,6 @@ namespace Prometheus.Client
         internal Summary(
             string name,
             string help,
-            string[] labelNames,
-            IList<QuantileEpsilonPair> objectives = null,
-            TimeSpan? maxAge = null,
-            int? ageBuckets = null,
-            int? bufCap = null)
-            : this(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap)
-        {
-        }
-
-        internal Summary(
-            string name,
-            string help,
             bool includeTimestamp,
             string[] labelNames,
             IList<QuantileEpsilonPair> objectives = null,

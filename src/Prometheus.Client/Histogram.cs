@@ -14,11 +14,6 @@ namespace Prometheus.Client
         private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
         private readonly double[] _buckets;
 
-        internal Histogram(string name, string help, string[] labelNames, double[] buckets = null)
-            : this(name, help, false, labelNames, buckets)
-        {
-        }
-
         internal Histogram(string name, string help, bool includeTimestamp, string[] labelNames, double[] buckets = null)
             : base(name, help, includeTimestamp, labelNames)
         {

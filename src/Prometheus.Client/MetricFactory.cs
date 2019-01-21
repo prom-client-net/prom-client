@@ -38,33 +38,134 @@ namespace Prometheus.Client
             return (Counter) _registry.GetOrAdd(metric);
         }
 
+        /// <summary>
+        ///     Create Gauge
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public Gauge CreateGauge(string name, string help, params string[] labelNames)
         {
-            var metric = new Gauge(name, help, labelNames);
+            return CreateGauge(name, help, false, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Gauge
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            var metric = new Gauge(name, help, includeTimestamp, labelNames);
             return (Gauge) _registry.GetOrAdd(metric);
         }
 
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public Summary CreateSummary(string name, string help, params string[] labelNames)
         {
-            var metric = new Summary(name, help, labelNames);
-            return (Summary) _registry.GetOrAdd(metric);
+            return CreateSummary(name, help, false, labelNames);
         }
 
-        public Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Summary CreateSummary(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return CreateSummary(name, help, includeTimestamp, labelNames, null, null, null, null);
+        }
+
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
+        /// <param name="objectives"></param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        public Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        {
+            return CreateSummary(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap);
+        }
+
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        /// <param name="objectives"></param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        public Summary CreateSummary(string name, string help, bool includeTimestamp, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan? maxAge, int? ageBuckets,
             int? bufCap)
         {
-            var metric = new Summary(name, help, labelNames, objectives, maxAge, ageBuckets, bufCap);
+            var metric = new Summary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
             return (Summary) _registry.GetOrAdd(metric);
         }
 
+        
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public Histogram CreateHistogram(string name, string help, params string[] labelNames)
         {
-            return CreateHistogram(name, help, null, labelNames);
+            return CreateHistogram(name, help, false, labelNames);
         }
 
+        
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Histogram CreateHistogram(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return CreateHistogram(name, help, includeTimestamp, null, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="buckets">Buckets</param>
+        /// <param name="labelNames">Array of label names</param>
         public Histogram CreateHistogram(string name, string help, double[] buckets, params string[] labelNames)
         {
-            var metric = new Histogram(name, help, labelNames, buckets);
+            return CreateHistogram(name, help, false, buckets, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="buckets">Buckets</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
+        {
+            var metric = new Histogram(name, help, includeTimestamp, labelNames, buckets);
             return (Histogram) _registry.GetOrAdd(metric);
         }
     }

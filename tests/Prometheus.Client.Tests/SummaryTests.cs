@@ -22,7 +22,7 @@ namespace Prometheus.Client.Tests
             var concLevel = n % 5 + 1;
             var total = mutations * concLevel;
 
-            var sum = new Summary("test_summary", "helpless", new string[0]);
+            var sum = new Summary("test_summary", "helpless", false, new string[0]);
             var allVars = new double[total];
             double sampleSum = 0;
             var tasks = new List<Task>();
@@ -85,7 +85,7 @@ namespace Prometheus.Client.Tests
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            var sum = new Summary("test_summary", "helpless", new string[0],
+            var sum = new Summary("test_summary", "helpless", false, new string[0],
                 objectives: new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, maxAge: TimeSpan.FromSeconds(100), ageBuckets: 10);
             var child = new Summary.ThisChild();
             child.Init(sum, LabelValues.Empty, false, baseTime);

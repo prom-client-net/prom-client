@@ -23,7 +23,7 @@ namespace Prometheus.Client
         {
             return DefaultFactory.CreateCounter(name, help, labelNames);
         }
-        
+
         /// <summary>
         ///     Create  Counter
         /// </summary>
@@ -37,44 +37,132 @@ namespace Prometheus.Client
         }
 
         /// <summary>
-        ///     Create Gauge in default MetricFactory
+        ///     Create Gauge
         /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public static Gauge CreateGauge(string name, string help, params string[] labelNames)
         {
             return DefaultFactory.CreateGauge(name, help, labelNames);
         }
 
         /// <summary>
-        ///     Create Summary in default MetricFactory
+        ///     Create Gauge
         /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return DefaultFactory.CreateGauge(name, help, includeTimestamp, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public static Summary CreateSummary(string name, string help, params string[] labelNames)
         {
-            return DefaultFactory.CreateSummary(name, help, labelNames);
+            return DefaultFactory.CreateSummary(name, help, false, labelNames);
         }
 
         /// <summary>
-        ///     Create Summary in default MetricFactory
+        ///     Create Summary
         /// </summary>
-        public static Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge,
-            int? ageBuckets, int? bufCap)
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Summary CreateSummary(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            return DefaultFactory.CreateSummary(name, help, labelNames, objectives, maxAge, ageBuckets, bufCap);
+            return DefaultFactory.CreateSummary(name, help, includeTimestamp, labelNames, null, null, null, null);
         }
 
         /// <summary>
-        ///     Create Histogram in default MetricFactory
+        ///     Create Summary
         /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
+        /// <param name="objectives"></param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        public static Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        {
+            return DefaultFactory.CreateSummary(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap);
+        }
+
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        /// <param name="objectives"></param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        public static Summary CreateSummary(string name, string help, bool includeTimestamp, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan? maxAge,
+            int? ageBuckets,
+            int? bufCap)
+        {
+            return DefaultFactory.CreateSummary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
+        }
+
+
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
         public static Histogram CreateHistogram(string name, string help, params string[] labelNames)
         {
-            return CreateHistogram(name, help, null, labelNames);
+            return DefaultFactory.CreateHistogram(name, help, false, labelNames);
+        }
+
+
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Histogram CreateHistogram(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return DefaultFactory.CreateHistogram(name, help, includeTimestamp, null, labelNames);
         }
 
         /// <summary>
-        ///     Create Histogram in default MetricFactory
+        ///     Create Histogram
         /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="buckets">Buckets</param>
+        /// <param name="labelNames">Array of label names</param>
         public static Histogram CreateHistogram(string name, string help, double[] buckets, params string[] labelNames)
         {
-            return DefaultFactory.CreateHistogram(name, help, buckets, labelNames);
+            return DefaultFactory.CreateHistogram(name, help, false, buckets, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Histogram
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="buckets">Buckets</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
+        {
+            return DefaultFactory.CreateHistogram(name, help, includeTimestamp, buckets, labelNames);
         }
 
         /// <summary>
