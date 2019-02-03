@@ -85,6 +85,10 @@ namespace Prometheus.Client
                     WriteMetricValue(streamWriter, familyName, "_bucket", bucket.CumulativeCount, metric.Timestamp, bucketLabels);
                 }
             }
+            else if (metric.CUntyped != null)
+            {
+                WriteMetricValue(streamWriter, familyName, null, metric.CUntyped.Value, metric.Timestamp, metric.Labels);
+            }
         }
 
         private static void WriteMetricValue(StreamWriter writer, string familyName, string postfix, double value, long? timestamp, CLabelPair[] labels)
@@ -118,7 +122,7 @@ namespace Prometheus.Client
 
             writer.Write(' ');
             writer.Write(value.ToString(CultureInfo.InvariantCulture));
-            
+
             if (timestamp.HasValue)
             {
                 writer.Write(' ');
