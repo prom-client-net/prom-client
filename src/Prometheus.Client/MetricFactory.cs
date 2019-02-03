@@ -61,6 +61,30 @@ namespace Prometheus.Client
             var metric = new Gauge(name, help, includeTimestamp, labelNames);
             return (Gauge) _registry.GetOrAdd(metric);
         }
+        
+        /// <summary>
+        ///     Create Untyped
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Untyped CreateUntyped(string name, string help, params string[] labelNames)
+        {
+            return CreateUntyped(name, help, false, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Untyped
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            var metric = new Untyped(name, help, includeTimestamp, labelNames);
+            return (Untyped) _registry.GetOrAdd(metric);
+        }
 
         /// <summary>
         ///     Create Summary

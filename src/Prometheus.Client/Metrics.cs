@@ -60,6 +60,29 @@ namespace Prometheus.Client
         }
 
         /// <summary>
+        ///     Create Untyped
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Untyped CreateUntyped(string name, string help, params string[] labelNames)
+        {
+            return DefaultFactory.CreateUntyped(name, help, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Untyped
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="help">Help text</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric</param>
+        /// <param name="labelNames">Array of label names</param>
+        public static Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return DefaultFactory.CreateUntyped(name, help, includeTimestamp, labelNames);
+        }
+
+        /// <summary>
         ///     Create Summary
         /// </summary>
         /// <param name="name">Name</param>
