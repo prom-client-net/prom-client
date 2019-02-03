@@ -6,5 +6,7 @@ namespace Prometheus.Client.Abstractions
     public interface IUntyped
     {
         double Value { get; }
+        
+        void Set(double val);
     }
 }
