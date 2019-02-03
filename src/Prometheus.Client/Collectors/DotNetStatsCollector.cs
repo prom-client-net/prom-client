@@ -12,7 +12,7 @@ namespace Prometheus.Client.Collectors
     {
         private readonly MetricFactory _metricFactory;
         private readonly List<Counter.ThisChild> _collectionCounts = new List<Counter.ThisChild>();
-        private Gauge _totalMemory;
+        private Untyped _totalMemory;
         private Counter _errorCounter;
 
         /// <inheritdoc />
@@ -39,7 +39,7 @@ namespace Prometheus.Client.Collectors
 
             var collectionCountsParent = _metricFactory.CreateCounter("dotnet_collection_count_total", "GC collection count", "generation");
 
-            _totalMemory = _metricFactory.CreateGauge("dotnet_totalmemory", "Total known allocated memory");
+            _totalMemory = _metricFactory.CreateUntyped("dotnet_totalmemory", "Total known allocated memory");
 
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
                 _collectionCounts.Add(collectionCountsParent.Labels(gen.ToString()));
