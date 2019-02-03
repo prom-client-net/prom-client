@@ -16,7 +16,6 @@ namespace Prometheus.Client.Collectors
 
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
-        private static readonly LabelValues _emptyLabelValues = new LabelValues(new string[0], new string[0]);
 
         protected readonly string Help;
         private readonly bool _includeTimestamp;
@@ -47,7 +46,7 @@ namespace Prometheus.Client.Collectors
                     throw new ArgumentException("Labels starting with double underscore are reserved!");
             }
 
-            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(_emptyLabelValues));
+            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(LabelValues.Empty));
         }
         
         /// <summary>
