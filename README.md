@@ -28,29 +28,8 @@ and <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>.
 
     dotnet add package Prometheus.Client
 	
-## Extensions
 
-Owin Middleware for net45 [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
-
-	dotnet add package Prometheus.Client.Owin
-	
-AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
-	
-	dotnet add package Prometheus.Client.AspNetCore
-
-Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
-
-	dotnet add package Prometheus.Client.MetricServer
-	
-Push metrics to a PushGateaway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
-
-	dotnet add package Prometheus.Client.MetricPusher
-
-Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
-
-	dotnet add package Prometheus.Client.HttpRequestDurations
-
-## Quik start
+## Configuration
 
 [Examples](https://github.com/PrometheusClientNet/Prometheus.Client.Examples)
 
@@ -167,6 +146,28 @@ var counter = Metrics.CreateCounter("myCounter", "help text", labelNames: new []
 counter.Labels("GET", "/").Inc();
 counter.Labels("POST", "/cancel").Inc();
 ```
+
+## Extensions
+
+Owin Middleware for net45 [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
+
+	dotnet add package Prometheus.Client.Owin
+	
+AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
+	
+	dotnet add package Prometheus.Client.AspNetCore
+
+Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
+
+	dotnet add package Prometheus.Client.MetricServer
+	
+Push metrics to a PushGateaway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
+
+	dotnet add package Prometheus.Client.MetricPusher
+
+Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
+
+	dotnet add package Prometheus.Client.HttpRequestDurations
 
 ## Contribute
 
