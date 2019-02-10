@@ -6,7 +6,7 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IUntyped" />
-    public class Untyped : Collector<Untyped.ThisChild>, IUntyped
+    public class Untyped : Collector<Untyped.LabelledUntyped>, IUntyped
     {
         internal Untyped(string name, string help, bool includeTimestamp, string[] labelNames)
             : base(name, help, includeTimestamp, labelNames)
@@ -22,7 +22,7 @@ namespace Prometheus.Client
 
         public double Value => Unlabelled.Value;
 
-        public class ThisChild : Child, IUntyped
+        public class LabelledUntyped : Labelled, IUntyped
         {
             private ThreadSafeDouble _value;
 

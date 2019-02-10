@@ -9,7 +9,7 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IHistogram" />
-    public class Histogram : Collector<Histogram.ThisChild>, IHistogram
+    public class Histogram : Collector<Histogram.LabelledHistogram>, IHistogram
     {
         private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
         private readonly double[] _buckets;
@@ -44,7 +44,7 @@ namespace Prometheus.Client
             Unlabelled.Observe(val);
         }
 
-        public class ThisChild : Child, IHistogram
+        public class LabelledHistogram : Labelled, IHistogram
         {
             private ThreadSafeLong[] _bucketCounts;
             private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);

@@ -7,7 +7,7 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ICounter" />
-    public class Counter : Collector<Counter.ThisChild>, ICounter
+    public class Counter : Collector<Counter.LabelledCounter>, ICounter
     {
         internal Counter(string name, string help, bool includeTimestamp, string[] labelNames)
             : base(name, help, includeTimestamp, labelNames)
@@ -35,7 +35,7 @@ namespace Prometheus.Client
 
         protected override CMetricType Type => CMetricType.Counter;
 
-        public class ThisChild : Child, ICounter
+        public class LabelledCounter : Labelled, ICounter
         {
             private ThreadSafeDouble _value;
 

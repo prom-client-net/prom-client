@@ -6,7 +6,7 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IGauge" />
-    public class Gauge : Collector<Gauge.ThisChild>, IGauge
+    public class Gauge : Collector<Gauge.LabelledGauge>, IGauge
     {        
         internal Gauge(string name, string help, bool includeTimestamp, string[] labelNames)
             : base(name, help, includeTimestamp, labelNames)
@@ -43,7 +43,7 @@ namespace Prometheus.Client
         public double Value => Unlabelled.Value;
 
 
-        public class ThisChild : Child, IGauge
+        public class LabelledGauge : Labelled, IGauge
         {
             private ThreadSafeDouble _value;
 

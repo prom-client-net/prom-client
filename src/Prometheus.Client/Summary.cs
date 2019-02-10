@@ -10,7 +10,7 @@ using Prometheus.Client.SummaryImpl;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ISummary" />
-    public class Summary : Collector<Summary.ThisChild>, ISummary
+    public class Summary : Collector<Summary.LabelledSummary>, ISummary
     {
         // Label that defines the quantile in a summary.
         private const string _quantileLabel = "quantile";
@@ -77,7 +77,7 @@ namespace Prometheus.Client
             Unlabelled.Observe(val);
         }
 
-        public class ThisChild : Child, ISummary
+        public class LabelledSummary : Labelled, ISummary
         {
             // Protects hotBuf and hotBufExpTime.
             private readonly object _bufLock = new object();

@@ -11,7 +11,7 @@ namespace Prometheus.Client.Collectors
     public class DotNetStatsCollector : IOnDemandCollector
     {
         private readonly MetricFactory _metricFactory;
-        private readonly List<Counter.ThisChild> _collectionCounts = new List<Counter.ThisChild>();
+        private readonly List<Counter.LabelledCounter> _collectionCounts = new List<Counter.LabelledCounter>();
         private Untyped _totalMemory;
         private Counter _errorCounter;
 

@@ -9,7 +9,7 @@ using Prometheus.Client.Contracts;
 namespace Prometheus.Client.Collectors
 {
     public abstract class Collector<TChild> : ICollector
-        where TChild : Child, new()
+        where TChild : Labelled, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
         private readonly Lazy<TChild> _unlabelledLazy;

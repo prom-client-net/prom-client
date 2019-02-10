@@ -5,7 +5,7 @@ using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client
 {
-    public abstract class Child
+    public abstract class Labelled
     {
         private long? _timestamp;
         protected bool IncludeTimestamp;
