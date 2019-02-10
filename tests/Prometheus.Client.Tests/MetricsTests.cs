@@ -55,14 +55,20 @@ namespace Prometheus.Client.Tests
             Assert.Throws<ArgumentException>(() => Metrics.CreateCounter("name1", "h", "label1"));
         }
 
-        [Fact]
-        public void Counter_Collection()
+        [Theory]
+        [InlineData(3.2)]
+        [InlineData(3.1)]
+        [InlineData(1)]
+        [InlineData(4)]
+        [InlineData(8)]
+        [InlineData(8.9)]
+        public void Counter_Collection(double value)
         {
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
 
             counter.Inc();
-            counter.Inc(3.2);
-            counter.Labels("abc").Inc(3.2);
+            counter.Inc(value);
+            counter.WithLabels("abc").Inc(value);
 
             var exported = CollectorRegistry.Instance.CollectAll().ToArray();
 
@@ -81,12 +87,14 @@ namespace Prometheus.Client.Tests
                 Assert.Null(metric.CUntyped);
                 Assert.NotNull(metric.CCounter);
             }
-
-            Assert.Equal(4.2, metrics[0].CCounter.Value);
+            
+            Assert.Equal(value + 1, metrics[0].CCounter.Value); 
             Assert.Empty(metrics[0].Labels);
 
-            Assert.Equal(3.2, metrics[1].CCounter.Value);
+            Assert.Equal(value, metrics[1].CCounter.Value);
+            
             var labelPairs = metrics[1].Labels;
+            
             Assert.Single(labelPairs);
             Assert.Equal("label1", labelPairs[0].Name);
             Assert.Equal("abc", labelPairs[0].Value);
@@ -98,6 +106,7 @@ namespace Prometheus.Client.Tests
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
 
             counter.Inc();
+            
             counter.Inc(3.2);
             counter.Labels("test").Inc(1);
             var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
