@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client
@@ -174,17 +175,11 @@ namespace Prometheus.Client
                     };
             }
 
-            protected override void Populate(CMetric cMetric)
+            internal SummaryState ForkState(DateTime now)
             {
-                Populate(cMetric, DateTime.UtcNow);
-            }
-
-            internal void Populate(CMetric cMetric, DateTime now)
-            {
-                cMetric.CSummary = new CSummary
-                {
-                    Quantiles = new CQuantile[_objectives.Count]
-                };
+                double count;
+                double sum;
+                var values = new KeyValuePair<double, double>[_objectives.Count];
 
                 lock (_bufLock)
                 {
@@ -193,25 +188,48 @@ namespace Prometheus.Client
                         // Swap bufs even if hotBuf is empty to set new hotBufExpTime.
                         SwapBufs(now);
                         FlushColdBuf();
-                        cMetric.CSummary.SampleCount = _count;
-                        cMetric.CSummary.SampleSum = _sum;
+                        count = _count;
+                        sum = _sum;
 
-                        for (var idx = 0; idx < _sortedObjectives.Length; idx++)
+                        for (var i = 0; i < _sortedObjectives.Length; i++)
                         {
-                            var rank = _sortedObjectives[idx];
-                            var q = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
+                            var rank = _sortedObjectives[i];
+                            var value = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
 
-                            cMetric.CSummary.Quantiles[idx] = new CQuantile
-                            {
-                                Quantile = rank,
-                                Value = q
-                            };
+                            values[i] = new KeyValuePair<double, double>(rank, value);
                         }
+
+                        return new SummaryState
+                        {
+                            Values = values,
+                            Count = _count,
+                            Sum = _sum,
+                        };
+                    }
+                }
+            }
+
+            protected internal override void Collect(IMetricsWriter writer)
+            {
+                var state = ForkState(DateTime.UtcNow);
+
+                for (int i = 0; i < state.Values.Length; i++)
+                {
+                    var bucketSample = writer.StartSample();
+                    var labelWriter = bucketSample.StartLabels();
+                    labelWriter.WriteLabels(Labels);
+                    labelWriter.WriteLabel("quantile", state.Values[i].Key.ToString());
+                    labelWriter.EndLabels();
+
+                    bucketSample.WriteValue(state.Values[i].Value);
+                    if (IncludeTimestamp && Timestamp.HasValue)
+                    {
+                        bucketSample.WriteTimestamp(Timestamp.Value);
                     }
                 }
 
-                if (cMetric.CSummary.Quantiles.Length > 0)
-                    Array.Sort(cMetric.CSummary.Quantiles, _quantileComparer);
+                writer.WriteSample(state.Sum, "_sum", Labels, Timestamp);
+                writer.WriteSample(state.Count, "_count", Labels, Timestamp);
             }
 
             /// <summary>
@@ -294,6 +312,15 @@ namespace Prometheus.Client
                     _headStream = _streams[_headStreamIdx];
                     _headStreamExpTime = _headStreamExpTime.Add(_streamDuration);
                 }
+            }
+
+            internal struct SummaryState
+            {
+                public double Sum { get; set; }
+
+                public uint Count { get; set; }
+
+                public KeyValuePair<double, double>[] Values { get; set; }
             }
         }
     }

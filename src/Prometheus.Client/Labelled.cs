@@ -2,12 +2,12 @@ using System;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client
 {
     public abstract class Labelled
     {
-        private long? _timestamp;
         protected bool IncludeTimestamp;
         private LabelValues _labelValues;
 
@@ -17,21 +17,20 @@ namespace Prometheus.Client
             IncludeTimestamp = includeTimestamp;
         }
 
-        protected abstract void Populate(CMetric cMetric);
+        protected internal abstract void Collect(IMetricsWriter writer);
 
-        internal CMetric Collect()
-        {
-            var metric = new CMetric();
-            Populate(metric);
-            metric.Labels = _labelValues.WireLabels;
-            if (IncludeTimestamp)
-                metric.Timestamp = _timestamp;
-            return metric;
-        }
+        protected CLabelPair[] Labels => _labelValues.WireLabels;
+
+        protected long? Timestamp { get; private set; }
 
         protected void SetTimestamp()
         {
-            _timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+            if (!IncludeTimestamp)
+            {
+                throw new InvalidOperationException("Set IncludeTimestamp to true before call SetTimestamp");
+            }
+
+            Timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Prometheus.Client.Contracts;
+using System.Collections.Generic;
 
 namespace Prometheus.Client.Collectors.Abstractions
 {
@@ -9,7 +8,7 @@ namespace Prometheus.Client.Collectors.Abstractions
 
         bool Remove(ICollector collector);
 
-        IEnumerable<CMetricFamily> CollectAll();
+        IEnumerable<ICollector> Enumerate();
 
         void RegisterOnDemandCollectors(List<IOnDemandCollector> onDemandCollectors);
     }

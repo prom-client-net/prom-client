@@ -1,9 +1,11 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
@@ -77,27 +79,29 @@ namespace Prometheus.Client
                 _bucketCounts = new ThreadSafeLong[_upperBounds.Length];
             }
 
-            protected override void Populate(CMetric cMetric)
+            protected internal override void Collect(IMetricsWriter writer)
             {
-                var wireMetric = new CHistogram
-                {
-                    SampleCount = 0L,
-                    Buckets = new CBucket[_bucketCounts.Length]
-                };
+                var cumulativeCount = 0L;
 
                 for (int i = 0; i < _bucketCounts.Length; i++)
                 {
-                    wireMetric.SampleCount += (ulong) _bucketCounts[i].Value;
-                    wireMetric.Buckets[i] = new CBucket
+                    cumulativeCount += _bucketCounts[i].Value;
+                    var bucketSample = writer.StartSample("_bucket");
+                    var labelWriter = bucketSample.StartLabels();
+                    labelWriter.WriteLabels(Labels);
+                    var labelValue = double.IsPositiveInfinity(_upperBounds[i]) ? "+Inf" : _upperBounds[i].ToString(CultureInfo.InvariantCulture);
+                    labelWriter.WriteLabel("le", labelValue);
+                    labelWriter.EndLabels();
+
+                    bucketSample.WriteValue(cumulativeCount);
+                    if (IncludeTimestamp && Timestamp.HasValue)
                     {
-                        UpperBound = _upperBounds[i],
-                        CumulativeCount = wireMetric.SampleCount
-                    };
+                        bucketSample.WriteTimestamp(Timestamp.Value);
+                    }
                 }
 
-                wireMetric.SampleSum = _sum.Value;
-
-                cMetric.CHistogram = wireMetric;
+                writer.WriteSample(_sum.Value, "_sum", Labels, Timestamp);
+                writer.WriteSample(cumulativeCount, "_count", Labels, Timestamp);
             }
         }
     }

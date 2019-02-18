@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +21,7 @@ namespace Prometheus.Client.Collectors
                 onDemandCollector.RegisterMetrics();
         }
 
-        public IEnumerable<CMetricFamily> CollectAll()
-        {
-            if (_onDemandCollectors != null)
-                foreach (var onDemandCollector in _onDemandCollectors)
-                    onDemandCollector.UpdateMetrics();
-
-            foreach (var value in _collectors.Values)
-            {
-                var c = value.Collect();
-                if (c != null)
-                    yield return c;
-            }
-        }
+        public IEnumerable<ICollector> Enumerate() => _collectors.Values;
 
         public void Clear()
         {

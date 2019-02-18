@@ -1,10 +1,10 @@
-using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Collectors.Abstractions
 {
     public interface ICollector
     {
-        CMetricFamily Collect();
+        void Collect(IMetricsWriter writer);
 
         string Name { get; }
 
