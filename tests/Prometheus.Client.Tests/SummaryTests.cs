@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.SummaryImpl;
 using Xunit;
 
@@ -49,11 +48,11 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.Collect().Metrics.Single().CSummary;
+            var m = sum.WithLabels().ForkState(DateTime.Now);
 
-            Assert.Equal(mutations * concLevel, (int) m.SampleCount);
+            Assert.Equal(mutations * concLevel, (int)m.Count);
 
-            var got = m.SampleSum;
+            var got = m.Sum;
             var want = sampleSum;
 
             Assert.True(Math.Abs(got - want) / want <= 0.001);
@@ -65,8 +64,8 @@ namespace Prometheus.Client.Tests
             {
                 var wantQ = Summary.DefObjectives.ElementAt(i);
                 var epsilon = wantQ.Epsilon;
-                var gotQ = m.Quantiles[i].Quantile;
-                var gotV = m.Quantiles[i].Value;
+                var gotQ = m.Values[i].Key;
+                var gotV = m.Values[i].Value;
                 var minMax = GetBounds(allVars, wantQ.Quantile, epsilon);
 
                 Assert.False(double.IsNaN(gotQ));
@@ -90,9 +89,6 @@ namespace Prometheus.Client.Tests
             var child = new Summary.LabelledSummary();
             child.Init(sum, LabelValues.Empty, false, baseTime);
 
-            CSummary m;
-            var metric = new CMetric();
-
             for (var i = 0; i < 1000; i++)
             {
                 var now = baseTime.AddSeconds(i);
@@ -100,20 +96,17 @@ namespace Prometheus.Client.Tests
 
                 if (i % 10 == 0)
                 {
-                    child.Populate(metric, now);
-                    m = metric.CSummary;
-                    var got = m.Quantiles[0].Value;
-                    var want = Math.Max((double) i / 10, (double) i - 90);
+                    var state = child.ForkState(now);
+                    var got = state.Values[0].Value;
+                    var want = Math.Max((double)i / 10, (double)i - 90);
 
                     Assert.True(Math.Abs(got - want) <= 1, $"{i}. got {got} want {want}");
                 }
             }
 
             // Wait for MaxAge without observations and make sure quantiles are NaN.
-            child.Populate(metric, baseTime.AddSeconds(1000).AddSeconds(100));
-            m = metric.CSummary;
-
-            Assert.True(double.IsNaN(m.Quantiles[0].Value));
+            var newState = child.ForkState(baseTime.AddSeconds(1000).AddSeconds(100));
+            Assert.True(double.IsNaN(newState.Values[0].Value));
         }
 
         [Fact]
@@ -136,45 +129,43 @@ namespace Prometheus.Client.Tests
                 }
             }
 
-            var metric = new CMetric();
-            summary.Populate(metric, DateTime.UtcNow);
-            var m = metric.CSummary;
+            var state = summary.ForkState(DateTime.Now);
 
-            Assert.Equal(numObservations * numIterations, (int) m.SampleCount);
-            Assert.Equal(expectedSum, m.SampleSum);
+            Assert.Equal(numObservations * numIterations, (int)state.Count);
+            Assert.Equal(expectedSum, state.Sum);
 
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.5)).Value >= 50 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.5)).Value <= 50 + 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.5)).Value >= 50 - 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.5)).Value <= 50 + 2);
 
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.9)).Value >= 90 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.9)).Value <= 90 + 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.9)).Value >= 90 - 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.9)).Value <= 90 + 2);
 
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.99)).Value >= 99 - 2);
-            Assert.True(m.Quantiles.Single(_ => _.Quantile.Equals(0.99)).Value <= 99 + 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.99)).Value >= 99 - 2);
+            Assert.True(state.Values.Single(_ => _.Key.Equals(0.99)).Value <= 99 + 2);
         }
 
         private static Tuple<double, double> GetBounds(double[] vars, double q, double epsilon)
-        {
-            // TODO: This currently tolerates an error of up to 2*ε. The error must
-            // be at most ε, but for some reason, it's sometimes slightly
-            // higher. That's a bug.
-            var n = (double) vars.Length;
-            var lower = (int) ((q - 2 * epsilon) * n);
-            var upper = (int) Math.Ceiling((q + 2 * epsilon) * n);
-
-            var min = vars[0];
-            if (lower > 1)
             {
-                min = vars[lower - 1];
-            }
+                // TODO: This currently tolerates an error of up to 2*ε. The error must
+                // be at most ε, but for some reason, it's sometimes slightly
+                // higher. That's a bug.
+                var n = (double) vars.Length;
+                var lower = (int) ((q - 2 * epsilon) * n);
+                var upper = (int) Math.Ceiling((q + 2 * epsilon) * n);
 
-            var max = vars[vars.Length - 1];
-            if (upper < vars.Length)
-            {
-                max = vars[upper - 1];
-            }
+                var min = vars[0];
+                if (lower > 1)
+                {
+                    min = vars[lower - 1];
+                }
 
-            return new Tuple<double, double>(min, max);
-        }
+                var max = vars[vars.Length - 1];
+                if (upper < vars.Length)
+                {
+                    max = vars[upper - 1];
+                }
+
+                return new Tuple<double, double>(min, max);
+            }
     }
 }

@@ -1,6 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
+
+using NSubstitute;
+using NSubstitute.Extensions;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.MetricsWriter;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -64,64 +69,58 @@ namespace Prometheus.Client.Tests
         [InlineData(8.9)]
         public void Counter_Collection(double value)
         {
+            var writer = Substitute.For<IMetricsWriter>();
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
 
             counter.Inc();
             counter.Inc(value);
             counter.WithLabels("abc").Inc(value);
 
-            var exported = CollectorRegistry.Instance.CollectAll().ToArray();
+            counter.Collect(writer);
 
-            Assert.Single(exported);
-            var familiy1 = exported[0];
-            Assert.Equal("name1", familiy1.Name);
-            Assert.Equal("help1", familiy1.Help);
-            var metrics = familiy1.Metrics;
-            Assert.Equal(2, metrics.Length);
+            Received.InOrder(() => {
+                writer.StartMetric("name1");
+                writer.WriteHelp("help1");
+                writer.WriteType(Contracts.CMetricType.Counter);
 
-            foreach (var metric in metrics)
-            {
-                Assert.Null(metric.CGauge);
-                Assert.Null(metric.CHistogram);
-                Assert.Null(metric.CSummary);
-                Assert.Null(metric.CUntyped);
-                Assert.NotNull(metric.CCounter);
-            }
-            
-            Assert.Equal(value + 1, metrics[0].CCounter.Value); 
-            Assert.Empty(metrics[0].Labels);
+                var sample1 = writer.StartSample();
+                sample1.WriteValue(value + 1);
 
-            Assert.Equal(value, metrics[1].CCounter.Value);
-            
-            var labelPairs = metrics[1].Labels;
-            
-            Assert.Single(labelPairs);
-            Assert.Equal("label1", labelPairs[0].Name);
-            Assert.Equal("abc", labelPairs[0].Value);
+                var sample2 = writer.StartSample();
+                var lbl = sample2.StartLabels();
+                lbl.WriteLabel("label1", "abc");
+                lbl.EndLabels();
+                sample2.WriteValue(value);
+            });
         }
 
         [Fact]
         public void Counter_Reset()
         {
+            var writer = Substitute.For<IMetricsWriter>();
             var counter = Metrics.CreateCounter("name1", "help1", "label1");
 
             counter.Inc();
-            
             counter.Inc(3.2);
             counter.Labels("test").Inc(1);
-            var counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
-            Assert.Equal(4.2, counterValue);
-
             counter.Reset();
-            var metricFamily = CollectorRegistry.Instance.CollectAll().ToArray()[0];
-            counterValue = metricFamily.Metrics[0].CCounter.Value;
-            var counterValueLabeled = metricFamily.Metrics[1].CCounter.Value;
-            Assert.Equal(0, counterValue);
-            Assert.Equal(0, counterValueLabeled);
 
-            counter.Inc();
-            counterValue = CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value;
-            Assert.Equal(1, counterValue);
+            counter.Collect(writer);
+
+            Received.InOrder(() => {
+                writer.StartMetric("name1");
+                writer.WriteHelp("help1");
+                writer.WriteType(Contracts.CMetricType.Counter);
+
+                var sample1 = writer.StartSample();
+                sample1.WriteValue(0);
+
+                var sample2 = writer.StartSample();
+                var lbl = sample2.StartLabels();
+                lbl.WriteLabel("label1", "test");
+                lbl.EndLabels();
+                sample2.WriteValue(0);
+            });
         }
 
         [Fact]
@@ -135,13 +134,17 @@ namespace Prometheus.Client.Tests
             counter1.Inc(3);
             counter2.Inc(4);
 
-            Assert.Equal(3, myRegistry.CollectAll().ToArray()[0].Metrics[0].CCounter.Value); //counter1 == 3
-            Assert.Equal(4, CollectorRegistry.Instance.CollectAll().ToArray()[0].Metrics[0].CCounter.Value); //counter2 == 4
+            Assert.Single(myRegistry.Enumerate());
+            Assert.Single(CollectorRegistry.Instance.Enumerate());
+
+            Assert.Equal(3, ((ICounter)myRegistry.Enumerate().Single()).Value); //counter1 == 3
+            Assert.Equal(4, ((ICounter)CollectorRegistry.Instance.Enumerate().Single()).Value); //counter2 == 4
         }
 
         [Fact]
         public void Gauge_Collection()
         {
+            var writer = Substitute.For<IMetricsWriter>();
             var gauge = Metrics.CreateGauge("name1", "help1");
 
             gauge.Inc();
@@ -149,28 +152,22 @@ namespace Prometheus.Client.Tests
             gauge.Set(4);
             gauge.Dec(0.2);
 
-            var exported = CollectorRegistry.Instance.CollectAll().ToArray();
+            gauge.Collect(writer);
 
-            Assert.Single(exported);
-            var familiy1 = exported[0];
-            Assert.Equal("name1", familiy1.Name);
-            var metrics = familiy1.Metrics;
-            Assert.Single(metrics);
-            foreach (var metric in metrics)
-            {
-                Assert.Null(metric.CCounter);
-                Assert.Null(metric.CHistogram);
-                Assert.Null(metric.CSummary);
-                Assert.Null(metric.CUntyped);
-                Assert.NotNull(metric.CGauge);
-            }
+            Received.InOrder(() => {
+                writer.StartMetric("name1");
+                writer.WriteHelp("help1");
+                writer.WriteType(Contracts.CMetricType.Gauge);
 
-            Assert.Equal(3.8, metrics[0].CGauge.Value);
+                var sample1 = writer.StartSample();
+                sample1.WriteValue(3.8);
+            });
         }
 
         [Fact]
         public void Histogram_Tests()
         {
+            var writer = Substitute.For<IMetricsWriter>();
             var histogram = Metrics.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
             histogram.Observe(1.5);
             histogram.Observe(2.5);
@@ -182,15 +179,43 @@ namespace Prometheus.Client.Tests
             histogram.Observe(1.5);
             histogram.Observe(3.9);
 
-            var metric = histogram.Collect().Metrics[0];
-            Assert.NotNull(metric.CHistogram);
-            Assert.Equal(9ul, metric.CHistogram.SampleCount);
-            Assert.Equal(16.7, metric.CHistogram.SampleSum);
-            Assert.Equal(4, metric.CHistogram.Buckets.Length);
-            Assert.Equal(2ul, metric.CHistogram.Buckets[0].CumulativeCount);
-            Assert.Equal(5ul, metric.CHistogram.Buckets[1].CumulativeCount);
-            Assert.Equal(8ul, metric.CHistogram.Buckets[2].CumulativeCount);
-            Assert.Equal(9ul, metric.CHistogram.Buckets[3].CumulativeCount);
+            histogram.Collect(writer);
+
+            Received.InOrder(() => {
+                writer.StartMetric("hist1");
+                writer.WriteHelp("help");
+                writer.WriteType(Contracts.CMetricType.Histogram);
+
+                var sample = writer.StartSample("_bucket");
+                var lbl = sample.StartLabels();
+                lbl.WriteLabel("le", "1");
+                lbl.EndLabels();
+                sample.WriteValue(2);
+
+                sample = writer.StartSample("_bucket");
+                lbl = sample.StartLabels();
+                lbl.WriteLabel("le", "2");
+                lbl.EndLabels();
+                sample.WriteValue(5);
+
+                sample = writer.StartSample("_bucket");
+                lbl = sample.StartLabels();
+                lbl.WriteLabel("le", "3");
+                lbl.EndLabels();
+                sample.WriteValue(8);
+
+                sample = writer.StartSample("_bucket");
+                lbl = sample.StartLabels();
+                lbl.WriteLabel("le", "+Inf");
+                lbl.EndLabels();
+                sample.WriteValue(9);
+
+                sample = writer.StartSample("_sum");
+                sample.WriteValue(16.7);
+
+                sample = writer.StartSample("_count");
+                sample.WriteValue(9);
+            });
         }
 
         [Fact]
@@ -231,19 +256,5 @@ namespace Prometheus.Client.Tests
             Assert.Same(labelled1, labelled2);
         }
 
-        [Fact]
-        public void Summary_Tests()
-        {
-            var summary = Metrics.CreateSummary("summ1", "help");
-
-            summary.Observe(1);
-            summary.Observe(2);
-            summary.Observe(3);
-
-            var metric = summary.Collect().Metrics[0];
-            Assert.NotNull(metric.CSummary);
-            Assert.Equal(3ul, metric.CSummary.SampleCount);
-            Assert.Equal(6, metric.CSummary.SampleSum);
-        }
     }
 }
