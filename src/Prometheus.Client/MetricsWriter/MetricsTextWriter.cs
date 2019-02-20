@@ -27,7 +27,7 @@ namespace Prometheus.Client.MetricsWriter
         }
 
         private static readonly Encoding _encoding = new UTF8Encoding(false);
-        private static readonly IReadOnlyDictionary<CMetricType, string> _metricTypesMap = BuildMetricTypesMap();
+        private static readonly IReadOnlyDictionary<MetricType, string> _metricTypesMap = BuildMetricTypesMap();
 
         private const string _commentPrefix = "#";
         private const string _tokenSeparator = " ";
@@ -79,7 +79,7 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        public IMetricsWriter WriteType(CMetricType metricType)
+        public IMetricsWriter WriteType(MetricType metricType)
         {
             ValidateState(nameof(WriteType), WriterState.MetricStarted | WriterState.HelpWritten);
 
@@ -175,11 +175,11 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        private static IReadOnlyDictionary<CMetricType, string> BuildMetricTypesMap()
+        private static IReadOnlyDictionary<MetricType, string> BuildMetricTypesMap()
         {
-            var values = (CMetricType[])Enum.GetValues(typeof(CMetricType));
+            var values = (MetricType[])Enum.GetValues(typeof(MetricType));
 
-            return values.ToDictionary(k => k, v => Enum.GetName(typeof(CMetricType), v).ToLowerInvariant());
+            return values.ToDictionary(k => k, v => Enum.GetName(typeof(MetricType), v).ToLowerInvariant());
         }
 
         private void ValidateState(string callerMethod, WriterState expectedStates)

@@ -8,7 +8,7 @@ namespace Prometheus.Client.MetricsWriter
 
         IMetricsWriter WriteHelp(string help);
 
-        IMetricsWriter WriteType(CMetricType metricType);
+        IMetricsWriter WriteType(MetricType metricType);
 
         ISampleWriter StartSample(string suffix = "");
 

@@ -14,7 +14,7 @@ namespace Prometheus.Client
         {
         }
 
-        protected override CMetricType Type => CMetricType.Untyped;
+        protected override MetricType Type => MetricType.Untyped;
 
         public void Set(double val)
         {

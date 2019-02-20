@@ -39,7 +39,7 @@ namespace Prometheus.Client
 
         private readonly IList<QuantileEpsilonPair> _objectives;
 
-        protected override CMetricType Type => CMetricType.Summary;
+        protected override MetricType Type => MetricType.Summary;
 
         internal Summary(
             string name,

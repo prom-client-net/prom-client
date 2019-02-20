@@ -14,7 +14,7 @@ namespace Prometheus.Client
         {
         }
 
-        protected override CMetricType Type => CMetricType.Gauge;
+        protected override MetricType Type => MetricType.Gauge;
 
         public void Inc()
         {

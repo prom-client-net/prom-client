@@ -19,7 +19,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.WriteMetricHeader(Name, Contracts.CMetricType.Gauge, _help);
+            writer.WriteMetricHeader(Name, MetricType.Gauge, _help);
             writer.WriteSample(GC.GetTotalMemory(false));
         }
     }

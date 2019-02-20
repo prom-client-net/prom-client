@@ -22,7 +22,7 @@ namespace Prometheus.Client.Collectors
         private readonly bool _includeTimestamp;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
         
-        protected abstract CMetricType Type { get; }
+        protected abstract MetricType Type { get; }
         protected TChild Unlabelled => _unlabelledLazy.Value;
 
         public string Name { get; }

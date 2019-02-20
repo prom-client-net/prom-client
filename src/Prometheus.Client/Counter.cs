@@ -34,7 +34,7 @@ namespace Prometheus.Client
                 labelledMetric.Value.ResetValue();
         }
 
-        protected override CMetricType Type => CMetricType.Counter;
+        protected override MetricType Type => MetricType.Counter;
 
         public class LabelledCounter : Labelled, ICounter
         {

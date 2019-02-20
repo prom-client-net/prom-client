@@ -33,7 +33,7 @@ namespace Prometheus.Client.Collectors.PerfCounters
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.WriteMetricHeader(Name, Contracts.CMetricType.Gauge, _help);
+            writer.WriteMetricHeader(Name, MetricType.Gauge, _help);
             double value = _lastValue.Value;
             try
             {

@@ -81,7 +81,7 @@ namespace Prometheus.Client.Tests
             Received.InOrder(() => {
                 writer.StartMetric("name1");
                 writer.WriteHelp("help1");
-                writer.WriteType(Contracts.CMetricType.Counter);
+                writer.WriteType(MetricType.Counter);
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(value + 1);
@@ -110,7 +110,7 @@ namespace Prometheus.Client.Tests
             Received.InOrder(() => {
                 writer.StartMetric("name1");
                 writer.WriteHelp("help1");
-                writer.WriteType(Contracts.CMetricType.Counter);
+                writer.WriteType(MetricType.Counter);
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(0);
@@ -157,7 +157,7 @@ namespace Prometheus.Client.Tests
             Received.InOrder(() => {
                 writer.StartMetric("name1");
                 writer.WriteHelp("help1");
-                writer.WriteType(Contracts.CMetricType.Gauge);
+                writer.WriteType(MetricType.Gauge);
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(3.8);
@@ -184,7 +184,7 @@ namespace Prometheus.Client.Tests
             Received.InOrder(() => {
                 writer.StartMetric("hist1");
                 writer.WriteHelp("help");
-                writer.WriteType(Contracts.CMetricType.Histogram);
+                writer.WriteType(MetricType.Histogram);
 
                 var sample = writer.StartSample("_bucket");
                 var lbl = sample.StartLabels();

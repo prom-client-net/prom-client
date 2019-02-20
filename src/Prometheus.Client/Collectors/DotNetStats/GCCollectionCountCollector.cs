@@ -16,7 +16,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.WriteMetricHeader(Name, Contracts.CMetricType.Counter, _help);
+            writer.WriteMetricHeader(Name, MetricType.Counter, _help);
 
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
             {

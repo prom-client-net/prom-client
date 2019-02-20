@@ -39,7 +39,7 @@ namespace Prometheus.Client
         /// <summary>
         ///     Metric Type
         /// </summary>
-        protected override CMetricType Type => CMetricType.Histogram;
+        protected override MetricType Type => MetricType.Histogram;
 
         public void Observe(double val)
         {

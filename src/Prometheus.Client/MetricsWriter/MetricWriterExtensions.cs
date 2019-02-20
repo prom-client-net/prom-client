@@ -31,7 +31,7 @@ namespace Prometheus.Client.MetricsWriter
         public static IMetricsWriter WriteMetricHeader(
             this IMetricsWriter writer,
             string metricName,
-            CMetricType metricType,
+            MetricType metricType,
             string help = "")
         {
             writer.StartMetric(metricName);

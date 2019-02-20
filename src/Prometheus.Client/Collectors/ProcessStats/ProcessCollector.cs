@@ -36,25 +36,25 @@ namespace Prometheus.Client.Collectors.ProcessStats
         {
             _process.Refresh();
 
-            writer.WriteMetricHeader("process_cpu_seconds_total", Contracts.CMetricType.Counter, "Total user and system CPU time spent in seconds");
+            writer.WriteMetricHeader("process_cpu_seconds_total", MetricType.Counter, "Total user and system CPU time spent in seconds");
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
 
-            writer.WriteMetricHeader("process_virtual_bytes", Contracts.CMetricType.Gauge, "Process virtual memory size");
+            writer.WriteMetricHeader("process_virtual_bytes", MetricType.Gauge, "Process virtual memory size");
             writer.WriteSample(_process.VirtualMemorySize64);
 
-            writer.WriteMetricHeader("process_working_set", Contracts.CMetricType.Gauge, "Process working set");
+            writer.WriteMetricHeader("process_working_set", MetricType.Gauge, "Process working set");
             writer.WriteSample(_process.WorkingSet64);
 
-            writer.WriteMetricHeader("process_private_bytes", Contracts.CMetricType.Gauge, "Process private memory size");
+            writer.WriteMetricHeader("process_private_bytes", MetricType.Gauge, "Process private memory size");
             writer.WriteSample(_process.PrivateMemorySize64);
 
-            writer.WriteMetricHeader("process_num_threads", Contracts.CMetricType.Gauge, "Total number of threads");
+            writer.WriteMetricHeader("process_num_threads", MetricType.Gauge, "Total number of threads");
             writer.WriteSample(_process.Threads.Count);
 
-            writer.WriteMetricHeader("process_processid", Contracts.CMetricType.Untyped, "Process ID");
+            writer.WriteMetricHeader("process_processid", MetricType.Untyped, "Process ID");
             writer.WriteSample(_process.Id);
 
-            writer.WriteMetricHeader("process_start_time_seconds", Contracts.CMetricType.Untyped, "Start time of the process since unix epoch in seconds");
+            writer.WriteMetricHeader("process_start_time_seconds", MetricType.Untyped, "Start time of the process since unix epoch in seconds");
             writer.WriteSample(_processStartTime);
         }
     }

@@ -1,6 +1,6 @@
-namespace Prometheus.Client.Contracts
+namespace Prometheus.Client
 {
-    public enum CMetricType
+    public enum MetricType
     {
         Counter = 0,
         
