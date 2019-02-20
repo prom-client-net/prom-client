@@ -13,9 +13,8 @@
 It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), 
 prometheus-net didn't develop a long time. This is alternative was created with the possibility of rapid development:
 
-- Support <img src="https://img.shields.io/badge/.net-4.5-green.svg"></img>, <img src="https://img.shields.io/badge/.netstandard-1.3-green.svg"></img> 
+- Support <img src="https://img.shields.io/badge/.netstandard-1.3-green.svg"></img> 
 and <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>.
-- Independent of protobuf-net.
 - More Extensions. Extensions extracted to packages. 
 - There are differences in the internal implementation: MetricServer, MetricPusher, Middleware.
 - Each build is publish to MyGet. There is an opportunity to test development versions.
@@ -147,10 +146,6 @@ counter.Labels("POST", "/cancel").Inc();
 ```
 
 ## Extensions
-
-Owin Middleware for net45 [Prometheus.Client.Owin](https://github.com/PrometheusClientNet/Prometheus.Client.Owin)
-
-	dotnet add package Prometheus.Client.Owin
 	
 AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
 	

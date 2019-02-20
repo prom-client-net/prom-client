@@ -1,18 +1,18 @@
-version: '{build}-{branch}'
-image: Visual Studio 2017
+version: '{branch}-build{build}'
+image: Ubuntu1804
 
 skip_commits:
   files:
     - '**/*.md'
     
 build_script:
-- pwsh: dotnet build -c Release
+  - sh: dotnet build -c Release
 
 test_script:
-- pwsh: dotnet test ./tests/Prometheus.Client.Tests -c Release --no-build
+  - sh: dotnet test -c Release --no-build
 
 after_test:
-- pwsh: .\pack.ps1
+  - sh: chmod +x pack.sh && ./pack.sh
 
 artifacts:
 - path: '**\artifacts\nuget\*.nupkg'

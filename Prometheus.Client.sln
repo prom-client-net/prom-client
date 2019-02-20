@@ -14,7 +14,7 @@ ProjectSection(SolutionItems) = preProject
 	.gitattributes = .gitattributes
 	LICENSE = LICENSE
 	README.md = README.md
-	pack.ps1 = pack.ps1
+	pack.sh = pack.sh
 	.editorconfig = .editorconfig
 EndProjectSection
 EndProject
