@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using Prometheus.Client.Contracts;
+using System.Collections.Generic;
 
 namespace Prometheus.Client.Collectors.Abstractions
 {
     public interface ICollectorRegistry
     {
+        ICollector Add(ICollector collector);
+
         ICollector GetOrAdd(ICollector collector);
 
         bool Remove(ICollector collector);
 
-        IEnumerable<CMetricFamily> CollectAll();
-
-        void RegisterOnDemandCollectors(List<IOnDemandCollector> onDemandCollectors);
+        IEnumerable<ICollector> Enumerate();
     }
 }

@@ -1,6 +1,7 @@
-﻿using Prometheus.Client.Abstractions;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
@@ -13,7 +14,7 @@ namespace Prometheus.Client
         {
         }
 
-        protected override CMetricType Type => CMetricType.Gauge;
+        protected override MetricType Type => MetricType.Gauge;
 
         public void Inc()
         {
@@ -80,9 +81,9 @@ namespace Prometheus.Client
             public double Value => _value.Value;
 
 
-            protected override void Populate(CMetric cMetric)
+            protected internal override void Collect(IMetricsWriter writer)
             {
-                cMetric.CGauge = new CGauge { Value = Value };
+                writer.WriteSample(Value, string.Empty, Labels, Timestamp);
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
@@ -33,15 +34,15 @@ namespace Prometheus.Client
                 labelledMetric.Value.ResetValue();
         }
 
-        protected override CMetricType Type => CMetricType.Counter;
+        protected override MetricType Type => MetricType.Counter;
 
         public class LabelledCounter : Labelled, ICounter
         {
             private ThreadSafeDouble _value;
 
-            protected override void Populate(CMetric cMetric)
+            protected internal override void Collect(IMetricsWriter writer)
             {
-                cMetric.CCounter = new CCounter { Value = Value };
+                writer.WriteSample(Value, string.Empty, Labels, Timestamp);
             }
 
             public void Inc()

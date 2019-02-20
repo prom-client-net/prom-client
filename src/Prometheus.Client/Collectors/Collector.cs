@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Contracts;
+using Prometheus.Client.MetricsWriter;
 
 // ReSharper disable StaticMemberInGenericType
 
@@ -21,7 +22,7 @@ namespace Prometheus.Client.Collectors
         private readonly bool _includeTimestamp;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
         
-        protected abstract CMetricType Type { get; }
+        protected abstract MetricType Type { get; }
         protected TChild Unlabelled => _unlabelledLazy.Value;
 
         public string Name { get; }
@@ -73,24 +74,16 @@ namespace Prometheus.Client.Collectors
             });
         }
 
-        public CMetricFamily Collect()
+        public void Collect(IMetricsWriter writer)
         {
-            var result = new CMetricFamily
-            {
-                Name = Name,
-                Help = Help,
-                Type = Type,
-                Metrics = new CMetric[LabelledMetrics.Values.Count]
-            };
-            
-            var i = 0;            
-            foreach (var child in LabelledMetrics.Values)
-            {
-                result.Metrics[i] = child.Collect();
-                i++;
-            }
+            writer.StartMetric(Name);
+            writer.WriteHelp(Help);
+            writer.WriteType(Type);
 
-            return result;
+            foreach (var labelled in LabelledMetrics.Values)
+            {
+                labelled.Collect(writer);
+            }
         }
     }
 }
