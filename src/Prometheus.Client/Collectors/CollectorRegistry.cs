@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.Collectors
 {
@@ -11,21 +10,22 @@ namespace Prometheus.Client.Collectors
     {
         public static readonly CollectorRegistry Instance = new CollectorRegistry();
         private readonly ConcurrentDictionary<string, ICollector> _collectors = new ConcurrentDictionary<string, ICollector>();
-        private List<IOnDemandCollector> _onDemandCollectors;
-
-        public void RegisterOnDemandCollectors(List<IOnDemandCollector> onDemandCollectors)
-        {
-            _onDemandCollectors = onDemandCollectors;
-
-            foreach (var onDemandCollector in _onDemandCollectors)
-                onDemandCollector.RegisterMetrics();
-        }
 
         public IEnumerable<ICollector> Enumerate() => _collectors.Values;
 
         public void Clear()
         {
             _collectors.Clear();
+        }
+
+        public ICollector Add(ICollector collector)
+        {
+            if (!_collectors.TryAdd(collector.Name, collector))
+            {
+                throw new InvalidOperationException($"Collector with name '{collector.Name}' is already registered");
+            }
+
+            return collector;
         }
 
         public ICollector GetOrAdd(ICollector collector)
