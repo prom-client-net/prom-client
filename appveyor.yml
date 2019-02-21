@@ -19,7 +19,7 @@ artifacts:
     name: NuGet
   - path: '**/artifacts/myget/*.nupkg'
     name: MyGet
-  
+
 deploy:
   - provider: NuGet
     api_key:
@@ -36,3 +36,11 @@ deploy:
     on:
       branch: master
       APPVEYOR_REPO_TAG: false
+
+notifications:
+  - provider: Webhook
+    url: https://webhooks.gitter.im/e/37dbd44286e4d560740d
+    method: GET
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
