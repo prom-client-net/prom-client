@@ -40,6 +40,6 @@ deploy:
 notifications:
   - provider: Webhook
     url: https://webhooks.gitter.im/e/a46208b3334e59776e14
-    on_build_success: true
+    on_build_success: false
     on_build_failure: true
     on_build_status_changed: true
