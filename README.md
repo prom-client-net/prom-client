@@ -4,7 +4,8 @@
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/cyvjrbn46ju827a9/branch/master?svg=true)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
+[![Gitter](https://img.shields.io/gitter/room/PrometheusClientNet/community.svg)](https://gitter.im/PrometheusClientNet/community)
+[![Build status](https://img.shields.io/appveyor/ci/PrometheusClientNet/prometheus-client.svg?logo=appveyor)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/PrometheusClientNet/prometheus-client.svg)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/build/tests)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
