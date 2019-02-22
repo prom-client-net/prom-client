@@ -4,11 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.MetricsWriter
 {
-    internal class MetricsTextWriter: IMetricsWriter, ISampleWriter, ILabelWriter
+    internal class MetricsTextWriter: IMetricsWriter, ISampleWriter, ILabelWriter, IDisposable
     {
         [Flags]
         private enum WriterState
@@ -36,25 +35,23 @@ namespace Prometheus.Client.MetricsWriter
         private const string _labelsStart = "{";
         private const string _labelsEnd = "}";
         private const string _labelsEq = "=";
-        private const string _labelsSeparator = "=";
+        private const string _labelsSeparator = ",";
         private const string _labelTextQualifier = "\"";
 
         private readonly StreamWriter _streamWriter;
         private WriterState _state = WriterState.Empty;
         private string _currentMetricName;
+        private bool _hasData = false;
 
         public MetricsTextWriter(Stream stream)
         {
-            _streamWriter = new StreamWriter(stream, _encoding);
+            _streamWriter = new StreamWriter(stream, _encoding, bufferSize: 1024, leaveOpen: true);
+            _streamWriter.NewLine = "\n";
         }
 
         public IMetricsWriter StartMetric(string metricName)
         {
             ValidateState(nameof(StartMetric), WriterState.Empty | WriterState.ValueWritten | WriterState.TimestampWritten);
-            if (_state != WriterState.Empty)
-            {
-                _streamWriter.WriteLine();
-            }
 
             _currentMetricName = metricName;
             _state = WriterState.MetricStarted;
@@ -66,12 +63,16 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteHelp), WriterState.MetricStarted);
 
-            _streamWriter.WriteLine();
+            if (_hasData)
+            {
+                _streamWriter.WriteLine();
+            }
+            _hasData = true;
             _streamWriter.Write(_commentPrefix);
             _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_currentMetricName);
-            _streamWriter.Write(_tokenSeparator);
             _streamWriter.Write(_helpPrefix);
+            _streamWriter.Write(_tokenSeparator);
+            _streamWriter.Write(_currentMetricName);
             _streamWriter.Write(_tokenSeparator);
             _streamWriter.Write(EscapeValue(help));
             _state = WriterState.HelpWritten;
@@ -83,12 +84,16 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteType), WriterState.MetricStarted | WriterState.HelpWritten);
 
-            _streamWriter.WriteLine();
+            if (_hasData)
+            {
+                _streamWriter.WriteLine();
+            }
+            _hasData = true;
             _streamWriter.Write(_commentPrefix);
             _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_currentMetricName);
-            _streamWriter.Write(_tokenSeparator);
             _streamWriter.Write(_typePrefix);
+            _streamWriter.Write(_tokenSeparator);
+            _streamWriter.Write(_currentMetricName);
             _streamWriter.Write(_tokenSeparator);
             _streamWriter.Write(_metricTypesMap[metricType]);
             _state = WriterState.TypeWritten;
@@ -100,7 +105,11 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(StartSample), WriterState.MetricStarted | WriterState.HelpWritten | WriterState.TypeWritten | WriterState.ValueWritten | WriterState.TimestampWritten);
 
-            _streamWriter.WriteLine();
+            if (_hasData)
+            {
+                _streamWriter.WriteLine();
+            }
+            _hasData = true;
             _streamWriter.Write(_currentMetricName);
             _streamWriter.Write(suffix);
             _state = WriterState.SampleStarted;
@@ -158,7 +167,7 @@ namespace Prometheus.Client.MetricsWriter
                 _streamWriter.Write(_labelsSeparator);
             }
             _streamWriter.Write(name);
-            _streamWriter.Write(_labelsSeparator);
+            _streamWriter.Write(_labelsEq);
             _streamWriter.Write(_labelTextQualifier);
             _streamWriter.Write(EscapeValue(value));
             _streamWriter.Write(_labelTextQualifier);
@@ -196,6 +205,12 @@ namespace Prometheus.Client.MetricsWriter
                 .Replace("\\", @"\\")
                 .Replace("\n", @"\n")
                 .Replace("\"", @"\""");
+        }
+
+        public void Dispose()
+        {
+            this.CloseWriter();
+            _streamWriter.Dispose();
         }
     }
 }

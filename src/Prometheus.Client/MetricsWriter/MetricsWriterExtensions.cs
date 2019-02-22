@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.MetricsWriter
 {
-    public static class MetricWriterExtensions
+    public static class MetricsWriterExtensions
     {
         public static IMetricsWriter WriteSample(
             this IMetricsWriter writer,

@@ -31,26 +31,6 @@ namespace Prometheus.Client.Tests
             Assert.Equal(3.8, gauge.Value);
 
             Assert.Throws<ArgumentException>(() => gauge.Labels("1"));
-
-            var counter = Metrics.CreateCounter("name2", "help2", "label1");
-            counter.Inc();
-            counter.Inc(3.2);
-            Assert.Equal(4.2, counter.Value);
-
-            Assert.Equal(0, counter.Labels("a").Value);
-            counter.Labels("a").Inc(3.3);
-            Assert.Equal(3.3, counter.Labels("a").Value);
-            counter.Labels("a").Inc(1.1);
-            Assert.Equal(4.4, counter.Labels("a").Value);
-        }
-
-        [Fact]
-        public void Null_Labels()
-        {
-            var counter = Metrics.CreateCounter("name2", "help2", "label1", "label2");
-            Assert.Throws<ArgumentException>(() => counter.Labels().Inc());
-            Assert.Throws<ArgumentNullException>(() => counter.Labels(null).Inc());
-            Assert.Throws<ArgumentNullException>(() => counter.Labels("param1", null).Inc());
         }
 
         [Fact]
@@ -91,35 +71,6 @@ namespace Prometheus.Client.Tests
                 lbl.WriteLabel("label1", "abc");
                 lbl.EndLabels();
                 sample2.WriteValue(value);
-            });
-        }
-
-        [Fact]
-        public void Counter_Reset()
-        {
-            var writer = Substitute.For<IMetricsWriter>();
-            var counter = Metrics.CreateCounter("name1", "help1", "label1");
-
-            counter.Inc();
-            counter.Inc(3.2);
-            counter.Labels("test").Inc(1);
-            counter.Reset();
-
-            counter.Collect(writer);
-
-            Received.InOrder(() => {
-                writer.StartMetric("name1");
-                writer.WriteHelp("help1");
-                writer.WriteType(MetricType.Counter);
-
-                var sample1 = writer.StartSample();
-                sample1.WriteValue(0);
-
-                var sample2 = writer.StartSample();
-                var lbl = sample2.StartLabels();
-                lbl.WriteLabel("label1", "test");
-                lbl.EndLabels();
-                sample2.WriteValue(0);
             });
         }
 
