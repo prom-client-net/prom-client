@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 
 // ReSharper disable StaticMemberInGenericType
@@ -76,9 +75,7 @@ namespace Prometheus.Client.Collectors
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.StartMetric(Name);
-            writer.WriteHelp(Help);
-            writer.WriteType(Type);
+            writer.WriteMetricHeader(Name, Type, Help);
 
             foreach (var labelled in LabelledMetrics.Values)
             {
