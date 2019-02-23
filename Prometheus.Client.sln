@@ -8,19 +8,22 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client", "src\Prometheus.Client\Prometheus.Client.csproj", "{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7847B574-86FF-4D13-ADD9-85C6D37A86B9}"
-ProjectSection(SolutionItems) = preProject
-	appveyor.yml = appveyor.yml
-	.gitignore = .gitignore
-	.gitattributes = .gitattributes
-	LICENSE = LICENSE
-	README.md = README.md
-	pack.sh = pack.sh
-	.editorconfig = .editorconfig
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.ruleset = .ruleset
+		appveyor.yml = appveyor.yml
+		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		pack.sh = pack.sh
+		README.md = README.md
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FE42C2D5-9D20-44A2-A9ED-477527A832AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Tests", "tests\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{B11769F3-421B-4B79-A883-335331847542}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Tests", "tests\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{B11769F3-421B-4B79-A883-335331847542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,5 +46,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E} = {D994EEE1-3786-4FDF-8A49-76D8B9819A29}
 		{B11769F3-421B-4B79-A883-335331847542} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A21B7555-E98B-4C23-9545-70BCF791DE3E}
 	EndGlobalSection
 EndGlobal
