@@ -1,0 +1,17 @@
+# HELP hist1 help
+# TYPE hist1 histogram
+hist1_bucket{le="1"} 2
+hist1_bucket{le="2"} 5
+hist1_bucket{le="3"} 8
+hist1_bucket{le="+Inf"} 9
+hist1_sum 16.7
+hist1_count 9
+# HELP hist2 help2
+# TYPE hist2 histogram
+hist2_bucket{le="-5"} 1
+hist2_bucket{le="0"} 3
+hist2_bucket{le="5"} 5
+hist2_bucket{le="10"} 6
+hist2_bucket{le="+Inf"} 7
+hist2_sum 6.5
+hist2_count 7
