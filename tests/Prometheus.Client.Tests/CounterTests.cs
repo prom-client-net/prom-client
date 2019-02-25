@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
@@ -39,12 +37,51 @@ namespace Prometheus.Client.Tests
             Assert.Equal(3, labeled.Value);
         }
 
+        [Fact]
+        public void SameLabelReturnsSameMetric()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
+            var labeled1 = counter.WithLabels("value");
+            var labeled2 = counter.WithLabels("value");
+
+            Assert.Equal(labeled1, labeled2);
+        }
+
+        [Fact]
+        public void SameLabelsReturnsSameMetric()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
+            var labeled1 = counter.WithLabels("value1", "value2");
+            var labeled2 = counter.WithLabels("value1", "value2");
+
+            Assert.Equal(labeled1, labeled2);
+        }
+
+        [Fact]
+        public void DefaultIncValue()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var counter = factory.CreateCounter("test_counter", string.Empty);
+            counter.Inc();
+
+            Assert.Equal(1, counter.Value);
+        }
+
         [Theory]
         [InlineData()]
         [InlineData(null)]
         [InlineData(null, null)]
         [InlineData("onlyone")]
         [InlineData("onlyone", null)]
+        [InlineData("one", "two", "three")]
         public void ShouldThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();
@@ -115,6 +152,38 @@ namespace Prometheus.Client.Tests
             }
 
             Assert.Equal(ResourcesHelper.GetFileContent("CounterTests_Collection.txt"), formattedText);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(3.1)]
+        public void MetricsWriteApiUsage(double value)
+        {
+            var writer = Substitute.For<IMetricsWriter>();
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+            var counter = factory.CreateCounter("name1", "help1", "label1");
+
+            counter.Inc();
+            counter.Inc(value);
+            counter.WithLabels("abc").Inc(value);
+
+            counter.Collect(writer);
+
+            Received.InOrder(() => {
+                writer.StartMetric("name1");
+                writer.WriteHelp("help1");
+                writer.WriteType(MetricType.Counter);
+
+                var sample1 = writer.StartSample();
+                sample1.WriteValue(value + 1);
+
+                var sample2 = writer.StartSample();
+                var lbl = sample2.StartLabels();
+                lbl.WriteLabel("label1", "abc");
+                lbl.EndLabels();
+                sample2.WriteValue(value);
+            });
         }
     }
 }
