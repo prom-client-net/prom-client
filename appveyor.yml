@@ -34,5 +34,5 @@ deploy:
   symbol_server: https://www.myget.org/F/phnx47-beta/symbols/api/v2/package
   artifact: MyGet
   on:
-    branch: master
+    branch: 2.2
     appveyor_repo_tag: false
