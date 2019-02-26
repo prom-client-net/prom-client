@@ -1,6 +1,5 @@
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 
@@ -15,7 +14,7 @@ namespace Prometheus.Client
         }
 
         protected override MetricType Type => MetricType.Gauge;
-
+        
         public void Inc()
         {
             Inc(1.0D);

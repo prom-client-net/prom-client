@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset = utf-8
 end_of_line = lf
@@ -5,15 +7,10 @@ indent_style = space
 max_line_length = 180
 insert_final_newline = true
 
-[*.cs]
-indent_size = 4
-# code style settings:
-dotnet_sort_system_directives_first = true
-
 [*.csproj]
 indent_size = 2
 
-[{*.yml,*.yaml}]
+[{*.yml, *.yaml}]
 indent_size = 2
 
 [*.json]
@@ -21,3 +18,14 @@ indent_size = 2
 
 [{*.sh, *.ps1}]
 indent_size = 2
+
+[*.cs]
+indent_size = 4
+
+# https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference?view=vs-2017
+# https://www.jetbrains.com/help/rider/Using_EditorConfig.html?Wave=183
+
+csharp_style_expression_bodied_methods = true
+
+csharp_style_var_for_built_in_types = false : hint
+csharp_style_var_when_type_is_apparent = true : hint
