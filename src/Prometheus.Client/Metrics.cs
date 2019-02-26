@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
@@ -11,7 +11,9 @@ namespace Prometheus.Client
     /// </summary>
     public static class Metrics
     {
-        public static readonly MetricFactory DefaultFactory = new MetricFactory(CollectorRegistry.Instance);
+        public static readonly ICollectorRegistry DefaultCollectorRegistry = new CollectorRegistry();
+
+        public static readonly MetricFactory DefaultFactory = new MetricFactory(DefaultCollectorRegistry);
 
         /// <summary>
         ///     Create Counter

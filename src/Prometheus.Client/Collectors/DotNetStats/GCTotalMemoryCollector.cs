@@ -6,12 +6,11 @@ namespace Prometheus.Client.Collectors.DotNetStats
 {
     public class GCTotalMemoryCollector : ICollector
     {
-        private static readonly string _help = "Total known allocated memory";
-        private static readonly string[] _labels = new string[0];
+        private static string _help = "Total known allocated memory";
 
         public string Name => "dotnet_totalmemory";
 
-        public string[] LabelNames => _labels;
+        public string[] MetricNames => new[] { Name };
 
         public void Collect(IMetricsWriter writer)
         {
