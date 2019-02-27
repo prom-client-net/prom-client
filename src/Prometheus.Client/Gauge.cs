@@ -7,14 +7,14 @@ namespace Prometheus.Client
 {
     /// <inheritdoc cref="IGauge" />
     public class Gauge : Collector<Gauge.LabelledGauge>, IGauge
-    {        
+    {
         internal Gauge(string name, string help, bool includeTimestamp, string[] labelNames)
             : base(name, help, includeTimestamp, labelNames)
         {
         }
 
         protected override MetricType Type => MetricType.Gauge;
-        
+
         public void Inc()
         {
             Inc(1.0D);
@@ -41,7 +41,6 @@ namespace Prometheus.Client
         }
 
         public double Value => Unlabelled.Value;
-
 
         public class LabelledGauge : Labelled, IGauge
         {
@@ -71,14 +70,12 @@ namespace Prometheus.Client
                 Dec(1.0D);
             }
 
-
             public void Dec(double decrement)
             {
                 Inc(-decrement);
             }
 
             public double Value => _value.Value;
-
 
             protected internal override void Collect(IMetricsWriter writer)
             {
