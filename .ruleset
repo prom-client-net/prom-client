@@ -9,5 +9,12 @@
     <Rule Id="SX1309S" Action="Error" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1402" Action="None" />
+
+    <!-- Documentation -> Set 'Info' -->
+    <Rule Id="SA1600" Action="Hidden" />
+    <Rule Id="SA1614" Action="Hidden" />
+    <Rule Id="SA1615" Action="Hidden" />
+    <Rule Id="SA1629" Action="Hidden" />
+    
   </Rules>
 </RuleSet>
