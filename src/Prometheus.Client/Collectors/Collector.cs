@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
+
 // ReSharper disable StaticMemberInGenericType
 
 namespace Prometheus.Client.Collectors
@@ -12,20 +13,14 @@ namespace Prometheus.Client.Collectors
         where TChild : Labelled, new()
     {
         private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-        private readonly Lazy<TChild> _unlabelledLazy;
 
         private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
+        private readonly bool _includeTimestamp;
+        private readonly Lazy<TChild> _unlabelledLazy;
 
         protected readonly string Help;
-        private readonly bool _includeTimestamp;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
-        
-        protected abstract MetricType Type { get; }
-        protected TChild Unlabelled => _unlabelledLazy.Value;
-
-        public string Name { get; }
-        public string[] LabelNames { get; }
 
         protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
         {
@@ -37,7 +32,7 @@ namespace Prometheus.Client.Collectors
             if (!_metricNameLabelRegex.IsMatch(name))
                 throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
 
-            foreach (var labelName in labelNames)
+            foreach (string labelName in labelNames)
             {
                 if (!_metricNameLabelRegex.IsMatch(labelName))
                     throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
@@ -48,7 +43,21 @@ namespace Prometheus.Client.Collectors
 
             _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(LabelValues.Empty));
         }
-        
+
+        protected abstract MetricType Type { get; }
+        protected TChild Unlabelled => _unlabelledLazy.Value;
+
+        public string Name { get; }
+        public string[] LabelNames { get; }
+
+        public void Collect(IMetricsWriter writer)
+        {
+            writer.WriteMetricHeader(Name, Type, Help);
+
+            foreach (var labelled in LabelledMetrics.Values)
+                labelled.Collect(writer);
+        }
+
         /// <summary>
         ///     Analog WithLabels for compatible with old version
         /// </summary>
@@ -63,24 +72,12 @@ namespace Prometheus.Client.Collectors
             return GetOrAddLabelled(key);
         }
 
-        private TChild GetOrAddLabelled(LabelValues key)
-        {
-            return LabelledMetrics.GetOrAdd(key, labels1 =>
+        private TChild GetOrAddLabelled(LabelValues key) =>
+            LabelledMetrics.GetOrAdd(key, labels1 =>
             {
                 var child = new TChild();
                 child.Init(this, labels1, _includeTimestamp);
                 return child;
             });
-        }
-
-        public void Collect(IMetricsWriter writer)
-        {
-            writer.WriteMetricHeader(Name, Type, Help);
-
-            foreach (var labelled in LabelledMetrics.Values)
-            {
-                labelled.Collect(writer);
-            }
-        }
     }
 }

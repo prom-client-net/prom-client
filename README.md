@@ -3,8 +3,9 @@
 [![MyGet](https://img.shields.io/myget/prometheus-client-net/vpre/Prometheus.Client.svg?label=myget)](https://www.myget.org/feed/prometheus-client-net/package/nuget/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-
 [![Gitter](https://img.shields.io/gitter/room/PrometheusClientNet/community.svg)](https://gitter.im/PrometheusClientNet/community)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client/badge)](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client)
 [![Build status](https://img.shields.io/appveyor/ci/PrometheusClientNet/prometheus-client.svg?logo=appveyor)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/PrometheusClientNet/prometheus-client.svg)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/build/tests)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
