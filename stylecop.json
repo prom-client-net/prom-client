@@ -16,7 +16,7 @@
 		"orderingRules": {
 			"usingDirectivesPlacement": "outsideNamespace",
 			"systemUsingDirectivesFirst": true,
-			"blankLinesBetweenUsingGroups": "require"
+			"blankLinesBetweenUsingGroups": "omit"
 		}
 	}
 }
