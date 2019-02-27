@@ -4,9 +4,7 @@ using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
-
 // ReSharper disable StaticMemberInGenericType
-
 namespace Prometheus.Client.Collectors
 {
     public abstract class Collector<TChild> : ICollector
@@ -45,9 +43,11 @@ namespace Prometheus.Client.Collectors
         }
 
         protected abstract MetricType Type { get; }
+
         protected TChild Unlabelled => _unlabelledLazy.Value;
 
         public string Name { get; }
+
         public string[] LabelNames { get; }
 
         public void Collect(IMetricsWriter writer)
@@ -61,7 +61,10 @@ namespace Prometheus.Client.Collectors
         /// <summary>
         ///     Analog WithLabels for compatible with old version
         /// </summary>
-        public TChild Labels(params string[] labelValues) => WithLabels(labelValues);
+        public TChild Labels(params string[] labelValues)
+        {
+            return WithLabels(labelValues);
+        }
 
         /// <summary>
         ///     Metric with Label Values
@@ -72,12 +75,14 @@ namespace Prometheus.Client.Collectors
             return GetOrAddLabelled(key);
         }
 
-        private TChild GetOrAddLabelled(LabelValues key) =>
-            LabelledMetrics.GetOrAdd(key, labels1 =>
+        private TChild GetOrAddLabelled(LabelValues key)
+        {
+            return LabelledMetrics.GetOrAdd(key, labels1 =>
             {
                 var child = new TChild();
                 child.Init(this, labels1, _includeTimestamp);
                 return child;
             });
+        }
     }
 }
