@@ -1,5 +1,4 @@
 {
-	// Note: the file is shared for the solution
 	"$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
 	"settings": {
 		"layoutRules": {
