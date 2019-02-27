@@ -8,10 +8,9 @@ namespace Prometheus.Client.Abstractions
     /// </summary>
     public interface ICounter
     {
-        void Inc();
-        
-        void Inc(double increment);
-        
         double Value { get; }
+        void Inc();
+
+        void Inc(double increment);
     }
 }

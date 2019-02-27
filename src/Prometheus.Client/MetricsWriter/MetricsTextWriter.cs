@@ -209,7 +209,7 @@ namespace Prometheus.Client.MetricsWriter
 
         public void Dispose()
         {
-            this.CloseWriter();
+            CloseWriter();
             _streamWriter.Dispose();
         }
     }
