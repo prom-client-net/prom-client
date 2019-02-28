@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.SummaryImpl;
 
@@ -34,8 +35,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var metric = new Counter(name, help, includeTimestamp, labelNames);
-            return (Counter)_registry.GetOrAdd(metric);
+            if (_registry.GetOrAdd(name, () => new Counter(name, help, includeTimestamp, labelNames)) is Counter metric)
+            {
+                ValidateLabelNames(labelNames, metric.LabelNames);
+                return metric;
+            }
+
+            throw new InvalidOperationException($"Duplicate metric name: {name}");
         }
 
         /// <summary>
@@ -58,8 +64,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var metric = new Gauge(name, help, includeTimestamp, labelNames);
-            return (Gauge)_registry.GetOrAdd(metric);
+            if (_registry.GetOrAdd(name, () => new Gauge(name, help, includeTimestamp, labelNames)) is Gauge metric)
+            {
+                ValidateLabelNames(labelNames, metric.LabelNames);
+                return metric;
+            }
+
+            throw new InvalidOperationException($"Duplicate metric name: {name}");
         }
 
         /// <summary>
@@ -82,8 +93,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var metric = new Untyped(name, help, includeTimestamp, labelNames);
-            return (Untyped)_registry.GetOrAdd(metric);
+            if (_registry.GetOrAdd(name, () => new Untyped(name, help, includeTimestamp, labelNames)) is Untyped metric)
+            {
+                ValidateLabelNames(labelNames, metric.LabelNames);
+                return metric;
+            }
+
+            throw new InvalidOperationException($"Duplicate metric name: {name}");
         }
 
         /// <summary>
@@ -145,8 +161,13 @@ namespace Prometheus.Client
             int? ageBuckets,
             int? bufCap)
         {
-            var metric = new Summary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
-            return (Summary)_registry.GetOrAdd(metric);
+            if (_registry.GetOrAdd(name, () => new Summary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap)) is Summary metric)
+            {
+                ValidateLabelNames(labelNames, metric.LabelNames);
+                return metric;
+            }
+
+            throw new InvalidOperationException($"Duplicate metric name: {name}");
         }
 
         /// <summary>
@@ -194,8 +215,22 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
         {
-            var metric = new Histogram(name, help, includeTimestamp, labelNames, buckets);
-            return (Histogram)_registry.GetOrAdd(metric);
+            if (_registry.GetOrAdd(name, () => new Histogram(name, help, includeTimestamp, labelNames, buckets)) is Histogram metric)
+            {
+                ValidateLabelNames(labelNames, metric.LabelNames);
+                return metric;
+            }
+
+            throw new InvalidOperationException($"Duplicate metric name: {name}");
+        }
+
+        private void ValidateLabelNames(string[] expectedNames, string[] actualNames)
+        {
+            expectedNames = expectedNames ?? Array.Empty<string>();
+            actualNames = actualNames ?? Array.Empty<string>();
+
+            if (!Enumerable.SequenceEqual(expectedNames, actualNames))
+                throw new ArgumentException("Collector with same name must have same label names");
         }
     }
 }

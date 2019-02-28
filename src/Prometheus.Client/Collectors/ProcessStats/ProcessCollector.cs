@@ -11,7 +11,13 @@ namespace Prometheus.Client.Collectors.ProcessStats
     /// </summary>
     public class ProcessCollector : ICollector
     {
-        private static readonly string[] _labels = new string[0];
+        private const string CpuSecondsTotalName = "process_cpu_seconds_total";
+        private const string VirtualBytesName = "process_virtual_bytes";
+        private const string WorkingSetName = "process_working_set";
+        private const string PrivateBytesName = "process_private_bytes";
+        private const string NumThreadsName = "process_num_threads";
+        private const string ProcessIdName = "process_processid";
+        private const string StartTimeSecondsName = "process_start_time_seconds";
 
         private readonly Process _process;
         private readonly double _processStartTime;
@@ -30,31 +36,40 @@ namespace Prometheus.Client.Collectors.ProcessStats
 
         public string Name => "process_collector";
 
-        public string[] LabelNames => _labels;
+        public string[] MetricNames => new[]
+        {
+            CpuSecondsTotalName,
+            VirtualBytesName,
+            WorkingSetName,
+            PrivateBytesName,
+            NumThreadsName,
+            ProcessIdName,
+            StartTimeSecondsName,
+        };
 
         public void Collect(IMetricsWriter writer)
         {
             _process.Refresh();
 
-            writer.WriteMetricHeader("process_cpu_seconds_total", MetricType.Counter, "Total user and system CPU time spent in seconds");
+            writer.WriteMetricHeader(CpuSecondsTotalName, MetricType.Counter, "Total user and system CPU time spent in seconds");
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
 
-            writer.WriteMetricHeader("process_virtual_bytes", MetricType.Gauge, "Process virtual memory size");
+            writer.WriteMetricHeader(VirtualBytesName, MetricType.Gauge, "Process virtual memory size");
             writer.WriteSample(_process.VirtualMemorySize64);
 
-            writer.WriteMetricHeader("process_working_set", MetricType.Gauge, "Process working set");
+            writer.WriteMetricHeader(WorkingSetName, MetricType.Gauge, "Process working set");
             writer.WriteSample(_process.WorkingSet64);
 
-            writer.WriteMetricHeader("process_private_bytes", MetricType.Gauge, "Process private memory size");
+            writer.WriteMetricHeader(PrivateBytesName, MetricType.Gauge, "Process private memory size");
             writer.WriteSample(_process.PrivateMemorySize64);
 
-            writer.WriteMetricHeader("process_num_threads", MetricType.Gauge, "Total number of threads");
+            writer.WriteMetricHeader(NumThreadsName, MetricType.Gauge, "Total number of threads");
             writer.WriteSample(_process.Threads.Count);
 
-            writer.WriteMetricHeader("process_processid", MetricType.Untyped, "Process ID");
+            writer.WriteMetricHeader(ProcessIdName, MetricType.Untyped, "Process ID");
             writer.WriteSample(_process.Id);
 
-            writer.WriteMetricHeader("process_start_time_seconds", MetricType.Untyped, "Start time of the process since unix epoch in seconds");
+            writer.WriteMetricHeader(StartTimeSecondsName, MetricType.Untyped, "Start time of the process since unix epoch in seconds");
             writer.WriteSample(_processStartTime);
         }
     }

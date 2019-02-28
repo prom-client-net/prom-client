@@ -6,8 +6,8 @@ namespace Prometheus.Client.Collectors.DotNetStats
     {
         public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry)
         {
-            registry.Add(new GCCollectionCountCollector());
-            registry.Add(new GCTotalMemoryCollector());
+            registry.Add(nameof(GCCollectionCountCollector), new GCCollectionCountCollector());
+            registry.Add(nameof(GCTotalMemoryCollector), new GCTotalMemoryCollector());
 
             return registry;
         }

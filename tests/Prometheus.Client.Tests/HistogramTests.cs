@@ -21,6 +21,18 @@ namespace Prometheus.Client.Tests
             Assert.ThrowsAny<ArgumentException>(() => histogram.WithLabels(labels));
         }
 
+        [Theory]
+        [InlineData("le")]
+        [InlineData("le", "label")]
+        [InlineData("label", "le")]
+        public void ShouldThrowOnReservedLabelNames(params string[] labels)
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            Assert.ThrowsAny<ArgumentException>(() => factory.CreateHistogram("test_Histogram", string.Empty, labels));
+        }
+
         private static Histogram CreateHistogram1(MetricFactory metricFactory)
         {
             var histogram = metricFactory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });

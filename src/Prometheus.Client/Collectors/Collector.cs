@@ -20,17 +20,19 @@ namespace Prometheus.Client.Collectors
         protected readonly string Help;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
 
+        public string[] MetricNames => new[] { Name };
+
         protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
         {
             Name = name;
             Help = help;
             _includeTimestamp = includeTimestamp;
-            LabelNames = labelNames;
+            LabelNames = labelNames ?? Array.Empty<string>();
 
             if (!_metricNameLabelRegex.IsMatch(name))
                 throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
 
-            foreach (string labelName in labelNames)
+            foreach (string labelName in LabelNames)
             {
                 if (!_metricNameLabelRegex.IsMatch(labelName))
                     throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
