@@ -30,10 +30,11 @@ namespace Prometheus.Client
             if (!double.IsPositiveInfinity(_buckets[_buckets.Length - 1]))
                 _buckets = _buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
 
-
             for (int i = 1; i < _buckets.Length; i++)
+            {
                 if (_buckets[i] <= _buckets[i - 1])
                     throw new ArgumentException("Bucket values must be increasing");
+            }
         }
 
         /// <summary>
@@ -57,16 +58,17 @@ namespace Prometheus.Client
                 if (double.IsNaN(val))
                     return;
 
-
                 for (int i = 0; i < _upperBounds.Length; i++)
+                {
                     if (val <= _upperBounds[i])
                     {
                         _bucketCounts[i].Add(1);
                         break;
                     }
+                }
 
                 _sum.Add(val);
-                
+
                 if (IncludeTimestamp)
                     SetTimestamp();
             }
