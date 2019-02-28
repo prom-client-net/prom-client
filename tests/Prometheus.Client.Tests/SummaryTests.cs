@@ -17,8 +17,8 @@ namespace Prometheus.Client.Tests
         public void TestSummaryConcurrency(int n)
         {
             var random = new Random(42);
-            var mutations = n % 10000 + 10000;
-            var concLevel = n % 5 + 1;
+            var mutations = (n % 10000) + 10000;
+            var concLevel = (n % 5) + 1;
             var total = mutations * concLevel;
 
             var sum = new Summary("test_summary", "helpless", false, new string[0]);
@@ -33,7 +33,7 @@ namespace Prometheus.Client.Tests
                 {
                     var v = random.NormDouble();
                     vals[j] = v;
-                    allVars[i * mutations + j] = v;
+                    allVars[(i * mutations) + j] = v;
                     sampleSum += v;
                 }
 
@@ -150,8 +150,8 @@ namespace Prometheus.Client.Tests
                 // be at most ε, but for some reason, it's sometimes slightly
                 // higher. That's a bug.
                 var n = (double) vars.Length;
-                var lower = (int) ((q - 2 * epsilon) * n);
-                var upper = (int) Math.Ceiling((q + 2 * epsilon) * n);
+                var lower = (int) ((q - (2 * epsilon)) * n);
+                var upper = (int) Math.Ceiling((q + (2 * epsilon)) * n);
 
                 var min = vars[0];
                 if (lower > 1)

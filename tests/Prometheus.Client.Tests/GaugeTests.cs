@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public class GaugeTests
+    public class GaugeTests : BaseTests
     {
         [Fact]
         public void WithoutLabels()
@@ -88,12 +88,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Theory]
-        [InlineData()]
-        [InlineData(null)]
-        [InlineData(null, null)]
-        [InlineData("onlyone")]
-        [InlineData("onlyone", null)]
-        [InlineData("one", "two", "three")]
+        [MemberData(nameof(GetLabels))]
         public void ShouldThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();

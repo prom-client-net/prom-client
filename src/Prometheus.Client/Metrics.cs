@@ -138,7 +138,6 @@ namespace Prometheus.Client
             return DefaultFactory.CreateSummary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
         }
 
-
         /// <summary>
         ///     Create Histogram
         /// </summary>
@@ -149,7 +148,6 @@ namespace Prometheus.Client
         {
             return DefaultFactory.CreateHistogram(name, help, false, labelNames);
         }
-
 
         /// <summary>
         ///     Create Histogram

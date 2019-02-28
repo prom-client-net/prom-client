@@ -12,7 +12,7 @@ namespace Prometheus.Client.MetricsWriter
             long? timestamp = null)
         {
             var sampleWriter = writer.StartSample(suffix);
-            if (labels!=null && labels.Length > 0)
+            if ((labels!=null) && (labels.Length > 0))
             {
                 var labelWriter = sampleWriter.StartLabels();
                 labelWriter.WriteLabels(labels);

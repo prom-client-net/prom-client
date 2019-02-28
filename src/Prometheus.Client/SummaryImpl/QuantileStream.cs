@@ -86,9 +86,9 @@ namespace Prometheus.Client.SummaryImpl
                 {
                     double f;
                     if (target.Quantile * stream.N <= r)
-                        f = 2 * target.Epsilon * r / target.Quantile;
+                        f = (2 * target.Epsilon * r) / target.Quantile;
                     else
-                        f = 2 * target.Epsilon * (stream.N - r) / (1 - target.Quantile);
+                        f = (2 * target.Epsilon * (stream.N - r)) / (1 - target.Quantile);
 
                     if (f < m)
                         m = f;

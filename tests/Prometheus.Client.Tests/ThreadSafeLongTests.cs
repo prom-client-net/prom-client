@@ -8,7 +8,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ThreadSafeLong_Constructors()
         {
-            var tsdouble = new ThreadSafeLong();
+            var tsdouble = new ThreadSafeLong(0L);
             Assert.Equal(0L, tsdouble.Value);
 
             tsdouble = new ThreadSafeLong(1L);
@@ -18,8 +18,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ThreadSafeLong_ValueSet()
         {
-            var tsdouble = new ThreadSafeLong();
-            tsdouble.Value = 3L;
+            var tsdouble = new ThreadSafeLong(3L);
             Assert.Equal(3L, tsdouble.Value);
         }
 

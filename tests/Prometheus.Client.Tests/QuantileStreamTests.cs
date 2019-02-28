@@ -31,7 +31,7 @@ namespace Prometheus.Client.Tests
 
                 // Add 5% asymmetric outliers.
                 if (i % 20 == 0)
-                    v = v * v + 1;
+                    v = (v * v) + 1;
 
                 stream.Insert(v);
                 a[i] = v;
@@ -99,8 +99,8 @@ namespace Prometheus.Client.Tests
                 var n = (double) a.Length;
                 var k = (int) (qu * n);
 
-                var lowerRank = (int) ((1 - (1 + _relativeEpsilon) * (1 - qu)) * n);
-                var upperRank = (int) Math.Ceiling((1 - (1 - _relativeEpsilon) * (1 - qu)) * n);
+                var lowerRank = (int) ((1 - ((1 + _relativeEpsilon) * (1 - qu))) * n);
+                var upperRank = (int) Math.Ceiling((1 - ((1 - _relativeEpsilon) * (1 - qu))) * n);
                 var w = a[k - 1];
                 var min = a[lowerRank - 1];
                 var max = a[upperRank - 1];

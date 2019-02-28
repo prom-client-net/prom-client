@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public class HistogramTests
+    public class HistogramTests : BaseTests
     {
         [Fact]
         public void SameLabelReturnsSameMetric()
@@ -37,12 +37,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Theory]
-        [InlineData()]
-        [InlineData(null)]
-        [InlineData(null, null)]
-        [InlineData("onlyone")]
-        [InlineData("onlyone", null)]
-        [InlineData("one", "two", "three")]
+        [MemberData(nameof(GetLabels))]
         public void ShouldThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();
@@ -58,16 +53,7 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var histogram = factory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
-            histogram.Observe(1.5);
-            histogram.Observe(2.5);
-            histogram.Observe(1);
-            histogram.Observe(2.4);
-            histogram.Observe(2.1);
-            histogram.Observe(0.4);
-            histogram.Observe(1.4);
-            histogram.Observe(1.5);
-            histogram.Observe(3.9);
+            var histogram1 = CreateHistogram1(factory);
 
             var histogram2 = factory.CreateHistogram("hist2", "help2", new[] { -5.0, 0, 5.0, 10 });
             histogram2.Observe(-20);
@@ -84,9 +70,10 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    histogram.Collect(writer);
+                    histogram1.Collect(writer);
                     histogram2.Collect(writer);
                 }
+
                 stream.Seek(0, SeekOrigin.Begin);
 
                 using (var streamReader = new StreamReader(stream))
@@ -105,18 +92,9 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var histogram = factory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
-            histogram.Observe(1.5);
-            histogram.Observe(2.5);
-            histogram.Observe(1);
-            histogram.Observe(2.4);
-            histogram.Observe(2.1);
-            histogram.Observe(0.4);
-            histogram.Observe(1.4);
-            histogram.Observe(1.5);
-            histogram.Observe(3.9);
+            var histogram1 = CreateHistogram1(factory);
 
-            histogram.Collect(writer);
+            histogram1.Collect(writer);
 
             Received.InOrder(() => {
                 writer.StartMetric("hist1");
@@ -153,6 +131,21 @@ namespace Prometheus.Client.Tests
                 sample = writer.StartSample("_count");
                 sample.WriteValue(9);
             });
+        }
+
+        private static Histogram CreateHistogram1(MetricFactory metricFactory)
+        {
+            var histogram = metricFactory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
+            histogram.Observe(1.5);
+            histogram.Observe(2.5);
+            histogram.Observe(1);
+            histogram.Observe(2.4);
+            histogram.Observe(2.1);
+            histogram.Observe(0.4);
+            histogram.Observe(1.4);
+            histogram.Observe(1.5);
+            histogram.Observe(3.9);
+            return histogram;
         }
     }
 }

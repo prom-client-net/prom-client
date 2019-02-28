@@ -23,7 +23,7 @@ namespace Prometheus.Client.Collectors
 
             if (values.Any(value => value == null))
                 throw new ArgumentNullException(nameof(values), "Label cannot be null");
-            
+
             _values = values;
 
             WireLabels = names.Zip(values, (name, value) => new CLabelPair { Name = name, Value = value }).ToArray();
@@ -56,9 +56,7 @@ namespace Prometheus.Client.Collectors
         {
             var sb = new StringBuilder();
             foreach (var label in WireLabels)
-            {
                 sb.AppendFormat("{0}={1}, ", label.Name, label.Value);
-            }
 
             return sb.ToString();
         }
@@ -72,7 +70,7 @@ namespace Prometheus.Client.Collectors
         {
             unchecked
             {
-                return values.Aggregate(1, (current, t) => current ^ t.GetHashCode() * 397);
+                return values.Aggregate(1, (current, t) => current ^ (t.GetHashCode() * 397));
             }
         }
     }
