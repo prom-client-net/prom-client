@@ -10,83 +10,6 @@ namespace Prometheus.Client.Tests
 {
     public class GaugeTests : BaseTests
     {
-        [Fact]
-        public void WithoutLabels()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty);
-            gauge.Inc(2);
-
-            Assert.Equal(2, gauge.Value);
-        }
-
-        [Fact]
-        public void WithLabels()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label");
-            gauge.Inc(2);
-            var labeled = gauge.WithLabels("value");
-            labeled.Inc(3);
-
-            Assert.Equal(2, gauge.Value);
-            Assert.Equal(3, labeled.Value);
-        }
-
-        [Fact]
-        public void SameLabelReturnsSameMetric()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label");
-            var labeled1 = gauge.WithLabels("value");
-            var labeled2 = gauge.WithLabels("value");
-
-            Assert.Equal(labeled1, labeled2);
-        }
-
-        [Fact]
-        public void SameLabelsReturnsSameMetric()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label1", "label2");
-            var labeled1 = gauge.WithLabels("value1", "value2");
-            var labeled2 = gauge.WithLabels("value1", "value2");
-
-            Assert.Equal(labeled1, labeled2);
-        }
-
-        [Fact]
-        public void DefaultIncValue()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty);
-            gauge.Inc();
-
-            Assert.Equal(1, gauge.Value);
-        }
-
-        [Fact]
-        public void DefaultDecValue()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var gauge = factory.CreateGauge("test_gauge", string.Empty);
-            gauge.Dec();
-
-            Assert.Equal(-1, gauge.Value);
-        }
-
         [Theory]
         [MemberData(nameof(GetLabels))]
         public void ShouldThrowOnLabelsMismatch(params string[] labels)
@@ -154,6 +77,7 @@ namespace Prometheus.Client.Tests
                     gauge.Collect(writer);
                     gauge2.Collect(writer);
                 }
+
                 stream.Seek(0, SeekOrigin.Begin);
 
                 using (var streamReader = new StreamReader(stream))
@@ -163,6 +87,30 @@ namespace Prometheus.Client.Tests
             }
 
             Assert.Equal(ResourcesHelper.GetFileContent("GaugeTests_Collection.txt"), formattedText);
+        }
+
+        [Fact]
+        public void DefaultDecValue()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+            gauge.Dec();
+
+            Assert.Equal(-1, gauge.Value);
+        }
+
+        [Fact]
+        public void DefaultIncValue()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+            gauge.Inc();
+
+            Assert.Equal(1, gauge.Value);
         }
 
         [Fact]
@@ -186,6 +134,59 @@ namespace Prometheus.Client.Tests
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(3.2);
             });
+        }
+
+        [Fact]
+        public void SameLabelReturnsSameMetric()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label");
+            var labeled1 = gauge.WithLabels("value");
+            var labeled2 = gauge.WithLabels("value");
+
+            Assert.Equal(labeled1, labeled2);
+        }
+
+        [Fact]
+        public void SameLabelsReturnsSameMetric()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label1", "label2");
+            var labeled1 = gauge.WithLabels("value1", "value2");
+            var labeled2 = gauge.WithLabels("value1", "value2");
+
+            Assert.Equal(labeled1, labeled2);
+        }
+
+        [Fact]
+        public void WithLabels()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty, "label");
+            gauge.Inc(2);
+            var labeled = gauge.WithLabels("value");
+            labeled.Inc(3);
+
+            Assert.Equal(2, gauge.Value);
+            Assert.Equal(3, labeled.Value);
+        }
+
+        [Fact]
+        public void WithoutLabels()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+            gauge.Inc(2);
+
+            Assert.Equal(2, gauge.Value);
         }
     }
 }

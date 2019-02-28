@@ -39,8 +39,6 @@ namespace Prometheus.Client
 
         private readonly IList<QuantileEpsilonPair> _objectives;
 
-        protected override MetricType Type => MetricType.Summary;
-
         internal Summary(
             string name,
             string help,
@@ -73,6 +71,8 @@ namespace Prometheus.Client
                 throw new ArgumentException($"{_quantileLabel} is a reserved label name");
         }
 
+        protected override MetricType Type => MetricType.Summary;
+
         public void Observe(double val)
         {
             Unlabelled.Observe(val);
@@ -87,8 +87,6 @@ namespace Prometheus.Client
             // Lock bufMtx before mtx if both are needed.
             private readonly object _lock = new object();
 
-            private readonly QuantileComparer _quantileComparer = new QuantileComparer();
-
             // AgeBuckets is the number of buckets used to exclude observations that
             // are older than MaxAge from the summary. A higher number has a
             // resource penalty, so only increase it if the higher resolution is
@@ -102,7 +100,7 @@ namespace Prometheus.Client
             // value of DefBufCap should suffice for most uses. If there is a need
             // to increase the value, a multiple of 500 is recommended (because that
             // is the internal buffer size of the underlying package
-            // "github.com/bmizerany/perks/quantile").      
+            // "github.com/bmizerany/perks/quantile").
             private int _bufCap;
 
             private SampleBuffer _coldBuf;
@@ -144,10 +142,10 @@ namespace Prometheus.Client
             {
                 base.Init(parent, labelValues, includeTimestamp);
 
-                _objectives = ((Summary) parent)._objectives;
-                _maxAge = ((Summary) parent)._maxAge;
-                _ageBuckets = ((Summary) parent)._ageBuckets;
-                _bufCap = ((Summary) parent)._bufCap;
+                _objectives = ((Summary)parent)._objectives;
+                _maxAge = ((Summary)parent)._maxAge;
+                _ageBuckets = ((Summary)parent)._ageBuckets;
+                _bufCap = ((Summary)parent)._bufCap;
 
                 _sortedObjectives = new double[_objectives.Count];
                 _hotBuf = new SampleBuffer(_bufCap);
@@ -157,28 +155,28 @@ namespace Prometheus.Client
                 _hotBufExpTime = _headStreamExpTime;
 
                 _streams = new QuantileStream[_ageBuckets];
-                for (var i = 0; i < _ageBuckets; i++)
+                for (int i = 0; i < _ageBuckets; i++)
                     _streams[i] = QuantileStream.NewTargeted(_objectives);
 
                 _headStream = _streams[0];
 
-                for (var i = 0; i < _objectives.Count; i++)
+                for (int i = 0; i < _objectives.Count; i++)
                     _sortedObjectives[i] = _objectives[i].Quantile;
 
                 Array.Sort(_sortedObjectives);
 
                 _wireMetric = new CSummary { Quantiles = new CQuantile[_objectives.Count] };
                 for (int i = 0; i < _objectives.Count; i++)
+                {
                     _wireMetric.Quantiles[i] = new CQuantile
                     {
                         Quantile = _objectives[i].Quantile
                     };
+                }
             }
 
             internal SummaryState ForkState(DateTime now)
             {
-                double count;
-                double sum;
                 var values = new KeyValuePair<double, double>[_objectives.Count];
 
                 lock (_bufLock)
@@ -188,13 +186,11 @@ namespace Prometheus.Client
                         // Swap bufs even if hotBuf is empty to set new hotBufExpTime.
                         SwapBufs(now);
                         FlushColdBuf();
-                        count = _count;
-                        sum = _sum;
 
-                        for (var i = 0; i < _sortedObjectives.Length; i++)
+                        for (int i = 0; i < _sortedObjectives.Length; i++)
                         {
-                            var rank = _sortedObjectives[i];
-                            var value = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
+                            double rank = _sortedObjectives[i];
+                            double value = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
 
                             values[i] = new KeyValuePair<double, double>(rank, value);
                         }
@@ -203,7 +199,7 @@ namespace Prometheus.Client
                         {
                             Values = values,
                             Count = _count,
-                            Sum = _sum,
+                            Sum = _sum
                         };
                     }
                 }
@@ -223,9 +219,7 @@ namespace Prometheus.Client
 
                     bucketSample.WriteValue(state.Values[i].Value);
                     if (IncludeTimestamp && Timestamp.HasValue)
-                    {
                         bucketSample.WriteTimestamp(Timestamp.Value);
-                    }
                 }
 
                 writer.WriteSample(state.Sum, "_sum", Labels, Timestamp);
@@ -246,7 +240,7 @@ namespace Prometheus.Client
 
                     if (_hotBuf.IsFull)
                         Flush(now);
-                    
+
                     if (IncludeTimestamp)
                         SetTimestamp();
                 }
@@ -283,9 +277,9 @@ namespace Prometheus.Client
             // FlushColdBuf needs mtx locked. 
             private void FlushColdBuf()
             {
-                for (var bufIdx = 0; bufIdx < _coldBuf.Position; bufIdx++)
+                for (int bufIdx = 0; bufIdx < _coldBuf.Position; bufIdx++)
                 {
-                    var value = _coldBuf[bufIdx];
+                    double value = _coldBuf[bufIdx];
 
                     foreach (var quantileStream in _streams)
                         quantileStream.Insert(value);

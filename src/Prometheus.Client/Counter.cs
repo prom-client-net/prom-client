@@ -14,6 +14,8 @@ namespace Prometheus.Client
         {
         }
 
+        protected override MetricType Type => MetricType.Counter;
+
         public void Inc()
         {
             Inc(1.0D);
@@ -33,16 +35,9 @@ namespace Prometheus.Client
                 labelledMetric.Value.ResetValue();
         }
 
-        protected override MetricType Type => MetricType.Counter;
-
         public class LabelledCounter : Labelled, ICounter
         {
             private ThreadSafeDouble _value;
-
-            protected internal override void Collect(IMetricsWriter writer)
-            {
-                writer.WriteSample(Value, string.Empty, Labels, Timestamp);
-            }
 
             public void Inc()
             {
@@ -61,6 +56,11 @@ namespace Prometheus.Client
             }
 
             public double Value => _value.Value;
+
+            protected internal override void Collect(IMetricsWriter writer)
+            {
+                writer.WriteSample(Value, string.Empty, Labels, Timestamp);
+            }
 
             internal void ResetValue()
             {

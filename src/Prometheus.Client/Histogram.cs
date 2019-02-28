@@ -4,7 +4,6 @@ using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 
@@ -77,13 +76,13 @@ namespace Prometheus.Client
             {
                 base.Init(parent, labelValues, includeTimestamp);
 
-                _upperBounds = ((Histogram) parent)._buckets;
+                _upperBounds = ((Histogram)parent)._buckets;
                 _bucketCounts = new ThreadSafeLong[_upperBounds.Length];
             }
 
             protected internal override void Collect(IMetricsWriter writer)
             {
-                var cumulativeCount = 0L;
+                long cumulativeCount = 0L;
 
                 for (int i = 0; i < _bucketCounts.Length; i++)
                 {
@@ -91,15 +90,13 @@ namespace Prometheus.Client
                     var bucketSample = writer.StartSample("_bucket");
                     var labelWriter = bucketSample.StartLabels();
                     labelWriter.WriteLabels(Labels);
-                    var labelValue = double.IsPositiveInfinity(_upperBounds[i]) ? "+Inf" : _upperBounds[i].ToString(CultureInfo.InvariantCulture);
+                    string labelValue = double.IsPositiveInfinity(_upperBounds[i]) ? "+Inf" : _upperBounds[i].ToString(CultureInfo.InvariantCulture);
                     labelWriter.WriteLabel("le", labelValue);
                     labelWriter.EndLabels();
 
                     bucketSample.WriteValue(cumulativeCount);
                     if (IncludeTimestamp && Timestamp.HasValue)
-                    {
                         bucketSample.WriteTimestamp(Timestamp.Value);
-                    }
                 }
 
                 writer.WriteSample(_sum.Value, "_sum", Labels, Timestamp);

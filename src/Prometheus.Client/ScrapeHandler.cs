@@ -1,5 +1,6 @@
 using System.IO;
 using Prometheus.Client.Collectors.Abstractions;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client
 {
@@ -7,12 +8,10 @@ namespace Prometheus.Client
     {
         public static void Process(ICollectorRegistry registry, Stream outputStream)
         {
-            using (var metricsWriter = new MetricsWriter.MetricsTextWriter(outputStream))
+            using (var metricsWriter = new MetricsTextWriter(outputStream))
             {
                 foreach (var collector in registry.Enumerate())
-                {
                     collector.Collect(metricsWriter);
-                }
             }
         }
 

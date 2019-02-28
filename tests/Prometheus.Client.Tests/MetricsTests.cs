@@ -1,11 +1,7 @@
 using System;
 using System.Linq;
-
-using NSubstitute;
-using NSubstitute.Extensions;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.MetricsWriter;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -38,11 +34,9 @@ namespace Prometheus.Client.Tests
             Assert.Single(myRegistry.Enumerate());
             Assert.Single(CollectorRegistry.Instance.Enumerate());
 
-            Assert.Equal(3, ((ICounter)myRegistry.Enumerate().Single()).Value); //counter1 == 3
-            Assert.Equal(4, ((ICounter)CollectorRegistry.Instance.Enumerate().Single()).Value); //counter2 == 4
+            Assert.Equal(3, ((ICounter) myRegistry.Enumerate().Single()).Value); //counter1 == 3
+            Assert.Equal(4, ((ICounter) CollectorRegistry.Instance.Enumerate().Single()).Value); //counter2 == 4
         }
-
-        
 
         [Fact]
         public void Label_Names()
@@ -81,6 +75,5 @@ namespace Prometheus.Client.Tests
 
             Assert.Same(labelled1, labelled2);
         }
-
     }
 }

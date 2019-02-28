@@ -1,5 +1,3 @@
-using Prometheus.Client.Contracts;
-
 namespace Prometheus.Client.MetricsWriter
 {
     public interface IMetricsWriter

@@ -1,6 +1,5 @@
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tools;
 

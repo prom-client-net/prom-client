@@ -35,7 +35,7 @@ namespace Prometheus.Client
         public Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
             var metric = new Counter(name, help, includeTimestamp, labelNames);
-            return (Counter) _registry.GetOrAdd(metric);
+            return (Counter)_registry.GetOrAdd(metric);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Prometheus.Client
         public Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
             var metric = new Gauge(name, help, includeTimestamp, labelNames);
-            return (Gauge) _registry.GetOrAdd(metric);
+            return (Gauge)_registry.GetOrAdd(metric);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Prometheus.Client
         public Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
             var metric = new Untyped(name, help, includeTimestamp, labelNames);
-            return (Untyped) _registry.GetOrAdd(metric);
+            return (Untyped)_registry.GetOrAdd(metric);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Prometheus.Client
             int? bufCap)
         {
             var metric = new Summary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
-            return (Summary) _registry.GetOrAdd(metric);
+            return (Summary)_registry.GetOrAdd(metric);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Prometheus.Client
         public Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
         {
             var metric = new Histogram(name, help, includeTimestamp, labelNames, buckets);
-            return (Histogram) _registry.GetOrAdd(metric);
+            return (Histogram)_registry.GetOrAdd(metric);
         }
     }
 }

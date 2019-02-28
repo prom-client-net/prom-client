@@ -11,7 +11,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
     /// </summary>
     public class ProcessCollector : ICollector
     {
-        private static string[] _labels = new string[0];
+        private static readonly string[] _labels = new string[0];
 
         private readonly Process _process;
         private readonly double _processStartTime;

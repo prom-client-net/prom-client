@@ -6,6 +6,15 @@ namespace Prometheus.Client.Tests
     public class ThreadSafeLongTests
     {
         [Fact]
+        public void ThreadSafeLong_Add()
+        {
+            var tsdouble = new ThreadSafeLong(3L);
+            tsdouble.Add(2L);
+            tsdouble.Add(5L);
+            Assert.Equal(10L, tsdouble.Value);
+        }
+
+        [Fact]
         public void ThreadSafeLong_Constructors()
         {
             var tsdouble = new ThreadSafeLong(0L);
@@ -13,13 +22,6 @@ namespace Prometheus.Client.Tests
 
             tsdouble = new ThreadSafeLong(1L);
             Assert.Equal(1L, tsdouble.Value);
-        }
-
-        [Fact]
-        public void ThreadSafeLong_ValueSet()
-        {
-            var tsdouble = new ThreadSafeLong(3L);
-            Assert.Equal(3L, tsdouble.Value);
         }
 
         [Fact]
@@ -36,16 +38,14 @@ namespace Prometheus.Client.Tests
             Assert.True(tsdouble.Equals(9L));
             Assert.False(tsdouble.Equals(10L));
 
-            Assert.Equal((9L).GetHashCode(), tsdouble.GetHashCode());
+            Assert.Equal(9L.GetHashCode(), tsdouble.GetHashCode());
         }
 
         [Fact]
-        public void ThreadSafeLong_Add()
+        public void ThreadSafeLong_ValueSet()
         {
             var tsdouble = new ThreadSafeLong(3L);
-            tsdouble.Add(2L);
-            tsdouble.Add(5L);
-            Assert.Equal(10L, tsdouble.Value);
+            Assert.Equal(3L, tsdouble.Value);
         }
     }
 }

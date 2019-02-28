@@ -10,32 +10,6 @@ namespace Prometheus.Client.Tests
 {
     public class HistogramTests : BaseTests
     {
-        [Fact]
-        public void SameLabelReturnsSameMetric()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var histogram = factory.CreateHistogram("test_histogram", string.Empty, "label");
-            var labeled1 = histogram.WithLabels("value");
-            var labeled2 = histogram.WithLabels("value");
-
-            Assert.Equal(labeled1, labeled2);
-        }
-
-        [Fact]
-        public void SameLabelsReturnsSameMetric()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var histogram = factory.CreateHistogram("test_histogram", string.Empty, "label1", "label2");
-            var labeled1 = histogram.WithLabels("value1", "value2");
-            var labeled2 = histogram.WithLabels("value1", "value2");
-
-            Assert.Equal(labeled1, labeled2);
-        }
-
         [Theory]
         [MemberData(nameof(GetLabels))]
         public void ShouldThrowOnLabelsMismatch(params string[] labels)
@@ -45,6 +19,21 @@ namespace Prometheus.Client.Tests
 
             var histogram = factory.CreateHistogram("test_Histogram", string.Empty, "label1", "label2");
             Assert.ThrowsAny<ArgumentException>(() => histogram.WithLabels(labels));
+        }
+
+        private static Histogram CreateHistogram1(MetricFactory metricFactory)
+        {
+            var histogram = metricFactory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
+            histogram.Observe(1.5);
+            histogram.Observe(2.5);
+            histogram.Observe(1);
+            histogram.Observe(2.4);
+            histogram.Observe(2.1);
+            histogram.Observe(0.4);
+            histogram.Observe(1.4);
+            histogram.Observe(1.5);
+            histogram.Observe(3.9);
+            return histogram;
         }
 
         [Fact]
@@ -96,7 +85,8 @@ namespace Prometheus.Client.Tests
 
             histogram1.Collect(writer);
 
-            Received.InOrder(() => {
+            Received.InOrder(() =>
+            {
                 writer.StartMetric("hist1");
                 writer.WriteHelp("help");
                 writer.WriteType(MetricType.Histogram);
@@ -133,19 +123,30 @@ namespace Prometheus.Client.Tests
             });
         }
 
-        private static Histogram CreateHistogram1(MetricFactory metricFactory)
+        [Fact]
+        public void SameLabelReturnsSameMetric()
         {
-            var histogram = metricFactory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
-            histogram.Observe(1.5);
-            histogram.Observe(2.5);
-            histogram.Observe(1);
-            histogram.Observe(2.4);
-            histogram.Observe(2.1);
-            histogram.Observe(0.4);
-            histogram.Observe(1.4);
-            histogram.Observe(1.5);
-            histogram.Observe(3.9);
-            return histogram;
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var histogram = factory.CreateHistogram("test_histogram", string.Empty, "label");
+            var labeled1 = histogram.WithLabels("value");
+            var labeled2 = histogram.WithLabels("value");
+
+            Assert.Equal(labeled1, labeled2);
+        }
+
+        [Fact]
+        public void SameLabelsReturnsSameMetric()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var histogram = factory.CreateHistogram("test_histogram", string.Empty, "label1", "label2");
+            var labeled1 = histogram.WithLabels("value1", "value2");
+            var labeled2 = histogram.WithLabels("value1", "value2");
+
+            Assert.Equal(labeled1, labeled2);
         }
     }
 }

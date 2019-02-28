@@ -5,15 +5,19 @@ namespace Prometheus.Client.SummaryImpl
 {
     public class SampleStream
     {
-        private readonly List<Sample> _samples = new List<Sample>();
         private readonly Invariant _invariant;
-
-        public double N { get; set; }
+        private readonly List<Sample> _samples = new List<Sample>();
 
         public SampleStream(Invariant invariant)
         {
             _invariant = invariant;
         }
+
+        public double N { get; set; }
+
+        public int Count => (int)N;
+
+        public int SampleCount => _samples.Count;
 
         public void Merge(List<Sample> samples)
         {
@@ -23,11 +27,11 @@ namespace Prometheus.Client.SummaryImpl
             // do merges properly.
 
             double r = 0;
-            var i = 0;
+            int i = 0;
 
             foreach (var sample in samples)
             {
-                var inserted = false;
+                bool inserted = false;
                 for (; i < _samples.Count; i++)
                 {
                     var c = _samples[i];
@@ -38,11 +42,11 @@ namespace Prometheus.Client.SummaryImpl
                         _samples.Insert(i,
                             new Sample
                             {
-                                Value = sample.Value, 
-                                Width = sample.Width, 
+                                Value = sample.Value,
+                                Width = sample.Width,
                                 Delta = Math.Max(sample.Delta, Math.Floor(_invariant(this, r)) - 1)
                             });
-                        
+
                         i++;
                         inserted = true;
                         break;
@@ -61,7 +65,7 @@ namespace Prometheus.Client.SummaryImpl
                     });
                     i++;
                 }
-                
+
                 N += sample.Width;
                 r += sample.Width;
             }
@@ -75,10 +79,10 @@ namespace Prometheus.Client.SummaryImpl
                 return;
 
             var x = _samples[_samples.Count - 1];
-            var xi = _samples.Count - 1;
-            var r = N - 1 - x.Width;
+            int xi = _samples.Count - 1;
+            double r = N - 1 - x.Width;
 
-            for (var i = _samples.Count - 2; i >= 0; i--)
+            for (int i = _samples.Count - 2; i >= 0; i--)
             {
                 var c = _samples[i];
 
@@ -105,16 +109,14 @@ namespace Prometheus.Client.SummaryImpl
             N = 0;
         }
 
-        public int Count => (int) N;
-
         public double Query(double q)
         {
-            var t = Math.Ceiling(q * N);
+            double t = Math.Ceiling(q * N);
             t += Math.Ceiling(_invariant(this, t) / 2);
             var p = _samples[0];
             double r = 0;
 
-            for (var i = 1; i < _samples.Count; i++)
+            for (int i = 1; i < _samples.Count; i++)
             {
                 var c = _samples[i];
                 r += p.Width;
@@ -127,7 +129,5 @@ namespace Prometheus.Client.SummaryImpl
 
             return p.Value;
         }
-
-        public int SampleCount => _samples.Count;
     }
 }

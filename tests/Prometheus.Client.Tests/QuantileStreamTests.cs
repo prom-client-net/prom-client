@@ -25,9 +25,9 @@ namespace Prometheus.Client.Tests
         private static double[] PopulateStream(QuantileStream stream, Random random)
         {
             var a = new double[100100];
-            for (var i = 0; i < a.Length; i++)
+            for (int i = 0; i < a.Length; i++)
             {
-                var v = random.NormDouble();
+                double v = random.NormDouble();
 
                 // Add 5% asymmetric outliers.
                 if (i % 20 == 0)
@@ -46,20 +46,20 @@ namespace Prometheus.Client.Tests
 
             foreach (var target in _targets)
             {
-                var n = (double) a.Length;
-                var k = (int) (target.Quantile * n);
-                var lower = (int) ((target.Quantile - target.Epsilon) * n);
+                double n = a.Length;
+                int k = (int) (target.Quantile * n);
+                int lower = (int) ((target.Quantile - target.Epsilon) * n);
                 if (lower < 1)
                     lower = 1;
-                var upper = (int) Math.Ceiling((target.Quantile + target.Epsilon) * n);
+                int upper = (int) Math.Ceiling((target.Quantile + target.Epsilon) * n);
                 if (upper > a.Length)
                     upper = a.Length;
 
-                var w = a[k - 1];
-                var min = a[lower - 1];
-                var max = a[upper - 1];
+                double w = a[k - 1];
+                double min = a[lower - 1];
+                double max = a[upper - 1];
 
-                var g = s.Query(target.Quantile);
+                double g = s.Query(target.Quantile);
 
                 Assert.True(g >= min, $"q={target.Quantile}: want {w} [{min}, {max}], got {g}");
                 Assert.True(g <= max, $"q={target.Quantile}: want {w} [{min}, {max}], got {g}");
@@ -70,19 +70,19 @@ namespace Prometheus.Client.Tests
         {
             Array.Sort(a);
 
-            foreach (var qu in _lowQuantiles)
+            foreach (double qu in _lowQuantiles)
             {
-                var n = (double) a.Length;
-                var k = (int) (qu * n);
+                double n = a.Length;
+                int k = (int) (qu * n);
 
-                var lowerRank = (int) ((1 - _relativeEpsilon) * qu * n);
-                var upperRank = (int) Math.Ceiling((1 + _relativeEpsilon) * qu * n);
+                int lowerRank = (int) ((1 - _relativeEpsilon) * qu * n);
+                int upperRank = (int) Math.Ceiling((1 + _relativeEpsilon) * qu * n);
 
-                var w = a[k - 1];
-                var min = a[lowerRank - 1];
-                var max = a[upperRank - 1];
+                double w = a[k - 1];
+                double min = a[lowerRank - 1];
+                double max = a[upperRank - 1];
 
-                var g = s.Query(qu);
+                double g = s.Query(qu);
 
                 Assert.True(g >= min, $"q={qu}: want {w} [{min}, {max}], got {g}");
 
@@ -94,18 +94,18 @@ namespace Prometheus.Client.Tests
         {
             Array.Sort(a);
 
-            foreach (var qu in _highQuantiles)
+            foreach (double qu in _highQuantiles)
             {
-                var n = (double) a.Length;
-                var k = (int) (qu * n);
+                double n = a.Length;
+                int k = (int) (qu * n);
 
-                var lowerRank = (int) ((1 - ((1 + _relativeEpsilon) * (1 - qu))) * n);
-                var upperRank = (int) Math.Ceiling((1 - ((1 - _relativeEpsilon) * (1 - qu))) * n);
-                var w = a[k - 1];
-                var min = a[lowerRank - 1];
-                var max = a[upperRank - 1];
+                int lowerRank = (int) ((1 - ((1 + _relativeEpsilon) * (1 - qu))) * n);
+                int upperRank = (int) Math.Ceiling((1 - ((1 - _relativeEpsilon) * (1 - qu))) * n);
+                double w = a[k - 1];
+                double min = a[lowerRank - 1];
+                double max = a[upperRank - 1];
 
-                var g = s.Query(qu);
+                double g = s.Query(qu);
 
                 Assert.True(g >= min, $"q={qu}: want {w} [{min}, {max}], got {g}");
                 Assert.True(g <= max, $"q={qu}: want {w} [{min}, {max}], got {g}");
@@ -116,7 +116,7 @@ namespace Prometheus.Client.Tests
         public void TestDefaults()
         {
             var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
-            var g = q.Query(0.99);
+            double g = q.Query(0.99);
             Assert.Equal(0, g);
         }
 
@@ -152,16 +152,16 @@ namespace Prometheus.Client.Tests
         {
             var q = QuantileStream.NewTargeted(_targets);
 
-            for (var i = 100; i > 0; i--)
+            for (int i = 100; i > 0; i--)
                 q.Insert(i);
 
             Assert.Equal(100, q.Count);
 
             // Before compression, Query should have 100% accuracy
-            foreach (var quantile in _targets.Select(_ => _.Quantile))
+            foreach (double quantile in _targets.Select(_ => _.Quantile))
             {
-                var w = quantile * 100;
-                var g = q.Query(quantile);
+                double w = quantile * 100;
+                double g = q.Query(quantile);
                 Assert.Equal(g, w);
             }
         }
@@ -171,7 +171,7 @@ namespace Prometheus.Client.Tests
         {
             var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
             q.Insert(3.14);
-            var g = q.Query(0.90);
+            double g = q.Query(0.90);
             Assert.Equal(3.14, g);
         }
 
@@ -180,7 +180,7 @@ namespace Prometheus.Client.Tests
         {
             var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
 
-            for (var i = 1; i <= 100; i++)
+            for (int i = 1; i <= 100; i++)
                 q.Insert(i);
 
             Assert.Equal(100, q.SamplesCount);

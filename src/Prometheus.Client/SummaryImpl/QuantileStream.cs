@@ -23,8 +23,8 @@ namespace Prometheus.Client.SummaryImpl
 
     public class QuantileStream
     {
-        private readonly SampleStream _sampleStream;
         private readonly List<Sample> _samples;
+        private readonly SampleStream _sampleStream;
         private bool _sorted;
 
         private QuantileStream(SampleStream sampleStream, List<Sample> samples, bool sorted)
@@ -33,6 +33,13 @@ namespace Prometheus.Client.SummaryImpl
             _samples = samples;
             _sorted = sorted;
         }
+
+        // Count returns the total number of samples observed in the stream since initialization.
+        public int Count => _samples.Count + _sampleStream.Count;
+
+        public int SamplesCount => _samples.Count;
+
+        public bool Flushed => _sampleStream.SampleCount > 0;
 
         public static QuantileStream NewStream(Invariant invariant)
         {
@@ -80,7 +87,7 @@ namespace Prometheus.Client.SummaryImpl
         {
             return NewStream((stream, r) =>
             {
-                var m = double.MaxValue;
+                double m = double.MaxValue;
 
                 foreach (var target in targets)
                 {
@@ -138,13 +145,6 @@ namespace Prometheus.Client.SummaryImpl
             _samples.Clear();
         }
 
-        // Count returns the total number of samples observed in the stream since initialization.
-        public int Count => _samples.Count + _sampleStream.Count;
-
-        public int SamplesCount => _samples.Count;
-
-        public bool Flushed => _sampleStream.SampleCount > 0;
-
         // Query returns the computed qth percentiles value. If s was created with
         // NewTargeted, and q is not in the set of quantiles provided a priori, Query
         // will return an unspecified result.
@@ -155,12 +155,12 @@ namespace Prometheus.Client.SummaryImpl
                 // Fast path when there hasn't been enough data for a flush;
                 // this also yields better accuracy for small sets of data.
 
-                var l = _samples.Count;
+                int l = _samples.Count;
 
                 if (l == 0)
                     return 0;
 
-                var i = (int) (l * q);
+                int i = (int) (l * q);
                 if (i > 0)
                     i -= 1;
 

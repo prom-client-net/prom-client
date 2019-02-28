@@ -26,8 +26,8 @@ namespace Prometheus.Client.Tools
         {
             while (true)
             {
-                var initialValue = Interlocked.Read(ref _value);
-                var computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
+                long initialValue = Interlocked.Read(ref _value);
+                double computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
 
                 if (initialValue == Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), initialValue))
                     return;
