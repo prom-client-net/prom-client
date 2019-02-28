@@ -17,7 +17,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ThreadSafeDouble_Constructors()
         {
-            var tsdouble = new ThreadSafeDouble();
+            var tsdouble = new ThreadSafeDouble(0.0);
             Assert.Equal(0.0, tsdouble.Value);
 
             tsdouble = new ThreadSafeDouble(1.42);
@@ -44,8 +44,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ThreadSafeDouble_ValueSet()
         {
-            var tsdouble = new ThreadSafeDouble();
-            tsdouble.Value = 3.14;
+            var tsdouble = new ThreadSafeDouble(3.14);
             Assert.Equal(3.14, tsdouble.Value);
         }
     }
