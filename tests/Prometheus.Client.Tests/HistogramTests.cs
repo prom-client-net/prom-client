@@ -87,6 +87,34 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void EmptyCollection()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var histogram = factory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
+            
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    histogram.Collect(writer);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("HistogramTests_Empty.txt"), formattedText);
+        }
+
+        [Fact]
         public void MetricsWriteApiUsage()
         {
             var writer = Substitute.For<IMetricsWriter>();

@@ -90,6 +90,34 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void EmptyCollection()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test", "with help text", "category");
+           
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    gauge.Collect(writer);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("GaugeTests_Empty.txt"), formattedText);
+        }
+
+        [Fact]
         public void DefaultDecValue()
         {
             var registry = new CollectorRegistry();

@@ -7,10 +7,10 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ICounter" />
-    public class Counter : Collector<Counter.LabelledCounter>, ICounter
+    public class Counter : Collector<Counter.LabelledCounter, MetricConfiguration>, ICounter
     {
-        internal Counter(string name, string help, bool includeTimestamp, string[] labelNames)
-            : base(name, help, includeTimestamp, labelNames)
+        internal Counter(MetricConfiguration configuration)
+            : base(configuration)
         {
         }
 
@@ -35,7 +35,7 @@ namespace Prometheus.Client
                 labelledMetric.Value.ResetValue();
         }
 
-        public class LabelledCounter : Labelled, ICounter
+        public class LabelledCounter : Labelled<MetricConfiguration>, ICounter
         {
             private ThreadSafeDouble _value;
 
@@ -50,9 +50,7 @@ namespace Prometheus.Client
                     throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
                 _value.Add(increment);
-
-                if (IncludeTimestamp)
-                    SetTimestamp();
+                TimestampIfRequired();
             }
 
             public double Value => _value.Value;

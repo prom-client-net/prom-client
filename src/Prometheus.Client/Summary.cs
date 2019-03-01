@@ -11,64 +11,17 @@ using Prometheus.Client.SummaryImpl;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ISummary" />
-    public class Summary : Collector<Summary.LabelledSummary>, ISummary
+    public class Summary : Collector<Summary.LabelledSummary, Summary.SummaryConfiguration>, ISummary
     {
-        // Label that defines the quantile in a summary.
-        private const string _quantileLabel = "quantile";
-
-        // Default number of buckets used to calculate the age of observations
-        private const int _defAgeBuckets = 5;
-
-        // Standard buffer size for collecting Summary observations
-        private const int _defBufCap = 500;
-
-        // Default Summary quantile values.
-        public static readonly IReadOnlyCollection<QuantileEpsilonPair> DefObjectives = new List<QuantileEpsilonPair>
-        {
-            new QuantileEpsilonPair(0.5, 0.05),
-            new QuantileEpsilonPair(0.9, 0.01),
-            new QuantileEpsilonPair(0.99, 0.001)
-        };
-
-        // Default duration for which observations stay relevant
-        private static readonly TimeSpan _defMaxAge = TimeSpan.FromMinutes(10);
-
         private readonly int _ageBuckets;
         private readonly int _bufCap;
         private readonly TimeSpan _maxAge;
 
         private readonly IList<QuantileEpsilonPair> _objectives;
 
-        internal Summary(
-            string name,
-            string help,
-            bool includeTimestamp,
-            string[] labelNames,
-            IList<QuantileEpsilonPair> objectives = null,
-            TimeSpan? maxAge = null,
-            int? ageBuckets = null,
-            int? bufCap = null)
-            : base(name, help, includeTimestamp, labelNames)
+        internal Summary(SummaryConfiguration configuration)
+            : base(configuration)
         {
-            _objectives = objectives ?? DefObjectives.ToList();
-            _maxAge = maxAge ?? _defMaxAge;
-            _ageBuckets = ageBuckets ?? _defAgeBuckets;
-            _bufCap = bufCap ?? _defBufCap;
-
-            if (_objectives.Count == 0)
-                _objectives = DefObjectives.ToList();
-
-            if (_maxAge < TimeSpan.Zero)
-                throw new ArgumentException($"Illegal max age {_maxAge}");
-
-            if (_ageBuckets == 0)
-                _ageBuckets = _defAgeBuckets;
-
-            if (_bufCap == 0)
-                _bufCap = _defBufCap;
-
-            if (labelNames.Any(_ => _ == _quantileLabel))
-                throw new ArgumentException($"{_quantileLabel} is a reserved label name");
         }
 
         protected override MetricType Type => MetricType.Summary;
@@ -78,7 +31,7 @@ namespace Prometheus.Client
             Unlabelled.Observe(val);
         }
 
-        public class LabelledSummary : Labelled, ISummary
+        public class LabelledSummary : Labelled<SummaryConfiguration>, ISummary
         {
             // Protects hotBuf and hotBufExpTime.
             private readonly object _bufLock = new object();
@@ -87,22 +40,6 @@ namespace Prometheus.Client
             // Lock bufMtx before mtx if both are needed.
             private readonly object _lock = new object();
 
-            // AgeBuckets is the number of buckets used to exclude observations that
-            // are older than MaxAge from the summary. A higher number has a
-            // resource penalty, so only increase it if the higher resolution is
-            // really required. For very high observation rates, you might want to
-            // reduce the number of age buckets. With only one age bucket, you will
-            // effectively see a complete reset of the summary each time MaxAge has
-            // passed. The default value is DefAgeBuckets.
-            private int _ageBuckets;
-
-            // BufCap defines the default sample stream buffer size.  The default
-            // value of DefBufCap should suffice for most uses. If there is a need
-            // to increase the value, a multiple of 500 is recommended (because that
-            // is the internal buffer size of the underlying package
-            // "github.com/bmizerany/perks/quantile").
-            private int _bufCap;
-
             private SampleBuffer _coldBuf;
             private uint _count;
             private QuantileStream _headStream;
@@ -110,16 +47,6 @@ namespace Prometheus.Client
             private int _headStreamIdx;
             private SampleBuffer _hotBuf;
             private DateTime _hotBufExpTime;
-
-            // MaxAge defines the duration for which an observation stays relevant
-            // for the summary. Must be positive. The default value is DefMaxAge.
-            private TimeSpan _maxAge;
-
-            // Objectives defines the quantile rank estimates with their respective
-            // absolute error. If Objectives[q] = e, then the value reported
-            // for q will be the φ-quantile value for some φ between q-e and q+e.
-            // The default value is DefObjectives.
-            private IList<QuantileEpsilonPair> _objectives = new List<QuantileEpsilonPair>();
 
             private double[] _sortedObjectives;
             private TimeSpan _streamDuration;
@@ -133,51 +60,46 @@ namespace Prometheus.Client
                 Observe(val, DateTime.UtcNow);
             }
 
-            internal override void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp)
+            protected internal override void Init(LabelValues labelValues, SummaryConfiguration configuration)
             {
-                Init(parent, labelValues, includeTimestamp, DateTime.UtcNow);
+                Init(labelValues, configuration, DateTime.UtcNow);
             }
 
-            internal void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp, DateTime now)
+            internal void Init(LabelValues labelValues, SummaryConfiguration configuration, DateTime now)
             {
-                base.Init(parent, labelValues, includeTimestamp);
+                base.Init(labelValues, configuration);
 
-                _objectives = ((Summary)parent)._objectives;
-                _maxAge = ((Summary)parent)._maxAge;
-                _ageBuckets = ((Summary)parent)._ageBuckets;
-                _bufCap = ((Summary)parent)._bufCap;
-
-                _sortedObjectives = new double[_objectives.Count];
-                _hotBuf = new SampleBuffer(_bufCap);
-                _coldBuf = new SampleBuffer(_bufCap);
-                _streamDuration = new TimeSpan(_maxAge.Ticks / _ageBuckets);
+                _sortedObjectives = new double[Configuration.Objectives.Count];
+                _hotBuf = new SampleBuffer(Configuration.BufCap);
+                _coldBuf = new SampleBuffer(Configuration.BufCap);
+                _streamDuration = new TimeSpan(Configuration.MaxAge.Ticks / Configuration.AgeBuckets);
                 _headStreamExpTime = now.Add(_streamDuration);
                 _hotBufExpTime = _headStreamExpTime;
 
-                _streams = new QuantileStream[_ageBuckets];
-                for (int i = 0; i < _ageBuckets; i++)
-                    _streams[i] = QuantileStream.NewTargeted(_objectives);
+                _streams = new QuantileStream[Configuration.AgeBuckets];
+                for (int i = 0; i < Configuration.AgeBuckets; i++)
+                    _streams[i] = QuantileStream.NewTargeted(Configuration.Objectives);
 
                 _headStream = _streams[0];
 
-                for (int i = 0; i < _objectives.Count; i++)
-                    _sortedObjectives[i] = _objectives[i].Quantile;
+                for (int i = 0; i < Configuration.Objectives.Count; i++)
+                    _sortedObjectives[i] = Configuration.Objectives[i].Quantile;
 
                 Array.Sort(_sortedObjectives);
 
-                _wireMetric = new CSummary { Quantiles = new CQuantile[_objectives.Count] };
-                for (int i = 0; i < _objectives.Count; i++)
+                _wireMetric = new CSummary { Quantiles = new CQuantile[Configuration.Objectives.Count] };
+                for (int i = 0; i < Configuration.Objectives.Count; i++)
                 {
                     _wireMetric.Quantiles[i] = new CQuantile
                     {
-                        Quantile = _objectives[i].Quantile
+                        Quantile = Configuration.Objectives[i].Quantile
                     };
                 }
             }
 
             internal SummaryState ForkState(DateTime now)
             {
-                var values = new KeyValuePair<double, double>[_objectives.Count];
+                var values = new KeyValuePair<double, double>[Configuration.Objectives.Count];
 
                 lock (_bufLock)
                 {
@@ -218,7 +140,7 @@ namespace Prometheus.Client
                     labelWriter.EndLabels();
 
                     bucketSample.WriteValue(state.Values[i].Value);
-                    if (IncludeTimestamp && Timestamp.HasValue)
+                    if (Configuration.IncludeTimestamp && Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
                 }
 
@@ -241,8 +163,7 @@ namespace Prometheus.Client
                     if (_hotBuf.IsFull)
                         Flush(now);
 
-                    if (IncludeTimestamp)
-                        SetTimestamp();
+                    TimestampIfRequired();
                 }
             }
 
@@ -316,6 +237,88 @@ namespace Prometheus.Client
 
                 public KeyValuePair<double, double>[] Values { get; set; }
             }
+        }
+
+        public class SummaryConfiguration : MetricConfiguration
+        {
+            // Label that defines the quantile in a summary.
+            private const string _quantileLabel = "quantile";
+
+            // Default number of buckets used to calculate the age of observations
+            private const int _defaultAgeBuckets = 5;
+
+            // Standard buffer size for collecting Summary observations
+            private const int _defaultBufCap = 500;
+
+            // Default Summary quantile values.
+            public static readonly IReadOnlyList<QuantileEpsilonPair> DefaultObjectives = new List<QuantileEpsilonPair>
+            {
+                new QuantileEpsilonPair(0.5, 0.05),
+                new QuantileEpsilonPair(0.9, 0.01),
+                new QuantileEpsilonPair(0.99, 0.001)
+            };
+
+            // Default duration for which observations stay relevant
+            private static readonly TimeSpan _defaultMaxAge = TimeSpan.FromMinutes(10);
+
+            public SummaryConfiguration(
+                string name,
+                string help,
+                bool includeTimestamp,
+                string[] labelNames,
+                IReadOnlyList<QuantileEpsilonPair> objectives = null,
+                TimeSpan? maxAge = null,
+                int? ageBuckets = null,
+                int? bufCap = null)
+            : base(name, help, includeTimestamp, labelNames)
+            {
+                Objectives = objectives;
+                if (Objectives == null || Objectives.Count == 0)
+                {
+                    Objectives = DefaultObjectives;
+                }
+
+                MaxAge = maxAge ?? _defaultMaxAge;
+                if (MaxAge < TimeSpan.Zero)
+                    throw new ArgumentException($"Illegal max age {MaxAge}");
+
+                AgeBuckets = ageBuckets ?? _defaultAgeBuckets;
+                if (AgeBuckets == 0)
+                    AgeBuckets = _defaultAgeBuckets;
+
+                BufCap = bufCap ?? _defaultBufCap;
+                if (BufCap == 0)
+                    BufCap = _defaultBufCap;
+
+                if (LabelNames.Any(_ => _ == _quantileLabel))
+                    throw new ArgumentException($"{_quantileLabel} is a reserved label name");
+            }
+
+            // Objectives defines the quantile rank estimates with their respective
+            // absolute error. If Objectives[q] = e, then the value reported
+            // for q will be the φ-quantile value for some φ between q-e and q+e.
+            // The default value is DefObjectives.
+            public IReadOnlyList<QuantileEpsilonPair> Objectives { get; }
+
+            // MaxAge defines the duration for which an observation stays relevant
+            // for the summary. Must be positive. The default value is DefMaxAge.
+            public TimeSpan MaxAge { get; }
+
+            // AgeBuckets is the number of buckets used to exclude observations that
+            // are older than MaxAge from the summary. A higher number has a
+            // resource penalty, so only increase it if the higher resolution is
+            // really required. For very high observation rates, you might want to
+            // reduce the number of age buckets. With only one age bucket, you will
+            // effectively see a complete reset of the summary each time MaxAge has
+            // passed. The default value is DefAgeBuckets.
+            public int AgeBuckets { get; }
+
+            // BufCap defines the default sample stream buffer size.  The default
+            // value of DefBufCap should suffice for most uses. If there is a need
+            // to increase the value, a multiple of 500 is recommended (because that
+            // is the internal buffer size of the underlying package
+            // "github.com/bmizerany/perks/quantile").
+            public int BufCap { get; }
         }
     }
 }

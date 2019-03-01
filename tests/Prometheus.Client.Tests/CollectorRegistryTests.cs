@@ -42,10 +42,11 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var originalCollector = Substitute.For<ICollector>();
             originalCollector.MetricNames.Returns(new[] { "metric" });
-            var fn = Substitute.For<Func<ICollector>>();
+            var fn = Substitute.For<Func<CollectorConfiguration, ICollector>>();
+            var cfg = new CollectorConfiguration("testName");
 
             registry.Add("testName", originalCollector);
-            var result = registry.GetOrAdd("testName", fn);
+            var result = registry.GetOrAdd(cfg, fn);
 
             Assert.Equal(originalCollector, result);
             fn.DidNotReceiveWithAnyArgs();

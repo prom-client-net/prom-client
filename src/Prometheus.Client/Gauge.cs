@@ -6,10 +6,10 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IGauge" />
-    public class Gauge : Collector<Gauge.LabelledGauge>, IGauge
+    public class Gauge : Collector<Gauge.LabelledGauge, MetricConfiguration>, IGauge
     {
-        internal Gauge(string name, string help, bool includeTimestamp, string[] labelNames)
-            : base(name, help, includeTimestamp, labelNames)
+        internal Gauge(MetricConfiguration configuration)
+            : base(configuration)
         {
         }
 
@@ -42,7 +42,7 @@ namespace Prometheus.Client
 
         public double Value => Unlabelled.Value;
 
-        public class LabelledGauge : Labelled, IGauge
+        public class LabelledGauge : Labelled<MetricConfiguration>, IGauge
         {
             private ThreadSafeDouble _value;
 
@@ -54,15 +54,13 @@ namespace Prometheus.Client
             public void Inc(double increment)
             {
                 _value.Add(increment);
-                if (IncludeTimestamp)
-                    SetTimestamp();
+                TimestampIfRequired();
             }
 
             public void Set(double val)
             {
                 _value.Value = val;
-                if (IncludeTimestamp)
-                    SetTimestamp();
+                TimestampIfRequired();
             }
 
             public void Dec()

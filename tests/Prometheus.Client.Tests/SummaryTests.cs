@@ -21,7 +21,7 @@ namespace Prometheus.Client.Tests
             int concLevel = (n % 5) + 1;
             int total = mutations * concLevel;
 
-            var sum = new Summary("test_summary", "helpless", false, new string[0]);
+            var sum = new Summary(new Summary.SummaryConfiguration("test_summary", "helpless", false, new string[0]));
             var allVars = new double[total];
             double sampleSum = 0;
             var tasks = new List<Task>();
@@ -48,7 +48,7 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.WithLabels().ForkState(DateTime.Now);
+            var m = sum.Unlabelled.ForkState(DateTime.Now);
 
             Assert.Equal(mutations * concLevel, (int) m.Count);
 
@@ -57,12 +57,12 @@ namespace Prometheus.Client.Tests
 
             Assert.True(Math.Abs(got - want) / want <= 0.001);
 
-            var objectives = Summary.DefObjectives.Select(_ => _.Quantile).ToArray();
+            var objectives = Summary.SummaryConfiguration.DefaultObjectives.Select(_ => _.Quantile).ToArray();
             Array.Sort(objectives);
 
             for (int i = 0; i < objectives.Length; i++)
             {
-                var wantQ = Summary.DefObjectives.ElementAt(i);
+                var wantQ = Summary.SummaryConfiguration.DefaultObjectives.ElementAt(i);
                 double epsilon = wantQ.Epsilon;
                 double gotQ = m.Values[i].Key;
                 double gotV = m.Values[i].Value;
@@ -139,10 +139,11 @@ namespace Prometheus.Client.Tests
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            var sum = new Summary("test_summary", "helpless", false, new string[0],
+            var summaryConfig = new Summary.SummaryConfiguration("test_summary", "helpless", false, new string[0],
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
+            var sum = new Summary(summaryConfig);
             var child = new Summary.LabelledSummary();
-            child.Init(sum, LabelValues.Empty, false, baseTime);
+            child.Init(LabelValues.Empty, summaryConfig, baseTime);
 
             for (int i = 0; i < 1000; i++)
             {

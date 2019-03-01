@@ -4,8 +4,11 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CounterTests_Collection.txt" />
+    <EmbeddedResource Include="Resources\CounterTests_Empty.txt" />
     <EmbeddedResource Include="Resources\GaugeTests_Collection.txt" />
+    <EmbeddedResource Include="Resources\GaugeTests_Empty.txt" />
     <EmbeddedResource Include="Resources\HistogramTests_Collection.txt" />
+    <EmbeddedResource Include="Resources\HistogramTests_Empty.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />

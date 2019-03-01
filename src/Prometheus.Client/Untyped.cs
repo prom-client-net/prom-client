@@ -6,10 +6,10 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IUntyped" />
-    public class Untyped : Collector<Untyped.LabelledUntyped>, IUntyped
+    public class Untyped : Collector<Untyped.LabelledUntyped, MetricConfiguration>, IUntyped
     {
-        internal Untyped(string name, string help, bool includeTimestamp, string[] labelNames)
-            : base(name, help, includeTimestamp, labelNames)
+        internal Untyped(MetricConfiguration configuration)
+            : base(configuration)
         {
         }
 
@@ -22,15 +22,14 @@ namespace Prometheus.Client
 
         public double Value => Unlabelled.Value;
 
-        public class LabelledUntyped : Labelled, IUntyped
+        public class LabelledUntyped : Labelled<MetricConfiguration>, IUntyped
         {
             private ThreadSafeDouble _value;
 
             public void Set(double val)
             {
                 _value.Value = val;
-                if (IncludeTimestamp)
-                    SetTimestamp();
+                TimestampIfRequired();
             }
 
             public double Value => _value.Value;

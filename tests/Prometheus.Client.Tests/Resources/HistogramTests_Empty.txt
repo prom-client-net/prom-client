@@ -1,0 +1,8 @@
+# HELP hist1 help
+# TYPE hist1 histogram
+hist1_bucket{le="1"} 0
+hist1_bucket{le="2"} 0
+hist1_bucket{le="3"} 0
+hist1_bucket{le="+Inf"} 0
+hist1_sum 0
+hist1_count 0

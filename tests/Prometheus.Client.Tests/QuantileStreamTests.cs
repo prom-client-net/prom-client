@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.SummaryImpl;
@@ -8,7 +8,7 @@ namespace Prometheus.Client.Tests
 {
     public class QuantileStreamTests
     {
-        private readonly IList<QuantileEpsilonPair> _targets = new List<QuantileEpsilonPair>
+        private readonly IReadOnlyList<QuantileEpsilonPair> _targets = new List<QuantileEpsilonPair>
         {
             new QuantileEpsilonPair(0.01, 0.001),
             new QuantileEpsilonPair(0.10, 0.01),

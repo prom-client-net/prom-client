@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Prometheus.Client.SummaryImpl
 {
@@ -83,7 +83,7 @@ namespace Prometheus.Client.SummaryImpl
         // is guaranteed to be within (Quantile±Epsilon).
         //
         // See http://www.cs.rutgers.edu/~muthu/bquant.pdf for time, space, and error properties.
-        public static QuantileStream NewTargeted(IList<QuantileEpsilonPair> targets)
+        public static QuantileStream NewTargeted(IReadOnlyList<QuantileEpsilonPair> targets)
         {
             return NewStream((stream, r) =>
             {
