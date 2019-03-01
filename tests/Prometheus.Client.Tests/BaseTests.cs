@@ -12,5 +12,12 @@ namespace Prometheus.Client.Tests
             yield return new object[] { "onlyone", null };
             yield return new object[] { "one", "two", "three" };
         }
+
+        public static IEnumerable<object[]> InvalidLabels()
+        {
+            yield return new object[] { "my-metric" };
+            yield return new object[] { "my!metric" };
+            yield return new object[] { "my%metric" };
+        }
     }
 }

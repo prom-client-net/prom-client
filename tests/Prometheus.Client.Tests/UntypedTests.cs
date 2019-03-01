@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public class CounterTests : BaseTests
+    public class UntypedTests : BaseTests
     {
         [Theory]
         [MemberData(nameof(GetLabels))]
@@ -17,8 +17,8 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            Assert.ThrowsAny<ArgumentException>(() => counter.WithLabels(labels));
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty, "label1", "label2");
+            Assert.ThrowsAny<ArgumentException>(() => untyped.WithLabels(labels));
         }
 
         [Theory]
@@ -28,7 +28,7 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            Assert.ThrowsAny<ArgumentException>(() => factory.CreateCounter("test_counter", string.Empty, label));
+            Assert.ThrowsAny<ArgumentException>(() => factory.CreateUntyped("test_untyped", string.Empty, label));
         }
 
         [Theory]
@@ -39,19 +39,18 @@ namespace Prometheus.Client.Tests
             var writer = Substitute.For<IMetricsWriter>();
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
-            var counter = factory.CreateCounter("name1", "help1", "label1");
+            var untyped = factory.CreateUntyped("name1", "help1", "label1");
 
-            counter.Inc();
-            counter.Inc(value);
-            counter.WithLabels("abc").Inc(value);
+            untyped.Set(value + 1);
+            untyped.WithLabels("abc").Set(value);
 
-            counter.Collect(writer);
+            untyped.Collect(writer);
 
             Received.InOrder(() =>
             {
                 writer.StartMetric("name1");
                 writer.WriteHelp("help1");
-                writer.WriteType(MetricType.Counter);
+                writer.WriteType(MetricType.Untyped);
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(value + 1);
@@ -65,47 +64,18 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CannotDecrement()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
-            Assert.Throws<ArgumentOutOfRangeException>(() => counter.Inc(-1));
-            var labeled = counter.WithLabels("value");
-            Assert.Throws<ArgumentOutOfRangeException>(() => labeled.Inc(-1));
-        }
-
-        [Fact]
-        public void CanReset()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
-            counter.Inc(1);
-            var labeled = counter.WithLabels("value");
-            labeled.Inc(2);
-
-            counter.Reset();
-
-            Assert.Equal(0, counter.Value);
-            Assert.Equal(0, labeled.Value);
-        }
-
-        [Fact]
         public void Collection()
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test", "with help text", "category");
-            counter.Inc();
-            counter.WithLabels("some").Inc(2);
+            var untyped = factory.CreateUntyped("test", "with help text", "category");
+            untyped.Set(1);
+            untyped.WithLabels("some").Set(2);
 
-            var counter2 = factory.CreateCounter("nextcounter", "with help text", "group", "type");
-            counter2.Inc(10);
-            counter2.WithLabels("any", "2").Inc(5);
+            var untyped2 = factory.CreateUntyped("nextuntyped", "with help text", "group", "type");
+            untyped2.Set(10);
+            untyped2.WithLabels("any", "2").Set(5);
 
             string formattedText = null;
 
@@ -113,8 +83,8 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    counter.Collect(writer);
-                    counter2.Collect(writer);
+                    untyped.Collect(writer);
+                    untyped2.Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -125,7 +95,7 @@ namespace Prometheus.Client.Tests
                 }
             }
 
-            Assert.Equal(ResourcesHelper.GetFileContent("CounterTests_Collection.txt"), formattedText);
+            Assert.Equal(ResourcesHelper.GetFileContent("UntypedTests_Collection.txt"), formattedText);
         }
 
         [Fact]
@@ -134,7 +104,7 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test", "with help text", "category");
+            var untyped = factory.CreateUntyped("test", "with help text", "category");
             
             string formattedText = null;
 
@@ -142,7 +112,7 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    counter.Collect(writer);
+                    untyped.Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -153,19 +123,7 @@ namespace Prometheus.Client.Tests
                 }
             }
 
-            Assert.Equal(ResourcesHelper.GetFileContent("CounterTests_Empty.txt"), formattedText);
-        }
-
-        [Fact]
-        public void DefaultIncValue()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty);
-            counter.Inc();
-
-            Assert.Equal(1, counter.Value);
+            Assert.Equal(ResourcesHelper.GetFileContent("UntypedTests_Empty.txt"), formattedText);
         }
 
         [Fact]
@@ -174,9 +132,9 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
-            var labeled1 = counter.WithLabels("value");
-            var labeled2 = counter.WithLabels("value");
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty, "label");
+            var labeled1 = untyped.WithLabels("value");
+            var labeled2 = untyped.WithLabels("value");
 
             Assert.Equal(labeled1, labeled2);
         }
@@ -187,9 +145,9 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            var labeled1 = counter.WithLabels("value1", "value2");
-            var labeled2 = counter.WithLabels("value1", "value2");
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty, "label1", "label2");
+            var labeled1 = untyped.WithLabels("value1", "value2");
+            var labeled2 = untyped.WithLabels("value1", "value2");
 
             Assert.Equal(labeled1, labeled2);
         }
@@ -200,12 +158,12 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
-            counter.Inc(2);
-            var labeled = counter.WithLabels("value");
-            labeled.Inc(3);
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty, "label");
+            untyped.Set(2);
+            var labeled = untyped.WithLabels("value");
+            labeled.Set(3);
 
-            Assert.Equal(2, counter.Value);
+            Assert.Equal(2, untyped.Value);
             Assert.Equal(3, labeled.Value);
         }
 
@@ -215,10 +173,10 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test_counter", string.Empty);
-            counter.Inc(2);
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty);
+            untyped.Set(2);
 
-            Assert.Equal(2, counter.Value);
+            Assert.Equal(2, untyped.Value);
         }
     }
 }

@@ -12,17 +12,17 @@ namespace Prometheus.Client.Collectors
         protected readonly TConfig Configuration;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
 
-        public string[] MetricNames => new[] { Configuration.Name };
-
         protected Collector(TConfig configuration)
         {
             Configuration = configuration;
             Unlabelled = CreateLabelled(LabelValues.Empty);
         }
 
-        protected abstract MetricType Type { get; }
+        public string[] MetricNames => new[] { Configuration.Name };
 
         internal string[] LabelNames => Configuration.LabelNames;
+
+        protected abstract MetricType Type { get; }
 
         protected internal TChild Unlabelled { get; }
 

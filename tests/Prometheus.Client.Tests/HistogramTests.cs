@@ -12,7 +12,7 @@ namespace Prometheus.Client.Tests
     {
         [Theory]
         [MemberData(nameof(GetLabels))]
-        public void ShouldThrowOnLabelsMismatch(params string[] labels)
+        public void ThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -22,10 +22,20 @@ namespace Prometheus.Client.Tests
         }
 
         [Theory]
+        [MemberData(nameof(InvalidLabels))]
+        public void ThrowOnInvalidLabels(string label)
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            Assert.ThrowsAny<ArgumentException>(() => factory.CreateHistogram("test_Histogram", string.Empty, label));
+        }
+
+        [Theory]
         [InlineData("le")]
         [InlineData("le", "label")]
         [InlineData("label", "le")]
-        public void ShouldThrowOnReservedLabelNames(params string[] labels)
+        public void ThrowOnReservedLabelNames(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -115,7 +125,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void MetricsWriteApiUsage()
+        public void MetricsWriterApiUsage()
         {
             var writer = Substitute.For<IMetricsWriter>();
             var registry = new CollectorRegistry();
