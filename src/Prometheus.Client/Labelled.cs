@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client
@@ -11,7 +11,7 @@ namespace Prometheus.Client
         private LabelValues _labelValues;
         protected TConfig Configuration;
 
-        protected CLabelPair[] Labels => _labelValues.WireLabels;
+        protected KeyValuePair<string, string>[] Labels => _labelValues.WireLabels;
 
         protected long? Timestamp { get; private set; }
 

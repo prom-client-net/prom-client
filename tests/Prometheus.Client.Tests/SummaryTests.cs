@@ -141,7 +141,6 @@ namespace Prometheus.Client.Tests
 
             var summaryConfig = new Summary.SummaryConfiguration("test_summary", "helpless", false, new string[0],
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
-            var sum = new Summary(summaryConfig);
             var child = new Summary.LabelledSummary();
             child.Init(LabelValues.Empty, summaryConfig, baseTime);
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.SummaryImpl;
 
@@ -13,12 +11,6 @@ namespace Prometheus.Client
     /// <inheritdoc cref="ISummary" />
     public class Summary : Collector<Summary.LabelledSummary, Summary.SummaryConfiguration>, ISummary
     {
-        private readonly int _ageBuckets;
-        private readonly int _bufCap;
-        private readonly TimeSpan _maxAge;
-
-        private readonly IList<QuantileEpsilonPair> _objectives;
-
         internal Summary(SummaryConfiguration configuration)
             : base(configuration)
         {
@@ -53,8 +45,6 @@ namespace Prometheus.Client
             private QuantileStream[] _streams;
             private double _sum;
 
-            private CSummary _wireMetric;
-
             public void Observe(double val)
             {
                 Observe(val, DateTime.UtcNow);
@@ -86,15 +76,6 @@ namespace Prometheus.Client
                     _sortedObjectives[i] = Configuration.Objectives[i].Quantile;
 
                 Array.Sort(_sortedObjectives);
-
-                _wireMetric = new CSummary { Quantiles = new CQuantile[Configuration.Objectives.Count] };
-                for (int i = 0; i < Configuration.Objectives.Count; i++)
-                {
-                    _wireMetric.Quantiles[i] = new CQuantile
-                    {
-                        Quantile = Configuration.Objectives[i].Quantile
-                    };
-                }
             }
 
             internal SummaryState ForkState(DateTime now)
