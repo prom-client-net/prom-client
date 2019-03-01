@@ -1,34 +1,35 @@
 using System;
+using System.Collections.Generic;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.Contracts;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    public abstract class Labelled
+    public abstract class Labelled<TConfig>
+        where TConfig: MetricConfiguration
     {
         private LabelValues _labelValues;
-        protected bool IncludeTimestamp;
+        protected TConfig Configuration;
 
-        protected CLabelPair[] Labels => _labelValues.WireLabels;
+        protected KeyValuePair<string, string>[] Labels => _labelValues.WireLabels;
 
         protected long? Timestamp { get; private set; }
 
-        internal virtual void Init(ICollector parent, LabelValues labelValues, bool includeTimestamp)
+        protected internal virtual void Init(LabelValues labelValues, TConfig configuration)
         {
             _labelValues = labelValues;
-            IncludeTimestamp = includeTimestamp;
+            Configuration = configuration;
         }
 
         protected internal abstract void Collect(IMetricsWriter writer);
 
-        protected void SetTimestamp()
+        protected void TimestampIfRequired()
         {
-            if (!IncludeTimestamp)
-                throw new InvalidOperationException("Set IncludeTimestamp to true before call SetTimestamp");
-
-            Timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+            if (Configuration.IncludeTimestamp)
+            {
+                Timestamp = DateTime.UtcNow.ToUnixTime();
+            }
         }
     }
 }

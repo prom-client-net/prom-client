@@ -61,7 +61,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void ShouldNotAllowDuplicatedMetricNames()
+        public void ThrowOnDuplicatedMetricNames()
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -77,7 +77,7 @@ namespace Prometheus.Client.Tests
         [InlineData(new[] { "label", "label2" }, new[] { "label" })]
         [InlineData(new[] { "label" }, null)]
         [InlineData(null, new[] { "label" })]
-        public void ShouldNotAllowDifferentLabelNames(string[] labels1, string[] labels2)
+        public void ThrowOnLabelNamesMismatch(string[] labels1, string[] labels2)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);

@@ -12,7 +12,7 @@ namespace Prometheus.Client.Tests
     {
         [Theory]
         [MemberData(nameof(GetLabels))]
-        public void ShouldThrowOnLabelsMismatch(params string[] labels)
+        public void ThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -22,10 +22,20 @@ namespace Prometheus.Client.Tests
         }
 
         [Theory]
+        [MemberData(nameof(InvalidLabels))]
+        public void ThrowOnInvalidLabels(string label)
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            Assert.ThrowsAny<ArgumentException>(() => factory.CreateHistogram("test_Histogram", string.Empty, label));
+        }
+
+        [Theory]
         [InlineData("le")]
         [InlineData("le", "label")]
         [InlineData("label", "le")]
-        public void ShouldThrowOnReservedLabelNames(params string[] labels)
+        public void ThrowOnReservedLabelNames(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -87,7 +97,35 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void MetricsWriteApiUsage()
+        public void EmptyCollection()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var histogram = factory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
+            
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    histogram.Collect(writer);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("HistogramTests_Empty.txt"), formattedText);
+        }
+
+        [Fact]
+        public void MetricsWriterApiUsage()
         {
             var writer = Substitute.For<IMetricsWriter>();
             var registry = new CollectorRegistry();

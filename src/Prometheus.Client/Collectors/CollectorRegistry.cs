@@ -39,13 +39,15 @@ namespace Prometheus.Client.Collectors
             }
         }
 
-        public ICollector GetOrAdd(string name, Func<ICollector> collectorFactory)
+        public TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
+            where TCollector : class, ICollector
+            where TConfig : CollectorConfiguration
         {
-            ValidateCollectorName(name);
+            ValidateCollectorName(config.Name);
             _lock.EnterReadLock();
             try
             {
-                if (_collectors.TryGetValue(name, out var collector))
+                if (TryGetCollector(_collectors, config.Name, out var collector))
                     return collector;
             }
             finally
@@ -56,16 +58,33 @@ namespace Prometheus.Client.Collectors
             _lock.EnterWriteLock();
             try
             {
-                if (_collectors.TryGetValue(name, out var collector))
+                if (TryGetCollector(_collectors, config.Name, out var collector))
                     return collector;
 
-                collector = collectorFactory();
-                AddInternal(name, collector);
+                collector = collectorFactory(config);
+                AddInternal(config.Name, collector);
                 return collector;
             }
             finally
             {
                 _lock.ExitWriteLock();
+            }
+
+            bool TryGetCollector(Dictionary<string, ICollector> dict, string name, out TCollector result)
+            {
+                if (dict.TryGetValue(name, out var collector))
+                {
+                    if (collector is TCollector typed)
+                    {
+                        result = typed;
+                        return true;
+                    }
+
+                    throw new InvalidOperationException($"Duplicated collector name: {name}");
+                }
+
+                result = null;
+                return false;
             }
         }
 

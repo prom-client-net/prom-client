@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client.Collectors.ProcessStats
 {
@@ -30,8 +31,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
         {
             _process = process;
 
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            _processStartTime = (_process.StartTime.ToUniversalTime() - epoch).TotalSeconds;
+            _processStartTime = _process.StartTime.ToUniversalTime().ToUnixTimeSeconds();
         }
 
         public string Name => "process_collector";

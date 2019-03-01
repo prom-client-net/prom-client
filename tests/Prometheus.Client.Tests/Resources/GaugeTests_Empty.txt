@@ -1,0 +1,3 @@
+# HELP test with help text
+# TYPE test gauge
+test 0

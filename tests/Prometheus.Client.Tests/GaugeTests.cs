@@ -12,13 +12,23 @@ namespace Prometheus.Client.Tests
     {
         [Theory]
         [MemberData(nameof(GetLabels))]
-        public void ShouldThrowOnLabelsMismatch(params string[] labels)
+        public void ThrowOnLabelsMismatch(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
             var gauge = factory.CreateGauge("test_gauge", string.Empty, "label1", "label2");
             Assert.ThrowsAny<ArgumentException>(() => gauge.WithLabels(labels));
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidLabels))]
+        public void ThrowOnInvalidLabels(string label)
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            Assert.ThrowsAny<ArgumentException>(() => factory.CreateGauge("test_gauge", string.Empty, label));
         }
 
         [Fact]
@@ -90,6 +100,34 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void EmptyCollection()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test", "with help text", "category");
+           
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    gauge.Collect(writer);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("GaugeTests_Empty.txt"), formattedText);
+        }
+
+        [Fact]
         public void DefaultDecValue()
         {
             var registry = new CollectorRegistry();
@@ -114,7 +152,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void MetricsWriteApiUsage()
+        public void MetricsWriterApiUsage()
         {
             var writer = Substitute.For<IMetricsWriter>();
             var registry = new CollectorRegistry();

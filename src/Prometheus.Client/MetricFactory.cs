@@ -35,13 +35,10 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            if (_registry.GetOrAdd(name, () => new Counter(name, help, includeTimestamp, labelNames)) is Counter metric)
-            {
-                ValidateLabelNames(labelNames, metric.LabelNames);
-                return metric;
-            }
-
-            throw new InvalidOperationException($"Duplicate metric name: {name}");
+            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+            var metric = _registry.GetOrAdd(configuration, config => new Counter(config));
+            ValidateLabelNames(labelNames, metric.LabelNames);
+            return metric;
         }
 
         /// <summary>
@@ -64,13 +61,10 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            if (_registry.GetOrAdd(name, () => new Gauge(name, help, includeTimestamp, labelNames)) is Gauge metric)
-            {
-                ValidateLabelNames(labelNames, metric.LabelNames);
-                return metric;
-            }
-
-            throw new InvalidOperationException($"Duplicate metric name: {name}");
+            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+            var metric = _registry.GetOrAdd(configuration, config => new Gauge(config));
+            ValidateLabelNames(labelNames, metric.LabelNames);
+            return metric;
         }
 
         /// <summary>
@@ -93,13 +87,10 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            if (_registry.GetOrAdd(name, () => new Untyped(name, help, includeTimestamp, labelNames)) is Untyped metric)
-            {
-                ValidateLabelNames(labelNames, metric.LabelNames);
-                return metric;
-            }
-
-            throw new InvalidOperationException($"Duplicate metric name: {name}");
+            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+            var metric = _registry.GetOrAdd(configuration, config => new Untyped(config));
+            ValidateLabelNames(labelNames, metric.LabelNames);
+            return metric;
         }
 
         /// <summary>
@@ -135,7 +126,7 @@ namespace Prometheus.Client
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
         /// <param name="bufCap"></param>
-        public Summary CreateSummary(string name, string help, string[] labelNames, IList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        public Summary CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
         {
             return CreateSummary(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap);
         }
@@ -156,18 +147,15 @@ namespace Prometheus.Client
             string help,
             bool includeTimestamp,
             string[] labelNames,
-            IList<QuantileEpsilonPair> objectives,
+            IReadOnlyList<QuantileEpsilonPair> objectives,
             TimeSpan? maxAge,
             int? ageBuckets,
             int? bufCap)
         {
-            if (_registry.GetOrAdd(name, () => new Summary(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap)) is Summary metric)
-            {
-                ValidateLabelNames(labelNames, metric.LabelNames);
-                return metric;
-            }
-
-            throw new InvalidOperationException($"Duplicate metric name: {name}");
+            var configuration = new Summary.SummaryConfiguration(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
+            var metric = _registry.GetOrAdd(configuration, config => new Summary(config));
+            ValidateLabelNames(labelNames, metric.LabelNames);
+            return metric;
         }
 
         /// <summary>
@@ -215,13 +203,10 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
         {
-            if (_registry.GetOrAdd(name, () => new Histogram(name, help, includeTimestamp, labelNames, buckets)) is Histogram metric)
-            {
-                ValidateLabelNames(labelNames, metric.LabelNames);
-                return metric;
-            }
-
-            throw new InvalidOperationException($"Duplicate metric name: {name}");
+            var configuration = new Histogram.HistogramConfiguration(name, help, includeTimestamp, labelNames, buckets);
+            var metric = _registry.GetOrAdd(configuration, config => new Histogram(config));
+            ValidateLabelNames(labelNames, metric.LabelNames);
+            return metric;
         }
 
         private void ValidateLabelNames(string[] expectedNames, string[] actualNames)

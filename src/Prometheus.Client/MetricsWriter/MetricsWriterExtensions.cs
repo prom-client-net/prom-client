@@ -1,4 +1,4 @@
-using Prometheus.Client.Contracts;
+using System.Collections.Generic;
 
 namespace Prometheus.Client.MetricsWriter
 {
@@ -8,7 +8,7 @@ namespace Prometheus.Client.MetricsWriter
             this IMetricsWriter writer,
             double value,
             string suffix = "",
-            CLabelPair[] labels = null,
+            KeyValuePair<string, string>[] labels = null,
             long? timestamp = null)
         {
             var sampleWriter = writer.StartSample(suffix);
@@ -42,11 +42,11 @@ namespace Prometheus.Client.MetricsWriter
 
         public static ILabelWriter WriteLabels(
             this ILabelWriter labelWriter,
-            CLabelPair[] labels
+            KeyValuePair<string, string>[] labels
         )
         {
             for (int i = 0; i < labels.Length; i++)
-                labelWriter.WriteLabel(labels[i].Name, labels[i].Value);
+                labelWriter.WriteLabel(labels[i].Key, labels[i].Value);
 
             return labelWriter;
         }

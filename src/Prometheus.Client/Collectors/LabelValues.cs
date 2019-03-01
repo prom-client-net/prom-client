@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Prometheus.Client.Contracts;
 
 namespace Prometheus.Client.Collectors
 {
@@ -11,7 +11,7 @@ namespace Prometheus.Client.Collectors
         private readonly string[] _values;
 
         internal static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
-        internal readonly CLabelPair[] WireLabels;
+        internal readonly KeyValuePair<string, string>[] WireLabels;
 
         public LabelValues(string[] names, string[] values)
         {
@@ -26,19 +26,19 @@ namespace Prometheus.Client.Collectors
 
             _values = values;
 
-            WireLabels = names.Zip(values, (name, value) => new CLabelPair { Name = name, Value = value }).ToArray();
+            WireLabels = names.Zip(values, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
 
             // Calculating the hash code is fast but we don't need to re-calculate it for each comparison this object is involved in.
             // Label values are fixed- caluclate it once up-front and remember the value.
             _hashCode = CalculateHashCode(_values);
         }
 
-        public bool Equals(LabelValues labelValues)
+        public bool Equals(LabelValues other)
         {
-            if (labelValues._values.Length != _values.Length)
+            if (other._values.Length != _values.Length)
                 return false;
 
-            return !_values.Where((t, i) => t != labelValues._values[i]).Any();
+            return !_values.Where((t, i) => t != other._values[i]).Any();
         }
 
         public override bool Equals(object obj)
@@ -56,7 +56,7 @@ namespace Prometheus.Client.Collectors
         {
             var sb = new StringBuilder();
             foreach (var label in WireLabels)
-                sb.AppendFormat("{0}={1}, ", label.Name, label.Value);
+                sb.AppendFormat("{0}={1}, ", label.Key, label.Value);
 
             return sb.ToString();
         }

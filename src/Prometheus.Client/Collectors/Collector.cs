@@ -1,63 +1,38 @@
 using System;
 using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
-// ReSharper disable StaticMemberInGenericType
 namespace Prometheus.Client.Collectors
 {
-    public abstract class Collector<TChild> : ICollector
-        where TChild : Labelled, new()
+    public abstract class Collector<TChild, TConfig> : ICollector
+        where TChild : Labelled<TConfig>, new()
+        where TConfig : MetricConfiguration
     {
-        private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-
-        private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe);
-        private static readonly Regex _reservedLabelRegex = new Regex("^__.*$");
-        private readonly bool _includeTimestamp;
-        private readonly Lazy<TChild> _unlabelledLazy;
-
-        protected readonly string Help;
+        protected readonly TConfig Configuration;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
 
-        public string[] MetricNames => new[] { Name };
-
-        protected Collector(string name, string help, bool includeTimestamp, string[] labelNames)
+        protected Collector(TConfig configuration)
         {
-            Name = name;
-            Help = help;
-            _includeTimestamp = includeTimestamp;
-            LabelNames = labelNames ?? Array.Empty<string>();
-
-            if (!_metricNameLabelRegex.IsMatch(name))
-                throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
-
-            foreach (string labelName in LabelNames)
-            {
-                if (!_metricNameLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
-
-                if (_reservedLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Labels starting with double underscore are reserved!");
-            }
-
-            _unlabelledLazy = new Lazy<TChild>(() => GetOrAddLabelled(LabelValues.Empty));
+            Configuration = configuration;
+            Unlabelled = CreateLabelled(LabelValues.Empty);
         }
+
+        public string[] MetricNames => new[] { Configuration.Name };
+
+        internal string[] LabelNames => Configuration.LabelNames;
 
         protected abstract MetricType Type { get; }
 
-        protected TChild Unlabelled => _unlabelledLazy.Value;
-
-        public string Name { get; }
-
-        public string[] LabelNames { get; }
+        protected internal TChild Unlabelled { get; }
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.WriteMetricHeader(Name, Type, Help);
+            writer.WriteMetricHeader(Configuration.Name, Type, Configuration.Help);
+            Unlabelled.Collect(writer);
 
-            foreach (var labelled in LabelledMetrics.Values)
-                labelled.Collect(writer);
+            foreach (var labelledMetric in LabelledMetrics)
+                labelledMetric.Value.Collect(writer);
         }
 
         /// <summary>
@@ -73,18 +48,20 @@ namespace Prometheus.Client.Collectors
         /// </summary>
         public TChild WithLabels(params string[] labelValues)
         {
-            var key = new LabelValues(LabelNames, labelValues);
-            return GetOrAddLabelled(key);
+            if (labelValues == null || labelValues.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(labelValues));
+            }
+
+            var key = new LabelValues(Configuration.LabelNames, labelValues);
+            return LabelledMetrics.GetOrAdd(key, CreateLabelled);
         }
 
-        private TChild GetOrAddLabelled(LabelValues key)
+        private TChild CreateLabelled(LabelValues labels)
         {
-            return LabelledMetrics.GetOrAdd(key, labels1 =>
-            {
-                var child = new TChild();
-                child.Init(this, labels1, _includeTimestamp);
-                return child;
-            });
+            var child = new TChild();
+            child.Init(labels, Configuration);
+            return child;
         }
     }
 }
