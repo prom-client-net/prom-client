@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
@@ -27,9 +28,7 @@ namespace Prometheus.Client
         {
             if (Configuration.IncludeTimestamp)
             {
-                // TODO: Should it be number of milliseconds?
-                // https://prometheus.io/docs/instrumenting/exposition_formats/
-                Timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+                Timestamp = DateTime.UtcNow.ToUnixTime();
             }
         }
     }
