@@ -7,6 +7,7 @@ namespace Prometheus.Client
 {
     public abstract class Labelled
     {
+        private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         private long? _timestamp;
         protected bool IncludeTimestamp;
         private LabelValues _labelValues;
@@ -31,7 +32,7 @@ namespace Prometheus.Client
 
         protected void SetTimestamp()
         {
-            _timestamp = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+            _timestamp = (long)(DateTime.UtcNow - _epoch).TotalMilliseconds;
         }
     }
 }
