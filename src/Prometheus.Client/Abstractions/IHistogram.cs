@@ -6,8 +6,7 @@ namespace Prometheus.Client.Abstractions
     ///         https://prometheus.io/docs/concepts/metric_types/#histogram
     ///     </remarks>
     /// </summary>
-    public interface IHistogram
+    public interface IHistogram: IValueObserver
     {
-        void Observe(double val);
     }
 }

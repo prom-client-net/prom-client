@@ -1,4 +1,4 @@
-﻿namespace Prometheus.Client.Abstractions
+namespace Prometheus.Client.Abstractions
 {
     /// <summary>
     ///     Summary metric type
@@ -6,8 +6,7 @@
     ///         https://prometheus.io/docs/concepts/metric_types/#summary
     ///     </remarks>
     /// </summary>
-    public interface ISummary
+    public interface ISummary: IValueObserver
     {
-        void Observe(double val);
     }
 }
