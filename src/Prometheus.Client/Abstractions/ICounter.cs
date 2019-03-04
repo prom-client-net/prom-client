@@ -6,12 +6,16 @@ namespace Prometheus.Client.Abstractions
     ///         https://prometheus.io/docs/concepts/metric_types/#counter
     ///     </remarks>
     /// </summary>
-    public interface ICounter
+    public interface ICounter<T>
     {
-        double Value { get; }
+        T Value { get; }
 
         void Inc();
 
-        void Inc(double increment);
+        void Inc(T increment);
+    }
+
+    public interface ICounter : ICounter<double>
+    {
     }
 }
