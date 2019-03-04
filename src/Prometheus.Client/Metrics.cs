@@ -39,6 +39,29 @@ namespace Prometheus.Client
         }
 
         /// <summary>
+        ///     Create int-based counter
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        public static IntCounter CreateCounterInt64(string name, string help, params string[] labelNames)
+        {
+            return DefaultFactory.CreateCounterInt64(name, help, labelNames);
+        }
+
+        /// <summary>
+        ///     Create int-based counter
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        public static IntCounter CreateCounterInt64(string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return DefaultFactory.CreateCounterInt64(name, help, includeTimestamp, labelNames);
+        }
+
+        /// <summary>
         ///     Create Gauge
         /// </summary>
         /// <param name="name">Name.</param>
