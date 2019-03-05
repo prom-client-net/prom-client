@@ -1,10 +1,7 @@
-﻿*.nupkg
-*.user
-*.suo
-*.exe
+﻿*.user
 
-.vs
+.vscode
+.idea
+
 bin
 obj
-packages
-.idea
