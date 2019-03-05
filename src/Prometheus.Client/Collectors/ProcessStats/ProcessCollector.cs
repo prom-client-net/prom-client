@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
