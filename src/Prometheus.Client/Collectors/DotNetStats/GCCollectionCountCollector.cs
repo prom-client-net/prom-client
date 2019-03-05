@@ -1,5 +1,4 @@
 using System;
-
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -7,7 +6,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
 {
     public class GCCollectionCountCollector : ICollector
     {
-        private static readonly string _help = "GC collection count";
+        private const string _help = "GC collection count";
 
         public string Name => "dotnet_collection_count_total";
 

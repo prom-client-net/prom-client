@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
@@ -117,7 +118,7 @@ namespace Prometheus.Client
                     var bucketSample = writer.StartSample();
                     var labelWriter = bucketSample.StartLabels();
                     labelWriter.WriteLabels(Labels);
-                    labelWriter.WriteLabel("quantile", state.Values[i].Key.ToString());
+                    labelWriter.WriteLabel("quantile", state.Values[i].Key.ToString(CultureInfo.InvariantCulture));
                     labelWriter.EndLabels();
 
                     bucketSample.WriteValue(state.Values[i].Value);

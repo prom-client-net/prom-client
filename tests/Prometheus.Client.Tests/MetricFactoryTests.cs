@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using NSubstitute;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
 using Xunit;
 
 namespace Prometheus.Client.Tests
