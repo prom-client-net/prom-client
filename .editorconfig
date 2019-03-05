@@ -82,13 +82,23 @@ csharp_new_line_before_members_in_anonymous_types = true
 
 ## Naming
 
-dotnet_naming_rule.private_members_with_underscore.symbols = private_fields
-dotnet_naming_rule.private_members_with_underscore.style = prefix_underscore
-dotnet_naming_rule.private_members_with_underscore.severity = suggestion
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+dotnet_naming_style.underscore_prefix.required_prefix = _
 
-dotnet_naming_symbols.private_fields.applicable_kinds = field
-dotnet_naming_symbols.private_fields.applicable_accessibilities = private
-dotnet_naming_symbols.private_fields.required_modifiers = readonly
+# private readonly fields should be _camelCase
+dotnet_naming_rule.private_readonly_fields_with_underscore.symbols = private_readonly_fields
+dotnet_naming_rule.private_readonly_fields_with_underscore.style = underscore_prefix
+dotnet_naming_rule.private_readonly_fields_with_underscore.severity = suggestion
 
-dotnet_naming_style.prefix_underscore.capitalization = camel_case
-dotnet_naming_style.prefix_underscore.required_prefix = _
+dotnet_naming_symbols.private_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.private_readonly_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_readonly_fields.required_modifiers = readonly
+
+# private const should be _camelCase
+dotnet_naming_rule.private_const_with_underscore.symbols = private_const
+dotnet_naming_rule.private_const_with_underscore.style = underscore_prefix
+dotnet_naming_rule.private_const_with_underscore.severity = suggestion
+
+dotnet_naming_symbols.private_const.applicable_kinds = field
+dotnet_naming_symbols.private_const.applicable_accessibilities = private
+dotnet_naming_symbols.private_const.required_modifiers = const
