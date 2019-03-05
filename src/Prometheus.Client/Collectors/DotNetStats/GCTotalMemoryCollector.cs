@@ -6,7 +6,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
 {
     public class GCTotalMemoryCollector : ICollector
     {
-        private static string _help = "Total known allocated memory";
+        private const string _help = "Total known allocated memory";
 
         public string Name => "dotnet_totalmemory";
 
