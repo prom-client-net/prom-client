@@ -33,13 +33,12 @@ namespace Prometheus.Client
             // Lock bufMtx before mtx if both are needed.
             private readonly object _lock = new object();
 
-            private SampleBuffer _coldBuf;
+            private SampleBuffer _buffer;
+            private DateTime _bufferExpTime;
             private uint _count;
             private QuantileStream _headStream;
             private DateTime _headStreamExpTime;
             private int _headStreamIdx;
-            private SampleBuffer _hotBuf;
-            private DateTime _hotBufExpTime;
 
             private double[] _sortedObjectives;
             private TimeSpan _streamDuration;
@@ -61,11 +60,10 @@ namespace Prometheus.Client
                 base.Init(labelValues, configuration);
 
                 _sortedObjectives = new double[Configuration.Objectives.Count];
-                _hotBuf = new SampleBuffer(Configuration.BufCap);
-                _coldBuf = new SampleBuffer(Configuration.BufCap);
+                _buffer = new SampleBuffer(Configuration.BufCap);
                 _streamDuration = new TimeSpan(Configuration.MaxAge.Ticks / Configuration.AgeBuckets);
                 _headStreamExpTime = now.Add(_streamDuration);
-                _hotBufExpTime = _headStreamExpTime;
+                _bufferExpTime = _headStreamExpTime;
 
                 _streams = new QuantileStream[Configuration.AgeBuckets];
                 for (int i = 0; i < Configuration.AgeBuckets; i++)
@@ -87,9 +85,8 @@ namespace Prometheus.Client
                 {
                     lock (_lock)
                     {
-                        // Swap bufs even if hotBuf is empty to set new hotBufExpTime.
-                        SwapBufs(now);
-                        FlushColdBuf();
+                        // FlushBuffer even if buffer is empty to set new bufferExpTime.
+                        FlushBuffer(now);
 
                         for (int i = 0; i < _sortedObjectives.Length; i++)
                         {
@@ -137,12 +134,12 @@ namespace Prometheus.Client
             {
                 lock (_bufLock)
                 {
-                    if (now > _hotBufExpTime)
+                    if (now > _bufferExpTime)
                         Flush(now);
 
-                    _hotBuf.Append(val);
+                    _buffer.Append(val);
 
-                    if (_hotBuf.IsFull)
+                    if (_buffer.IsFull)
                         Flush(now);
 
                     TimestampIfRequired();
@@ -154,35 +151,16 @@ namespace Prometheus.Client
             {
                 lock (_lock)
                 {
-                    SwapBufs(now);
-
-                    // Go version flushes on a separate goroutine, but doing this on another
-                    // thread actually makes the benchmark tests slower in .net
-                    FlushColdBuf();
+                    FlushBuffer(now);
                 }
             }
 
-            // SwapBufs needs mtx AND bufMtx locked, coldBuf must be empty.
-            private void SwapBufs(DateTime now)
+            // FlushBuffer needs mtx AND bufMtx locked. 
+            private void FlushBuffer(DateTime now)
             {
-                if (!_coldBuf.IsEmpty)
-                    throw new ArgumentException("coldBuf is not empty");
-
-                var temp = _hotBuf;
-                _hotBuf = _coldBuf;
-                _coldBuf = temp;
-
-                // hotBuf is now empty and gets new expiration set.
-                while (now > _hotBufExpTime)
-                    _hotBufExpTime = _hotBufExpTime.Add(_streamDuration);
-            }
-
-            // FlushColdBuf needs mtx locked. 
-            private void FlushColdBuf()
-            {
-                for (int bufIdx = 0; bufIdx < _coldBuf.Position; bufIdx++)
+                for (int bufIdx = 0; bufIdx < _buffer.Position; bufIdx++)
                 {
-                    double value = _coldBuf[bufIdx];
+                    double value = _buffer[bufIdx];
 
                     foreach (var quantileStream in _streams)
                         quantileStream.Insert(value);
@@ -191,14 +169,19 @@ namespace Prometheus.Client
                     _sum += value;
                 }
 
-                _coldBuf.Reset();
+                _buffer.Reset();
+
+                // buffer is now empty and gets new expiration set.
+                while (now > _bufferExpTime)
+                    _bufferExpTime = _bufferExpTime.Add(_streamDuration);
+
                 MaybeRotateStreams();
             }
 
             // MaybeRotateStreams needs mtx AND bufMtx locked.
             private void MaybeRotateStreams()
             {
-                while (!_hotBufExpTime.Equals(_headStreamExpTime))
+                while (!_bufferExpTime.Equals(_headStreamExpTime))
                 {
                     _headStream.Reset();
                     _headStreamIdx++;
