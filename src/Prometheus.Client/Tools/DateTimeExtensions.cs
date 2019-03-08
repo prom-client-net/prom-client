@@ -15,5 +15,10 @@ namespace Prometheus.Client.Tools
         {
             return (long)(date - _epoch).TotalSeconds;
         }
+
+        public static long ToUnixTime(this DateTimeOffset date)
+        {
+            return (long)(date - _epoch).TotalMilliseconds;
+        }
     }
 }

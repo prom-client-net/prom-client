@@ -18,12 +18,17 @@ namespace Prometheus.Client
 
         public void Inc()
         {
-            Inc(1.0D);
+            Unlabelled.Inc();
         }
 
         public void Inc(double increment)
         {
             Unlabelled.Inc(increment);
+        }
+
+        public void Inc(double increment, long? timestamp)
+        {
+            Unlabelled.Inc(increment, timestamp);
         }
 
         public double Value => Unlabelled.Value;
@@ -41,16 +46,24 @@ namespace Prometheus.Client
 
             public void Inc()
             {
-                Inc(1.0D);
+                Inc(1.0D, null);
             }
 
             public void Inc(double increment)
             {
+                Inc(increment, null);
+            }
+
+            public void Inc(double increment, long? timestamp)
+            {
+                if (double.IsNaN(increment))
+                    return;
+
                 if (increment < 0.0D)
                     throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
                 _value.Add(increment);
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             public double Value => _value.Value;

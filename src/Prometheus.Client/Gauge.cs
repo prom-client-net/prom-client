@@ -17,7 +17,7 @@ namespace Prometheus.Client
 
         public void Inc()
         {
-            Inc(1.0D);
+            Unlabelled.Inc();
         }
 
         public void Inc(double increment)
@@ -25,19 +25,34 @@ namespace Prometheus.Client
             Unlabelled.Inc(increment);
         }
 
+        public void Inc(double increment, long? timestamp)
+        {
+            Unlabelled.Inc(increment, timestamp);
+        }
+
         public void Set(double val)
         {
             Unlabelled.Set(val);
         }
 
+        public void Set(double val, long? timestamp)
+        {
+            Unlabelled.Set(val, timestamp);
+        }
+
         public void Dec()
         {
-            Dec(1.0D);
+            Unlabelled.Dec();
         }
 
         public void Dec(double decrement)
         {
             Unlabelled.Dec(decrement);
+        }
+
+        public void Dec(double decrement, long? timestamp)
+        {
+            Unlabelled.Dec(decrement, timestamp);
         }
 
         public double Value => Unlabelled.Value;
@@ -48,29 +63,54 @@ namespace Prometheus.Client
 
             public void Inc()
             {
-                Inc(1.0D);
+                Inc(1.0D, null);
             }
 
             public void Inc(double increment)
             {
+                Inc(increment, null);
+            }
+
+            public void Inc(double increment, long? timestamp)
+            {
+                if (double.IsNaN(increment))
+                    return;
+
                 _value.Add(increment);
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             public void Set(double val)
             {
+                Set(val, null);
+            }
+
+            public void Set(double val, long? timestamp)
+            {
+                if (double.IsNaN(val))
+                    return;
+
                 _value.Value = val;
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             public void Dec()
             {
-                Dec(1.0D);
+                Dec(1.0D, null);
             }
 
             public void Dec(double decrement)
             {
-                Inc(-decrement);
+                Dec(decrement, null);
+            }
+
+            public void Dec(double decrement, long? timestamp)
+            {
+                if (double.IsNaN(decrement))
+                    return;
+
+                _value.Add(-decrement);
+                TimestampIfRequired(timestamp);
             }
 
             public double Value => _value.Value;
