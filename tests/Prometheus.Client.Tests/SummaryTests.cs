@@ -147,7 +147,7 @@ namespace Prometheus.Client.Tests
             for (int i = 0; i < 1000; i++)
             {
                 var now = baseTime.AddSeconds(i);
-                child.Observe(i, now);
+                child.Observe(i, null, now);
 
                 if (i % 10 == 0)
                 {

@@ -24,6 +24,11 @@ namespace Prometheus.Client
             Unlabelled.Observe(val);
         }
 
+        public void Observe(double val, long? timestamp)
+        {
+            Unlabelled.Observe(val, timestamp);
+        }
+
         public class LabelledSummary : Labelled<SummaryConfiguration>, ISummary
         {
             // Protects hotBuf and hotBufExpTime.
@@ -47,7 +52,31 @@ namespace Prometheus.Client
 
             public void Observe(double val)
             {
-                Observe(val, DateTime.UtcNow);
+                Observe(val, null);
+            }
+
+            public void Observe(double val, long? timestamp)
+            {
+                Observe(val, timestamp, DateTime.UtcNow);
+            }
+
+            /// <summary>
+            ///     For unit tests only
+            /// </summary>
+            internal void Observe(double val, long? timestamp, DateTime now)
+            {
+                lock (_bufLock)
+                {
+                    if (now > _bufferExpTime)
+                        Flush(now);
+
+                    _buffer.Append(val);
+
+                    if (_buffer.IsFull)
+                        Flush(now);
+                }
+
+                TimestampIfRequired(timestamp);
             }
 
             protected internal override void Init(LabelValues labelValues, SummaryConfiguration configuration)
@@ -125,25 +154,6 @@ namespace Prometheus.Client
 
                 writer.WriteSample(state.Sum, "_sum", Labels, Timestamp);
                 writer.WriteSample(state.Count, "_count", Labels, Timestamp);
-            }
-
-            /// <summary>
-            ///     For unit tests only
-            /// </summary>
-            internal void Observe(double val, DateTime now)
-            {
-                lock (_bufLock)
-                {
-                    if (now > _bufferExpTime)
-                        Flush(now);
-
-                    _buffer.Append(val);
-
-                    if (_buffer.IsFull)
-                        Flush(now);
-
-                    TimestampIfRequired();
-                }
             }
 
             // Flush needs bufMtx locked.

@@ -20,6 +20,11 @@ namespace Prometheus.Client
             Unlabelled.Set(val);
         }
 
+        public void Set(double val, long? timestamp)
+        {
+            Unlabelled.Set(val, timestamp);
+        }
+
         public double Value => Unlabelled.Value;
 
         public class LabelledUntyped : Labelled<MetricConfiguration>, IUntyped
@@ -28,8 +33,16 @@ namespace Prometheus.Client
 
             public void Set(double val)
             {
+                Set(val, null);
+            }
+
+            public void Set(double val, long? timestamp)
+            {
+                if (double.IsNaN(val))
+                    return;
+
                 _value.Value = val;
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             public double Value => _value.Value;

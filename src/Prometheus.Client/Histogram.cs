@@ -16,14 +16,16 @@ namespace Prometheus.Client
         {
         }
 
-        /// <summary>
-        ///     Metric Type
-        /// </summary>
         protected override MetricType Type => MetricType.Histogram;
 
         public void Observe(double val)
         {
             Unlabelled.Observe(val);
+        }
+
+        public void Observe(double val, long? timestamp)
+        {
+            Unlabelled.Observe(val, timestamp);
         }
 
         public class LabelledHistogram : Labelled<HistogramConfiguration>, IHistogram
@@ -32,6 +34,11 @@ namespace Prometheus.Client
             private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);
 
             public void Observe(double val)
+            {
+                Observe(val, null);
+            }
+
+            public void Observe(double val, long? timestamp)
             {
                 if (double.IsNaN(val))
                     return;
@@ -46,7 +53,7 @@ namespace Prometheus.Client
                 }
 
                 _sum.Add(val);
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             protected internal override void Init(LabelValues labelValues, HistogramConfiguration configuration)

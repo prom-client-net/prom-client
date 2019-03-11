@@ -25,6 +25,11 @@ namespace Prometheus.Client
             Unlabelled.Inc(increment);
         }
 
+        public void Inc(long increment, long? timestamp)
+        {
+            Unlabelled.Inc(increment, timestamp);
+        }
+
         public long Value => Unlabelled.Value;
 
         public void Reset()
@@ -40,16 +45,21 @@ namespace Prometheus.Client
 
             public void Inc()
             {
-                Inc(1);
+                Inc(1, null);
             }
 
             public void Inc(long increment)
+            {
+                Inc(increment, null);
+            }
+
+            public void Inc(long increment, long? timestamp)
             {
                 if (increment < 0)
                     throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
                 _value.Add(increment);
-                TimestampIfRequired();
+                TimestampIfRequired(timestamp);
             }
 
             public long Value => _value.Value;
