@@ -1,54 +1,67 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Linq;
+using System.Globalization;
 
 namespace Prometheus.Client.MetricsWriter
 {
-    internal class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter, IDisposable
+    internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter, IDisposable
     {
-        private const string _commentPrefix = "#";
-        private const string _tokenSeparator = " ";
-        private const string _helpPrefix = "HELP";
-        private const string _typePrefix = "TYPE";
-        private const string _labelsStart = "{";
-        private const string _labelsEnd = "}";
-        private const string _labelsEq = "=";
-        private const string _labelsSeparator = ",";
-        private const string _labelTextQualifier = "\"";
-
+        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
         private static readonly Encoding _encoding = new UTF8Encoding(false);
-        private static readonly IReadOnlyDictionary<MetricType, string> _metricTypesMap = BuildMetricTypesMap();
 
-        private readonly StreamWriter _streamWriter;
+        private static readonly byte[] _commentPrefix = _encoding.GetBytes("#");
+        private static readonly byte[] _tokenSeparator = _encoding.GetBytes(" ");
+        private static readonly byte[] _helpPrefix = _encoding.GetBytes("HELP");
+        private static readonly byte[] _typePrefix = _encoding.GetBytes("TYPE");
+        private static readonly byte[] _labelsStart = _encoding.GetBytes("{");
+        private static readonly byte[] _labelsEnd = _encoding.GetBytes("}");
+        private static readonly byte[] _labelsEq = _encoding.GetBytes("=");
+        private static readonly byte[] _labelsSeparator = _encoding.GetBytes(",");
+        private static readonly byte[] _labelTextQualifier = _encoding.GetBytes("\"");
+        private static readonly byte[] _newLine = _encoding.GetBytes("\n");
+        private static readonly IReadOnlyDictionary<MetricType, byte[]> _metricTypesMap = BuildMetricTypesMap();
+
+        private readonly Stream _stream;
+        private byte[] _buffer;
+        private int _position;
         private string _currentMetricName;
         private bool _hasData;
-        private WriterState _state = WriterState.Empty;
+        private WriterState _state = WriterState.None;
 
         public MetricsTextWriter(Stream stream)
         {
-            _streamWriter = new StreamWriter(stream, _encoding, 1024, true);
-            _streamWriter.NewLine = "\n";
+            _stream = stream;
+            _buffer = _arrayPool.Rent(1024);
+            Write(_encoding.GetPreamble());
+        }
+
+        // Should use finalizer to ensure _buffer returned into pool.
+        ~MetricsTextWriter()
+        {
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            CloseWriter();
-            _streamWriter.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public ILabelWriter WriteLabel(string name, string value)
         {
             ValidateState(nameof(WriteLabel), WriterState.LabelsStarted | WriterState.LabelWritten);
             if (_state == WriterState.LabelWritten)
-                _streamWriter.Write(_labelsSeparator);
-            _streamWriter.Write(name);
-            _streamWriter.Write(_labelsEq);
-            _streamWriter.Write(_labelTextQualifier);
-            _streamWriter.Write(EscapeValue(value));
-            _streamWriter.Write(_labelTextQualifier);
+                Write(_labelsSeparator);
+
+            Write(name);
+            Write(_labelsEq);
+            Write(_labelTextQualifier);
+            Write(EscapeValue(value));
+            Write(_labelTextQualifier);
 
             _state = WriterState.LabelWritten;
             return this;
@@ -57,14 +70,14 @@ namespace Prometheus.Client.MetricsWriter
         public ISampleWriter EndLabels()
         {
             ValidateState(nameof(WriteLabel), WriterState.LabelWritten);
-            _streamWriter.Write(_labelsEnd);
+            Write(_labelsEnd);
             _state = WriterState.LabelsClosed;
             return this;
         }
 
         public IMetricsWriter StartMetric(string metricName)
         {
-            ValidateState(nameof(StartMetric), WriterState.Empty | WriterState.ValueWritten | WriterState.TimestampWritten);
+            ValidateState(nameof(StartMetric), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
 
             _currentMetricName = metricName;
             _state = WriterState.MetricStarted;
@@ -77,15 +90,16 @@ namespace Prometheus.Client.MetricsWriter
             ValidateState(nameof(WriteHelp), WriterState.MetricStarted);
 
             if (_hasData)
-                _streamWriter.WriteLine();
+                Write(_newLine);
+
             _hasData = true;
-            _streamWriter.Write(_commentPrefix);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_helpPrefix);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_currentMetricName);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(EscapeValue(help));
+            Write(_commentPrefix);
+            Write(_tokenSeparator);
+            Write(_helpPrefix);
+            Write(_tokenSeparator);
+            Write(_currentMetricName);
+            Write(_tokenSeparator);
+            Write(EscapeValue(help));
             _state = WriterState.HelpWritten;
 
             return this;
@@ -96,15 +110,16 @@ namespace Prometheus.Client.MetricsWriter
             ValidateState(nameof(WriteType), WriterState.MetricStarted | WriterState.HelpWritten);
 
             if (_hasData)
-                _streamWriter.WriteLine();
+                Write(_newLine);
+
             _hasData = true;
-            _streamWriter.Write(_commentPrefix);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_typePrefix);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_currentMetricName);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(_metricTypesMap[metricType]);
+            Write(_commentPrefix);
+            Write(_tokenSeparator);
+            Write(_typePrefix);
+            Write(_tokenSeparator);
+            Write(_currentMetricName);
+            Write(_tokenSeparator);
+            Write(_metricTypesMap[metricType]);
             _state = WriterState.TypeWritten;
 
             return this;
@@ -116,27 +131,28 @@ namespace Prometheus.Client.MetricsWriter
                 WriterState.MetricStarted | WriterState.HelpWritten | WriterState.TypeWritten | WriterState.ValueWritten | WriterState.TimestampWritten);
 
             if (_hasData)
-                _streamWriter.WriteLine();
+                Write(_newLine);
+
             _hasData = true;
-            _streamWriter.Write(_currentMetricName);
-            _streamWriter.Write(suffix);
+            Write(_currentMetricName);
+            Write(suffix);
             _state = WriterState.SampleStarted;
             return this;
         }
 
         public void CloseWriter()
         {
-            ValidateState(nameof(CloseWriter), WriterState.Empty | WriterState.ValueWritten | WriterState.TimestampWritten);
+            ValidateState(nameof(CloseWriter), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
 
-            _streamWriter.WriteLine();
-            _streamWriter.Flush();
+            Write(_newLine);
+            Flush();
             _state = WriterState.Closed;
         }
 
         public ILabelWriter StartLabels()
         {
             ValidateState(nameof(StartLabels), WriterState.SampleStarted);
-            _streamWriter.Write(_labelsStart);
+            Write(_labelsStart);
             _state = WriterState.LabelsStarted;
 
             return this;
@@ -145,8 +161,8 @@ namespace Prometheus.Client.MetricsWriter
         public ISampleWriter WriteValue(double value)
         {
             ValidateState(nameof(WriteLabel), WriterState.SampleStarted | WriterState.LabelsClosed);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(value.ToString(CultureInfo.InvariantCulture));
+            Write(_tokenSeparator);
+            Write(value.ToString(CultureInfo.InvariantCulture));
             _state = WriterState.ValueWritten;
 
             return this;
@@ -155,8 +171,8 @@ namespace Prometheus.Client.MetricsWriter
         public ISampleWriter WriteTimestamp(long timestamp)
         {
             ValidateState(nameof(WriteLabel), WriterState.ValueWritten);
-            _streamWriter.Write(_tokenSeparator);
-            _streamWriter.Write(timestamp.ToString(CultureInfo.InvariantCulture));
+            Write(_tokenSeparator);
+            Write(timestamp.ToString(CultureInfo.InvariantCulture));
             _state = WriterState.TimestampWritten;
 
             return this;
@@ -167,11 +183,11 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        private static IReadOnlyDictionary<MetricType, string> BuildMetricTypesMap()
+        private static IReadOnlyDictionary<MetricType, byte[]> BuildMetricTypesMap()
         {
-            var values = (MetricType[]) Enum.GetValues(typeof(MetricType));
+            var values = (MetricType[])Enum.GetValues(typeof(MetricType));
 
-            return values.ToDictionary(k => k, v => Enum.GetName(typeof(MetricType), v).ToLowerInvariant());
+            return values.ToDictionary(k => k, v => _encoding.GetBytes(Enum.GetName(typeof(MetricType), v).ToLowerInvariant()));
         }
 
         private void ValidateState(string callerMethod, WriterState expectedStates)
@@ -188,20 +204,94 @@ namespace Prometheus.Client.MetricsWriter
                    .Replace("\"", @"\""");
         }
 
+        private void Write(string value)
+        {
+            var size = _encoding.GetByteCount(value);
+            EnsureBufferCapacity(size);
+
+            if (size > _buffer.Length)
+            {
+                var buff = _arrayPool.Rent(size);
+                try
+                {
+                    _encoding.GetBytes(value, 0, value.Length, buff, 0);
+                    _stream.Write(buff, 0, size);
+                }
+                finally
+                {
+                    _arrayPool.Return(buff);
+                }
+            }
+            else
+            {
+                _encoding.GetBytes(value, 0, value.Length, _buffer, _position);
+                _position += size;
+            }
+        }
+
+        private void Write(byte[] bytes)
+        {
+            Write(bytes, bytes.Length);
+        }
+
+        private void Write(byte[] bytes, int len)
+        {
+            EnsureBufferCapacity(len);
+
+            if (len > _buffer.Length)
+            {
+                _stream.Write(bytes, 0, len);
+            }
+            else
+            {
+                Array.Copy(bytes, 0, _buffer, _position, len);
+                _position += len;
+            }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_buffer == null)
+                return;
+
+            if (disposing && _state != WriterState.Closed)
+                CloseWriter();
+
+            _arrayPool.Return(_buffer);
+            _buffer = null;
+        }
+
+        // Ensure if current buffer has neccesary space available for next write
+        // if there is not enough space available - flush it
+        private void EnsureBufferCapacity(int requiredCapacity)
+        {
+            if ((_buffer.Length - _position) < requiredCapacity)
+                Flush();
+        }
+
+        private void Flush()
+        {
+            if (_position == 0)
+                return;
+
+            _stream.Write(_buffer, 0, _position);
+            _position = 0;
+        }
+
         [Flags]
         private enum WriterState
         {
-            Empty,
-            MetricStarted,
-            HelpWritten,
-            TypeWritten,
-            SampleStarted,
-            LabelsStarted,
-            LabelWritten,
-            LabelsClosed,
-            ValueWritten,
-            TimestampWritten,
-            Closed
+            None = 0,
+            MetricStarted = 1,
+            HelpWritten = 2,
+            TypeWritten = 4,
+            SampleStarted = 8,
+            LabelsStarted = 16,
+            LabelWritten = 32,
+            LabelsClosed = 64,
+            ValueWritten = 128,
+            TimestampWritten = 256,
+            Closed = 512
         }
     }
 }
