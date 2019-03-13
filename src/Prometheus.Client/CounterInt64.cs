@@ -6,9 +6,9 @@ using Prometheus.Client.Tools;
 
 namespace Prometheus.Client
 {
-    public class IntCounter : Collector<IntCounter.LabelledCounter, MetricConfiguration>, ICounter<long>
+    public class CounterInt64 : Collector<CounterInt64.LabelledCounter, MetricConfiguration>, ICounter<long>
     {
-        internal IntCounter(MetricConfiguration configuration)
+        internal CounterInt64(MetricConfiguration configuration)
             : base(configuration)
         {
         }

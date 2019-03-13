@@ -44,7 +44,7 @@ namespace Prometheus.Client
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="labelNames">Array of label names.</param>
-        public static IntCounter CreateCounterInt64(string name, string help, params string[] labelNames)
+        public static CounterInt64 CreateCounterInt64(string name, string help, params string[] labelNames)
         {
             return DefaultFactory.CreateCounterInt64(name, help, labelNames);
         }
@@ -56,7 +56,7 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Array of label names.</param>
-        public static IntCounter CreateCounterInt64(string name, string help, bool includeTimestamp, params string[] labelNames)
+        public static CounterInt64 CreateCounterInt64(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
             return DefaultFactory.CreateCounterInt64(name, help, includeTimestamp, labelNames);
         }
