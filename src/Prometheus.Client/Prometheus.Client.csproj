@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>.NET client for Prometheus</Description>
     <Copyright>2019 © Sergey Kuznetsov</Copyright>
@@ -21,5 +21,8 @@
     <PackageReference Include="System.Diagnostics.Process">
       <Version>4.3.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Buffers" Version="4.5.0" />
   </ItemGroup>
 </Project>

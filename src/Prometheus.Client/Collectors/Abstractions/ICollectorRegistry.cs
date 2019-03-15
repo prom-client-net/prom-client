@@ -7,6 +7,8 @@ namespace Prometheus.Client.Collectors.Abstractions
     {
         void Add(string name, ICollector collector);
 
+        bool TryGet(string name, out ICollector collector);
+
         TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
             where TConfig: CollectorConfiguration;

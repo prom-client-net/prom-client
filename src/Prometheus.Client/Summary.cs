@@ -148,7 +148,7 @@ namespace Prometheus.Client
                     labelWriter.EndLabels();
 
                     bucketSample.WriteValue(state.Values[i].Value);
-                    if (Configuration.IncludeTimestamp && Timestamp.HasValue)
+                    if (Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
                 }
 

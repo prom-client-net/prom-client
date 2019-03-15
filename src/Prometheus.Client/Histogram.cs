@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Prometheus.Client.Abstractions;
@@ -43,7 +44,7 @@ namespace Prometheus.Client
                 if (double.IsNaN(val))
                     return;
 
-                for (int i = 0; i < Configuration.Buckets.Length; i++)
+                for (int i = 0; i < Configuration.Buckets.Count; i++)
                 {
                     if (val <= Configuration.Buckets[i])
                     {
@@ -60,7 +61,7 @@ namespace Prometheus.Client
             {
                 base.Init(labelValues, configuration);
 
-                _bucketCounts = new ThreadSafeLong[Configuration.Buckets.Length];
+                _bucketCounts = new ThreadSafeLong[Configuration.Buckets.Count];
             }
 
             protected internal override void Collect(IMetricsWriter writer)
@@ -73,12 +74,12 @@ namespace Prometheus.Client
                     var bucketSample = writer.StartSample("_bucket");
                     var labelWriter = bucketSample.StartLabels();
                     labelWriter.WriteLabels(Labels);
-                    string labelValue = double.IsPositiveInfinity(Configuration.Buckets[i]) ? "+Inf" : Configuration.Buckets[i].ToString(CultureInfo.InvariantCulture);
+                    string labelValue = double.IsPositiveInfinity(Configuration.Buckets[i]) ? "+Inf" : Configuration.FormattedBuckets[i];
                     labelWriter.WriteLabel("le", labelValue);
                     labelWriter.EndLabels();
 
                     bucketSample.WriteValue(cumulativeCount);
-                    if (Configuration.IncludeTimestamp && Timestamp.HasValue)
+                    if (Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
                 }
 
@@ -99,20 +100,26 @@ namespace Prometheus.Client
                 if (LabelNames.Any(l => l == "le"))
                     throw new ArgumentException("'le' is a reserved label name");
 
-                if (Buckets.Length == 0)
+                if (Buckets.Count == 0)
                     throw new ArgumentException("Histogram must have at least one bucket");
 
-                if (!double.IsPositiveInfinity(Buckets[Buckets.Length - 1]))
+                if (!double.IsPositiveInfinity(Buckets[Buckets.Count - 1]))
                     Buckets = Buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
 
-                for (int i = 1; i < Buckets.Length; i++)
+                for (int i = 1; i < Buckets.Count; i++)
                 {
                     if (Buckets[i] <= Buckets[i - 1])
                         throw new ArgumentException("Bucket values must be increasing");
                 }
+
+                FormattedBuckets = Buckets
+                    .Select(b => b.ToString(CultureInfo.InvariantCulture))
+                    .ToArray();
             }
 
-            public double[] Buckets { get; }
+            public IReadOnlyList<double> Buckets { get; }
+
+            internal IReadOnlyList<string> FormattedBuckets { get; }
         }
     }
 }

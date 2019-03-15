@@ -35,8 +35,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Counter CreateCounter(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
-            var metric = _registry.GetOrAdd(configuration, config => new Counter(config));
+            var metric = TryGetByName<Counter>(name);
+            if (metric == null)
+            {
+                var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+                metric = _registry.GetOrAdd(configuration, config => new Counter(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
         }
@@ -61,8 +66,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public CounterInt64 CreateCounterInt64(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
-            var metric = _registry.GetOrAdd(configuration, config => new CounterInt64(config));
+            var metric = TryGetByName<CounterInt64>(name);
+            if (metric == null)
+            {
+                var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+                metric = _registry.GetOrAdd(configuration, config => new CounterInt64(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
         }
@@ -87,8 +97,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Gauge CreateGauge(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
-            var metric = _registry.GetOrAdd(configuration, config => new Gauge(config));
+            var metric = TryGetByName<Gauge>(name);
+            if (metric == null)
+            {
+                var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+                metric = _registry.GetOrAdd(configuration, config => new Gauge(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
         }
@@ -113,8 +128,13 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Untyped CreateUntyped(string name, string help, bool includeTimestamp, params string[] labelNames)
         {
-            var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
-            var metric = _registry.GetOrAdd(configuration, config => new Untyped(config));
+            var metric = TryGetByName<Untyped>(name);
+            if (metric == null)
+            {
+                var configuration = new MetricConfiguration(name, help, includeTimestamp, labelNames);
+                metric = _registry.GetOrAdd(configuration, config => new Untyped(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
         }
@@ -178,8 +198,13 @@ namespace Prometheus.Client
             int? ageBuckets,
             int? bufCap)
         {
-            var configuration = new Summary.SummaryConfiguration(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
-            var metric = _registry.GetOrAdd(configuration, config => new Summary(config));
+            var metric = TryGetByName<Summary>(name);
+            if (metric == null)
+            {
+                var configuration = new Summary.SummaryConfiguration(name, help, includeTimestamp, labelNames, objectives, maxAge, ageBuckets, bufCap);
+                metric = _registry.GetOrAdd(configuration, config => new Summary(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
         }
@@ -229,10 +254,31 @@ namespace Prometheus.Client
         /// <param name="labelNames">Array of label names.</param>
         public Histogram CreateHistogram(string name, string help, bool includeTimestamp, double[] buckets, params string[] labelNames)
         {
-            var configuration = new Histogram.HistogramConfiguration(name, help, includeTimestamp, labelNames, buckets);
-            var metric = _registry.GetOrAdd(configuration, config => new Histogram(config));
+            var metric = TryGetByName<Histogram>(name);
+            if (metric == null)
+            {
+                var configuration = new Histogram.HistogramConfiguration(name, help, includeTimestamp, labelNames, buckets);
+                metric = _registry.GetOrAdd(configuration, config => new Histogram(config));
+            }
+
             ValidateLabelNames(labelNames, metric.LabelNames);
             return metric;
+        }
+
+        private TCollector TryGetByName<TCollector>(string name)
+            where TCollector: class, ICollector
+        {
+            if (_registry.TryGet(name, out var collector))
+            {
+                if (collector is TCollector metric)
+                {
+                    return metric;
+                }
+
+                throw new InvalidOperationException($"Duplicated collector name: {name}");
+            }
+
+            return null;
         }
 
         private void ValidateLabelNames(string[] expectedNames, string[] actualNames)

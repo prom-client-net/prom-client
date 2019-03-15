@@ -39,6 +39,20 @@ namespace Prometheus.Client.Collectors
             }
         }
 
+        public bool TryGet(string name, out ICollector collector)
+        {
+            _lock.EnterReadLock();
+            try
+            {
+                var res = _collectors.TryGetValue(name, out collector);
+                return res;
+            }
+            finally
+            {
+                _lock.ExitReadLock();
+            }
+        }
+
         public TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
             where TConfig : CollectorConfiguration
