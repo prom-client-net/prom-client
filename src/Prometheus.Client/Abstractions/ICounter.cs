@@ -9,10 +9,9 @@ namespace Prometheus.Client.Abstractions
     ///         https://prometheus.io/docs/concepts/metric_types/#counter
     ///     </remarks>
     /// </summary>
-    public interface ICounter<T>
+    public interface ICounter<T> : IMetric<T>
+        where T : struct
     {
-        T Value { get; }
-
         void Inc();
 
         void Inc(T increment);
@@ -27,11 +26,13 @@ namespace Prometheus.Client.Abstractions
     public static class CounterExtensions
     {
         public static void Inc<T>(this ICounter<T> counter, T increment, DateTime timestamp)
+            where T : struct
         {
             counter.Inc(increment, timestamp.ToUnixTime());
         }
 
         public static void Inc<T>(this ICounter<T> counter, T increment, DateTimeOffset timestamp)
+            where T : struct
         {
             counter.Inc(increment, timestamp.ToUnixTime());
         }

@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Prometheus.Client.Collectors
 {
-    public struct LabelValues : IEquatable<LabelValues>
+    public readonly struct LabelValues : IEquatable<LabelValues>
     {
         private readonly int _hashCode;
         private readonly string[] _values;
 
         internal static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
-        internal readonly KeyValuePair<string, string>[] WireLabels;
+        public readonly KeyValuePair<string, string>[] Labels;
 
         public LabelValues(string[] names, string[] values)
         {
@@ -26,12 +26,14 @@ namespace Prometheus.Client.Collectors
 
             _values = values;
 
-            WireLabels = names.Zip(values, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
+            Labels = names.Zip(values, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
 
             // Calculating the hash code is fast but we don't need to re-calculate it for each comparison this object is involved in.
             // Label values are fixed- caluclate it once up-front and remember the value.
             _hashCode = CalculateHashCode(_values);
         }
+
+        public bool IsEmpty => Labels.Length == 0;
 
         public bool Equals(LabelValues other)
         {
@@ -55,7 +57,7 @@ namespace Prometheus.Client.Collectors
         public override string ToString()
         {
             var sb = new StringBuilder();
-            foreach (var label in WireLabels)
+            foreach (var label in Labels)
                 sb.AppendFormat("{0}={1}, ", label.Key, label.Value);
 
             return sb.ToString();
