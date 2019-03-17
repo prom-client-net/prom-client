@@ -19,6 +19,8 @@ namespace Prometheus.Client
 
         protected override MetricType Type => MetricType.Summary;
 
+        public SummaryState Value => Unlabelled.Value;
+
         public void Observe(double val)
         {
             Unlabelled.Observe(val);
@@ -40,7 +42,7 @@ namespace Prometheus.Client
 
             private SampleBuffer _buffer;
             private DateTime _bufferExpTime;
-            private uint _count;
+            private long _count;
             private QuantileStream _headStream;
             private DateTime _headStreamExpTime;
             private int _headStreamIdx;
@@ -49,6 +51,8 @@ namespace Prometheus.Client
             private TimeSpan _streamDuration;
             private QuantileStream[] _streams;
             private double _sum;
+
+            public SummaryState Value => ForkState(DateTime.UtcNow);
 
             public void Observe(double val)
             {
@@ -125,12 +129,7 @@ namespace Prometheus.Client
                             values[i] = new KeyValuePair<double, double>(rank, value);
                         }
 
-                        return new SummaryState
-                        {
-                            Values = values,
-                            Count = _count,
-                            Sum = _sum
-                        };
+                        return new SummaryState(_count, _sum, values);
                     }
                 }
             }
@@ -139,15 +138,15 @@ namespace Prometheus.Client
             {
                 var state = ForkState(DateTime.UtcNow);
 
-                for (int i = 0; i < state.Values.Length; i++)
+                for (int i = 0; i < state.Quantiles.Count; i++)
                 {
                     var bucketSample = writer.StartSample();
                     var labelWriter = bucketSample.StartLabels();
                     labelWriter.WriteLabels(Labels);
-                    labelWriter.WriteLabel("quantile", state.Values[i].Key.ToString(CultureInfo.InvariantCulture));
+                    labelWriter.WriteLabel("quantile", state.Quantiles[i].Key.ToString(CultureInfo.InvariantCulture));
                     labelWriter.EndLabels();
 
-                    bucketSample.WriteValue(state.Values[i].Value);
+                    bucketSample.WriteValue(state.Quantiles[i].Value);
                     if (Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
                 }
@@ -202,15 +201,6 @@ namespace Prometheus.Client
                     _headStream = _streams[_headStreamIdx];
                     _headStreamExpTime = _headStreamExpTime.Add(_streamDuration);
                 }
-            }
-
-            internal struct SummaryState
-            {
-                public double Sum { get; set; }
-
-                public uint Count { get; set; }
-
-                public KeyValuePair<double, double>[] Values { get; set; }
             }
         }
 

@@ -122,7 +122,9 @@ namespace Prometheus.Client.Collectors
             {
                 _collectors.Remove(name);
                 _usedMetricNames.ExceptWith(collector.MetricNames);
-                _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+                if (_enumerableCollectors.IsValueCreated)
+                    _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+
                 return collector;
             }
             finally

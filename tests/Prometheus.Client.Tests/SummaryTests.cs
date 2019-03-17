@@ -64,8 +64,8 @@ namespace Prometheus.Client.Tests
             {
                 var wantQ = Summary.SummaryConfiguration.DefaultObjectives.ElementAt(i);
                 double epsilon = wantQ.Epsilon;
-                double gotQ = m.Values[i].Key;
-                double gotV = m.Values[i].Value;
+                double gotQ = m.Quantiles[i].Key;
+                double gotV = m.Quantiles[i].Value;
                 var minMax = GetBounds(allVars, wantQ.Quantile, epsilon);
 
                 Assert.False(double.IsNaN(gotQ));
@@ -124,14 +124,14 @@ namespace Prometheus.Client.Tests
             Assert.Equal(numObservations * numIterations, (int) state.Count);
             Assert.Equal(expectedSum, state.Sum);
 
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.5)).Value >= 50 - 2);
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.5)).Value <= 50 + 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.5)).Value >= 50 - 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.5)).Value <= 50 + 2);
 
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.9)).Value >= 90 - 2);
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.9)).Value <= 90 + 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.9)).Value >= 90 - 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.9)).Value <= 90 + 2);
 
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.99)).Value >= 99 - 2);
-            Assert.True(state.Values.Single(_ => _.Key.Equals(0.99)).Value <= 99 + 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.99)).Value >= 99 - 2);
+            Assert.True(state.Quantiles.Single(_ => _.Key.Equals(0.99)).Value <= 99 + 2);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Prometheus.Client.Tests
                 if (i % 10 == 0)
                 {
                     var state = child.ForkState(now);
-                    double got = state.Values[0].Value;
+                    double got = state.Quantiles[0].Value;
                     double want = Math.Max((double) i / 10, (double) i - 90);
 
                     Assert.True(Math.Abs(got - want) <= 1, $"{i}. got {got} want {want}");
@@ -161,7 +161,7 @@ namespace Prometheus.Client.Tests
 
             // Wait for MaxAge without observations and make sure quantiles are NaN.
             var newState = child.ForkState(baseTime.AddSeconds(1000).AddSeconds(100));
-            Assert.True(double.IsNaN(newState.Values[0].Value));
+            Assert.True(double.IsNaN(newState.Quantiles[0].Value));
         }
     }
 }

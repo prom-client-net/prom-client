@@ -17,6 +17,8 @@ namespace Prometheus.Client
         {
         }
 
+        public HistogramState Value => Unlabelled.Value;
+
         protected override MetricType Type => MetricType.Histogram;
 
         public void Observe(double val)
@@ -33,6 +35,8 @@ namespace Prometheus.Client
         {
             private ThreadSafeLong[] _bucketCounts;
             private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);
+
+            public HistogramState Value => ForkState();
 
             public void Observe(double val)
             {
@@ -85,6 +89,20 @@ namespace Prometheus.Client
 
                 writer.WriteSample(_sum.Value, "_sum", Labels, Timestamp);
                 writer.WriteSample(cumulativeCount, "_count", Labels, Timestamp);
+            }
+
+            private HistogramState ForkState()
+            {
+                long cumulativeCount = 0L;
+                var buckets = new KeyValuePair<double, long>[_bucketCounts.Length];
+
+                for (int i = 0; i < _bucketCounts.Length; i++)
+                {
+                    cumulativeCount += _bucketCounts[i].Value;
+                    buckets[i] = new KeyValuePair<double, long>(Configuration.Buckets[i], cumulativeCount);
+                }
+
+                return new HistogramState(cumulativeCount, _sum.Value, buckets);
             }
         }
 

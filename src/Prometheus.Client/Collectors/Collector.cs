@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -19,6 +20,8 @@ namespace Prometheus.Client.Collectors
         }
 
         public string[] MetricNames => new[] { Configuration.Name };
+
+        public IEnumerable<KeyValuePair<LabelValues, TChild>> Labelled => EnumerateLabelled();
 
         internal string[] LabelNames => Configuration.LabelNames;
 
@@ -62,6 +65,14 @@ namespace Prometheus.Client.Collectors
             var child = new TChild();
             child.Init(labels, Configuration);
             return child;
+        }
+
+        private IEnumerable<KeyValuePair<LabelValues, TChild>> EnumerateLabelled()
+        {
+            foreach (var labelled in LabelledMetrics)
+            {
+                yield return labelled;
+            }
         }
     }
 }

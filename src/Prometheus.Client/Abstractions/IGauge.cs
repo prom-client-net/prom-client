@@ -9,10 +9,8 @@ namespace Prometheus.Client.Abstractions
     ///         https://prometheus.io/docs/concepts/metric_types/#gauge
     ///     </remarks>
     /// </summary>
-    public interface IGauge
+    public interface IGauge : IMetric<double>
     {
-        double Value { get; }
-
         void Inc();
 
         void Inc(double increment);
