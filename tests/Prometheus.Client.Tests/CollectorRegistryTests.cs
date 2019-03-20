@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
+using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.Tests.Resources;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -99,27 +102,6 @@ namespace Prometheus.Client.Tests
             Assert.Throws<ArgumentException>(() => registry.Add("collector1", collector2));
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(10)]
-        public void CanEnumerateCollectors(int count)
-        {
-            var registry = new CollectorRegistry();
-            var collectors = new List<ICollector>();
-            for (var i = 0; i < count; i++)
-            {
-                var collector = Substitute.For<ICollector>();
-                var name = $"metric{i}";
-                collector.MetricNames.Returns(new[] { name });
-
-                registry.Add(name, collector);
-                collectors.Add(collector);
-            }
-
-            Assert.True(registry.Enumerate().SequenceEqual(collectors));
-        }
-
         [Fact]
         public void CanRemoveCollector()
         {
@@ -134,7 +116,38 @@ namespace Prometheus.Client.Tests
 
             registry.Remove("metric1");
 
-            Assert.True(registry.Enumerate().SequenceEqual(new[] { collector }));
+            Assert.False(registry.TryGet("metric1", out var _));
+        }
+
+        [Fact]
+        public void CanCollectAll()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            factory.CreateCounter("test", "with help text").Inc();
+            var gauge = factory.CreateGauge("gauge", "with help text", "group", "type");
+            gauge.Inc();
+            gauge.WithLabels("any", "2").Dec(5);
+
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    registry.CollectTo(writer);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("CollectorRegistryTests_Collection.txt"), formattedText);
         }
     }
 }

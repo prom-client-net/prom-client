@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
@@ -31,20 +32,19 @@ namespace Prometheus.Client.Collectors.ProcessStats
             _process = process;
 
             _processStartTime = _process.StartTime.ToUniversalTime().ToUnixTimeSeconds();
+            MetricNames = new[]
+            {
+                _cpuSecondsTotalName,
+                _virtualBytesName,
+                _workingSetName,
+                _privateBytesName,
+                _numThreadsName,
+                _processIdName,
+                _startTimeSecondsName,
+            };
         }
 
-        public string Name => "process_collector";
-
-        public string[] MetricNames => new[]
-        {
-            _cpuSecondsTotalName,
-            _virtualBytesName,
-            _workingSetName,
-            _privateBytesName,
-            _numThreadsName,
-            _processIdName,
-            _startTimeSecondsName,
-        };
+        public IReadOnlyList<string> MetricNames { get; }
 
         public void Collect(IMetricsWriter writer)
         {

@@ -1,0 +1,7 @@
+# HELP test with help text
+# TYPE test counter
+test 1
+# HELP gauge with help text
+# TYPE gauge gauge
+gauge 1
+gauge{group="any",type="2"} -5

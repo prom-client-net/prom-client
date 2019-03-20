@@ -14,7 +14,7 @@ namespace Prometheus.Client
         private long _timestamp;
         protected TConfig Configuration;
 
-        protected KeyValuePair<string, string>[] Labels => _labelValues.Labels;
+        protected IReadOnlyList<KeyValuePair<string, string>> Labels => _labelValues.Labels;
 
         protected long? Timestamp
         {

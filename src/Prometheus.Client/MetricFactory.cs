@@ -281,7 +281,7 @@ namespace Prometheus.Client
             return null;
         }
 
-        private void ValidateLabelNames(string[] expectedNames, string[] actualNames)
+        private void ValidateLabelNames(IReadOnlyList<string> expectedNames, IReadOnlyList<string> actualNames)
         {
             expectedNames = expectedNames ?? Array.Empty<string>();
             actualNames = actualNames ?? Array.Empty<string>();

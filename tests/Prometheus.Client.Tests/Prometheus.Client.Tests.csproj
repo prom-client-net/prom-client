@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\CollectorRegistryTests_Collection.txt" />
     <EmbeddedResource Include="Resources\CounterTests_Collection.txt" />
     <EmbeddedResource Include="Resources\CounterTests_Empty.txt" />
     <EmbeddedResource Include="Resources\GaugeTests_Collection.txt" />

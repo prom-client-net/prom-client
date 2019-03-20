@@ -230,7 +230,7 @@ namespace Prometheus.Client
                 string name,
                 string help,
                 bool includeTimestamp,
-                string[] labelNames,
+                IReadOnlyList<string> labelNames,
                 IReadOnlyList<QuantileEpsilonPair> objectives = null,
                 TimeSpan? maxAge = null,
                 int? ageBuckets = null,

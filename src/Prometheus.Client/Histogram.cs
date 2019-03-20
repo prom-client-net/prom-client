@@ -110,7 +110,7 @@ namespace Prometheus.Client
         {
             private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
 
-            public HistogramConfiguration(string name, string help, bool includeTimestamp, string[] labels, double[] buckets)
+            public HistogramConfiguration(string name, string help, bool includeTimestamp, IReadOnlyList<string> labels, IReadOnlyList<double> buckets)
                 : base(name, help, includeTimestamp, labels)
             {
                 Buckets = buckets ?? _defaultBuckets;

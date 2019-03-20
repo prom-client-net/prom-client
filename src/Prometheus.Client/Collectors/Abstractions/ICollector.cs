@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Collectors.Abstractions
@@ -6,6 +7,6 @@ namespace Prometheus.Client.Collectors.Abstractions
     {
         void Collect(IMetricsWriter writer);
 
-        string[] MetricNames { get; }
+        IReadOnlyList<string> MetricNames { get; }
     }
 }

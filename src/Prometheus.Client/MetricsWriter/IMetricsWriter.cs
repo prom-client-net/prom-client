@@ -1,6 +1,8 @@
+using System;
+
 namespace Prometheus.Client.MetricsWriter
 {
-    public interface IMetricsWriter
+    public interface IMetricsWriter : IDisposable
     {
         IMetricsWriter StartMetric(string metricName);
 
@@ -10,6 +12,6 @@ namespace Prometheus.Client.MetricsWriter
 
         ISampleWriter StartSample(string suffix = "");
 
-        void CloseWriter();
+        void Close();
     }
 }

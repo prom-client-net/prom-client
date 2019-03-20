@@ -8,17 +8,17 @@ namespace Prometheus.Client.Collectors
     public readonly struct LabelValues : IEquatable<LabelValues>
     {
         private readonly int _hashCode;
-        private readonly string[] _values;
+        private readonly IReadOnlyList<string> _values;
 
-        internal static readonly LabelValues Empty = new LabelValues(new string[0], new string[0]);
-        public readonly KeyValuePair<string, string>[] Labels;
+        internal static readonly LabelValues Empty = new LabelValues(Array.Empty<string>(), Array.Empty<string>());
+        public readonly IReadOnlyList<KeyValuePair<string, string>> Labels;
 
-        public LabelValues(string[] names, string[] values)
+        public LabelValues(IReadOnlyList<string> names, IReadOnlyList<string> values)
         {
             if (values == null)
                 throw new ArgumentNullException(nameof(values), "Labels cannot be null");
 
-            if (names.Length != values.Length)
+            if (names.Count != values.Count)
                 throw new ArgumentException("Incorrect number of labels");
 
             if (values.Any(value => value == null))
@@ -33,11 +33,11 @@ namespace Prometheus.Client.Collectors
             _hashCode = CalculateHashCode(_values);
         }
 
-        public bool IsEmpty => Labels.Length == 0;
+        public bool IsEmpty => Labels.Count == 0;
 
         public bool Equals(LabelValues other)
         {
-            if (other._values.Length != _values.Length)
+            if (other._values.Count != _values.Count)
                 return false;
 
             return !_values.Where((t, i) => t != other._values[i]).Any();
@@ -68,7 +68,7 @@ namespace Prometheus.Client.Collectors
             return _hashCode;
         }
 
-        private static int CalculateHashCode(string[] values)
+        private static int CalculateHashCode(IReadOnlyList<string> values)
         {
             unchecked
             {
