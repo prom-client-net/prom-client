@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors;
 
@@ -6,12 +7,10 @@ namespace Prometheus.Client
 {
     public class MetricConfiguration : CollectorConfiguration
     {
-        private const string _metricNameLabelRe = "^[a-zA-Z_:][a-zA-Z0-9_:]*$";
-
-        private static readonly Regex _metricNameLabelRegex = new Regex(_metricNameLabelRe, RegexOptions.Compiled);
+        private static readonly Regex _metricNameLabelRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$", RegexOptions.Compiled);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$", RegexOptions.Compiled);
 
-        public MetricConfiguration(string name, string help, bool includeTimestamp, string[] labels)
+        public MetricConfiguration(string name, string help, bool includeTimestamp, IReadOnlyList<string> labels)
             : base(name)
         {
             Help = help;
@@ -35,6 +34,6 @@ namespace Prometheus.Client
 
         public bool IncludeTimestamp { get; }
 
-        public string[] LabelNames { get; }
+        public IReadOnlyList<string> LabelNames { get; }
     }
 }

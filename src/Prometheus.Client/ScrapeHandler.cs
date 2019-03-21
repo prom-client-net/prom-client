@@ -10,8 +10,7 @@ namespace Prometheus.Client
         {
             using (var metricsWriter = new MetricsTextWriter(outputStream))
             {
-                foreach (var collector in registry.Enumerate())
-                    collector.Collect(metricsWriter);
+                registry.CollectTo(metricsWriter);
             }
         }
 

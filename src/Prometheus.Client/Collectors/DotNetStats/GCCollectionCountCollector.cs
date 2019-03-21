@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -7,14 +8,18 @@ namespace Prometheus.Client.Collectors.DotNetStats
     public class GCCollectionCountCollector : ICollector
     {
         private const string _help = "GC collection count";
+        private const string _name = "dotnet_collection_count_total";
 
-        public string Name => "dotnet_collection_count_total";
+        public GCCollectionCountCollector()
+        {
+            MetricNames = new[] { _name };
+        }
 
-        public string[] MetricNames => new[] { Name };
+        public IReadOnlyList<string> MetricNames { get; }
 
         public void Collect(IMetricsWriter writer)
         {
-            writer.WriteMetricHeader(Name, MetricType.Counter, _help);
+            writer.WriteMetricHeader(_name, MetricType.Counter, _help);
 
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
             {

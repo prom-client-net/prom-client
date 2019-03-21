@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Collectors.Abstractions
 {
@@ -15,6 +15,6 @@ namespace Prometheus.Client.Collectors.Abstractions
 
         ICollector Remove(string name);
 
-        IEnumerable<ICollector> Enumerate();
+        void CollectTo(IMetricsWriter writer);
     }
 }

@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace Prometheus.Client.MetricsWriter
 {
-    internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter, IDisposable
+    internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter
     {
         private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
         private static readonly Encoding _encoding = new UTF8Encoding(false);
@@ -140,9 +140,9 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        public void CloseWriter()
+        public void Close()
         {
-            ValidateState(nameof(CloseWriter), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
+            ValidateState(nameof(Close), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
 
             Write(_newLine);
             Flush();
@@ -255,7 +255,7 @@ namespace Prometheus.Client.MetricsWriter
                 return;
 
             if (disposing && _state != WriterState.Closed)
-                CloseWriter();
+                Close();
 
             _arrayPool.Return(_buffer);
             _buffer = null;

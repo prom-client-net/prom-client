@@ -17,13 +17,14 @@ namespace Prometheus.Client.Collectors
         {
             Configuration = configuration;
             Unlabelled = CreateLabelled(LabelValues.Empty);
+            MetricNames = new[] { Configuration.Name };
         }
 
-        public string[] MetricNames => new[] { Configuration.Name };
+        public IReadOnlyList<string> MetricNames { get; }
 
         public IEnumerable<KeyValuePair<LabelValues, TChild>> Labelled => EnumerateLabelled();
 
-        internal string[] LabelNames => Configuration.LabelNames;
+        internal IReadOnlyList<string> LabelNames => Configuration.LabelNames;
 
         protected abstract MetricType Type { get; }
 

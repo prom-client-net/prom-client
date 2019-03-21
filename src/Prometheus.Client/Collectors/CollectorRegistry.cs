@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Prometheus.Client.Collectors.Abstractions;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Collectors
 {
@@ -23,7 +24,10 @@ namespace Prometheus.Client.Collectors
             _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
         }
 
-        public IEnumerable<ICollector> Enumerate() => _enumerableCollectors.Value;
+        public void Dispose()
+        {
+            _lock.Dispose();
+        }
 
         public void Add(string name, ICollector collector)
         {
@@ -133,6 +137,16 @@ namespace Prometheus.Client.Collectors
             }
         }
 
+        public void CollectTo(IMetricsWriter writer)
+        {
+            var wrapped = new MetricWriterWrapper(writer);
+            foreach (var collector in _enumerableCollectors.Value)
+            {
+                wrapped.SetCurrentCollector(collector);
+                collector.Collect(wrapped);
+            }
+        }
+
         private void ValidateCollectorName(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -141,13 +155,13 @@ namespace Prometheus.Client.Collectors
 
         private void AddInternal(string name, ICollector collector)
         {
-            if (collector.MetricNames == null || collector.MetricNames.Length == 0)
+            if (collector.MetricNames == null || collector.MetricNames.Count == 0)
                 throw new ArgumentNullException(nameof(collector.MetricNames), "Collector should define metric names");
 
             if (_collectors.ContainsKey(name))
                 throw new ArgumentException($"Collector with name '{name}' is already registered");
 
-            for (var i = 0; i < collector.MetricNames.Length; i++)
+            for (var i = 0; i < collector.MetricNames.Count; i++)
             {
                 var metricName = collector.MetricNames[i];
                 if (!_metricNameRegex.IsMatch(metricName))
@@ -175,11 +189,6 @@ namespace Prometheus.Client.Collectors
             {
                 _lock.ExitReadLock();
             }
-        }
-
-        public void Dispose()
-        {
-            _lock.Dispose();
         }
     }
 }
