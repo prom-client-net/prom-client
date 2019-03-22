@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace Prometheus.Client
 
         public class LabelledSummary : Labelled<SummaryConfiguration>, ISummary
         {
+            private static readonly ArrayPool<double> _arrayPool = ArrayPool<double>.Shared;
             // Protects hotBuf and hotBufExpTime.
             private readonly object _bufLock = new object();
 
@@ -47,12 +49,20 @@ namespace Prometheus.Client
             private DateTime _headStreamExpTime;
             private int _headStreamIdx;
 
-            private double[] _sortedObjectives;
             private TimeSpan _streamDuration;
             private QuantileStream[] _streams;
             private double _sum;
 
-            public SummaryState Value => ForkState(DateTime.UtcNow);
+            public SummaryState Value
+            {
+                get
+                {
+                    var values = new double[Configuration.SortedObjectives.Count];
+                    ForkState(DateTime.UtcNow, out var count, out var sum, values);
+                    var zipped = values.Zip(Configuration.SortedObjectives, (v, k) => new KeyValuePair<double, double>(k, v)).ToArray();
+                    return new SummaryState(count, sum, zipped);
+                }
+            }
 
             public void Observe(double val)
             {
@@ -92,7 +102,6 @@ namespace Prometheus.Client
             {
                 base.Init(labelValues, configuration);
 
-                _sortedObjectives = new double[Configuration.Objectives.Count];
                 _buffer = new SampleBuffer(Configuration.BufCap);
                 _streamDuration = new TimeSpan(Configuration.MaxAge.Ticks / Configuration.AgeBuckets);
                 _headStreamExpTime = now.Add(_streamDuration);
@@ -103,17 +112,10 @@ namespace Prometheus.Client
                     _streams[i] = QuantileStream.NewTargeted(Configuration.Objectives);
 
                 _headStream = _streams[0];
-
-                for (int i = 0; i < Configuration.Objectives.Count; i++)
-                    _sortedObjectives[i] = Configuration.Objectives[i].Quantile;
-
-                Array.Sort(_sortedObjectives);
             }
 
-            internal SummaryState ForkState(DateTime now)
+            internal void ForkState(DateTime now, out long count, out double sum, double[] values)
             {
-                var values = new KeyValuePair<double, double>[Configuration.Objectives.Count];
-
                 lock (_bufLock)
                 {
                     lock (_lock)
@@ -121,40 +123,50 @@ namespace Prometheus.Client
                         // FlushBuffer even if buffer is empty to set new bufferExpTime.
                         FlushBuffer(now);
 
-                        for (int i = 0; i < _sortedObjectives.Length; i++)
+                        for (int i = 0; i < Configuration.SortedObjectives.Count; i++)
                         {
-                            double rank = _sortedObjectives[i];
+                            double rank = Configuration.SortedObjectives[i];
                             double value = _headStream.Count == 0 ? double.NaN : _headStream.Query(rank);
 
-                            values[i] = new KeyValuePair<double, double>(rank, value);
+                            values[i] = value;
                         }
 
-                        return new SummaryState(_count, _sum, values);
+                        count = _count;
+                        sum = _sum;
                     }
                 }
             }
 
             protected internal override void Collect(IMetricsWriter writer)
             {
-                var state = ForkState(DateTime.UtcNow);
+                var values = _arrayPool.Rent(Configuration.SortedObjectives.Count);
 
-                for (int i = 0; i < state.Quantiles.Count; i++)
+                try
                 {
-                    var bucketSample = writer.StartSample();
-                    var labelWriter = bucketSample.StartLabels();
-                    labelWriter.WriteLabels(Labels);
-                    labelWriter.WriteLabel("quantile", state.Quantiles[i].Key.ToString(CultureInfo.InvariantCulture));
-                    labelWriter.EndLabels();
+                    ForkState(DateTime.UtcNow, out var count, out var sum, values);
 
-                    bucketSample.WriteValue(state.Quantiles[i].Value);
-                    if (Timestamp.HasValue)
-                        bucketSample.WriteTimestamp(Timestamp.Value);
+                    for (int i = 0; i < Configuration.SortedObjectives.Count; i++)
+                    {
+                        var bucketSample = writer.StartSample();
+                        var labelWriter = bucketSample.StartLabels();
+                        labelWriter.WriteLabels(Labels);
+                        labelWriter.WriteLabel("quantile", Configuration.FormattedObjectives[i]);
+                        labelWriter.EndLabels();
 
-                    bucketSample.EndSample();
+                        bucketSample.WriteValue(values[i]);
+                        if (Timestamp.HasValue)
+                            bucketSample.WriteTimestamp(Timestamp.Value);
+
+                        bucketSample.EndSample();
+                    }
+
+                    writer.WriteSample(sum, "_sum", Labels, Timestamp);
+                    writer.WriteSample(count, "_count", Labels, Timestamp);
                 }
-
-                writer.WriteSample(state.Sum, "_sum", Labels, Timestamp);
-                writer.WriteSample(state.Count, "_count", Labels, Timestamp);
+                finally
+                {
+                    _arrayPool.Return(values);
+                }
             }
 
             // Flush needs bufMtx locked.
@@ -245,6 +257,16 @@ namespace Prometheus.Client
                     Objectives = DefaultObjectives;
                 }
 
+                var sorted = new double[Objectives.Count];
+                for (int i = 0; i < Objectives.Count; i++)
+                    sorted[i] = Objectives[i].Quantile;
+
+                Array.Sort(sorted);
+                SortedObjectives = sorted;
+                FormattedObjectives = SortedObjectives
+                    .Select(o => o.ToString(CultureInfo.InvariantCulture))
+                    .ToArray();
+
                 MaxAge = maxAge ?? _defaultMaxAge;
                 if (MaxAge < TimeSpan.Zero)
                     throw new ArgumentException($"Illegal max age {MaxAge}");
@@ -286,6 +308,10 @@ namespace Prometheus.Client
             // is the internal buffer size of the underlying package
             // "github.com/bmizerany/perks/quantile").
             public int BufCap { get; }
+
+            internal IReadOnlyList<double> SortedObjectives { get; }
+
+            internal IReadOnlyList<string> FormattedObjectives { get; }
         }
     }
 }
