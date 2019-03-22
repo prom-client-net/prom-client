@@ -85,6 +85,8 @@ namespace Prometheus.Client
                     bucketSample.WriteValue(cumulativeCount);
                     if (Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
+
+                    bucketSample.EndSample();
                 }
 
                 writer.WriteSample(_sum.Value, "_sum", Labels, Timestamp);

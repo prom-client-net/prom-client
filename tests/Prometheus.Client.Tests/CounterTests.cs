@@ -55,12 +55,16 @@ namespace Prometheus.Client.Tests
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(value + 1);
+                sample1.EndSample();
 
                 var sample2 = writer.StartSample();
                 var lbl = sample2.StartLabels();
                 lbl.WriteLabel("label1", "abc");
                 lbl.EndLabels();
                 sample2.WriteValue(value);
+                sample2.EndSample();
+
+                writer.EndMetric();
             });
         }
 

@@ -171,6 +171,9 @@ namespace Prometheus.Client.Tests
 
                 var sample1 = writer.StartSample();
                 sample1.WriteValue(3.2);
+                sample1.EndSample();
+
+                writer.EndMetric();
             });
         }
 

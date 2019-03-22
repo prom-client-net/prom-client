@@ -149,6 +149,8 @@ namespace Prometheus.Client
                     bucketSample.WriteValue(state.Quantiles[i].Value);
                     if (Timestamp.HasValue)
                         bucketSample.WriteTimestamp(Timestamp.Value);
+
+                    bucketSample.EndSample();
                 }
 
                 writer.WriteSample(state.Sum, "_sum", Labels, Timestamp);

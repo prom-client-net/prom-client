@@ -12,6 +12,8 @@ namespace Prometheus.Client.MetricsWriter
 
         ISampleWriter StartSample(string suffix = "");
 
+        IMetricsWriter EndMetric();
+
         void Close();
     }
 }

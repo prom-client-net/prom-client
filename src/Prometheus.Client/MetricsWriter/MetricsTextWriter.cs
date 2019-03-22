@@ -51,33 +51,9 @@ namespace Prometheus.Client.MetricsWriter
             GC.SuppressFinalize(this);
         }
 
-        public ILabelWriter WriteLabel(string name, string value)
-        {
-            ValidateState(nameof(WriteLabel), WriterState.LabelsStarted | WriterState.LabelWritten);
-            if (_state == WriterState.LabelWritten)
-                Write(_labelsSeparator);
-
-            Write(name);
-            Write(_labelsEq);
-            Write(_labelTextQualifier);
-            Write(EscapeValue(value));
-            Write(_labelTextQualifier);
-
-            _state = WriterState.LabelWritten;
-            return this;
-        }
-
-        public ISampleWriter EndLabels()
-        {
-            ValidateState(nameof(WriteLabel), WriterState.LabelWritten);
-            Write(_labelsEnd);
-            _state = WriterState.LabelsClosed;
-            return this;
-        }
-
         public IMetricsWriter StartMetric(string metricName)
         {
-            ValidateState(nameof(StartMetric), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
+            ValidateState(nameof(StartMetric), WriterState.None | WriterState.MetricClosed);
 
             _currentMetricName = metricName;
             _state = WriterState.MetricStarted;
@@ -128,7 +104,7 @@ namespace Prometheus.Client.MetricsWriter
         public ISampleWriter StartSample(string suffix = "")
         {
             ValidateState(nameof(StartSample),
-                WriterState.MetricStarted | WriterState.HelpWritten | WriterState.TypeWritten | WriterState.ValueWritten | WriterState.TimestampWritten);
+                WriterState.MetricStarted | WriterState.HelpWritten | WriterState.TypeWritten | WriterState.SampleClosed);
 
             if (_hasData)
                 Write(_newLine);
@@ -140,21 +116,36 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        public void Close()
-        {
-            ValidateState(nameof(Close), WriterState.None | WriterState.ValueWritten | WriterState.TimestampWritten);
-
-            Write(_newLine);
-            Flush();
-            _state = WriterState.Closed;
-        }
-
         public ILabelWriter StartLabels()
         {
             ValidateState(nameof(StartLabels), WriterState.SampleStarted);
             Write(_labelsStart);
             _state = WriterState.LabelsStarted;
 
+            return this;
+        }
+
+        public ILabelWriter WriteLabel(string name, string value)
+        {
+            ValidateState(nameof(WriteLabel), WriterState.LabelsStarted | WriterState.LabelWritten);
+            if (_state == WriterState.LabelWritten)
+                Write(_labelsSeparator);
+
+            Write(name);
+            Write(_labelsEq);
+            Write(_labelTextQualifier);
+            Write(EscapeValue(value));
+            Write(_labelTextQualifier);
+
+            _state = WriterState.LabelWritten;
+            return this;
+        }
+
+        public ISampleWriter EndLabels()
+        {
+            ValidateState(nameof(EndLabels), WriterState.LabelWritten);
+            Write(_labelsEnd);
+            _state = WriterState.LabelsClosed;
             return this;
         }
 
@@ -170,7 +161,7 @@ namespace Prometheus.Client.MetricsWriter
 
         public ISampleWriter WriteTimestamp(long timestamp)
         {
-            ValidateState(nameof(WriteLabel), WriterState.ValueWritten);
+            ValidateState(nameof(WriteTimestamp), WriterState.ValueWritten);
             Write(_tokenSeparator);
             Write(timestamp.ToString(CultureInfo.InvariantCulture));
             _state = WriterState.TimestampWritten;
@@ -180,7 +171,24 @@ namespace Prometheus.Client.MetricsWriter
 
         public IMetricsWriter EndSample()
         {
+            ValidateState(nameof(EndSample), WriterState.ValueWritten | WriterState.TimestampWritten);
+            _state = WriterState.SampleClosed;
             return this;
+        }
+
+        public IMetricsWriter EndMetric()
+        {
+            ValidateState(nameof(EndMetric), WriterState.SampleClosed);
+            _currentMetricName = string.Empty;
+            _state = WriterState.MetricClosed;
+            return this;
+        }
+
+        public void Close()
+        {
+            Write(_newLine);
+            Flush();
+            _state = WriterState.Closed;
         }
 
         private static IReadOnlyDictionary<MetricType, byte[]> BuildMetricTypesMap()
@@ -291,7 +299,9 @@ namespace Prometheus.Client.MetricsWriter
             LabelsClosed = 64,
             ValueWritten = 128,
             TimestampWritten = 256,
-            Closed = 512
+            SampleClosed = 512,
+            MetricClosed = 1024,
+            Closed = 2048
         }
     }
 }

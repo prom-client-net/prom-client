@@ -21,6 +21,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
         {
             writer.WriteMetricHeader(_name, MetricType.Gauge, _help);
             writer.WriteSample(GC.GetTotalMemory(false));
+            writer.EndMetric();
         }
     }
 }
