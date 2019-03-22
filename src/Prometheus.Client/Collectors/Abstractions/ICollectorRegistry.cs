@@ -15,6 +15,8 @@ namespace Prometheus.Client.Collectors.Abstractions
 
         ICollector Remove(string name);
 
+        bool Remove(ICollector collector);
+
         void CollectTo(IMetricsWriter writer);
     }
 }

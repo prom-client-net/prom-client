@@ -121,20 +121,32 @@ namespace Prometheus.Client.Collectors
                 _lock.ExitReadLock();
             }
 
-            _lock.EnterWriteLock();
+            RemoveCollector(name, collector);
+            return collector;
+        }
+
+        public bool Remove(ICollector collector)
+        {
+            var key = string.Empty;
+            _lock.EnterReadLock();
             try
             {
-                _collectors.Remove(name);
-                _usedMetricNames.ExceptWith(collector.MetricNames);
-                if (_enumerableCollectors.IsValueCreated)
-                    _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
-
-                return collector;
+                foreach (var pair in _collectors)
+                {
+                    if (pair.Value == collector)
+                    {
+                        key = pair.Key;
+                        break;
+                    }
+                }
             }
             finally
             {
-                _lock.ExitWriteLock();
+                _lock.ExitReadLock();
             }
+
+            RemoveCollector(key, collector);
+            return !string.IsNullOrEmpty(key);
         }
 
         public void CollectTo(IMetricsWriter writer)
@@ -144,6 +156,22 @@ namespace Prometheus.Client.Collectors
             {
                 wrapped.SetCurrentCollector(collector);
                 collector.Collect(wrapped);
+            }
+        }
+
+        private void RemoveCollector(string key, ICollector collector)
+        {
+            _lock.EnterWriteLock();
+            try
+            {
+                _collectors.Remove(key);
+                _usedMetricNames.ExceptWith(collector.MetricNames);
+                if (_enumerableCollectors.IsValueCreated)
+                    _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+            }
+            finally
+            {
+                _lock.ExitWriteLock();
             }
         }
 

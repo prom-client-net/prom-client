@@ -103,6 +103,25 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void CanRemoveByNameCollector()
+        {
+            var registry = new CollectorRegistry();
+            var collector = Substitute.For<ICollector>();
+            collector.MetricNames.Returns(new[] { "metric" });
+            registry.Add("collector", collector);
+
+            var collector1 = Substitute.For<ICollector>();
+            collector1.MetricNames.Returns(new[] { "metric1" });
+            registry.Add("metric1", collector1);
+
+            var res = registry.Remove("metric1");
+
+            Assert.Equal(collector1, res);
+            Assert.False(registry.TryGet("metric1", out var _));
+            Assert.True(registry.TryGet("collector", out var _));
+        }
+
+        [Fact]
         public void CanRemoveCollector()
         {
             var registry = new CollectorRegistry();
@@ -114,9 +133,11 @@ namespace Prometheus.Client.Tests
             collector1.MetricNames.Returns(new[] { "metric1" });
             registry.Add("metric1", collector1);
 
-            registry.Remove("metric1");
+            var res = registry.Remove(collector1);
 
+            Assert.True(res);
             Assert.False(registry.TryGet("metric1", out var _));
+            Assert.True(registry.TryGet("collector", out var _));
         }
 
         [Fact]
