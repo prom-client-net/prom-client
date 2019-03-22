@@ -37,6 +37,8 @@ namespace Prometheus.Client.Collectors
 
             foreach (var labelledMetric in LabelledMetrics)
                 labelledMetric.Value.Collect(writer);
+
+            writer.EndMetric();
         }
 
         /// <summary>

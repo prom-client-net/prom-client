@@ -27,8 +27,11 @@ namespace Prometheus.Client.Collectors.DotNetStats
                     .StartLabels()
                     .WriteLabel("generation", gen.ToString())
                     .EndLabels()
-                    .WriteValue(GC.CollectionCount(gen));
+                    .WriteValue(GC.CollectionCount(gen))
+                    .EndSample();
             }
+
+            writer.EndMetric();
         }
     }
 }

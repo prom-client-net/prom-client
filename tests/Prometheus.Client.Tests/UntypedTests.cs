@@ -39,10 +39,11 @@ namespace Prometheus.Client.Tests
             var writer = Substitute.For<IMetricsWriter>();
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
-            var untyped = factory.CreateUntyped("name1", "help1", "label1");
+            var untyped = factory.CreateUntyped("name1", "help1", "labelled");
+            var val = value + 1;
 
-            untyped.Set(value + 1);
-            untyped.WithLabels("abc").Set(value);
+            untyped.Set(val);
+            untyped.WithLabels("lbl").Set(value);
 
             untyped.Collect(writer);
 
@@ -53,13 +54,17 @@ namespace Prometheus.Client.Tests
                 writer.WriteType(MetricType.Untyped);
 
                 var sample1 = writer.StartSample();
-                sample1.WriteValue(value + 1);
+                sample1.WriteValue(val);
+                sample1.EndSample();
 
                 var sample2 = writer.StartSample();
                 var lbl = sample2.StartLabels();
-                lbl.WriteLabel("label1", "abc");
+                lbl.WriteLabel("labelled", "lbl");
                 lbl.EndLabels();
                 sample2.WriteValue(value);
+                sample2.EndSample();
+
+                writer.EndMetric();
             });
         }
 

@@ -23,6 +23,7 @@ namespace Prometheus.Client.MetricsWriter
             if (timestamp.HasValue)
                 sampleWriter.WriteTimestamp(timestamp.Value);
 
+            sampleWriter.EndSample();
             return writer;
         }
 

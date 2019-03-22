@@ -52,24 +52,31 @@ namespace Prometheus.Client.Collectors.ProcessStats
 
             writer.WriteMetricHeader(_cpuSecondsTotalName, MetricType.Counter, "Total user and system CPU time spent in seconds");
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_virtualBytesName, MetricType.Gauge, "Process virtual memory size");
             writer.WriteSample(_process.VirtualMemorySize64);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_workingSetName, MetricType.Gauge, "Process working set");
             writer.WriteSample(_process.WorkingSet64);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_privateBytesName, MetricType.Gauge, "Process private memory size");
             writer.WriteSample(_process.PrivateMemorySize64);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_numThreadsName, MetricType.Gauge, "Total number of threads");
             writer.WriteSample(_process.Threads.Count);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_processIdName, MetricType.Untyped, "Process ID");
             writer.WriteSample(_process.Id);
+            writer.EndMetric();
 
             writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Untyped, "Start time of the process since unix epoch in seconds");
             writer.WriteSample(_processStartTime);
+            writer.EndMetric();
         }
     }
 }

@@ -61,5 +61,10 @@ namespace Prometheus.Client.Collectors
         {
             return _baseWriter.WriteType(metricType);
         }
+
+        public IMetricsWriter EndMetric()
+        {
+            return _baseWriter.EndMetric();
+        }
     }
 }

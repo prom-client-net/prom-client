@@ -146,30 +146,38 @@ namespace Prometheus.Client.Tests
                 lbl.WriteLabel("le", "1");
                 lbl.EndLabels();
                 sample.WriteValue(2);
+                sample.EndSample();
 
                 sample = writer.StartSample("_bucket");
                 lbl = sample.StartLabels();
                 lbl.WriteLabel("le", "2");
                 lbl.EndLabels();
                 sample.WriteValue(5);
+                sample.EndSample();
 
                 sample = writer.StartSample("_bucket");
                 lbl = sample.StartLabels();
                 lbl.WriteLabel("le", "3");
                 lbl.EndLabels();
                 sample.WriteValue(8);
+                sample.EndSample();
 
                 sample = writer.StartSample("_bucket");
                 lbl = sample.StartLabels();
                 lbl.WriteLabel("le", "+Inf");
                 lbl.EndLabels();
                 sample.WriteValue(9);
+                sample.EndSample();
 
                 sample = writer.StartSample("_sum");
                 sample.WriteValue(16.7);
+                sample.EndSample();
 
                 sample = writer.StartSample("_count");
                 sample.WriteValue(9);
+                sample.EndSample();
+
+                writer.EndMetric();
             });
         }
 
