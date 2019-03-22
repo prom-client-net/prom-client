@@ -4,13 +4,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
+#if NETCORE
+using System.Buffers.Text;
+#else
 using System.Globalization;
+#endif
 
 namespace Prometheus.Client.MetricsWriter
 {
     internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter
     {
         private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
+#if NETCORE
+        private static readonly ArrayPool<char> _charPool = ArrayPool<char>.Shared;
+#endif
         private static readonly Encoding _encoding = new UTF8Encoding(false);
 
         private static readonly byte[] _commentPrefix = _encoding.GetBytes("#");
@@ -153,7 +160,7 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteLabel), WriterState.SampleStarted | WriterState.LabelsClosed);
             Write(_tokenSeparator);
-            Write(value.ToString(CultureInfo.InvariantCulture));
+            Write(value);
             _state = WriterState.ValueWritten;
 
             return this;
@@ -163,7 +170,7 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteTimestamp), WriterState.ValueWritten);
             Write(_tokenSeparator);
-            Write(timestamp.ToString(CultureInfo.InvariantCulture));
+            Write(timestamp);
             _state = WriterState.TimestampWritten;
 
             return this;
@@ -210,6 +217,27 @@ namespace Prometheus.Client.MetricsWriter
                    .Replace("\\", @"\\")
                    .Replace("\n", @"\n")
                    .Replace("\"", @"\""");
+        }
+
+        private void Write(double value)
+        {
+#if NETCORE
+            var buff = _charPool.Rent(32);
+            try
+            {
+                EnsureBufferCapacity(buff.Length);
+
+                value.TryFormat(buff, out var charsize);
+                var size = _encoding.GetBytes(buff, 0, charsize, _buffer, _position);
+                _position += size;
+            }
+            finally
+            {
+                _charPool.Return(buff);
+            }
+#else
+            Write(value.ToString(CultureInfo.InvariantCulture));
+#endif
         }
 
         private void Write(string value)

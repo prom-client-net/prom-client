@@ -48,7 +48,7 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.Unlabelled.ForkState(DateTime.Now);
+            var m = sum.Unlabelled.Value;
 
             Assert.Equal(mutations * concLevel, (int) m.Count);
 
@@ -119,7 +119,7 @@ namespace Prometheus.Client.Tests
                 }
             }
 
-            var state = summary.ForkState(DateTime.Now);
+            var state = summary.Value;
 
             Assert.Equal(numObservations * numIterations, (int) state.Count);
             Assert.Equal(expectedSum, state.Sum);
@@ -143,6 +143,7 @@ namespace Prometheus.Client.Tests
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
             var child = new Summary.LabelledSummary();
             child.Init(LabelValues.Empty, summaryConfig, baseTime);
+            var values = new double[summaryConfig.Objectives.Count];
 
             for (int i = 0; i < 1000; i++)
             {
@@ -151,8 +152,8 @@ namespace Prometheus.Client.Tests
 
                 if (i % 10 == 0)
                 {
-                    var state = child.ForkState(now);
-                    double got = state.Quantiles[0].Value;
+                    child.ForkState(now, out var _, out var _, values);
+                    double got = values[0];
                     double want = Math.Max((double) i / 10, (double) i - 90);
 
                     Assert.True(Math.Abs(got - want) <= 1, $"{i}. got {got} want {want}");
@@ -160,8 +161,8 @@ namespace Prometheus.Client.Tests
             }
 
             // Wait for MaxAge without observations and make sure quantiles are NaN.
-            var newState = child.ForkState(baseTime.AddSeconds(1000).AddSeconds(100));
-            Assert.True(double.IsNaN(newState.Quantiles[0].Value));
+            child.ForkState(baseTime.AddSeconds(1000).AddSeconds(100), out var _, out var _, values);
+            Assert.True(double.IsNaN(values[0]));
         }
     }
 }
