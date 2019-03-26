@@ -21,8 +21,9 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(new[] { "metric" });
+            collector.Configuration.Name.Returns(collectorName);
 
-            Assert.Throws<ArgumentNullException>(() => registry.Add(collectorName, collector));
+            Assert.Throws<ArgumentNullException>(() => registry.Add(collector));
         }
 
         [Fact]
@@ -31,12 +32,14 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(new[] { "metric" });
+            collector.Configuration.Name.Returns("testName");
 
             var collector1 = Substitute.For<ICollector>();
-            collector1.MetricNames.Returns(new[] { "metric" });
+            collector1.MetricNames.Returns(new[] { "metric2" });
+            collector1.Configuration.Name.Returns("testName");
 
-            registry.Add("testName", collector);
-            Assert.Throws<ArgumentException>(() => registry.Add("testName", collector1));
+            registry.Add(collector);
+            Assert.Throws<ArgumentException>(() => registry.Add(collector1));
         }
 
         [Fact]
@@ -44,11 +47,12 @@ namespace Prometheus.Client.Tests
         {
             var registry = new CollectorRegistry();
             var originalCollector = Substitute.For<ICollector>();
-            originalCollector.MetricNames.Returns(new[] { "metric" });
-            var fn = Substitute.For<Func<CollectorConfiguration, ICollector>>();
             var cfg = new CollectorConfiguration("testName");
+            originalCollector.MetricNames.Returns(new[] { "metric" });
+            originalCollector.Configuration.Returns(cfg);
+            var fn = Substitute.For<Func<CollectorConfiguration, ICollector>>();
 
-            registry.Add("testName", originalCollector);
+            registry.Add(originalCollector);
             var result = registry.GetOrAdd(cfg, fn);
 
             Assert.Equal(originalCollector, result);
@@ -58,14 +62,15 @@ namespace Prometheus.Client.Tests
         [Theory]
         [InlineData(null, "test")]
         [InlineData(new string[0], "test")]
-        public void CollectorShouldDefineMetrics(string[] metrics, string name)
+        public void CollectorShouldDefineMetricNames(string[] metrics, string name)
         {
             // parameter "name" is useless in the test, but it's needed to avoid CS0182 error
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(metrics);
+            collector.Configuration.Name.Returns(name);
 
-            Assert.Throws<ArgumentNullException>(() => registry.Add(name, collector));
+            Assert.Throws<ArgumentNullException>(() => registry.Add(collector));
         }
 
         [Theory]
@@ -80,8 +85,9 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(new[] { metricName });
+            collector.Configuration.Name.Returns("tst");
 
-            Assert.Throws<ArgumentException>(() => registry.Add("tst", collector));
+            Assert.Throws<ArgumentException>(() => registry.Add(collector));
         }
 
         [Theory]
@@ -94,12 +100,14 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector1 = Substitute.For<ICollector>();
             collector1.MetricNames.Returns(first);
+            collector1.Configuration.Name.Returns("collector1");
 
             var collector2 = Substitute.For<ICollector>();
             collector2.MetricNames.Returns(second);
+            collector2.Configuration.Name.Returns("collector1");
 
-            registry.Add("collector1", collector1);
-            Assert.Throws<ArgumentException>(() => registry.Add("collector1", collector2));
+            registry.Add(collector1);
+            Assert.Throws<ArgumentException>(() => registry.Add(collector2));
         }
 
         [Fact]
@@ -108,11 +116,13 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(new[] { "metric" });
-            registry.Add("collector", collector);
+            collector.Configuration.Name.Returns("collector");
+            registry.Add(collector);
 
             var collector1 = Substitute.For<ICollector>();
             collector1.MetricNames.Returns(new[] { "metric1" });
-            registry.Add("metric1", collector1);
+            collector1.Configuration.Name.Returns("metric1");
+            registry.Add(collector1);
 
             var res = registry.Remove("metric1");
 
@@ -127,11 +137,13 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var collector = Substitute.For<ICollector>();
             collector.MetricNames.Returns(new[] { "metric" });
-            registry.Add("collector", collector);
+            collector.Configuration.Name.Returns("collector");
+            registry.Add(collector);
 
             var collector1 = Substitute.For<ICollector>();
             collector1.MetricNames.Returns(new[] { "metric1" });
-            registry.Add("metric1", collector1);
+            collector1.Configuration.Name.Returns("metric1");
+            registry.Add(collector1);
 
             var res = registry.Remove(collector1);
 

@@ -29,13 +29,13 @@ namespace Prometheus.Client.Collectors
             _lock.Dispose();
         }
 
-        public void Add(string name, ICollector collector)
+        public void Add(ICollector collector)
         {
-            ValidateCollectorName(name);
+            ValidateCollectorName(collector.Configuration.Name);
             _lock.EnterWriteLock();
             try
             {
-                AddInternal(name, collector);
+                AddInternal(collector);
             }
             finally
             {
@@ -59,7 +59,7 @@ namespace Prometheus.Client.Collectors
 
         public TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
-            where TConfig : CollectorConfiguration
+            where TConfig : ICollectorConfiguration
         {
             ValidateCollectorName(config.Name);
             _lock.EnterReadLock();
@@ -80,7 +80,7 @@ namespace Prometheus.Client.Collectors
                     return collector;
 
                 collector = collectorFactory(config);
-                AddInternal(config.Name, collector);
+                AddInternal(collector);
                 return collector;
             }
             finally
@@ -181,13 +181,13 @@ namespace Prometheus.Client.Collectors
                 throw new ArgumentNullException(nameof(name));
         }
 
-        private void AddInternal(string name, ICollector collector)
+        private void AddInternal(ICollector collector)
         {
             if (collector.MetricNames == null || collector.MetricNames.Count == 0)
                 throw new ArgumentNullException(nameof(collector.MetricNames), "Collector should define metric names");
 
-            if (_collectors.ContainsKey(name))
-                throw new ArgumentException($"Collector with name '{name}' is already registered");
+            if (_collectors.ContainsKey(collector.Configuration.Name))
+                throw new ArgumentException($"Collector with name '{collector.Configuration.Name}' is already registered");
 
             for (var i = 0; i < collector.MetricNames.Count; i++)
             {
@@ -199,7 +199,7 @@ namespace Prometheus.Client.Collectors
                     throw new ArgumentException($"Metric name '{metricName}' is already in use");
             }
 
-            _collectors.Add(name, collector);
+            _collectors.Add(collector.Configuration.Name, collector);
             _usedMetricNames.UnionWith(collector.MetricNames);
             _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
         }

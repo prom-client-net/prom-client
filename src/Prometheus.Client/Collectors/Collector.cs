@@ -10,6 +10,7 @@ namespace Prometheus.Client.Collectors
         where TChild : Labelled<TConfig>, new()
         where TConfig : MetricConfiguration
     {
+        private readonly IReadOnlyList<string> _metricNames;
         protected readonly TConfig Configuration;
         protected readonly ConcurrentDictionary<LabelValues, TChild> LabelledMetrics = new ConcurrentDictionary<LabelValues, TChild>();
 
@@ -17,10 +18,8 @@ namespace Prometheus.Client.Collectors
         {
             Configuration = configuration;
             Unlabelled = CreateLabelled(LabelValues.Empty);
-            MetricNames = new[] { Configuration.Name };
+            _metricNames = new[] { Configuration.Name };
         }
-
-        public IReadOnlyList<string> MetricNames { get; }
 
         public IEnumerable<KeyValuePair<LabelValues, TChild>> Labelled => EnumerateLabelled();
 
@@ -30,7 +29,11 @@ namespace Prometheus.Client.Collectors
 
         protected internal TChild Unlabelled { get; }
 
-        public void Collect(IMetricsWriter writer)
+        ICollectorConfiguration ICollector.Configuration => Configuration;
+
+        IReadOnlyList<string> ICollector.MetricNames => _metricNames;
+
+        void ICollector.Collect(IMetricsWriter writer)
         {
             writer.WriteMetricHeader(Configuration.Name, Type, Configuration.Help);
             Unlabelled.Collect(writer);

@@ -5,8 +5,10 @@ namespace Prometheus.Client.Collectors.Abstractions
 {
     public interface ICollector
     {
-        void Collect(IMetricsWriter writer);
+        ICollectorConfiguration Configuration { get; }
 
         IReadOnlyList<string> MetricNames { get; }
+
+        void Collect(IMetricsWriter writer);
     }
 }
