@@ -12,8 +12,11 @@ namespace Prometheus.Client.Collectors.DotNetStats
 
         public GCTotalMemoryCollector()
         {
+            Configuration = new CollectorConfiguration(nameof(GCTotalMemoryCollector));
             MetricNames = new[] { _name };
         }
+
+        public ICollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

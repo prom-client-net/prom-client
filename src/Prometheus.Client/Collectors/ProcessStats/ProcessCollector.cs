@@ -30,6 +30,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
         public ProcessCollector(Process process)
         {
             _process = process;
+            Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = _process.StartTime.ToUniversalTime().ToUnixTimeSeconds();
             MetricNames = new[]
@@ -43,6 +44,8 @@ namespace Prometheus.Client.Collectors.ProcessStats
                 _startTimeSecondsName,
             };
         }
+
+        public ICollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

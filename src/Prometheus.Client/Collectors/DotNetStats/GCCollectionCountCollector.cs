@@ -12,8 +12,11 @@ namespace Prometheus.Client.Collectors.DotNetStats
 
         public GCCollectionCountCollector()
         {
+            Configuration = new CollectorConfiguration(nameof(GCCollectionCountCollector));
             MetricNames = new[] { _name };
         }
+
+        public ICollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

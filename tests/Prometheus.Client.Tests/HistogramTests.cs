@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NSubstitute;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tests.Resources;
 using Xunit;
@@ -81,8 +82,8 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    histogram1.Collect(writer);
-                    histogram2.Collect(writer);
+                    ((ICollector)histogram1).Collect(writer);
+                    ((ICollector)histogram2).Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -110,7 +111,7 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    histogram.Collect(writer);
+                    ((ICollector)histogram).Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -133,7 +134,7 @@ namespace Prometheus.Client.Tests
 
             var histogram1 = CreateHistogram1(factory);
 
-            histogram1.Collect(writer);
+            ((ICollector)histogram1).Collect(writer);
 
             Received.InOrder(() =>
             {

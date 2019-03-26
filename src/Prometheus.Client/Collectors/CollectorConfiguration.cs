@@ -1,6 +1,8 @@
+using Prometheus.Client.Collectors.Abstractions;
+
 namespace Prometheus.Client.Collectors
 {
-    public class CollectorConfiguration
+    public class CollectorConfiguration : ICollectorConfiguration
     {
         public CollectorConfiguration(string name)
         {

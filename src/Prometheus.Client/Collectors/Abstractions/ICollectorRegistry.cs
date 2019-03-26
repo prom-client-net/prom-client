@@ -5,13 +5,13 @@ namespace Prometheus.Client.Collectors.Abstractions
 {
     public interface ICollectorRegistry
     {
-        void Add(string name, ICollector collector);
+        void Add(ICollector collector);
 
         bool TryGet(string name, out ICollector collector);
 
         TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
-            where TConfig: CollectorConfiguration;
+            where TConfig: ICollectorConfiguration;
 
         ICollector Remove(string name);
 

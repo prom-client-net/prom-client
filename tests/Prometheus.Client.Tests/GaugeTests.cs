@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using NSubstitute;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tests.Resources;
 using Xunit;
@@ -84,8 +85,8 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    gauge.Collect(writer);
-                    gauge2.Collect(writer);
+                    ((ICollector)gauge).Collect(writer);
+                    ((ICollector)gauge2).Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -113,7 +114,7 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    gauge.Collect(writer);
+                    ((ICollector)gauge).Collect(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -161,7 +162,7 @@ namespace Prometheus.Client.Tests
 
             gauge.Inc(3.2);
 
-            gauge.Collect(writer);
+            ((ICollector)gauge).Collect(writer);
 
             Received.InOrder(() =>
             {
