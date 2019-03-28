@@ -20,6 +20,7 @@ namespace Prometheus.Client.MetricsWriter
 #endif
         private static readonly Encoding _encoding = new UTF8Encoding(false);
 
+        private static readonly byte[] _encodingPreamble = _encoding.GetPreamble();
         private static readonly byte[] _commentPrefix = _encoding.GetBytes("#");
         private static readonly byte[] _tokenSeparator = _encoding.GetBytes(" ");
         private static readonly byte[] _helpPrefix = _encoding.GetBytes("HELP");
@@ -43,7 +44,7 @@ namespace Prometheus.Client.MetricsWriter
         {
             _stream = stream;
             _buffer = _arrayPool.Rent(1024);
-            Write(_encoding.GetPreamble());
+            Write(_encodingPreamble);
         }
 
         // Should use finalizer to ensure _buffer returned into pool.
@@ -158,7 +159,7 @@ namespace Prometheus.Client.MetricsWriter
 
         public ISampleWriter WriteValue(double value)
         {
-            ValidateState(nameof(WriteLabel), WriterState.SampleStarted | WriterState.LabelsClosed);
+            ValidateState(nameof(WriteValue), WriterState.SampleStarted | WriterState.LabelsClosed);
             Write(_tokenSeparator);
             Write(value);
             _state = WriterState.ValueWritten;
