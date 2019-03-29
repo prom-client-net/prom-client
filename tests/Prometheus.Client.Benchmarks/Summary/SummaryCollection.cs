@@ -35,7 +35,7 @@ namespace Prometheus.Client.Benchmarks.Summary
         [Benchmark]
         public void Collect()
         {
-            ScrapeHandler.Process(_registry, _stream);
+            ScrapeHandler.ProcessAsync(_registry, _stream).GetAwaiter().GetResult();
         }
     }
 }

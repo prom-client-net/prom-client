@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
@@ -153,7 +154,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CanCollectAll()
+        public async Task CanCollectAll()
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -169,7 +170,7 @@ namespace Prometheus.Client.Tests
             {
                 using (var writer = new MetricsTextWriter(stream))
                 {
-                    registry.CollectTo(writer);
+                    await registry.CollectToAsync(writer);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);

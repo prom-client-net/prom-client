@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 #if NETCORE
 using System.Buffers.Text;
 #else
@@ -14,7 +15,8 @@ namespace Prometheus.Client.MetricsWriter
 {
     internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelWriter
     {
-        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Shared;
+        private const int _defaultBufferSize = 10240;
+        private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Create(_defaultBufferSize, 100);
 #if NETCORE
         private static readonly ArrayPool<char> _charPool = ArrayPool<char>.Shared;
 #endif
@@ -34,6 +36,7 @@ namespace Prometheus.Client.MetricsWriter
         private static readonly IReadOnlyDictionary<MetricType, byte[]> _metricTypesMap = BuildMetricTypesMap();
 
         private readonly Stream _stream;
+        private readonly Queue<ArraySegment<byte>> _chunks;
         private byte[] _buffer;
         private int _position;
         private string _currentMetricName;
@@ -43,19 +46,20 @@ namespace Prometheus.Client.MetricsWriter
         public MetricsTextWriter(Stream stream)
         {
             _stream = stream;
-            _buffer = _arrayPool.Rent(1024);
+            _buffer = _arrayPool.Rent(_defaultBufferSize);
+            _chunks = new Queue<ArraySegment<byte>>();
             Write(_encodingPreamble);
         }
 
         // Should use finalizer to ensure _buffer returned into pool.
         ~MetricsTextWriter()
         {
-            Dispose(false);
+            CleanUp();
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            CleanUp();
             GC.SuppressFinalize(this);
         }
 
@@ -192,11 +196,38 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        public void Close()
+        public Task CloseWriterAsync()
         {
             Write(_newLine);
-            Flush();
             _state = WriterState.Closed;
+
+            return FlushInternalAsync(true);
+        }
+
+        public Task FlushAsync()
+        {
+            if (_chunks.Count == 0 && _position == 0)
+            {
+                return Task.CompletedTask;
+            }
+
+            return FlushInternalAsync(false);
+        }
+
+        private async Task FlushInternalAsync(bool freeUpCurrentBuffer)
+        {
+            while (_chunks.Count > 0)
+            {
+                var chunk = _chunks.Dequeue();
+                await _stream.WriteAsync(chunk.Array, chunk.Offset, chunk.Count).ConfigureAwait(false);
+                _arrayPool.Return(chunk.Array);
+            }
+
+            await _stream.WriteAsync(_buffer, 0, _position).ConfigureAwait(false);
+            if (freeUpCurrentBuffer)
+                _arrayPool.Return(_buffer);
+
+            _position = 0;
         }
 
         private static IReadOnlyDictionary<MetricType, byte[]> BuildMetricTypesMap()
@@ -226,10 +257,11 @@ namespace Prometheus.Client.MetricsWriter
             var buff = _charPool.Rent(32);
             try
             {
-                EnsureBufferCapacity(buff.Length);
-
                 value.TryFormat(buff, out var charsize);
-                var size = _encoding.GetBytes(buff, 0, charsize, _buffer, _position);
+                var size = _encoding.GetByteCount(buff, 0, charsize);
+
+                EnsureBufferCapacity(size);
+                _encoding.GetBytes(buff, 0, charsize, _buffer, _position);
                 _position += size;
             }
             finally
@@ -246,24 +278,8 @@ namespace Prometheus.Client.MetricsWriter
             var size = _encoding.GetByteCount(value);
             EnsureBufferCapacity(size);
 
-            if (size > _buffer.Length)
-            {
-                var buff = _arrayPool.Rent(size);
-                try
-                {
-                    _encoding.GetBytes(value, 0, value.Length, buff, 0);
-                    _stream.Write(buff, 0, size);
-                }
-                finally
-                {
-                    _arrayPool.Return(buff);
-                }
-            }
-            else
-            {
-                _encoding.GetBytes(value, 0, value.Length, _buffer, _position);
-                _position += size;
-            }
+            _encoding.GetBytes(value, 0, value.Length, _buffer, _position);
+            _position += size;
         }
 
         private void Write(byte[] bytes)
@@ -275,44 +291,35 @@ namespace Prometheus.Client.MetricsWriter
         {
             EnsureBufferCapacity(len);
 
-            if (len > _buffer.Length)
-            {
-                _stream.Write(bytes, 0, len);
-            }
-            else
-            {
-                Array.Copy(bytes, 0, _buffer, _position, len);
-                _position += len;
-            }
+            Array.Copy(bytes, 0, _buffer, _position, len);
+            _position += len;
         }
 
-        private void Dispose(bool disposing)
+        private void CleanUp()
         {
-            if (_buffer == null)
-                return;
+            if (_buffer != null)
+            {
+                _arrayPool.Return(_buffer);
+                _buffer = null;
+            }
 
-            if (disposing && _state != WriterState.Closed)
-                Close();
-
-            _arrayPool.Return(_buffer);
-            _buffer = null;
+            while (_chunks.Count > 0)
+            {
+                var chunk = _chunks.Dequeue();
+                _arrayPool.Return(chunk.Array);
+            }
         }
 
         // Ensure if current buffer has neccesary space available for next write
-        // if there is not enough space available - flush it
+        // if there is not enough space available - rotate the buffers
         private void EnsureBufferCapacity(int requiredCapacity)
         {
             if ((_buffer.Length - _position) < requiredCapacity)
-                Flush();
-        }
-
-        private void Flush()
-        {
-            if (_position == 0)
-                return;
-
-            _stream.Write(_buffer, 0, _position);
-            _position = 0;
+            {
+                _chunks.Enqueue(new ArraySegment<byte>(_buffer, 0, _position));
+                _buffer = _arrayPool.Rent(Math.Max(requiredCapacity, _defaultBufferSize));
+                _position = 0;
+            }
         }
 
         [Flags]
