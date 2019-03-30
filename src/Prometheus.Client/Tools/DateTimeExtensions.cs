@@ -2,7 +2,7 @@ using System;
 
 namespace Prometheus.Client.Tools
 {
-    public static class DateTimeExtensions
+    internal static class DateTimeExtensions
     {
         private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 

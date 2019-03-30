@@ -9,12 +9,17 @@ namespace Prometheus.Client
     public enum DurationUnit
     {
         Milliseconds,
-        Seconds,
+        Seconds
     }
 
     public static class ValueObserverExtensions
     {
-        public static void ObserveDuration(this IValueObserver observer, Action method, DurationUnit unit = DurationUnit.Seconds)
+        public static void ObserveDuration(this IValueObserver observer, Action method)
+        {
+            ObserveDuration(observer, method, DurationUnit.Seconds);
+        }
+
+        public static void ObserveDuration(this IValueObserver observer, Action method, DurationUnit unit)
         {
             var stopwatch = Stopwatch.StartNew();
             try
@@ -27,7 +32,12 @@ namespace Prometheus.Client
             }
         }
 
-        public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, DurationUnit unit = DurationUnit.Seconds)
+        public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method)
+        {
+            return ObserveDuration(observer, method, DurationUnit.Seconds);
+        }
+
+        public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, DurationUnit unit)
         {
             var stopwatch = Stopwatch.StartNew();
             try
@@ -40,7 +50,12 @@ namespace Prometheus.Client
             }
         }
 
-        public async static Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, DurationUnit unit = DurationUnit.Seconds)
+        public static Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method)
+        {
+            return ObserveDurationAsync(observer, method, DurationUnit.Seconds);
+        }
+
+        public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, DurationUnit unit)
         {
             var stopwatch = Stopwatch.StartNew();
             try
@@ -53,7 +68,12 @@ namespace Prometheus.Client
             }
         }
 
-        public async static Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, DurationUnit unit = DurationUnit.Seconds)
+        public static Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method)
+        {
+            return ObserveDurationAsync(observer, method, DurationUnit.Seconds);
+        }
+
+        public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, DurationUnit unit)
         {
             var stopwatch = Stopwatch.StartNew();
             try
