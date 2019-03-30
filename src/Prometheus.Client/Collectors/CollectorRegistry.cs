@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -149,14 +150,17 @@ namespace Prometheus.Client.Collectors
             return !string.IsNullOrEmpty(key);
         }
 
-        public void CollectTo(IMetricsWriter writer)
+        public async Task CollectToAsync(IMetricsWriter writer)
         {
             var wrapped = new MetricWriterWrapper(writer);
             foreach (var collector in _enumerableCollectors.Value)
             {
                 wrapped.SetCurrentCollector(collector);
                 collector.Collect(wrapped);
+                await writer.FlushAsync().ConfigureAwait(false);
             }
+
+            await writer.CloseWriterAsync().ConfigureAwait(false);
         }
 
         private void RemoveCollector(string key, ICollector collector)

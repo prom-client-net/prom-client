@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -6,19 +7,19 @@ namespace Prometheus.Client
 {
     public static class ScrapeHandler
     {
-        public static void Process(ICollectorRegistry registry, Stream outputStream)
+        public static async Task ProcessAsync(ICollectorRegistry registry, Stream outputStream)
         {
             using (var metricsWriter = new MetricsTextWriter(outputStream))
             {
-                registry.CollectTo(metricsWriter);
+                await registry.CollectToAsync(metricsWriter);
             }
         }
 
-        public static MemoryStream Process(ICollectorRegistry registry)
+        public static async Task<MemoryStream> ProcessAsync(ICollectorRegistry registry)
         {
             // leave open
             var stream = new MemoryStream();
-            Process(registry, stream);
+            await ProcessAsync(registry, stream);
             stream.Position = 0;
             return stream;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
@@ -66,7 +67,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void Collection()
+        public async Task Collection()
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -87,6 +88,7 @@ namespace Prometheus.Client.Tests
                 {
                     ((ICollector)gauge).Collect(writer);
                     ((ICollector)gauge2).Collect(writer);
+                    await writer.CloseWriterAsync();
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -101,7 +103,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void EmptyCollection()
+        public async Task EmptyCollection()
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
@@ -115,6 +117,7 @@ namespace Prometheus.Client.Tests
                 using (var writer = new MetricsTextWriter(stream))
                 {
                     ((ICollector)gauge).Collect(writer);
+                    await writer.CloseWriterAsync();
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);

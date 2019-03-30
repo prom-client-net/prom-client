@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 
@@ -23,9 +24,14 @@ namespace Prometheus.Client.Collectors
             _currentCollector = collector;
         }
 
-        public void Close()
+        public Task FlushAsync()
         {
-            _baseWriter.Close();
+            return _baseWriter.FlushAsync();
+        }
+
+        public Task CloseWriterAsync()
+        {
+            return _baseWriter.CloseWriterAsync();
         }
 
         public void Dispose()

@@ -37,7 +37,7 @@ namespace Prometheus.Client.Benchmarks.Gauge
         [Benchmark]
         public void Collect()
         {
-            ScrapeHandler.Process(_registry, _stream);
+            ScrapeHandler.ProcessAsync(_registry, _stream).GetAwaiter().GetResult();
         }
     }
 }
