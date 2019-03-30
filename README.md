@@ -11,17 +11,17 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
+Supports: 
+<img src="https://img.shields.io/badge/.netstandard-1.3-green.svg"></img>
+<img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>
+<img src="https://img.shields.io/badge/.netcore-2.2-green.svg"></img>
 
-It's a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), 
-prometheus-net didn't develop a long time. This is alternative was created with the possibility of rapid development:
-
-- Support <img src="https://img.shields.io/badge/.netstandard-1.3-green.svg"></img> 
-and <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>.
+It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
+- Keep posibility of rapid development.
+- Extensibility is one of the core values, together with performance and minimal allocation.
 - More Extensions. Extensions extracted to packages. 
-- There are differences in the internal implementation: MetricServer, MetricPusher, Middleware.
 - Each build is publish to MyGet. There is an opportunity to test development versions.
-- All developments in prometheus-net will be analyzed and will implement as necessary.
-- The goal is to be able to flexibly write extensions. And keep the speed of development.
+- We are open for suggestions and new ideas, contribution is always welcomed.
 
 
 ## Installation
