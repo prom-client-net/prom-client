@@ -159,8 +159,10 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            factory.CreateCounter("test", "with help text").Inc();
-            var gauge = factory.CreateGauge("gauge", "with help text", "group", "type");
+            factory.CreateCounter("www", "help").Inc(99);
+            factory.CreateCounter("ap", "text").Inc(5);
+            factory.CreateCounter("counter", string.Empty).Inc();
+            var gauge = factory.CreateGauge("abc", "with help text", "group", "type");
             gauge.Inc();
             gauge.WithLabels("any", "2").Dec(5);
 

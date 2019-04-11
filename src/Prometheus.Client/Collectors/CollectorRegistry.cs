@@ -210,17 +210,21 @@ namespace Prometheus.Client.Collectors
 
         private IEnumerable<ICollector> GetImmutableValueCollection()
         {
+            ICollector[] collectors = null;
+
             _lock.EnterReadLock();
             try
             {
-                var collectors = new ICollector[_collectors.Count];
+                collectors = new ICollector[_collectors.Count];
                 _collectors.Values.CopyTo(collectors, 0);
-                return collectors;
             }
             finally
             {
                 _lock.ExitReadLock();
             }
+
+            Array.Sort(collectors, (a, b) => String.Compare(a.Configuration.Name, b.Configuration.Name));
+            return collectors;
         }
     }
 }
