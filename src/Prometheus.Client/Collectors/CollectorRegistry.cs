@@ -223,7 +223,7 @@ namespace Prometheus.Client.Collectors
                 _lock.ExitReadLock();
             }
 
-            Array.Sort(collectors, (a, b) => String.Compare(a.Configuration.Name, b.Configuration.Name));
+            Array.Sort(collectors, (a, b) => string.Compare(a.Configuration.Name, b.Configuration.Name, StringComparison.OrdinalIgnoreCase));
             return collectors;
         }
     }
