@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client.MetricsWriter
 {

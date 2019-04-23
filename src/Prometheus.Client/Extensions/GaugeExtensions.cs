@@ -1,7 +1,7 @@
 using System;
-using Prometheus.Client.Tools;
+using Prometheus.Client.Abstractions;
 
-namespace Prometheus.Client.Abstractions
+namespace Prometheus.Client.Extensions
 {
     public static class GaugeExtensions
     {

@@ -6,6 +6,7 @@ using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.MetricsWriter.Abstractions;
 using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client

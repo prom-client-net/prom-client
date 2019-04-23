@@ -1,6 +1,6 @@
 using System;
 
-namespace Prometheus.Client.Tools
+namespace Prometheus.Client.Extensions
 {
     internal static class DateTimeExtensions
     {

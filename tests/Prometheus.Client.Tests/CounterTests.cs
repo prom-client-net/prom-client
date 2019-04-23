@@ -5,6 +5,7 @@ using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.MetricsWriter.Abstractions;
 using Prometheus.Client.Tests.Resources;
 using Xunit;
 

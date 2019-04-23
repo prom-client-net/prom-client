@@ -1,4 +1,4 @@
-namespace Prometheus.Client.MetricsWriter
+namespace Prometheus.Client.MetricsWriter.Abstractions
 {
     public interface ISampleWriter
     {

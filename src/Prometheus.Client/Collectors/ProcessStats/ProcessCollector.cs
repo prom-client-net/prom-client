@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
-using Prometheus.Client.Tools;
+using Prometheus.Client.Extensions;
+using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client.Collectors.ProcessStats
 {

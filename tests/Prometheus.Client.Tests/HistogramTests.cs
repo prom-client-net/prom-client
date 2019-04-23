@@ -5,6 +5,7 @@ using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.MetricsWriter.Abstractions;
 using Prometheus.Client.Tests.Resources;
 using Xunit;
 
@@ -106,7 +107,7 @@ namespace Prometheus.Client.Tests
             var factory = new MetricFactory(registry);
 
             var histogram = factory.CreateHistogram("hist1", "help", false, false, new[] { 1.0, 2.0, 3.0 });
-            
+
             string formattedText = null;
 
             using (var stream = new MemoryStream())

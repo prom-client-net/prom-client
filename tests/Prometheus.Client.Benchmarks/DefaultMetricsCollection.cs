@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Engines;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks

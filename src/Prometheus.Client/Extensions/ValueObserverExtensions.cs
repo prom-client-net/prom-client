@@ -4,16 +4,20 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Prometheus.Client.Abstractions;
 
-namespace Prometheus.Client
+namespace Prometheus.Client.Extensions
 {
-    public enum DurationUnit
-    {
-        Milliseconds,
-        Seconds
-    }
-
     public static class ValueObserverExtensions
     {
+        public static void Observe(this IValueObserver observer, double val, DateTime timestamp)
+        {
+            observer.Observe(val, timestamp.ToUnixTime());
+        }
+
+        public static void Observe(this IValueObserver observer, double val, DateTimeOffset timestamp)
+        {
+            observer.Observe(val, timestamp.ToUnixTime());
+        }
+
         public static void ObserveDuration(this IValueObserver observer, Action method)
         {
             ObserveDuration(observer, method, DurationUnit.Seconds);
