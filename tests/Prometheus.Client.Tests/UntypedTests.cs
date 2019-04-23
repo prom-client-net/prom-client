@@ -112,7 +112,7 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var untyped = factory.CreateUntyped("test", "with help text", "category");
+            var untyped = factory.CreateUntyped("test", "with help text", false, false, "category");
             
             string formattedText = null;
 

@@ -12,6 +12,7 @@ namespace Prometheus.Client
     {
         private LabelValues _labelValues;
         private long _timestamp;
+        private long _hasObservation = 0;
         protected TConfig Configuration;
 
         protected IReadOnlyList<KeyValuePair<string, string>> Labels => _labelValues.Labels;
@@ -27,6 +28,8 @@ namespace Prometheus.Client
             }
         }
 
+        public bool HasObservations => Interlocked.Read(ref _hasObservation) != 0;
+
         protected internal virtual void Init(LabelValues labelValues, TConfig configuration)
         {
             _labelValues = labelValues;
@@ -37,6 +40,8 @@ namespace Prometheus.Client
 
         protected void TimestampIfRequired(long? timestamp = null)
         {
+            Interlocked.Exchange(ref _hasObservation, 1);
+
             if (!Configuration.IncludeTimestamp)
                 return;
 

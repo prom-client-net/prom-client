@@ -10,11 +10,12 @@ namespace Prometheus.Client
         private static readonly Regex _metricNameLabelRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$", RegexOptions.Compiled);
         private static readonly Regex _reservedLabelRegex = new Regex("^__.*$", RegexOptions.Compiled);
 
-        public MetricConfiguration(string name, string help, bool includeTimestamp, IReadOnlyList<string> labels)
+        public MetricConfiguration(string name, string help, bool includeTimestamp, bool suppressEmptySamples, IReadOnlyList<string> labels)
             : base(name)
         {
             Help = help;
             IncludeTimestamp = includeTimestamp;
+            SuppressEmptySamples = suppressEmptySamples;
             LabelNames = labels ?? Array.Empty<string>();
 
             if (!_metricNameLabelRegex.IsMatch(Name))
@@ -33,6 +34,8 @@ namespace Prometheus.Client
         public string Help { get; }
 
         public bool IncludeTimestamp { get; }
+
+        public bool SuppressEmptySamples { get; }
 
         public IReadOnlyList<string> LabelNames { get; }
     }

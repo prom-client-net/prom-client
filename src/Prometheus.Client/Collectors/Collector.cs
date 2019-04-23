@@ -36,10 +36,14 @@ namespace Prometheus.Client.Collectors
         void ICollector.Collect(IMetricsWriter writer)
         {
             writer.WriteMetricHeader(Configuration.Name, Type, Configuration.Help);
-            Unlabelled.Collect(writer);
+            if(!Configuration.SuppressEmptySamples || Unlabelled.HasObservations)
+                Unlabelled.Collect(writer);
 
             foreach (var labelledMetric in LabelledMetrics)
-                labelledMetric.Value.Collect(writer);
+            {
+                if(!Configuration.SuppressEmptySamples || labelledMetric.Value.HasObservations)
+                    labelledMetric.Value.Collect(writer);
+            }
 
             writer.EndMetric();
         }

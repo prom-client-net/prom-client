@@ -141,7 +141,7 @@ namespace Prometheus.Client.Tests
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            var counter = factory.CreateCounter("test", "with help text", "category");
+            var counter = factory.CreateCounter("test", "with help text", false, false, "category");
             
             string formattedText = null;
 
@@ -162,6 +162,36 @@ namespace Prometheus.Client.Tests
             }
 
             Assert.Equal(ResourcesHelper.GetFileContent("CounterTests_Empty.txt"), formattedText);
+        }
+
+        [Fact]
+        public async Task SuppressEmptySamples()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var counter = factory.CreateCounter("test", "with help text", "category");
+            counter.WithLabels("some").Inc(5);
+
+            string formattedText = null;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    ((ICollector)counter).Collect(writer);
+                    await writer.CloseWriterAsync();
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("CounterTests_SuppressEmpty.txt"), formattedText);
         }
 
         [Fact]

@@ -244,12 +244,13 @@ namespace Prometheus.Client
                 string name,
                 string help,
                 bool includeTimestamp,
+                bool suppressEmptySamples,
                 IReadOnlyList<string> labelNames,
                 IReadOnlyList<QuantileEpsilonPair> objectives = null,
                 TimeSpan? maxAge = null,
                 int? ageBuckets = null,
                 int? bufCap = null)
-            : base(name, help, includeTimestamp, labelNames)
+            : base(name, help, includeTimestamp, suppressEmptySamples, labelNames)
             {
                 Objectives = objectives;
                 if (Objectives == null || Objectives.Count == 0)
