@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Prometheus.Client.Abstractions;
 
-namespace Prometheus.Client.Extensions
+namespace Prometheus.Client
 {
     public static class ValueObserverExtensions
     {

@@ -1,7 +1,7 @@
 using System;
 using Prometheus.Client.Abstractions;
 
-namespace Prometheus.Client.Extensions
+namespace Prometheus.Client
 {
     public static class CounterExtensions
     {
