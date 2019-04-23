@@ -142,7 +142,7 @@ namespace Prometheus.Client.Tests
             var factory = new MetricFactory(registry);
 
             var counter = factory.CreateCounter("test", "with help text", false, false, "category");
-            
+
             string formattedText = null;
 
             using (var stream = new MemoryStream())

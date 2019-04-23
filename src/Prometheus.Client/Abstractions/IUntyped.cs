@@ -1,6 +1,3 @@
-using System;
-using Prometheus.Client.Tools;
-
 namespace Prometheus.Client.Abstractions
 {
     /// <summary>
@@ -13,18 +10,5 @@ namespace Prometheus.Client.Abstractions
         void Set(double val);
 
         void Set(double val, long? timestamp);
-    }
-
-    public static class UntypedExtensions
-    {
-        public static void Set(this IUntyped untyped, double val, DateTime timestamp)
-        {
-            untyped.Set(val, timestamp.ToUnixTime());
-        }
-
-        public static void Set(this IUntyped untyped, double val, DateTimeOffset timestamp)
-        {
-            untyped.Set(val, timestamp.ToUnixTime());
-        }
     }
 }

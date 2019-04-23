@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Prometheus.Client.Abstractions
 {
     /// <summary>
@@ -10,21 +8,5 @@ namespace Prometheus.Client.Abstractions
     /// </summary>
     public interface ISummary : IMetric<SummaryState>, IValueObserver
     {
-    }
-
-    public readonly struct SummaryState
-    {
-        public SummaryState(long count, double sum, IReadOnlyList<KeyValuePair<double, double>> quantiles)
-        {
-            Count = count;
-            Sum = sum;
-            Quantiles = quantiles;
-        }
-
-        public long Count { get; }
-
-        public double Sum { get; }
-
-        public IReadOnlyList<KeyValuePair<double, double>> Quantiles { get; }
     }
 }

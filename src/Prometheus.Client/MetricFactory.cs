@@ -373,12 +373,12 @@ namespace Prometheus.Client
             return null;
         }
 
-        private void ValidateLabelNames(IReadOnlyList<string> expectedNames, IReadOnlyList<string> actualNames)
+        private static void ValidateLabelNames(IReadOnlyList<string> expectedNames, IReadOnlyList<string> actualNames)
         {
             expectedNames = expectedNames ?? Array.Empty<string>();
             actualNames = actualNames ?? Array.Empty<string>();
 
-            if (!Enumerable.SequenceEqual(expectedNames, actualNames))
+            if (!expectedNames.SequenceEqual(actualNames))
                 throw new ArgumentException("Collector with same name must have same label names");
         }
     }

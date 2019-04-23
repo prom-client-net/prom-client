@@ -140,7 +140,14 @@ namespace Prometheus.Client
         /// <param name="maxAge">.</param>
         /// <param name="ageBuckets">.</param>
         /// <param name="bufCap">.</param>
-        public static Summary CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets, int? bufCap)
+        public static Summary CreateSummary(
+            string name,
+            string help,
+            string[] labelNames,
+            IReadOnlyList<QuantileEpsilonPair> objectives,
+            TimeSpan maxAge,
+            int? ageBuckets,
+            int? bufCap)
         {
             return DefaultFactory.CreateSummary(name, help, false, labelNames, objectives, maxAge, ageBuckets, bufCap);
         }
@@ -156,7 +163,13 @@ namespace Prometheus.Client
         /// <param name="maxAge">.</param>
         /// <param name="ageBuckets">.</param>
         /// <param name="bufCap">.</param>
-        public static Summary CreateSummary(string name, string help, bool includeTimestamp, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan? maxAge,
+        public static Summary CreateSummary(
+            string name,
+            string help,
+            bool includeTimestamp,
+            string[] labelNames,
+            IReadOnlyList<QuantileEpsilonPair> objectives, 
+            TimeSpan? maxAge,
             int? ageBuckets,
             int? bufCap)
         {

@@ -178,7 +178,7 @@ namespace Prometheus.Client
                 }
             }
 
-            // FlushBuffer needs mtx AND bufMtx locked. 
+            // FlushBuffer needs mtx AND bufMtx locked.
             private void FlushBuffer(DateTime now)
             {
                 for (int bufIdx = 0; bufIdx < _buffer.Position; bufIdx++)

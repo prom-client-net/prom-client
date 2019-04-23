@@ -8,7 +8,7 @@ using Prometheus.Client.Tools;
 namespace Prometheus.Client
 {
     public abstract class Labelled<TConfig>
-        where TConfig: MetricConfiguration
+        where TConfig : MetricConfiguration
     {
         private LabelValues _labelValues;
         private long _timestamp;
