@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter.Abstractions;
-using Prometheus.Client.Extensions;
 
 namespace Prometheus.Client
 {
