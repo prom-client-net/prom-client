@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client.Collectors
 {
@@ -210,7 +210,7 @@ namespace Prometheus.Client.Collectors
 
         private IEnumerable<ICollector> GetImmutableValueCollection()
         {
-            ICollector[] collectors = null;
+            ICollector[] collectors;
 
             _lock.EnterReadLock();
             try

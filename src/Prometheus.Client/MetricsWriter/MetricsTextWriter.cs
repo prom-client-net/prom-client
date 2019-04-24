@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Prometheus.Client.MetricsWriter.Abstractions;
 #if NETCORE
 using System.Buffers.Text;
 #else

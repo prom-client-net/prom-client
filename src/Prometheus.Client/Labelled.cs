@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.MetricsWriter;
-using Prometheus.Client.Tools;
+using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client
 {

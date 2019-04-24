@@ -5,6 +5,7 @@ using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
+using Prometheus.Client.MetricsWriter.Abstractions;
 using Prometheus.Client.Tests.Resources;
 using Xunit;
 
@@ -109,8 +110,8 @@ namespace Prometheus.Client.Tests
             var factory = new MetricFactory(registry);
 
             var gauge = factory.CreateGauge("test", "with help text", false, false, "category");
-           
-            string formattedText = null;
+
+            string formattedText;
 
             using (var stream = new MemoryStream())
             {
