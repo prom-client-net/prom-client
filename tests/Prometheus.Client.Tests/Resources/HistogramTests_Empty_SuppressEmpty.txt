@@ -1,0 +1,2 @@
+# HELP hist1 help
+# TYPE hist1 histogram

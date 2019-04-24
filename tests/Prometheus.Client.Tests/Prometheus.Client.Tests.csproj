@@ -17,6 +17,7 @@
     <EmbeddedResource Include="Resources\GaugeTests_SuppressEmpty.txt" />
     <EmbeddedResource Include="Resources\GaugeTests_Collection.txt" />
     <EmbeddedResource Include="Resources\GaugeTests_Empty.txt" />
+    <EmbeddedResource Include="Resources\HistogramTests_Empty_SuppressEmpty.txt" />
     <EmbeddedResource Include="Resources\HistogramTests_SuppressEmpty.txt" />
     <EmbeddedResource Include="Resources\HistogramTests_Collection.txt" />
     <EmbeddedResource Include="Resources\HistogramTests_Empty.txt" />

@@ -166,6 +166,35 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public async Task Empty_SuppressEmpty()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var histogram = factory.CreateHistogram("hist1", "help", new[] { -5.0, 0, 5.0, 10 }, "type");
+            // No any Observe
+            string formattedText;
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new MetricsTextWriter(stream))
+                {
+                    ((ICollector)histogram).Collect(writer);
+                    await writer.CloseWriterAsync();
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    formattedText = streamReader.ReadToEnd();
+                }
+            }
+
+            Assert.Equal(ResourcesHelper.GetFileContent("HistogramTests_Empty_SuppressEmpty.txt"), formattedText);
+        }
+
+        [Fact]
         public void MetricsWriterApiUsage()
         {
             var writer = Substitute.For<IMetricsWriter>();
