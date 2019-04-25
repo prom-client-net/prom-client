@@ -191,7 +191,7 @@ namespace Prometheus.Client.MetricsWriter
 
         public IMetricsWriter EndMetric()
         {
-            ValidateState(nameof(EndMetric), WriterState.SampleClosed);
+            ValidateState(nameof(EndMetric), WriterState.SampleClosed | WriterState.MetricStarted | WriterState.TypeWritten | WriterState.HelpWritten);
             _currentMetricName = string.Empty;
             _state = WriterState.MetricClosed;
             return this;
