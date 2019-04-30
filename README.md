@@ -55,12 +55,12 @@ Without extensions:
 public class MetricsController : Controller
 {
     [HttpGet]
-    public Task Get()
+    public async Task Get()
     {
         Response.StatusCode = 200;
         using (var outputStream = Response.Body)
         {
-            return ScrapeHandler.ProcessAsync(Metrics.DefaultRegistry, outputStream);
+            return await ScrapeHandler.ProcessAsync(Metrics.DefaultRegistry, outputStream);
         }
     }
 }
