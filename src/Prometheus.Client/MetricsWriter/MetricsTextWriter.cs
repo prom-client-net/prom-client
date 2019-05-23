@@ -226,7 +226,10 @@ namespace Prometheus.Client.MetricsWriter
 
             await _stream.WriteAsync(_buffer, 0, _position).ConfigureAwait(false);
             if (freeUpCurrentBuffer)
+            {
                 _arrayPool.Return(_buffer);
+                _buffer = null;
+            }
 
             _position = 0;
         }
