@@ -79,7 +79,7 @@ namespace Prometheus.Client.Tests
 
             var untyped = factory.CreateUntyped("test", "with help text", "category");
             untyped.Set(1);
-            untyped.WithLabels("some").Set(2);
+            untyped.WithLabels("some").Set(double.NaN);
 
             var untyped2 = factory.CreateUntyped("nextuntyped", "with help text", "group", "type");
             untyped2.Set(10);
@@ -114,7 +114,6 @@ namespace Prometheus.Client.Tests
             var factory = new MetricFactory(registry);
 
             var untyped = factory.CreateUntyped("test", "with help text", false, false, "category");
-            
             string formattedText = null;
 
             using (var stream = new MemoryStream())
@@ -187,6 +186,18 @@ namespace Prometheus.Client.Tests
             untyped.Set(2);
 
             Assert.Equal(2, untyped.Value);
+        }
+
+        [Fact]
+        public void ShouldAllowNaNValue()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var untyped = factory.CreateUntyped("test_untyped", string.Empty);
+            untyped.Set(double.NaN);
+
+            Assert.Equal(double.NaN, untyped.Value);
         }
     }
 }
