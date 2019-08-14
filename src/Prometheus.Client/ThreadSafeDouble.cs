@@ -26,6 +26,9 @@ namespace Prometheus.Client
                 long initialValue = Interlocked.Read(ref _value);
                 double computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
 
+                if (double.IsNaN(computedValue))
+                    throw new InvalidOperationException("Cannot increment the NaN value.");
+
                 if (initialValue == Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), initialValue))
                     return;
             }

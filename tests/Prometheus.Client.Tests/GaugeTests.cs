@@ -81,6 +81,9 @@ namespace Prometheus.Client.Tests
             gauge2.Inc(1);
             gauge2.WithLabels("any", "2").Dec(5);
 
+            var nanGauge = factory.CreateGauge("nangauge", "example of NaN");
+            nanGauge.Set(double.NaN);
+
             string formattedText = null;
 
             using (var stream = new MemoryStream())
@@ -89,6 +92,7 @@ namespace Prometheus.Client.Tests
                 {
                     ((ICollector)gauge).Collect(writer);
                     ((ICollector)gauge2).Collect(writer);
+                    ((ICollector)nanGauge).Collect(writer);
                     await writer.CloseWriterAsync();
                 }
 
@@ -263,6 +267,45 @@ namespace Prometheus.Client.Tests
             gauge.Inc(2);
 
             Assert.Equal(2, gauge.Value);
+        }
+
+        [Fact]
+        public void ShouldAllowNaN()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+
+            gauge.Set(double.NaN);
+
+            Assert.Equal(double.NaN, gauge.Value);
+        }
+
+        [Fact]
+        public void ShouldThrowOnIncIfNaN()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+
+            gauge.Set(double.NaN);
+
+            Assert.Throws<InvalidOperationException>(() => gauge.Inc());
+        }
+
+        [Fact]
+        public void ShouldThrowOnDecIfNaN()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGauge("test_gauge", string.Empty);
+
+            gauge.Set(double.NaN);
+
+            Assert.Throws<InvalidOperationException>(() => gauge.Dec());
         }
     }
 }
