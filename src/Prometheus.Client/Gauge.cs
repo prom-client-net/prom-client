@@ -87,9 +87,6 @@ namespace Prometheus.Client
 
             public void Set(double val, long? timestamp)
             {
-                if (double.IsNaN(val))
-                    return;
-
                 _value.Value = val;
                 TimestampIfRequired(timestamp);
             }
