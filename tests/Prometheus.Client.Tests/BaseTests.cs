@@ -6,7 +6,6 @@ namespace Prometheus.Client.Tests
     {
         public static IEnumerable<object[]> GetLabels()
         {
-            yield return new object[] { };
             yield return new object[] { null };
             yield return new object[] { null, null };
             yield return new object[] { "onlyone", null };
