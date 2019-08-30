@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Linq;
@@ -8,8 +9,6 @@ using System.Threading.Tasks;
 using Prometheus.Client.MetricsWriter.Abstractions;
 #if NETCORE
 using System.Buffers.Text;
-#else
-using System.Globalization;
 #endif
 
 namespace Prometheus.Client.MetricsWriter
@@ -261,7 +260,7 @@ namespace Prometheus.Client.MetricsWriter
             var buff = _charPool.Rent(32);
             try
             {
-                value.TryFormat(buff, out var charsize);
+                value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
                 var size = _encoding.GetByteCount(buff, 0, charsize);
 
                 EnsureBufferCapacity(size);
