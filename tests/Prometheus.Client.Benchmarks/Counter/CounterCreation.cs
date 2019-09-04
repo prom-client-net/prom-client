@@ -24,9 +24,15 @@ namespace Prometheus.Client.Benchmarks.Counter
         }
 
         [Benchmark]
-        public ICounter CreationWithLabels()
+        public IMetricFamily<ICounter> CreationWithLabels()
         {
              return _factory.CreateCounter("counter", "help", "label1", "label2");
+        }
+
+        [Benchmark]
+        public IMetricFamily<ICounter, (string, string)> CreationWithTupleLabels()
+        {
+            return _factory.CreateCounter("counter", "help", ("label1", "label2"));
         }
     }
 }

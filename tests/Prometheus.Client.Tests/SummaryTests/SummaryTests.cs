@@ -21,7 +21,11 @@ namespace Prometheus.Client.Tests
             int concLevel = (n % 5) + 1;
             int total = mutations * concLevel;
 
-            var sum = new Summary(new Summary.SummaryConfiguration("test_summary", "helpless", false, false, new string[0]));
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var sum = new Summary(new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None), Array.Empty<string>());
+
             var allVars = new double[total];
             double sampleSum = 0;
             var tasks = new List<Task>();
@@ -48,7 +52,7 @@ namespace Prometheus.Client.Tests
 
             Array.Sort(allVars);
 
-            var m = sum.Unlabelled.Value;
+            var m = sum.Value;
 
             Assert.Equal(mutations * concLevel, (int) m.Count);
 
@@ -57,12 +61,12 @@ namespace Prometheus.Client.Tests
 
             Assert.True(Math.Abs(got - want) / want <= 0.001);
 
-            var objectives = Summary.SummaryConfiguration.DefaultObjectives.Select(_ => _.Quantile).ToArray();
+            var objectives = SummaryConfiguration.DefaultObjectives.Select(_ => _.Quantile).ToArray();
             Array.Sort(objectives);
 
             for (int i = 0; i < objectives.Length; i++)
             {
-                var wantQ = Summary.SummaryConfiguration.DefaultObjectives.ElementAt(i);
+                var wantQ = SummaryConfiguration.DefaultObjectives.ElementAt(i);
                 double epsilon = wantQ.Epsilon;
                 double gotQ = m.Quantiles[i].Key;
                 double gotV = m.Quantiles[i].Value;
@@ -102,7 +106,9 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void TestSummary()
         {
-            var summary = Metrics.CreateSummary("Summary", "helpless", "labelName").Labels("labelValue");
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+            var summary = factory.CreateSummary("Summary", "helpless", "labelName").WithLabels("labelValue");
 
             // Default objectives are 0.5, 0.9, 0.99 quantile
             const int numIterations = 1000;
@@ -138,11 +144,9 @@ namespace Prometheus.Client.Tests
         public void TestSummaryDecay()
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            var summaryConfig = new Summary.SummaryConfiguration("test_summary", "helpless", false, false, new string[0],
+            var summaryConfig = new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None,
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
-            var child = new Summary.LabelledSummary();
-            child.Init(LabelValues.Empty, summaryConfig, baseTime);
+            var child = new Summary(summaryConfig, Array.Empty<string>(), baseTime);
             var values = new double[summaryConfig.Objectives.Count];
 
             for (int i = 0; i < 1000; i++)

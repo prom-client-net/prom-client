@@ -1,8 +1,8 @@
-# HELP test with help text
-# TYPE test untyped
-test 1
-test{category="some"} NaN
 # HELP nextuntyped with help text
 # TYPE nextuntyped untyped
 nextuntyped 10
 nextuntyped{group="any",type="2"} 5
+# HELP test with help text
+# TYPE test untyped
+test 1
+test{category="some"} NaN

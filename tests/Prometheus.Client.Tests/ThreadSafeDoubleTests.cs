@@ -1,50 +1,83 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace Prometheus.Client.Tests
 {
     public class ThreadSafeDoubleTests
     {
-        [Fact]
-        public void ThreadSafeDouble_Add()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-10)]
+        [InlineData(10)]
+        [InlineData(-3.14)]
+        [InlineData(3.14)]
+        [InlineData(double.MinValue)]
+        [InlineData(double.MaxValue)]
+        [InlineData(double.Epsilon)]
+        [InlineData(double.NegativeInfinity)]
+        [InlineData(double.PositiveInfinity)]
+        [InlineData(double.NaN)]
+        public void CanInitConstructor(double value)
         {
-            var tsdouble = new ThreadSafeDouble(3.10);
-            tsdouble.Add(0.50);
-            tsdouble.Add(2.00);
-            Assert.Equal(5.6, tsdouble.Value);
+            var tsdouble = new ThreadSafeDouble(value);
+            Assert.Equal(value, tsdouble.Value);
         }
 
-        [Fact]
-        public void ThreadSafeDouble_Constructors()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-10)]
+        [InlineData(10)]
+        [InlineData(-3.14)]
+        [InlineData(3.14)]
+        [InlineData(double.MinValue)]
+        [InlineData(double.MaxValue)]
+        [InlineData(double.Epsilon)]
+        [InlineData(double.NegativeInfinity)]
+        [InlineData(double.PositiveInfinity)]
+        [InlineData(double.NaN)]
+        public void CanSetValue(double value)
         {
-            var tsdouble = new ThreadSafeDouble(0.0);
-            Assert.Equal(0.0, tsdouble.Value);
-
-            tsdouble = new ThreadSafeDouble(1.42);
-            Assert.Equal(1.42, tsdouble.Value);
+            var tsdouble = new ThreadSafeDouble(0);
+            tsdouble.Value = value;
+            Assert.Equal(value, tsdouble.Value);
         }
 
-        [Fact]
-        public void ThreadSafeDouble_Overrides()
+        [Theory]
+        [InlineData(0, false)]
+        [InlineData(-10, false)]
+        [InlineData(10, false)]
+        [InlineData(double.MinValue, false)]
+        [InlineData(double.MaxValue, false)]
+        [InlineData(double.Epsilon, false)]
+        [InlineData(double.NegativeInfinity, false)]
+        [InlineData(double.PositiveInfinity, false)]
+        [InlineData(double.NaN, true)]
+        public void IsNaN(double value, bool result)
         {
-            var tsdouble = new ThreadSafeDouble(9.15);
-            var equaltsdouble = new ThreadSafeDouble(9.15);
-            var notequaltsdouble = new ThreadSafeDouble(10.11);
-
-            Assert.Equal("9.15", tsdouble.ToString());
-            Assert.True(tsdouble.Equals(equaltsdouble));
-            Assert.False(tsdouble.Equals(notequaltsdouble));
-            Assert.False(tsdouble.Equals(null));
-            Assert.True(tsdouble.Equals(9.15));
-            Assert.False(tsdouble.Equals(10.11));
-
-            Assert.Equal(9.15.GetHashCode(), tsdouble.GetHashCode());
+            var isNaN = ThreadSafeDouble.IsNaN(value);
+            Assert.Equal(result, isNaN);
         }
 
-        [Fact]
-        public void ThreadSafeDouble_ValueSet()
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(-10, 10, 0)]
+        [InlineData(3.10, 2, 5.10)]
+        public void CanAddValue(double initial, double added, double expected)
         {
-            var tsdouble = new ThreadSafeDouble(3.14);
-            Assert.Equal(3.14, tsdouble.Value);
+            var tsdouble = new ThreadSafeDouble(initial);
+            tsdouble.Add(added);
+            Assert.Equal(expected, tsdouble.Value);
+        }
+
+        [Theory]
+        [InlineData(double.NaN, 0)]
+        [InlineData(0, double.NaN)]
+        [InlineData(3.14, double.NaN)]
+        [InlineData(double.NaN, double.NaN)]
+        public void AddThrowsOnNaN(double initial, double added)
+        {
+            var tsdouble = new ThreadSafeDouble(initial);
+            Assert.Throws<InvalidOperationException>(() => tsdouble.Add(added));
         }
     }
 }

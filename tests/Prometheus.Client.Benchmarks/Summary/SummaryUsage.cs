@@ -10,14 +10,14 @@ namespace Prometheus.Client.Benchmarks.Summary
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class SummaryUsage
     {
-        private Client.Summary _summary;
+        private IMetricFamily<ISummary> _summary;
         private Random _rnd;
 
         [GlobalSetup]
         public void Setup()
         {
             var factory = new MetricFactory(new CollectorRegistry());
-            _summary = factory.CreateSummary("summary", string.Empty, "label");
+            _summary = factory.CreateSummary("summary", string.Empty, "label1", "label2");
             _rnd = new Random();
         }
 

@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D994EEE1-3786-4FDF-8A49-76D8B9819A29}"
 EndProject
@@ -28,7 +27,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FE42C2D5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Tests", "tests\Prometheus.Client.Tests\Prometheus.Client.Tests.csproj", "{B11769F3-421B-4B79-A883-335331847542}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Benchmarks", "tests\Prometheus.Client.Benchmarks\Prometheus.Client.Benchmarks.csproj", "{7938605B-A516-4B8C-A8E0-40901CB903DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Benchmarks", "tests\Prometheus.Client.Benchmarks\Prometheus.Client.Benchmarks.csproj", "{7938605B-A516-4B8C-A8E0-40901CB903DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Benchmarks.Comparison", "tests\Prometheus.Client.Benchmarks.Comparison\Prometheus.Client.Benchmarks.Comparison.csproj", "{5B614BED-2C54-40F3-8F01-3995E4298137}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +49,10 @@ Global
 		{7938605B-A516-4B8C-A8E0-40901CB903DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7938605B-A516-4B8C-A8E0-40901CB903DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7938605B-A516-4B8C-A8E0-40901CB903DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B614BED-2C54-40F3-8F01-3995E4298137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B614BED-2C54-40F3-8F01-3995E4298137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B614BED-2C54-40F3-8F01-3995E4298137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B614BED-2C54-40F3-8F01-3995E4298137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +61,7 @@ Global
 		{B0E7B525-2F11-446F-A2F3-9A07083E3D6E} = {D994EEE1-3786-4FDF-8A49-76D8B9819A29}
 		{B11769F3-421B-4B79-A883-335331847542} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 		{7938605B-A516-4B8C-A8E0-40901CB903DE} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
+		{5B614BED-2C54-40F3-8F01-3995E4298137} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A21B7555-E98B-4C23-9545-70BCF791DE3E}

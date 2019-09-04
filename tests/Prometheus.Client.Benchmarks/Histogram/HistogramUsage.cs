@@ -10,14 +10,14 @@ namespace Prometheus.Client.Benchmarks.Histogram
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class HistogramUsage
     {
-        private Client.Histogram _histogram;
+        private IMetricFamily<IHistogram> _histogram;
         private Random _rnd;
 
         [GlobalSetup]
         public void Setup()
         {
             var factory = new MetricFactory(new CollectorRegistry());
-            _histogram = factory.CreateHistogram("histogram", string.Empty, "label");
+            _histogram = factory.CreateHistogram("histogram", string.Empty, "label1", "label2");
             _rnd = new Random();
         }
 

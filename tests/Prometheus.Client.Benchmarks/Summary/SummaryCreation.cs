@@ -24,7 +24,7 @@ namespace Prometheus.Client.Benchmarks.Summary
         }
 
         [Benchmark]
-        public ISummary CreationWithLabels()
+        public IMetricFamily<ISummary> CreationWithLabels()
         {
              return _factory.CreateSummary("summary", "help", "label1", "label2");
         }

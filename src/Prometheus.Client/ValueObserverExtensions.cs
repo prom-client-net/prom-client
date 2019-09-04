@@ -8,16 +8,6 @@ namespace Prometheus.Client
 {
     public static class ValueObserverExtensions
     {
-        public static void Observe(this IValueObserver observer, double val, DateTime timestamp)
-        {
-            observer.Observe(val, timestamp.ToUnixTime());
-        }
-
-        public static void Observe(this IValueObserver observer, double val, DateTimeOffset timestamp)
-        {
-            observer.Observe(val, timestamp.ToUnixTime());
-        }
-
         public static void ObserveDuration(this IValueObserver observer, Action method)
         {
             ObserveDuration(observer, method, DurationUnit.Seconds);
@@ -25,6 +15,7 @@ namespace Prometheus.Client
 
         public static void ObserveDuration(this IValueObserver observer, Action method, DurationUnit unit)
         {
+            // TODO: avoid allocation by using Stopwatch.GetTimestamp
             var stopwatch = Stopwatch.StartNew();
             try
             {

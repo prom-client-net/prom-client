@@ -1,28 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\CounterTests_SuppressEmpty.txt" />
-    <None Remove="Resources\GaugeTests_SuppressEmpty.txt" />
-    <None Remove="Resources\HistogramTests_SuppressEmpty.txt" />
+    <None Remove="UntypedTests\Resources\CounterTests_SuppressEmpty.txt" />
+    <None Remove="UntypedTests\Resources\GaugeTests_SuppressEmpty.txt" />
+    <None Remove="UntypedTests\Resources\HistogramTests_SuppressEmpty.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\CollectorRegistryTests_Collection.txt" />
-    <EmbeddedResource Include="Resources\CounterTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="Resources\CounterTests_Collection.txt" />
-    <EmbeddedResource Include="Resources\CounterTests_Empty.txt" />
-    <EmbeddedResource Include="Resources\GaugeTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="Resources\GaugeTests_Collection.txt" />
-    <EmbeddedResource Include="Resources\GaugeTests_Empty.txt" />
-    <EmbeddedResource Include="Resources\HistogramTests_Empty_SuppressEmpty.txt" />
-    <EmbeddedResource Include="Resources\HistogramTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="Resources\HistogramTests_Collection.txt" />
-    <EmbeddedResource Include="Resources\HistogramTests_Empty.txt" />
-    <EmbeddedResource Include="Resources\UntypedTests_Collection.txt" />
-    <EmbeddedResource Include="Resources\UntypedTests_Empty.txt" />
+    <EmbeddedResource Include="CounterTests\Resources\CounterTests_SuppressEmpty.txt" />
+    <EmbeddedResource Include="CounterTests\Resources\CounterTests_Collection.txt" />
+    <EmbeddedResource Include="CounterTests\Resources\CounterTests_Empty.txt" />
+    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_SuppressEmpty.txt" />
+    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_Collection.txt" />
+    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_Empty.txt" />
+    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_SuppressEmpty.txt" />
+    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_Collection.txt" />
+    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_Empty.txt" />
+    <EmbeddedResource Include="UntypedTests\Resources\UntypedTests_Collection.txt" />
+    <EmbeddedResource Include="UntypedTests\Resources\UntypedTests_Empty.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="1.1.0" />
@@ -33,7 +31,6 @@
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
-    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Prometheus.Client\Prometheus.Client.csproj" />
