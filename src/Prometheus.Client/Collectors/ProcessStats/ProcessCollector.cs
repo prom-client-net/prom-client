@@ -23,7 +23,6 @@ namespace Prometheus.Client.Collectors.ProcessStats
         private readonly Process _process;
         private readonly double _processStartTime;
 
-        /// <inheritdoc />
         /// <summary>
         ///     Constructors
         /// </summary>

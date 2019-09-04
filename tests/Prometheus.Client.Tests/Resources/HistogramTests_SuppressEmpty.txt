@@ -1,9 +1,0 @@
-# HELP hist1 help
-# TYPE hist1 histogram
-hist1_bucket{type="a",le="-5"} 1
-hist1_bucket{type="a",le="0"} 3
-hist1_bucket{type="a",le="5"} 5
-hist1_bucket{type="a",le="10"} 6
-hist1_bucket{type="a",le="+Inf"} 7
-hist1_sum{type="a"} 6.5
-hist1_count{type="a"} 7

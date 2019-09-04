@@ -1,10 +1,8 @@
-using System;
-using System.Globalization;
 using System.Threading;
 
 namespace Prometheus.Client
 {
-    internal struct ThreadSafeLong : IEquatable<ThreadSafeLong>
+    internal struct ThreadSafeLong
     {
         private long _value;
 
@@ -22,29 +20,6 @@ namespace Prometheus.Client
         public void Add(long increment)
         {
             Interlocked.Add(ref _value, increment);
-        }
-
-        public override string ToString()
-        {
-            return Value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        public bool Equals(ThreadSafeLong threadSafeLong)
-        {
-            return Value.Equals(threadSafeLong.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ThreadSafeLong l)
-                return Equals(l);
-
-            return Value.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
         }
     }
 }

@@ -1,47 +1,57 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client
 {
-    public abstract class Labelled<TConfig>
-        where TConfig : MetricConfiguration
+    public abstract class MetricBase<TConfig>
+        where TConfig: MetricConfiguration
     {
-        private LabelValues _labelValues;
+        protected readonly TConfig Configuration;
+        private readonly bool _includeTimestamp;
         private long _timestamp;
-        private long _hasObservation = 0;
-        protected TConfig Configuration;
+        private bool _hasObservation;
 
-        protected IReadOnlyList<KeyValuePair<string, string>> Labels => _labelValues.Labels;
+        protected IReadOnlyList<KeyValuePair<string, string>> Labels { get; }
+
+        protected MetricBase(TConfig config, IReadOnlyList<string> labelValues)
+        {
+            Configuration = config;
+            _includeTimestamp = config.IncludeTimestamp;
+
+            if (labelValues != null && labelValues.Count > 0)
+            {
+                if (config.LabelNames.Count != labelValues.Count)
+                    throw new ArgumentException("Incorrect number of labels");
+
+                Labels = config.LabelNames.Zip(labelValues, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
+            }
+        }
+
+        public bool HasObservations => Volatile.Read(ref _hasObservation);
 
         protected long? Timestamp
         {
             get
             {
-                if (!Configuration.IncludeTimestamp)
+                if (!_includeTimestamp)
                     return null;
 
                 return Interlocked.Read(ref _timestamp);
             }
         }
 
-        public bool HasObservations => Interlocked.Read(ref _hasObservation) != 0;
-
-        protected internal virtual void Init(LabelValues labelValues, TConfig configuration)
-        {
-            _labelValues = labelValues;
-            Configuration = configuration;
-        }
-
         protected internal abstract void Collect(IMetricsWriter writer);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void TimestampIfRequired(long? timestamp = null)
         {
-            Interlocked.Exchange(ref _hasObservation, 1);
+            Volatile.Write(ref _hasObservation, true);
 
-            if (!Configuration.IncludeTimestamp)
+            if (!_includeTimestamp)
                 return;
 
             var now = DateTime.UtcNow.ToUnixTime();

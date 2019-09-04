@@ -9,13 +9,13 @@ namespace Prometheus.Client.Benchmarks.Gauge
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class GaugeUsage
     {
-        private Client.Gauge _gauge;
+        private IMetricFamily<IGauge> _gauge;
 
         [GlobalSetup]
         public void Setup()
         {
             var factory = new MetricFactory(new CollectorRegistry());
-            _gauge = factory.CreateGauge("gauge", string.Empty, "label");
+            _gauge = factory.CreateGauge("gauge", string.Empty, "label1", "label2");
         }
 
         [Benchmark]

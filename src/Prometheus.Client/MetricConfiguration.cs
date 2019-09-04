@@ -1,33 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client
 {
-    public class MetricConfiguration : CollectorConfiguration
+    public class MetricConfiguration: CollectorConfiguration
     {
-        private static readonly Regex _metricNameLabelRegex = new Regex("^[a-zA-Z_:][a-zA-Z0-9_:]*$", RegexOptions.Compiled);
-        private static readonly Regex _reservedLabelRegex = new Regex("^__.*$", RegexOptions.Compiled);
-
-        public MetricConfiguration(string name, string help, bool includeTimestamp, bool suppressEmptySamples, IReadOnlyList<string> labels)
+        public MetricConfiguration(string name, string help, IReadOnlyList<string> labels, MetricFlags options)
             : base(name)
         {
             Help = help;
-            IncludeTimestamp = includeTimestamp;
-            SuppressEmptySamples = suppressEmptySamples;
+            IncludeTimestamp = options.HasFlag(MetricFlags.IncludeTimestamp);
+            SuppressEmptySamples = options.HasFlag(MetricFlags.SupressEmptySamples);
             LabelNames = labels ?? Array.Empty<string>();
-
-            if (!_metricNameLabelRegex.IsMatch(Name))
-                throw new ArgumentException("Metric name must match regex: " + _metricNameLabelRegex);
 
             foreach (string labelName in LabelNames)
             {
-                if (!_metricNameLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Label name must match regex: " + _metricNameLabelRegex);
+                if (string.IsNullOrEmpty(labelName))
+                    throw new ArgumentException("Label name cannot be empty");
 
-                if (_reservedLabelRegex.IsMatch(labelName))
-                    throw new ArgumentException("Labels starting with double underscore are reserved!");
+                if (!ValidateLabelName(labelName))
+                    throw new ArgumentException($"Invalid label name: {labelName}");
             }
         }
 
@@ -38,5 +33,29 @@ namespace Prometheus.Client
         public bool SuppressEmptySamples { get; }
 
         public IReadOnlyList<string> LabelNames { get; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool ValidateLabelName(string labelName)
+        {
+            if (labelName.Length >=2 && labelName[0] == '_' && labelName[1] == '_')
+                return false;
+
+            if (char.IsNumber(labelName[0]))
+                return false;
+
+            foreach (var ch in labelName)
+            {
+                if ((ch >= 'a' && ch <= 'z')
+                    || (ch >= 'A' && ch <= 'Z')
+                    || char.IsDigit(ch)
+                    || ch == '_'
+                    || ch == ':')
+                    continue;
+
+                return false;
+            }
+
+            return true;
+        }
     }
 }

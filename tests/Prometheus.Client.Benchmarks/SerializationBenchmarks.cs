@@ -1,5 +1,6 @@
 using System.IO;
 using BenchmarkDotNet.Attributes;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks
@@ -37,17 +38,17 @@ namespace Prometheus.Client.Benchmarks
         }
 
         private readonly CollectorRegistry _registry = new CollectorRegistry();
-        private readonly Prometheus.Client.Counter[] _counters;
-        private readonly Prometheus.Client.Gauge[] _gauges;
-        private readonly Prometheus.Client.Summary[] _summaries;
-        private readonly Prometheus.Client.Histogram[] _histograms;
+        private readonly IMetricFamily<ICounter>[] _counters;
+        private readonly IMetricFamily<IGauge>[] _gauges;
+        private readonly IMetricFamily<ISummary>[] _summaries;
+        private readonly IMetricFamily<IHistogram>[] _histograms;
 
         public SerializationBenchmarks()
         {
-            _counters = new Prometheus.Client.Counter[_metricCount];
-            _gauges = new Prometheus.Client.Gauge[_metricCount];
-            _summaries = new Prometheus.Client.Summary[_metricCount];
-            _histograms = new Prometheus.Client.Histogram[_metricCount];
+            _counters = new IMetricFamily<ICounter>[_metricCount];
+            _gauges = new IMetricFamily<IGauge>[_metricCount];
+            _summaries = new IMetricFamily<ISummary>[_metricCount];
+            _histograms = new IMetricFamily<IHistogram>[_metricCount];
 
             var factory = new MetricFactory(_registry);
 
@@ -68,10 +69,10 @@ namespace Prometheus.Client.Benchmarks
             {
                 for (var variantIndex = 0; variantIndex < _variantCount; variantIndex++)
                 {
-                    _counters[metricIndex].Labels(_labelValueRows[metricIndex][variantIndex]).Inc();
-                    _gauges[metricIndex].Labels(_labelValueRows[metricIndex][variantIndex]).Inc();
-                    _summaries[metricIndex].Labels(_labelValueRows[metricIndex][variantIndex]).Observe(variantIndex);
-                    _histograms[metricIndex].Labels(_labelValueRows[metricIndex][variantIndex]).Observe(variantIndex);
+                    _counters[metricIndex].WithLabels(_labelValueRows[metricIndex][variantIndex]).Inc();
+                    _gauges[metricIndex].WithLabels(_labelValueRows[metricIndex][variantIndex]).Inc();
+                    _summaries[metricIndex].WithLabels(_labelValueRows[metricIndex][variantIndex]).Observe(variantIndex);
+                    _histograms[metricIndex].WithLabels(_labelValueRows[metricIndex][variantIndex]).Observe(variantIndex);
                 }
             }
         }
