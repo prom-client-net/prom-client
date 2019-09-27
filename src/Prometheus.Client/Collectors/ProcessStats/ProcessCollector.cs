@@ -73,11 +73,11 @@ namespace Prometheus.Client.Collectors.ProcessStats
             writer.WriteSample(_process.Threads.Count);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_processIdName, MetricType.Untyped, "Process ID");
+            writer.WriteMetricHeader(_processIdName, MetricType.Gauge, "Process ID");
             writer.WriteSample(_process.Id);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Untyped, "Start time of the process since unix epoch in seconds");
+            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Gauge, "Start time of the process since unix epoch in seconds");
             writer.WriteSample(_processStartTime);
             writer.EndMetric();
         }
