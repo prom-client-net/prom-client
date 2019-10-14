@@ -8,6 +8,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client/badge)](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client)
 [![Build status](https://img.shields.io/appveyor/ci/PrometheusClientNet/prometheus-client.svg?logo=appveyor)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/branch/master)
 [![AppVeyor tests](https://img.shields.io/appveyor/tests/PrometheusClientNet/prometheus-client.svg)](https://ci.appveyor.com/project/PrometheusClientNet/prometheus-client/build/tests)
+[![codecov](https://codecov.io/gh/phnx47/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/phnx47/Prometheus.Client)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
