@@ -1,10 +1,6 @@
 version: '{branch}-build{build}'
 image: Ubuntu1804
 
-environment:
-  codecov_token:
-    secure: ChmOZrgQci5dvY1J2U9YomGaXw78lChaCt3ucv0ehu/p4wt90sB+yo3lVZ8ISD72
-
 skip_commits:
   files:
     - '**/*.md'
