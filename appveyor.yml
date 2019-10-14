@@ -3,7 +3,7 @@ image: Ubuntu1804
 
 environment:
   codecov_token:
-    secure: iioQscaf4ALQaT91gU7UHLnwhsUqaVXH5ngyaRyDjxyqIG7m7fBYawFyOoFK/d8k
+    secure: ChmOZrgQci5dvY1J2U9YomGaXw78lChaCt3ucv0ehu/p4wt90sB+yo3lVZ8ISD72
 
 skip_commits:
   files:
