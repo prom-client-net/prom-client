@@ -19,6 +19,9 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
