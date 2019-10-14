@@ -16,6 +16,7 @@ test_script:
   - sh: chmod +x test.sh && ./test.sh
 
 after_test:
+  - sh: chmod +x codecov.sh && ./codecov.sh
   - sh: chmod +x pack.sh && ./pack.sh
 
 artifacts:
