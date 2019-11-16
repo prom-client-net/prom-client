@@ -11,7 +11,7 @@ namespace Prometheus.Client
         {
             using (var metricsWriter = new MetricsTextWriter(outputStream))
             {
-                await registry.CollectToAsync(metricsWriter);
+                await registry.CollectToAsync(metricsWriter).ConfigureAwait(false);
             }
         }
 

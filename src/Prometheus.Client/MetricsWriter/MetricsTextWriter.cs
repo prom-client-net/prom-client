@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.MetricsWriter.Abstractions;
+using System.Runtime.CompilerServices;
 #if NETCORE
 using System.Buffers.Text;
 #endif
@@ -17,16 +18,12 @@ namespace Prometheus.Client.MetricsWriter
     {
         private const int _defaultBufferSize = 10240;
         private static readonly ArrayPool<byte> _arrayPool = ArrayPool<byte>.Create(_defaultBufferSize, 100);
-#if NETCORE
-        private static readonly ArrayPool<char> _charPool = ArrayPool<char>.Shared;
-#endif
         private static readonly Encoding _encoding = new UTF8Encoding(false);
 
         private static readonly byte[] _encodingPreamble = _encoding.GetPreamble();
-        private static readonly byte[] _commentPrefix = _encoding.GetBytes("#");
         private static readonly byte[] _tokenSeparator = _encoding.GetBytes(" ");
-        private static readonly byte[] _helpPrefix = _encoding.GetBytes("HELP");
-        private static readonly byte[] _typePrefix = _encoding.GetBytes("TYPE");
+        private static readonly byte[] _helpPrefix = _encoding.GetBytes("# HELP ");
+        private static readonly byte[] _typePrefix = _encoding.GetBytes("# TYPE ");
         private static readonly byte[] _labelsStart = _encoding.GetBytes("{");
         private static readonly byte[] _labelsEnd = _encoding.GetBytes("}");
         private static readonly byte[] _labelsEq = _encoding.GetBytes("=");
@@ -40,6 +37,7 @@ namespace Prometheus.Client.MetricsWriter
         private byte[] _buffer;
         private int _position;
         private string _currentMetricName;
+        private ArraySegment<byte> _currentMetricEncoded;
         private bool _hasData;
         private WriterState _state = WriterState.None;
 
@@ -68,6 +66,7 @@ namespace Prometheus.Client.MetricsWriter
             ValidateState(nameof(StartMetric), WriterState.None | WriterState.MetricClosed);
 
             _currentMetricName = metricName;
+            _currentMetricEncoded = default;
             _state = WriterState.MetricStarted;
 
             return this;
@@ -81,11 +80,12 @@ namespace Prometheus.Client.MetricsWriter
                 Write(_newLine);
 
             _hasData = true;
-            Write(_commentPrefix);
-            Write(_tokenSeparator);
             Write(_helpPrefix);
-            Write(_tokenSeparator);
-            Write(_currentMetricName);
+            if (_currentMetricEncoded == default)
+                _currentMetricEncoded = Write(_currentMetricName);
+            else
+                Write(_currentMetricEncoded.AsSpan());
+            
             Write(_tokenSeparator);
             Write(EscapeValue(help));
             _state = WriterState.HelpWritten;
@@ -101,11 +101,12 @@ namespace Prometheus.Client.MetricsWriter
                 Write(_newLine);
 
             _hasData = true;
-            Write(_commentPrefix);
-            Write(_tokenSeparator);
             Write(_typePrefix);
-            Write(_tokenSeparator);
-            Write(_currentMetricName);
+            if (_currentMetricEncoded == default)
+                _currentMetricEncoded = Write(_currentMetricName);
+            else
+                Write(_currentMetricEncoded.AsSpan());
+
             Write(_tokenSeparator);
             Write(_metricTypesMap[metricType]);
             _state = WriterState.TypeWritten;
@@ -122,7 +123,11 @@ namespace Prometheus.Client.MetricsWriter
                 Write(_newLine);
 
             _hasData = true;
-            Write(_currentMetricName);
+            if (_currentMetricEncoded == default)
+                _currentMetricEncoded = Write(_currentMetricName);
+            else
+                Write(_currentMetricEncoded.AsSpan());
+
             Write(suffix);
             _state = WriterState.SampleStarted;
             return this;
@@ -192,12 +197,14 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(EndMetric), WriterState.SampleClosed | WriterState.MetricStarted | WriterState.TypeWritten | WriterState.HelpWritten);
             _currentMetricName = string.Empty;
+            _currentMetricEncoded = default;
             _state = WriterState.MetricClosed;
             return this;
         }
 
         public Task CloseWriterAsync()
         {
+            ValidateState(nameof(CloseWriterAsync), WriterState.None | WriterState.MetricClosed);
             Write(_newLine);
             _state = WriterState.Closed;
 
@@ -230,6 +237,7 @@ namespace Prometheus.Client.MetricsWriter
                 _buffer = null;
             }
 
+            _currentMetricEncoded = default;
             _position = 0;
         }
 
@@ -246,56 +254,65 @@ namespace Prometheus.Client.MetricsWriter
                 throw new InvalidOperationException($"Cannot {callerMethod}. Current state: {_state}, expected states: {expectedStates}");
         }
 
+        private static readonly char[] _forbidden = new char[] { '\\', '\n', '"'};
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string EscapeValue(string val)
         {
+            if (val.IndexOfAny(_forbidden) < 0)
+            {
+                return val;
+            }
+
             return val
                    .Replace("\\", @"\\")
                    .Replace("\n", @"\n")
                    .Replace("\"", @"\""");
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Write(double value)
         {
 #if NETCORE
-            var buff = _charPool.Rent(32);
-            try
-            {
-                value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
-                var size = _encoding.GetByteCount(buff, 0, charsize);
+            Span<char> buff = stackalloc char[32];
+            value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
 
-                EnsureBufferCapacity(size);
-                _encoding.GetBytes(buff, 0, charsize, _buffer, _position);
-                _position += size;
-            }
-            finally
-            {
-                _charPool.Return(buff);
-            }
+            Write(buff.Slice(0, charsize));
 #else
             Write(value.ToString(CultureInfo.InvariantCulture));
 #endif
         }
 
-        private void Write(string value)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ArraySegment<byte> Write(string value)
         {
-            var size = _encoding.GetByteCount(value);
+            var size = _encoding.GetMaxByteCount(value.Length);
             EnsureBufferCapacity(size);
 
-            _encoding.GetBytes(value, 0, value.Length, _buffer, _position);
+            size = _encoding.GetBytes(value, 0, value.Length, _buffer, _position);
+            var writtenData = new ArraySegment<byte>(_buffer, _position, size);
+            _position += size;
+
+            return writtenData;
+        }
+
+#if NETCORE
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Write(ReadOnlySpan<char> value)
+        {
+            var size = _encoding.GetMaxByteCount(value.Length);
+            EnsureBufferCapacity(size);
+
+            size = _encoding.GetBytes(value, new Span<byte>(_buffer, _position, _buffer.Length - _position));
             _position += size;
         }
+#endif
 
-        private void Write(byte[] bytes)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Write(Span<byte> bytes)
         {
-            Write(bytes, bytes.Length);
-        }
-
-        private void Write(byte[] bytes, int len)
-        {
-            EnsureBufferCapacity(len);
-
-            Array.Copy(bytes, 0, _buffer, _position, len);
-            _position += len;
+            EnsureBufferCapacity(bytes.Length);
+            bytes.CopyTo(new Span<byte>(_buffer).Slice(_position));
+            _position += bytes.Length;
         }
 
         private void CleanUp()
@@ -315,14 +332,21 @@ namespace Prometheus.Client.MetricsWriter
 
         // Ensure if current buffer has neccesary space available for next write
         // if there is not enough space available - rotate the buffers
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureBufferCapacity(int requiredCapacity)
         {
             if ((_buffer.Length - _position) < requiredCapacity)
             {
-                _chunks.Enqueue(new ArraySegment<byte>(_buffer, 0, _position));
-                _buffer = _arrayPool.Rent(Math.Max(requiredCapacity, _defaultBufferSize));
-                _position = 0;
+                RotateBuffer(requiredCapacity);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RotateBuffer(int requiredCapacity = _defaultBufferSize)
+        {
+            _chunks.Enqueue(new ArraySegment<byte>(_buffer, 0, _position));
+            _buffer = _arrayPool.Rent(Math.Max(requiredCapacity, _defaultBufferSize));
+            _position = 0;
         }
 
         [Flags]
