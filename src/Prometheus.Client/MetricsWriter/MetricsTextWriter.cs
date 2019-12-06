@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.MetricsWriter.Abstractions;
 using System.Runtime.CompilerServices;
-#if NETCORE
+#if HasNativeSpans
 using System.Buffers.Text;
 #endif
 
@@ -272,7 +272,7 @@ namespace Prometheus.Client.MetricsWriter
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Write(double value)
         {
-#if NETCORE
+#if HasNativeSpans
             Span<char> buff = stackalloc char[32];
             value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
 
@@ -295,7 +295,7 @@ namespace Prometheus.Client.MetricsWriter
             return writtenData;
         }
 
-#if NETCORE
+#if HasNativeSpans
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Write(ReadOnlySpan<char> value)
         {
