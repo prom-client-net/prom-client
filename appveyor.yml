@@ -1,10 +1,6 @@
 version: '{branch}-build{build}'
 image: Ubuntu1804
 
-skip_commits:
-  files:
-    - '**/*.md'
-
 build_script:
   - sh: dotnet build -c Release
 
