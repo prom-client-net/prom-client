@@ -61,7 +61,7 @@ public class MetricsController : Controller
         Response.StatusCode = 200;
         using (var outputStream = Response.Body)
         {
-            return await ScrapeHandler.ProcessAsync(Metrics.DefaultCollectorRegistry, outputStream);
+R            await ScrapeHandler.ProcessAsync(Metrics.DefaultCollectorRegistry, outputStream);
         }
     }
 }
