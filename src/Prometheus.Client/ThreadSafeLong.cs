@@ -21,10 +21,5 @@ namespace Prometheus.Client
         {
             Interlocked.Add(ref _value, increment);
         }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
     }
 }
