@@ -219,6 +219,5 @@ namespace Prometheus.Client.Tests
 
             factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.None, "label1", "label2");
         }
-
     }
 }
