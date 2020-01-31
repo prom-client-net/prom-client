@@ -36,7 +36,7 @@ namespace Prometheus.Client
             _metricNames = new[] { _configuration.Name };
             _instanceFactory = instanceFactory;
             _unlabelled = _instanceFactory(_configuration, default);
-            LabelNames = TupleHelper<TLabels>.FromArray(configuration.LabelNames);
+            LabelNames = TupleHelper.FromArray<TLabels>(configuration.LabelNames);
             if(configuration.LabelNames.Count > 0)
                 _labelledMetrics = new ConcurrentDictionary<TLabels, TImplementation>();
         }
@@ -65,7 +65,7 @@ namespace Prometheus.Client
             if (labels.Length != _configuration.LabelNames.Count)
                 throw new ArgumentException("Wrong number of labels");
 
-            var labelsTuple = TupleHelper<TLabels>.FromArray(labels);
+            var labelsTuple = TupleHelper.FromArray<TLabels>(labels);
             return _labelledMetrics.GetOrAdd(labelsTuple, CreateLabelled);
         }
 
@@ -113,12 +113,12 @@ namespace Prometheus.Client
                 yield break;
 
             foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(TupleHelper<TLabels>.ToArray(labelled.Key), labelled.Value);
+                yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(TupleHelper.ToArray(labelled.Key), labelled.Value);
         }
 
         private TImplementation CreateLabelled(TLabels labels)
         {
-            var labelValues = TupleHelper<TLabels>.ToArray(labels);
+            var labelValues = TupleHelper.ToArray(labels);
 
             if (labelValues.Any(string.IsNullOrEmpty))
                 throw new ArgumentException("Label cannot be empty.");

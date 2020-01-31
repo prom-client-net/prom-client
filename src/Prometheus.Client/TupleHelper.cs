@@ -9,45 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace Prometheus.Client
 {
-    internal static class TupleHelper<TTuple>
-#if HasITuple
-        where TTuple : struct, ITuple, IEquatable<TTuple>
-#else
-        where TTuple : struct, IEquatable<TTuple>
-#endif
-    {
-        private static readonly int _size;
-        private static readonly Func<IReadOnlyList<string>, TTuple> _parser;
-        private static readonly Func<TTuple, IReadOnlyList<string>> _formatter;
-
-        static TupleHelper()
-        {
-            _size = TupleHelper.GetSize<TTuple>();
-            _formatter = TupleHelper.GenerateFormatter<TTuple>();
-            _parser = TupleHelper.GenerateParser<TTuple>();
-        }
-
-        public static IReadOnlyList<string> ToArray(TTuple values)
-        {
-            return _formatter(values);
-        }
-
-        public static TTuple FromArray(IReadOnlyList<string> values)
-        {
-            if (values == null || values.Count == 0)
-            {
-                return default;
-            }
-
-            if (values.Count != _size)
-            {
-                throw new ArgumentException(nameof(values));
-            }
-
-            return _parser(values);
-        }
-    }
-
     internal static class TupleHelper
     {
         public static Type MakeValueTupleType(int len)
@@ -104,7 +65,27 @@ namespace Prometheus.Client
 #endif
         }
 
-        public static Func<TTuple, IReadOnlyList<string>> GenerateFormatter<TTuple>()
+        public static IReadOnlyList<string> ToArray<TTuple>(TTuple values)
+#if HasITuple
+        where TTuple : struct, ITuple, IEquatable<TTuple>
+#else
+            where TTuple : struct, IEquatable<TTuple>
+#endif
+        {
+            return TupleHelperTyped<TTuple>.ToArray(values);
+        }
+
+        public static TTuple FromArray<TTuple>(IReadOnlyList<string> values)
+#if HasITuple
+        where TTuple : struct, ITuple, IEquatable<TTuple>
+#else
+            where TTuple : struct, IEquatable<TTuple>
+#endif
+        {
+            return TupleHelperTyped<TTuple>.FromArray(values);
+        }
+
+        internal static Func<TTuple, IReadOnlyList<string>> GenerateFormatter<TTuple>()
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -146,7 +127,7 @@ namespace Prometheus.Client
                 Expression.Block(new[] { resultArray }, methodBody), valuesArg).Compile();
         }
 
-        public static Func<IReadOnlyList<string>, TTuple> GenerateParser<TTuple>()
+        internal static Func<IReadOnlyList<string>, TTuple> GenerateParser<TTuple>()
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -196,6 +177,45 @@ namespace Prometheus.Client
 #else
             return tupleType.GetConstructor(parameters);
 #endif
+        }
+
+        private static class TupleHelperTyped<TTuple>
+#if HasITuple
+        where TTuple : struct, ITuple, IEquatable<TTuple>
+#else
+            where TTuple : struct, IEquatable<TTuple>
+#endif
+        {
+            private static readonly int _size;
+            private static readonly Func<IReadOnlyList<string>, TTuple> _parser;
+            private static readonly Func<TTuple, IReadOnlyList<string>> _formatter;
+
+            static TupleHelperTyped()
+            {
+                _size = TupleHelper.GetSize<TTuple>();
+                _formatter = TupleHelper.GenerateFormatter<TTuple>();
+                _parser = TupleHelper.GenerateParser<TTuple>();
+            }
+
+            public static IReadOnlyList<string> ToArray(TTuple values)
+            {
+                return _formatter(values);
+            }
+
+            public static TTuple FromArray(IReadOnlyList<string> values)
+            {
+                if (values == null || values.Count == 0)
+                {
+                    return default;
+                }
+
+                if (values.Count != _size)
+                {
+                    throw new ArgumentException(nameof(values));
+                }
+
+                return _parser(values);
+            }
         }
     }
 }
