@@ -27,7 +27,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateCounterWithTsWithSupressEmpty()
+        public void CreateCounterWithTsWithSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -37,7 +37,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateCounterWithTsWithoutSupressEmpty()
+        public void CreateCounterWithTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -47,7 +47,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateCounterWithoutTsWithoutSupressEmpty()
+        public void CreateCounterWithoutTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -77,7 +77,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateGaugeWithTsWithSupressEmpty()
+        public void CreateGaugeWithTsWithSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -87,7 +87,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateGaugeWithTsWithoutSupressEmpty()
+        public void CreateGaugeWithTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -97,7 +97,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateGaugeWithoutTsWithoutSupressEmpty()
+        public void CreateGaugeWithoutTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -191,7 +191,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateUntypedWithTsWithSupressEmpty()
+        public void CreateUntypedWithTsWithSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -201,7 +201,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateUntypedWithTsWithoutSupressEmpty()
+        public void CreateUntypedWithTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -211,7 +211,7 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void CreateUntypedWithoutTsWithoutSupressEmpty()
+        public void CreateUntypedWithoutTsWithoutSuppressEmpty()
         {
             var factory = Substitute.For<MetricFactory>(new CollectorRegistry());
 
@@ -220,6 +220,5 @@ namespace Prometheus.Client.Tests
             factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.None, "label1", "label2");
         }
 
-        // TODO: Tests for Summary
     }
 }

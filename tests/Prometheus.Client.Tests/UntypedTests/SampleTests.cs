@@ -6,8 +6,6 @@ namespace Prometheus.Client.Tests.UntypedTests
 {
     public class SampleTests : MetricTestBase
     {
-        // TODO: add timestamp test
-
         [Theory]
         [InlineData(0)]
         [InlineData(1)]

@@ -1,7 +1,4 @@
 using System;
-#if netstandard1_3
-using System.Linq;
-#endif
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -172,11 +169,7 @@ namespace Prometheus.Client
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static ConstructorInfo GetCtor(Type tupleType, Type[] parameters)
         {
-#if netstandard1_3
-            return tupleType.GetTypeInfo().DeclaredConstructors.Single();
-#else
             return tupleType.GetConstructor(parameters);
-#endif
         }
 
         private static class TupleHelperTyped<TTuple>

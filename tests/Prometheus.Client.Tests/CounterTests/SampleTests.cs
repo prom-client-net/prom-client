@@ -5,8 +5,6 @@ namespace Prometheus.Client.Tests.CounterTests
 {
     public class SampleTests : MetricTestBase
     {
-        // TODO: add timestamp test
-
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
