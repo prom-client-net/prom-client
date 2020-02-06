@@ -1,0 +1,11 @@
+# HELP nangauge example of NaN
+# TYPE nangauge gauge
+nangauge NaN
+# HELP nextgauge with help text
+# TYPE nextgauge gauge
+nextgauge 1
+nextgauge{group="any",type="2"} -5
+# HELP test with help text
+# TYPE test gauge
+test 1
+test{category="some"} 5

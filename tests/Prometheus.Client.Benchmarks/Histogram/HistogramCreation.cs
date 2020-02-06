@@ -24,7 +24,7 @@ namespace Prometheus.Client.Benchmarks.Histogram
         }
 
         [Benchmark]
-        public IHistogram CreationWithLabels()
+        public IMetricFamily<IHistogram> CreationWithLabels()
         {
              return _factory.CreateHistogram("histogram", "help", "label1", "label2");
         }

@@ -1,121 +1,78 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Prometheus.Client.Abstractions;
-using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IGauge" />
-    public class Gauge : Collector<Gauge.LabelledGauge, MetricConfiguration>, IGauge
+    public sealed class Gauge : MetricBase<MetricConfiguration>, IGauge
     {
-        internal Gauge(MetricConfiguration configuration)
-            : base(configuration)
+        private ThreadSafeDouble _value;
+
+        public Gauge(MetricConfiguration configuration, IReadOnlyList<string> labels)
+            : base(configuration, labels)
         {
         }
 
-        protected override MetricType Type => MetricType.Gauge;
-
         public void Inc()
         {
-            Unlabelled.Inc();
+            Inc(1.0D, null);
         }
 
         public void Inc(double increment)
         {
-            Unlabelled.Inc(increment);
+            Inc(increment, null);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Inc(double increment, long? timestamp)
         {
-            Unlabelled.Inc(increment, timestamp);
+            if (ThreadSafeDouble.IsNaN(increment))
+                return;
+
+            _value.Add(increment);
+            TimestampIfRequired(timestamp);
         }
 
         public void Set(double val)
         {
-            Unlabelled.Set(val);
+            Set(val, null);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Set(double val, long? timestamp)
         {
-            Unlabelled.Set(val, timestamp);
+            _value.Value = val;
+            TimestampIfRequired(timestamp);
         }
 
         public void Dec()
         {
-            Unlabelled.Dec();
+            Dec(1.0D, null);
         }
 
         public void Dec(double decrement)
         {
-            Unlabelled.Dec(decrement);
+            Dec(decrement, null);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dec(double decrement, long? timestamp)
         {
-            Unlabelled.Dec(decrement, timestamp);
+            if (ThreadSafeDouble.IsNaN(decrement))
+                return;
+
+            _value.Add(-decrement);
+            TimestampIfRequired(timestamp);
         }
 
-        public double Value => Unlabelled.Value;
+        public double Value => _value.Value;
 
-        public class LabelledGauge : Labelled<MetricConfiguration>, IGauge
+        protected internal override void Collect(IMetricsWriter writer)
         {
-            private ThreadSafeDouble _value;
-
-            public void Inc()
-            {
-                Inc(1.0D, null);
-            }
-
-            public void Inc(double increment)
-            {
-                Inc(increment, null);
-            }
-
-            public void Inc(double increment, long? timestamp)
-            {
-                if (double.IsNaN(increment))
-                    return;
-
-                _value.Add(increment);
-                TimestampIfRequired(timestamp);
-            }
-
-            public void Set(double val)
-            {
-                Set(val, null);
-            }
-
-            public void Set(double val, long? timestamp)
-            {
-                _value.Value = val;
-                TimestampIfRequired(timestamp);
-            }
-
-            public void Dec()
-            {
-                Dec(1.0D, null);
-            }
-
-            public void Dec(double decrement)
-            {
-                Dec(decrement, null);
-            }
-
-            public void Dec(double decrement, long? timestamp)
-            {
-                if (double.IsNaN(decrement))
-                    return;
-
-                _value.Add(-decrement);
-                TimestampIfRequired(timestamp);
-            }
-
-            public double Value => _value.Value;
-
-            protected internal override void Collect(IMetricsWriter writer)
-            {
-                writer.WriteSample(Value, string.Empty, Labels, Timestamp);
-            }
+            writer.WriteSample(Value, string.Empty, Labels, Timestamp);
         }
     }
 }

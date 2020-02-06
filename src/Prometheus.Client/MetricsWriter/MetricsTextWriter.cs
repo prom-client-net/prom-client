@@ -8,9 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.MetricsWriter.Abstractions;
 using System.Runtime.CompilerServices;
-#if HasNativeSpans
-using System.Buffers.Text;
-#endif
 
 namespace Prometheus.Client.MetricsWriter
 {

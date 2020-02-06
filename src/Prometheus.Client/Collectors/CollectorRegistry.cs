@@ -159,8 +159,6 @@ namespace Prometheus.Client.Collectors
                 collector.Collect(wrapped);
                 await writer.FlushAsync().ConfigureAwait(false);
             }
-
-            await writer.CloseWriterAsync().ConfigureAwait(false);
         }
 
         private void RemoveCollector(string key, ICollector collector)

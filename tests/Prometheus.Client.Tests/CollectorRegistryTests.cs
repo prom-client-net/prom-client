@@ -1,11 +1,7 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.MetricsWriter;
-using Prometheus.Client.Tests.Resources;
 using Xunit;
 
 namespace Prometheus.Client.Tests
@@ -149,39 +145,6 @@ namespace Prometheus.Client.Tests
             Assert.True(res);
             Assert.False(registry.TryGet("metric1", out var _));
             Assert.True(registry.TryGet("collector", out var _));
-        }
-
-        [Fact]
-        public async Task CanCollectAll()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            factory.CreateCounter("www", "help").Inc(99);
-            factory.CreateCounter("ap", "text").Inc(5);
-            factory.CreateCounter("counter", string.Empty).Inc();
-            var gauge = factory.CreateGauge("abc", "with help text", "group", "type");
-            gauge.Inc();
-            gauge.WithLabels("any", "2").Dec(5);
-
-            string formattedText = null;
-
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new MetricsTextWriter(stream))
-                {
-                    await registry.CollectToAsync(writer);
-                }
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                using (var streamReader = new StreamReader(stream))
-                {
-                    formattedText = streamReader.ReadToEnd();
-                }
-            }
-
-            Assert.Equal(ResourcesHelper.GetFileContent("CollectorRegistryTests_Collection.txt"), formattedText);
         }
     }
 }

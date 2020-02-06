@@ -24,7 +24,7 @@ namespace Prometheus.Client.Benchmarks.Gauge
         }
 
         [Benchmark]
-        public IGauge CreationWithLabels()
+        public IMetricFamily<IGauge> CreationWithLabels()
         {
              return _factory.CreateGauge("gauge", "help", "label1", "label2");
         }

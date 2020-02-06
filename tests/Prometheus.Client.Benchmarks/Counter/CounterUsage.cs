@@ -9,19 +9,19 @@ namespace Prometheus.Client.Benchmarks.Counter
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class CounterUsage
     {
-        private Client.Counter _counter;
+        private IMetricFamily<ICounter> _counter;
 
         [GlobalSetup]
         public void Setup()
         {
             var factory = new MetricFactory(new CollectorRegistry());
-            _counter = factory.CreateCounter("counter", string.Empty, "label");
+            _counter = factory.CreateCounter("counter", string.Empty, "label1", "label2");
         }
 
         [Benchmark]
         public ICounter LabelledCreation()
         {
-            return _counter.WithLabels("test label");
+            return _counter.WithLabels("test label1", "test label2");
         }
 
         [Benchmark]
