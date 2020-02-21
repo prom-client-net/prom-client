@@ -29,9 +29,13 @@ namespace Prometheus.Client
 
                 Labels = config.LabelNames.Zip(labelValues, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
             }
+
+            LabelValues = labelValues;
         }
 
         public bool HasObservations => Volatile.Read(ref _hasObservation);
+
+        internal IReadOnlyList<string> LabelValues { get; }
 
         protected long? Timestamp
         {

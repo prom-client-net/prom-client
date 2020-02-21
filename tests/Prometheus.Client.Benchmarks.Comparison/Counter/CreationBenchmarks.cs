@@ -1,13 +1,11 @@
-extern alias Their;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
-    public class CreationBenchmarks
+    public class CreationBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsPerIteration = 10000;
 
@@ -23,16 +21,10 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
                 _metricNames[i] = $"metric_{i:D4}";
         }
 
-        private MetricFactory _factory;
-        private Their.Prometheus.MetricFactory _theirFactory;
-
         [IterationSetup]
         public void Setup()
         {
-            _factory = new MetricFactory(new CollectorRegistry());
-
-            var registry = Their.Prometheus.Metrics.NewCustomRegistry();
-            _theirFactory = Their.Prometheus.Metrics.WithCustomRegistry(registry);
+            ResetFactories();
         }
 
         [Benchmark(Baseline = true)]
@@ -40,7 +32,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleBaseLine()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _theirFactory.CreateCounter("testcounter", _help);
+                TheirMetricFactory.CreateCounter("testcounter", _help);
         }
 
         [Benchmark]
@@ -48,7 +40,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter("testcounter", _help);
+                OurMetricFactory.CreateCounter("testcounter", _help);
         }
 
         [Benchmark]
@@ -56,7 +48,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64("testcounter", _help);
+                OurMetricFactory.CreateCounterInt64("testcounter", _help);
         }
 
         [Benchmark(Baseline = true)]
@@ -64,7 +56,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleLabelsBaseLine()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _theirFactory.CreateCounter("testcounter", _help, "foo", "bar", "baz");
+                TheirMetricFactory.CreateCounter("testcounter", _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -72,7 +64,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter("testcounter", _help, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounter("testcounter", _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -80,7 +72,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleLabelsTuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter("testcounter", _help, ("foo", "bar", "baz"));
+                OurMetricFactory.CreateCounter("testcounter", _help, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
@@ -88,7 +80,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_SingleLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64("testcounter", _help, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounterInt64("testcounter", _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -96,7 +88,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_SingleLabelsTuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64("testcounter", _help, ("foo", "bar", "baz"));
+                OurMetricFactory.CreateCounterInt64("testcounter", _help, ("foo", "bar", "baz"));
         }
 
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
@@ -106,7 +98,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleSharedLabelsBaseLine()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _theirFactory.CreateCounter("testcounter", _help, _labelNames);
+                TheirMetricFactory.CreateCounter("testcounter", _help, _labelNames);
         }
 
         [Benchmark]
@@ -114,7 +106,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_SingleSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter("testcounter", _help, _labelNames);
+                OurMetricFactory.CreateCounter("testcounter", _help, _labelNames);
         }
 
         [Benchmark]
@@ -122,7 +114,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_SingleSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64("testcounter", _help, _labelNames);
+                OurMetricFactory.CreateCounterInt64("testcounter", _help, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
@@ -130,7 +122,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_ManyBaseLine()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _theirFactory.CreateCounter(_metricNames[i], _help, "foo", "bar", "baz");
+                TheirMetricFactory.CreateCounter(_metricNames[i], _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -138,7 +130,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter(_metricNames[i], _help, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounter(_metricNames[i], _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -146,7 +138,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_ManyTuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounter(_metricNames[i], _help, ("foo", "bar", "baz"));
+                OurMetricFactory.CreateCounter(_metricNames[i], _help, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
@@ -154,7 +146,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64(_metricNames[i], _help, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounterInt64(_metricNames[i], _help, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -162,7 +154,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void CounterInt64_ManyTuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                _factory.CreateCounterInt64(_metricNames[i], _help, ("foo", "bar", "baz"));
+                OurMetricFactory.CreateCounterInt64(_metricNames[i], _help, ("foo", "bar", "baz"));
         }
     }
 }

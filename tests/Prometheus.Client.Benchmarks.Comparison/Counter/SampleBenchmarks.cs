@@ -1,13 +1,12 @@
 extern alias Their;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
-    public class SampleBenchmarks
+    public class SampleBenchmarks : ComparisonBenchmarkBase
     {
         private const int _opIterations = 1000000;
 
@@ -18,17 +17,13 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         [IterationSetup]
         public void Setup()
         {
-            var factory = new MetricFactory(new CollectorRegistry());
-            _counter = factory.CreateCounter("testcounter", string.Empty);
-            _counterInt64 = factory.CreateCounterInt64("testcounterInt64", string.Empty);
+            _counter = OurMetricFactory.CreateCounter("testcounter", string.Empty);
+            _counterInt64 = OurMetricFactory.CreateCounterInt64("testcounterInt64", string.Empty);
 
-            var registry = Their.Prometheus.Metrics.NewCustomRegistry();
-            var theirFactory = Their.Prometheus.Metrics.WithCustomRegistry(registry);
-
-            _theirCounter = theirFactory.CreateCounter("testcounter", string.Empty);
+            _theirCounter = TheirMetricFactory.CreateCounter("testcounter", string.Empty);
         }
 
-        [Benchmark(Baseline = true, OperationsPerInvoke = 10)]
+        [Benchmark(Baseline = true)]
         [BenchmarkCategory("Counter_IncDefault")]
         public void Counter_IncDefaultBaseLine()
         {
@@ -36,7 +31,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
                 _theirCounter.Inc();
         }
 
-        [Benchmark(OperationsPerInvoke = 10)]
+        [Benchmark]
         [BenchmarkCategory("Counter_IncDefault")]
         public void Counter_IncDefault()
         {
@@ -44,12 +39,36 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
                 _counter.Inc();
         }
 
-        [Benchmark(OperationsPerInvoke = 10)]
+        [Benchmark]
         [BenchmarkCategory("Counter_IncDefault")]
         public void CounterInt64_IncDefault()
         {
             for (var i = 0; i < _opIterations; i++)
                 _counterInt64.Inc();
+        }
+
+        [Benchmark(Baseline = true)]
+        [BenchmarkCategory("Counter_Inc")]
+        public void Counter_IncBaseLine()
+        {
+            for (var i = 0; i < _opIterations; i++)
+                _theirCounter.Inc(i);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Counter_Inc")]
+        public void Counter_Inc()
+        {
+            for (var i = 0; i < _opIterations; i++)
+                _counter.Inc(i);
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Counter_Inc")]
+        public void CounterInt64_Inc()
+        {
+            for (var i = 0; i < _opIterations; i++)
+                _counterInt64.Inc(i);
         }
     }
 }

@@ -58,51 +58,51 @@ namespace Prometheus.Client.Tests
 
             Assert.Equal(16, size);
         }
-
-        [Fact]
-        public void FormatTuple0()
-        {
-            var tuple = ValueTuple.Create();
-            var formatted = TupleHelper.GenerateFormatter<ValueTuple>()(tuple);
-
-            Assert.Equal(new string[0], formatted);
-        }
-
-        [Fact]
-        public void FormatTuple1()
-        {
-            var tuple = ValueTuple.Create("1");
-            var formatted = TupleHelper.GenerateFormatter<ValueTuple<string>>()(tuple);
-
-            Assert.Equal(new[] { "1" }, formatted);
-        }
-
-        [Fact]
-        public void FormatTuple2()
-        {
-            var tuple = ("1", "2");
-            var formatted = TupleHelper.GenerateFormatter<(string, string)>()(tuple);
-
-            Assert.Equal(new[] { "1", "2" }, formatted);
-        }
-
-        [Fact]
-        public void FormatTuple8()
-        {
-            var tuple = ("1", "2", "3", "4", "5", "6", "7", "8");
-            var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string)>()(tuple);
-
-            Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8" }, formatted);
-        }
-
-        [Fact]
-        public void FormatTuple16()
-        {
-            var tuple = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16");
-            var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>()(tuple);
-
-            Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }, formatted);
-        }
+        //
+        // [Fact]
+        // public void FormatTuple0()
+        // {
+        //     var tuple = ValueTuple.Create();
+        //     var formatted = TupleHelper.GenerateFormatter<ValueTuple>()(tuple);
+        //
+        //     Assert.Equal(new string[0], formatted);
+        // }
+        //
+        // [Fact]
+        // public void FormatTuple1()
+        // {
+        //     var tuple = ValueTuple.Create("1");
+        //     var formatted = TupleHelper.GenerateFormatter<ValueTuple<string>>()(tuple);
+        //
+        //     Assert.Equal(new[] { "1" }, formatted);
+        // }
+        //
+        // [Fact]
+        // public void FormatTuple2()
+        // {
+        //     var tuple = ("1", "2");
+        //     var formatted = TupleHelper.GenerateFormatter<(string, string)>()(tuple);
+        //
+        //     Assert.Equal(new[] { "1", "2" }, formatted);
+        // }
+        //
+        // [Fact]
+        // public void FormatTuple8()
+        // {
+        //     var tuple = ("1", "2", "3", "4", "5", "6", "7", "8");
+        //     var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string)>()(tuple);
+        //
+        //     Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8" }, formatted);
+        // }
+        //
+        // [Fact]
+        // public void FormatTuple16()
+        // {
+        //     var tuple = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16");
+        //     var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>()(tuple);
+        //
+        //     Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }, formatted);
+        // }
 
         [Fact]
         public void ParseTuple0()
