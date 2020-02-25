@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Prometheus.Client
 {
-    internal static class TupleHelper
+    internal static class LabelsHelper
     {
         public static Type MakeValueTupleType(int len)
         {
@@ -70,18 +70,21 @@ namespace Prometheus.Client
             where TTuple : struct, IEquatable<TTuple>
 #endif
         {
-            return TupleHelperTyped<TTuple>.GetTupleHashCode(values);
+            return TupleHelper<TTuple>.GetTupleHashCode(values);
         }
 
         public static int GetHashCode(IReadOnlyList<string> values)
         {
             var result = 0;
-            foreach (var value in values)
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // do not use for-each here, it allocates which is easy to avoid by for loop
+            for (var i = 0; i < values.Count; i++)
             {
-                if(value == null)
+                if(values[i] == null)
                     throw new ArgumentException("Label value cannot be empty");
 
-                result = HashCode.Combine(result, value.GetHashCode());
+                result = HashCode.Combine(result, values[i].GetHashCode());
             }
 
             return result;
@@ -94,7 +97,7 @@ namespace Prometheus.Client
             where TTuple : struct, IEquatable<TTuple>
 #endif
         {
-            return TupleHelperTyped<TTuple>.ToArray(values);
+            return TupleHelper<TTuple>.ToArray(values);
         }
 
         public static TTuple FromArray<TTuple>(IReadOnlyList<string> values)
@@ -104,10 +107,10 @@ namespace Prometheus.Client
             where TTuple : struct, IEquatable<TTuple>
 #endif
         {
-            return TupleHelperTyped<TTuple>.FromArray(values);
+            return TupleHelper<TTuple>.FromArray(values);
         }
 
-        internal static Func<TTuple, TAggregate, Func<string, int, TAggregate, TAggregate>, TAggregate> MakeReducer<TTuple, TAggregate>()
+        private static Func<TTuple, TAggregate, Func<string, int, TAggregate, TAggregate>, TAggregate> MakeReducer<TTuple, TAggregate>()
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -148,7 +151,7 @@ namespace Prometheus.Client
                 Expression.Block(new ParameterExpression[0], methodBody), values, result, aggregator).Compile();
         }
 
-        internal static Func<IReadOnlyList<string>, TTuple> GenerateParser<TTuple>()
+        private static Func<IReadOnlyList<string>, TTuple> GenerateParser<TTuple>()
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -190,7 +193,7 @@ namespace Prometheus.Client
             }
         }
 
-        private static class TupleHelperTyped<TTuple>
+        private static class TupleHelper<TTuple>
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -202,12 +205,12 @@ namespace Prometheus.Client
             private static readonly Func<TTuple, string[], Func<string, int, string[], string[]>, string[]> FormatReducer;
             private static readonly Func<TTuple, int, Func<string, int, int, int>, int> HashCodeReducer;
 
-            static TupleHelperTyped()
+            static TupleHelper()
             {
-                _size = TupleHelper.GetSize<TTuple>();
-                FormatReducer = TupleHelper.MakeReducer<TTuple, string[]>();
-                HashCodeReducer = TupleHelper.MakeReducer<TTuple, int>();
-                _parser = TupleHelper.GenerateParser<TTuple>();
+                _size = LabelsHelper.GetSize<TTuple>();
+                FormatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
+                HashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
+                _parser = LabelsHelper.GenerateParser<TTuple>();
             }
 
             public static IReadOnlyList<string> ToArray(TTuple values)

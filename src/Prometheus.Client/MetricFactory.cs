@@ -60,7 +60,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, TupleHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateCounterInternal<TLabels>(configuration);
             }
 
@@ -124,7 +124,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, TupleHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateCounterInt64Internal<TLabels>(configuration);
             }
 
@@ -188,7 +188,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, TupleHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateGaugeInternal<TLabels>(configuration);
             }
 
@@ -254,7 +254,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new HistogramConfiguration(name, help, TupleHelper.ToArray(labels), buckets, options);
+                var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labels), buckets, options);
                 metric = CreateHistogramInternal<TLabels>(configuration);
             }
 
@@ -319,7 +319,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, TupleHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateUntypedInternal<TLabels>(configuration);
             }
 
@@ -406,7 +406,7 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new SummaryConfiguration(name, help, TupleHelper.ToArray(labels), options, objectives, maxAge, ageBuckets, bufCap);
+                var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labels), options, objectives, maxAge, ageBuckets, bufCap);
                 metric = CreateSummaryInternal<TLabels>(configuration);
             }
 
@@ -630,7 +630,7 @@ namespace Prometheus.Client
                 var factoryParameter = Expression.Parameter(typeof(MetricFactory), "factory");
                 for (var i = cache?.Length ?? 0; i <= labelsLen; i++)
                 {
-                    var labelsTupleType = TupleHelper.MakeValueTupleType(i);
+                    var labelsTupleType = LabelsHelper.MakeValueTupleType(i);
 
                     var targetMethodCall = Expression.Call(
                         factoryParameter,

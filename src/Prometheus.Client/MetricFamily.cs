@@ -36,7 +36,7 @@ namespace Prometheus.Client
             _metricNames = new[] { _configuration.Name };
             _instanceFactory = instanceFactory;
             _unlabelled = _instanceFactory(_configuration, default);
-            LabelNames = TupleHelper.FromArray<TLabels>(configuration.LabelNames);
+            LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
             if(configuration.LabelNames.Count > 0)
                 _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
         }
@@ -65,7 +65,7 @@ namespace Prometheus.Client
             if (labels.Length != _configuration.LabelNames.Count)
                 throw new ArgumentException("Wrong number of labels");
 
-            var key = TupleHelper.GetHashCode(labels);
+            var key = LabelsHelper.GetHashCode(labels);
 
             if (_labelledMetrics.TryGetValue(key, out var metric))
             {
@@ -87,14 +87,14 @@ namespace Prometheus.Client
             if (_labelledMetrics == null)
                 throw new InvalidOperationException("Metric family does not have any labels");
 
-            var key = TupleHelper.GetHashCode(labels);
+            var key = LabelsHelper.GetHashCode(labels);
 
             if (_labelledMetrics.TryGetValue(key, out var metric))
             {
                 return metric;
             }
 
-            metric = CreateLabelled(TupleHelper.ToArray(labels));
+            metric = CreateLabelled(LabelsHelper.ToArray(labels));
             return _labelledMetrics.GetOrAdd(key, metric);
         }
 
@@ -119,7 +119,7 @@ namespace Prometheus.Client
                 yield break;
 
             foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<TLabels, TMetric>(TupleHelper.FromArray<TLabels>(labelled.Value.LabelValues), labelled.Value);
+                yield return new KeyValuePair<TLabels, TMetric>(LabelsHelper.FromArray<TLabels>(labelled.Value.LabelValues), labelled.Value);
         }
 
         private IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> EnumerateLabelledAsStrings()
