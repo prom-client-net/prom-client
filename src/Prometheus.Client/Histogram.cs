@@ -7,7 +7,7 @@ using Prometheus.Client.MetricsWriter.Abstractions;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="IHistogram" />
-    public sealed class Histogram : MetricBase<HistogramConfiguration>, IHistogram
+    internal sealed class Histogram : MetricBase<HistogramConfiguration>, IHistogram
     {
         private ThreadSafeLong[] _bucketCounts;
         private ThreadSafeDouble _sum = new ThreadSafeDouble(0.0D);

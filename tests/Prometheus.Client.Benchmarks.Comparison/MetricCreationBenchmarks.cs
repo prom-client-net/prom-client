@@ -92,8 +92,6 @@ namespace Prometheus.Client.Benchmarks.Comparison
                 OurMetricFactory.CreateCounterInt64("testcounter", _help, ("foo", "bar", "baz"));
         }
 
-
-
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Counter_Single_WithSharedLabels")]
         public void Counter_SingleSharedLabelsBaseLine()
@@ -117,9 +115,6 @@ namespace Prometheus.Client.Benchmarks.Comparison
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64("testcounter", _help, _labelNames);
         }
-
-
-
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Counter_Many")]

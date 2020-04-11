@@ -11,7 +11,7 @@ using Prometheus.Client.SummaryImpl;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ISummary" />
-    public sealed class Summary : MetricBase<SummaryConfiguration>, ISummary
+    internal sealed class Summary : MetricBase<SummaryConfiguration>, ISummary
     {
         private static readonly ArrayPool<double> _arrayPool = ArrayPool<double>.Shared;
         // Protects hotBuf and hotBufExpTime.

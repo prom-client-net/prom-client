@@ -7,7 +7,7 @@ using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client
 {
-    public sealed class CounterInt64 : MetricBase<MetricConfiguration>, ICounter<long>
+    internal sealed class CounterInt64 : MetricBase<MetricConfiguration>, ICounter<long>
     {
         private ThreadSafeLong _value  = default;
 

@@ -184,6 +184,5 @@ namespace Prometheus.Client.Tests
 
             Assert.Equal(tupleCode, arrayCode);
         }
-
     }
 }

@@ -8,7 +8,7 @@ using Prometheus.Client.MetricsWriter.Abstractions;
 namespace Prometheus.Client
 {
     /// <inheritdoc cref="ICounter" />
-    public sealed class Counter : MetricBase<MetricConfiguration>, ICounter
+    internal sealed class Counter : MetricBase<MetricConfiguration>, ICounter
     {
         private ThreadSafeDouble _value = default;
 

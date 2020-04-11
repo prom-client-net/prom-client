@@ -6,22 +6,26 @@ namespace Prometheus.Client.Abstractions
     ///         https://prometheus.io/docs/concepts/metric_types/#gauge
     ///     </remarks>
     /// </summary>
-    public interface IGauge : IMetric<double>
+    public interface IGauge<T> : IMetric<T>
+        where T : struct
     {
         void Inc();
 
-        void Inc(double increment);
+        void Inc(T increment);
 
-        void Inc(double increment, long? timestamp);
+        void Inc(T increment, long? timestamp);
 
-        void Set(double val);
+        void Set(T val);
 
-        void Set(double val, long? timestamp);
+        void Set(T val, long? timestamp);
 
         void Dec();
 
-        void Dec(double decrement);
+        void Dec(T decrement);
 
-        void Dec(double decrement, long? timestamp);
+        void Dec(T decrement, long? timestamp);
     }
+
+    public interface IGauge : IGauge<double>
+    {}
 }
