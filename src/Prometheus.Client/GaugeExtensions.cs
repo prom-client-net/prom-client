@@ -10,7 +10,7 @@ namespace Prometheus.Client
     {
         public static void Inc(this IGauge gauge, double increment, DateTimeOffset timestamp)
         {
-            gauge.Inc(increment, timestamp.ToUnixTime());
+            gauge.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Inc(this IMetricFamily<IGauge> metricFamily, double increment = 1)
@@ -25,12 +25,12 @@ namespace Prometheus.Client
 
         public static void Inc(this IMetricFamily<IGauge> metricFamily, double increment, DateTimeOffset timestamp)
         {
-            metricFamily.Unlabelled.Inc(increment, timestamp.ToUnixTime());
+            metricFamily.Unlabelled.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Dec(this IGauge gauge, double decrement, DateTimeOffset timestamp)
         {
-            gauge.Dec(decrement, timestamp.ToUnixTime());
+            gauge.Dec(decrement, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Dec(this IMetricFamily<IGauge> metricFamily, double decrement = 1)
@@ -45,7 +45,7 @@ namespace Prometheus.Client
 
         public static void Set(this IGauge gauge, double val, DateTimeOffset timestamp)
         {
-            gauge.Set(val, timestamp.ToUnixTime());
+            gauge.Set(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Set(this IMetricFamily<IGauge> metricFamily, double value)

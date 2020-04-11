@@ -10,7 +10,7 @@ namespace Prometheus.Client
     {
         public static void Inc(this ICounter<long> counter, long increment, DateTimeOffset timestamp)
         {
-            counter.Inc(increment, timestamp.ToUnixTime());
+            counter.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Inc(this IMetricFamily<ICounter<long>> metricFamily, long increment = 1)

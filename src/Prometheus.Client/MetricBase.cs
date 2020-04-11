@@ -13,31 +13,30 @@ namespace Prometheus.Client
         protected readonly TConfig Configuration;
         private readonly bool _includeTimestamp;
         private long _timestamp;
-        private bool _hasObservation;
+        private bool _hasObservations;
 
         protected IReadOnlyList<KeyValuePair<string, string>> Labels { get; }
 
-        protected MetricBase(TConfig config, IReadOnlyList<string> labelValues)
+        protected MetricBase(TConfig config, IReadOnlyList<string> labelValues, Func<DateTimeOffset> currentTimeProvider = null)
         {
+            if (currentTimeProvider == null)
+                currentTimeProvider = () => DateTimeOffset.UtcNow;
+
+            CurrentTimeProvider = currentTimeProvider;
             Configuration = config;
             _includeTimestamp = config.IncludeTimestamp;
 
             if (labelValues != null && labelValues.Count > 0)
-            {
-                if (config.LabelNames.Count != labelValues.Count)
-                    throw new ArgumentException("Incorrect number of labels");
-
                 Labels = config.LabelNames.Zip(labelValues, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
-            }
 
             LabelValues = labelValues;
         }
 
-        public bool HasObservations => Volatile.Read(ref _hasObservation);
+        protected internal bool HasObservations => Volatile.Read(ref _hasObservations);
 
-        internal IReadOnlyList<string> LabelValues { get; }
+        protected internal IReadOnlyList<string> LabelValues { get; }
 
-        protected long? Timestamp
+        protected internal long? Timestamp
         {
             get
             {
@@ -50,15 +49,17 @@ namespace Prometheus.Client
 
         protected internal abstract void Collect(IMetricsWriter writer);
 
+        protected Func<DateTimeOffset> CurrentTimeProvider { get; }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected void TimestampIfRequired(long? timestamp = null)
         {
-            Volatile.Write(ref _hasObservation, true);
+            Volatile.Write(ref _hasObservations, true);
 
             if (!_includeTimestamp)
                 return;
 
-            var now = DateTime.UtcNow.ToUnixTime();
+            var now = CurrentTimeProvider().ToUnixTimeMilliseconds();
 
             if (!timestamp.HasValue)
             {
@@ -74,7 +75,7 @@ namespace Prometheus.Client
                 return;
             }
 
-            // use provided timestamp unless current timestamp bigger
+            // use provided timestamp unless current timestamp is bigger
             while (true)
             {
                 long current = Interlocked.Read(ref _timestamp);

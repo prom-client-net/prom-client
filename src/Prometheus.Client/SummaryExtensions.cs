@@ -12,7 +12,7 @@ namespace Prometheus.Client
     {
         public static void Observe(this ISummary observer, double val, DateTimeOffset timestamp)
         {
-            observer.Observe(val, timestamp.ToUnixTime());
+            observer.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Observe(this IMetricFamily<ISummary> metricFamily, double val)
@@ -22,7 +22,7 @@ namespace Prometheus.Client
 
         public static void Observe(this IMetricFamily<ISummary> metricFamily, double val, DateTimeOffset timestamp)
         {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTime());
+            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val)
@@ -42,7 +42,7 @@ namespace Prometheus.Client
         where TLabels : struct, IEquatable<TLabels>
 #endif
         {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTime());
+            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static IMetricFamily<ISummary, ValueTuple<string>> CreateSummary(

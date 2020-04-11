@@ -94,7 +94,9 @@ namespace Prometheus.Client.Tests.CounterTests
             var factory = new MetricFactory(registry);
 
             var counter1 = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
+            counter1.Unlabelled.Inc();
             var counter2 = factory.CreateCounter("test_counter", string.Empty, ("label1", "label2"));
+            counter2.Unlabelled.Inc();
 
             // Cannot compare metrics families, because of different contracts, should check if sample the same
             Assert.Equal(counter1.Unlabelled, counter2.Unlabelled);
