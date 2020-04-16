@@ -29,7 +29,7 @@ namespace Prometheus.Client.Tests
 
             metricsSetup(factory);
 
-            string formattedText = null;
+            string formattedText;
 
             using (var stream = new MemoryStream())
             {

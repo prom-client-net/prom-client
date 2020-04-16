@@ -6,7 +6,7 @@ using Prometheus.Client.Collectors;
 using Prometheus.Client.SummaryImpl;
 using Xunit;
 
-namespace Prometheus.Client.Tests
+namespace Prometheus.Client.Tests.SummaryTests
 {
     public class SummaryTests
     {
@@ -20,9 +20,6 @@ namespace Prometheus.Client.Tests
             int mutations = (n % 10000) + 10000;
             int concLevel = (n % 5) + 1;
             int total = mutations * concLevel;
-
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
 
             var sum = new Summary(new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None), Array.Empty<string>());
 

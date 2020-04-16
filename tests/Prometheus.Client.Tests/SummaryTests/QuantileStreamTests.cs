@@ -4,7 +4,7 @@ using System.Linq;
 using Prometheus.Client.SummaryImpl;
 using Xunit;
 
-namespace Prometheus.Client.Tests
+namespace Prometheus.Client.Tests.SummaryTests
 {
     public class QuantileStreamTests
     {

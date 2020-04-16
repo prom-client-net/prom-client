@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Xunit;
-using Prometheus.Client;
 
 namespace Prometheus.Client.Tests.HistogramTests
 {

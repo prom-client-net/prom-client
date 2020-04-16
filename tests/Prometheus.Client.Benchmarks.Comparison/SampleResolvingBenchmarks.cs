@@ -32,7 +32,7 @@ namespace Prometheus.Client.Benchmarks.Comparison
             for (var i = 0; i < _labelsCount; i++)
             {
                 _tupleLabels.Add(($"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"));
-                _labels.Add(new string[] { $"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"});
+                _labels.Add(new [] { $"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"});
             }
 
             _counterTuplesFamily = OurMetricFactory.CreateCounter("_counterFamilyTuples", string.Empty, ("label1", "label2", "label3", "label4", "label5" ));

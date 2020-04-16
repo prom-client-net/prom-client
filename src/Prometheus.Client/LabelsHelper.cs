@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Net;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Prometheus.Client
@@ -174,6 +172,7 @@ namespace Prometheus.Client
                         args[i] = Expression.Property(source, "Item", Expression.Constant(offset + i));
                 }
 
+                // ReSharper disable once AssignNullToNotNullAttribute
                 return Expression.New(tupleType.GetConstructor(tupleType.GenericTypeArguments), args);
             }
 

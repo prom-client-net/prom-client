@@ -162,7 +162,7 @@ namespace Prometheus.Client.Tests
         public void GetHashCode1()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1"));
-            var arrayCode = LabelsHelper.GetHashCode(new string[] { "1" });
+            var arrayCode = LabelsHelper.GetHashCode(new [] { "1" });
 
             Assert.Equal(tupleCode, arrayCode);
         }
@@ -171,7 +171,7 @@ namespace Prometheus.Client.Tests
         public void GetHashCode2()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1", "2"));
-            var arrayCode = LabelsHelper.GetHashCode(new string[] {"1", "2"});
+            var arrayCode = LabelsHelper.GetHashCode(new [] {"1", "2"});
 
             Assert.Equal(tupleCode, arrayCode);
         }
@@ -180,7 +180,7 @@ namespace Prometheus.Client.Tests
         public void GetHashCode8()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1", "2", "3", "4", "5", "6", "7", "8"));
-            var arrayCode = LabelsHelper.GetHashCode(new string[] {"1", "2", "3", "4", "5", "6", "7", "8"});
+            var arrayCode = LabelsHelper.GetHashCode(new [] {"1", "2", "3", "4", "5", "6", "7", "8"});
 
             Assert.Equal(tupleCode, arrayCode);
         }

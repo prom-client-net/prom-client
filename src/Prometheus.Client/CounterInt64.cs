@@ -30,15 +30,10 @@ namespace Prometheus.Client
         public void Inc(long increment, long? timestamp)
         {
             if (increment < 0)
-                ThrowInvalidIncArgument();
+                throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
             _value.Add(increment);
             TimestampIfRequired(timestamp);
-        }
-
-        private void ThrowInvalidIncArgument()
-        {
-            throw new ArgumentOutOfRangeException("increment", "Counter cannot go down");
         }
 
         public long Value => _value.Value;

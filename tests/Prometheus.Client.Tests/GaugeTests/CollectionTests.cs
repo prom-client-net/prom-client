@@ -33,7 +33,7 @@ namespace Prometheus.Client.Tests.GaugeTests
                 gauge.WithLabels("some").Inc(5);
 
                 var gauge2 = factory.CreateGauge("nextgauge", "with help text", "group", "type");
-                gauge2.Inc(1);
+                gauge2.Inc();
                 gauge2.WithLabels("any", "2").Dec(5);
 
                 var nanGauge = factory.CreateGauge("nangauge", "example of NaN");

@@ -11,7 +11,7 @@ namespace Prometheus.Client.Tests.CounterTests
         public Task EmptyCollection()
         {
             return TestCollectionAsync(factory => {
-                var counter = factory.CreateCounter("test", "with help text", MetricFlags.None);
+                factory.CreateCounter("test", "with help text", MetricFlags.None);
             }, $"{_resourcesNamespace}.CounterTests_Empty.txt");
         }
 

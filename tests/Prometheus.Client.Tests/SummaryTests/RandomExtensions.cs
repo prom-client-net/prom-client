@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Prometheus.Client.Tests
+namespace Prometheus.Client.Tests.SummaryTests
 {
     public static class RandomExtensions
     {
