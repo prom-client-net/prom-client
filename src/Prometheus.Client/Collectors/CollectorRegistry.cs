@@ -32,7 +32,6 @@ namespace Prometheus.Client.Collectors
 
         public void Add(ICollector collector)
         {
-            ValidateCollectorName(collector.Configuration.Name);
             _lock.EnterWriteLock();
             try
             {
@@ -60,9 +59,8 @@ namespace Prometheus.Client.Collectors
 
         public TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
-            where TConfig : ICollectorConfiguration
+            where TConfig : CollectorConfiguration
         {
-            ValidateCollectorName(config.Name);
             _lock.EnterReadLock();
             try
             {
@@ -109,7 +107,6 @@ namespace Prometheus.Client.Collectors
 
         public ICollector Remove(string name)
         {
-            ValidateCollectorName(name);
             ICollector collector;
             _lock.EnterReadLock();
             try
@@ -175,12 +172,6 @@ namespace Prometheus.Client.Collectors
             {
                 _lock.ExitWriteLock();
             }
-        }
-
-        private void ValidateCollectorName(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
         }
 
         private void AddInternal(ICollector collector)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 #endif
 using Prometheus.Client.Abstractions;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.MetricsWriter.Abstractions;
@@ -43,7 +44,7 @@ namespace Prometheus.Client
 
         public IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled => EnumerateLabelled();
 
-        ICollectorConfiguration ICollector.Configuration => _configuration;
+        CollectorConfiguration ICollector.Configuration => _configuration;
 
         IReadOnlyList<string> ICollector.MetricNames => _metricNames;
 

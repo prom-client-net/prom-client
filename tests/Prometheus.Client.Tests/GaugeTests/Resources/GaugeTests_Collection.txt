@@ -4,8 +4,8 @@ nangauge NaN
 # HELP nextgauge with help text
 # TYPE nextgauge gauge
 nextgauge 1
-nextgauge{group="any",type="2"} -5
+nextgauge{group="any",type="2"} -5.2
 # HELP test with help text
 # TYPE test gauge
 test 1
-test{category="some"} 5
+test{category="some"} 5.5

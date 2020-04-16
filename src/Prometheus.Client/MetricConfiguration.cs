@@ -39,7 +39,7 @@ namespace Prometheus.Client
             if (labelName.Length >=2 && labelName[0] == '_' && labelName[1] == '_')
                 return false;
 
-            if (char.IsNumber(labelName[0]))
+            if (char.IsDigit(labelName[0]))
                 return false;
 
             foreach (var ch in labelName)

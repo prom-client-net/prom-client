@@ -1,17 +1,17 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Prometheus.Client.Tests.GaugeTests
+namespace Prometheus.Client.Tests.GaugeInt64Tests
 {
     public class CollectionTests
     {
-        private const string _resourcesNamespace = "Prometheus.Client.Tests.GaugeTests.Resources";
+        private const string _resourcesNamespace = "Prometheus.Client.Tests.GaugeInt64Tests.Resources";
 
         [Fact]
         public Task EmptyCollection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                factory.CreateGauge("test", "with help text", false, false, "category");
+                factory.CreateGaugeInt64("test", "with help text", false, false, "category");
             }, $"{_resourcesNamespace}.GaugeTests_Empty.txt");
         }
 
@@ -19,8 +19,8 @@ namespace Prometheus.Client.Tests.GaugeTests
         public Task SuppressEmptySamples()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                var gauge = factory.CreateGauge("test", "with help text", "category");
-                gauge.WithLabels("some").Inc(5.5);
+                var gauge = factory.CreateGaugeInt64("test", "with help text", "category");
+                gauge.WithLabels("some").Inc(5);
             }, $"{_resourcesNamespace}.GaugeTests_SuppressEmpty.txt");
         }
 
@@ -28,16 +28,13 @@ namespace Prometheus.Client.Tests.GaugeTests
         public Task Collection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                var gauge = factory.CreateGauge("test", "with help text", "category");
+                var gauge = factory.CreateGaugeInt64("test", "with help text", "category");
                 gauge.Inc();
-                gauge.WithLabels("some").Inc(5.5);
+                gauge.WithLabels("some").Inc(5);
 
-                var gauge2 = factory.CreateGauge("nextgauge", "with help text", "group", "type");
+                var gauge2 = factory.CreateGaugeInt64("nextgauge", "with help text", "group", "type");
                 gauge2.Inc();
-                gauge2.WithLabels("any", "2").Dec(5.2);
-
-                var nanGauge = factory.CreateGauge("nangauge", "example of NaN");
-                nanGauge.Set(double.NaN);
+                gauge2.WithLabels("any", "2").Dec(5);
             }, $"{_resourcesNamespace}.GaugeTests_Collection.txt");
         }
     }

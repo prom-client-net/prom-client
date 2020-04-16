@@ -23,7 +23,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
             }
         }
 
-        public ICollectorConfiguration Configuration { get; }
+        public CollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

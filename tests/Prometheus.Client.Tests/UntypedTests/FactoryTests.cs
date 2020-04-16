@@ -4,28 +4,8 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.UntypedTests
 {
-    public class FactoryTests : MetricTestBase
+    public class FactoryTests
     {
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.Throws<ArgumentException>(() => factory.CreateUntyped("test_untyped", string.Empty, "label1", label));
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels_Tuple(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.Throws<ArgumentException>(() => factory.CreateUntyped("test_untyped", string.Empty, ValueTuple.Create(label)));
-        }
-
         [Fact]
         public void ThrowOnNameConflict_Strings()
         {

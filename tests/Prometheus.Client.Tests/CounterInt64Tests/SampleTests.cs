@@ -1,15 +1,15 @@
 using System;
 using Xunit;
 
-namespace Prometheus.Client.Tests.CounterTests
+namespace Prometheus.Client.Tests.CounterInt64Tests
 {
     public class SampleTests
     {
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
-        [InlineData(3.1)]
-        public void CanIncrement(double inc)
+        [InlineData(3)]
+        public void CanIncrement(long inc)
         {
             var counter = CreateCounter();
             counter.Inc(inc);
@@ -19,8 +19,8 @@ namespace Prometheus.Client.Tests.CounterTests
 
         [Theory]
         [InlineData(-1)]
-        [InlineData(-3.1)]
-        public void CannotDecrement(double inc)
+        [InlineData(-3)]
+        public void CannotDecrement(long inc)
         {
             var counter = CreateCounter();
             Assert.Throws<ArgumentOutOfRangeException>(() => counter.Inc(inc));
@@ -35,10 +35,10 @@ namespace Prometheus.Client.Tests.CounterTests
             Assert.Equal(1, counter.Value);
         }
 
-        private Counter CreateCounter(MetricFlags options = MetricFlags.Default)
+        private CounterInt64 CreateCounter(MetricFlags options = MetricFlags.Default)
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
-            return new Counter(config, Array.Empty<string>());
+            return new CounterInt64(config, Array.Empty<string>());
         }
     }
 }

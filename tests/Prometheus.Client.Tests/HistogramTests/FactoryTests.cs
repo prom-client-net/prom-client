@@ -4,28 +4,8 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.HistogramTests
 {
-    public class FactoryTests : MetricTestBase
+    public class FactoryTests
     {
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.ThrowsAny<ArgumentException>(() => factory.CreateHistogram("test_histogram", string.Empty, "label1", label));
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels_Tuple(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.ThrowsAny<ArgumentException>(() => factory.CreateHistogram("test_histogram", string.Empty, ValueTuple.Create(label)));
-        }
-
         [Fact]
         public void ThrowOnNameConflict_Strings()
         {

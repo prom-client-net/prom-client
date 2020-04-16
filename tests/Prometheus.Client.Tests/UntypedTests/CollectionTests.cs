@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.UntypedTests
 {
-    public class CollectionTests : MetricTestBase
+    public class CollectionTests
     {
         private const string _resourcesNamespace = "Prometheus.Client.Tests.UntypedTests.Resources";
 
         [Fact]
         public Task EmptyCollection()
         {
-            return TestCollectionAsync(factory => {
+            return CollectionTestHelper.TestCollectionAsync(factory => {
                 factory.CreateUntyped("test", "with help text", false, false, "category");
             }, $"{_resourcesNamespace}.UntypedTests_Empty.txt");
         }
@@ -18,7 +18,7 @@ namespace Prometheus.Client.Tests.UntypedTests
         [Fact]
         public Task Collection()
         {
-            return TestCollectionAsync(factory => {
+            return CollectionTestHelper.TestCollectionAsync(factory => {
                 var untyped = factory.CreateUntyped("test", "with help text", "category");
                 untyped.Set(1);
                 untyped.WithLabels("some").Set(double.NaN);

@@ -2,15 +2,15 @@ using System;
 using Prometheus.Client.Abstractions;
 using Xunit;
 
-namespace Prometheus.Client.Tests.GaugeTests
+namespace Prometheus.Client.Tests.GaugeInt64Tests
 {
     public class SampleTests
     {
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
-        [InlineData(3.1)]
-        public void CanIncrement(double inc)
+        [InlineData(3)]
+        public void CanIncrement(long inc)
         {
             var gauge = CreateGauge();
             gauge.Inc(inc);
@@ -21,8 +21,8 @@ namespace Prometheus.Client.Tests.GaugeTests
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
-        [InlineData(3.1)]
-        public void CanDecrement(double dec)
+        [InlineData(3)]
+        public void CanDecrement(long dec)
         {
             var gauge = CreateGauge();
             gauge.Dec(dec);
@@ -35,7 +35,7 @@ namespace Prometheus.Client.Tests.GaugeTests
         [InlineData(1)]
         [InlineData(42)]
         [InlineData(-42)]
-        public void CanSetValue(double value)
+        public void CanSetValue(long value)
         {
             var gauge = CreateGauge();
             gauge.Set(value);
@@ -61,38 +61,10 @@ namespace Prometheus.Client.Tests.GaugeTests
             Assert.Equal(1, gauge.Value);
         }
 
-        [Fact]
-        public void ShouldAllowNaN()
-        {
-            var gauge = CreateGauge();
-
-            gauge.Set(double.NaN);
-
-            Assert.Equal(double.NaN, gauge.Value);
-        }
-
-        [Fact]
-        public void ShouldThrowOnIncIfNaN()
-        {
-            var gauge = CreateGauge();
-            gauge.Set(double.NaN);
-
-            Assert.Throws<InvalidOperationException>(() => gauge.Inc());
-        }
-
-        [Fact]
-        public void ShouldThrowOnDecIfNaN()
-        {
-            var gauge = CreateGauge();
-            gauge.Set(double.NaN);
-
-            Assert.Throws<InvalidOperationException>(() => gauge.Dec());
-        }
-
-        private IGauge CreateGauge(MetricFlags options = MetricFlags.Default)
+        private IGauge<long> CreateGauge(MetricFlags options = MetricFlags.Default)
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
-            return new Gauge(config, Array.Empty<string>());
+            return new GaugeInt64(config, Array.Empty<string>());
         }
     }
 }
