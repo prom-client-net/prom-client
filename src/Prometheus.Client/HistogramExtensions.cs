@@ -10,7 +10,7 @@ namespace Prometheus.Client
     {
         public static void Observe(this IHistogram observer, double val, DateTimeOffset timestamp)
         {
-            observer.Observe(val, timestamp.ToUnixTime());
+            observer.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Observe(this IMetricFamily<IHistogram> metricFamily, double val)
@@ -20,7 +20,7 @@ namespace Prometheus.Client
 
         public static void Observe(this IMetricFamily<IHistogram> metricFamily, double val, DateTimeOffset timestamp)
         {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTime());
+            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val)
@@ -40,7 +40,7 @@ namespace Prometheus.Client
         where TLabels : struct, IEquatable<TLabels>
 #endif
         {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTime());
+            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(this MetricFactory factory, string name, string help, string labelName, double[] buckets = null, MetricFlags options = MetricFlags.Default)

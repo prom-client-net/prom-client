@@ -6,7 +6,7 @@ using Prometheus.Client.Collectors;
 using Prometheus.Client.SummaryImpl;
 using Xunit;
 
-namespace Prometheus.Client.Tests
+namespace Prometheus.Client.Tests.SummaryTests
 {
     public class SummaryTests
     {
@@ -20,9 +20,6 @@ namespace Prometheus.Client.Tests
             int mutations = (n % 10000) + 10000;
             int concLevel = (n % 5) + 1;
             int total = mutations * concLevel;
-
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
 
             var sum = new Summary(new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None), Array.Empty<string>());
 
@@ -144,19 +141,20 @@ namespace Prometheus.Client.Tests
         public void TestSummaryDecay()
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTimeOffset currentTime = baseTime;
             var summaryConfig = new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None,
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
-            var child = new Summary(summaryConfig, Array.Empty<string>(), baseTime);
+            var child = new Summary(summaryConfig, Array.Empty<string>(), () => currentTime);
             var values = new double[summaryConfig.Objectives.Count];
 
             for (int i = 0; i < 1000; i++)
             {
-                var now = baseTime.AddSeconds(i);
-                child.Observe(i, null, now);
+                currentTime= baseTime.AddSeconds(i);
+                child.Observe(i, null);
 
                 if (i % 10 == 0)
                 {
-                    child.ForkState(now, out var _, out var _, values);
+                    child.ForkState(out var _, out var _, values);
                     double got = values[0];
                     double want = Math.Max((double) i / 10, (double) i - 90);
 
@@ -164,8 +162,9 @@ namespace Prometheus.Client.Tests
                 }
             }
 
+            currentTime = baseTime.AddSeconds(1000).AddSeconds(100);
             // Wait for MaxAge without observations and make sure quantiles are NaN.
-            child.ForkState(baseTime.AddSeconds(1000).AddSeconds(100), out var _, out var _, values);
+            child.ForkState(out _, out _, values);
             Assert.True(double.IsNaN(values[0]));
         }
     }

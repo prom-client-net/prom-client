@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public class TupleHelperTests
+    public class LabelsHelperTests
     {
         [Theory]
         [InlineData(0, typeof(ValueTuple))]
@@ -14,7 +14,7 @@ namespace Prometheus.Client.Tests
         [InlineData(16, typeof((string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)))]
         public void MakeValueTupleTypeTests(int len, Type expected)
         {
-            var type = TupleHelper.MakeValueTupleType(len);
+            var type = LabelsHelper.MakeValueTupleType(len);
 
             Assert.Equal(expected, type);
         }
@@ -22,7 +22,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void GetSize0Test()
         {
-            var size = TupleHelper.GetSize<ValueTuple>();
+            var size = LabelsHelper.GetSize<ValueTuple>();
 
             Assert.Equal(0, size);
         }
@@ -30,7 +30,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void GetSize1Test()
         {
-            var size = TupleHelper.GetSize<ValueTuple<string>>();
+            var size = LabelsHelper.GetSize<ValueTuple<string>>();
 
             Assert.Equal(1, size);
         }
@@ -38,7 +38,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void GetSize2Test()
         {
-            var size = TupleHelper.GetSize<(string, string)>();
+            var size = LabelsHelper.GetSize<(string, string)>();
 
             Assert.Equal(2, size);
         }
@@ -46,7 +46,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void GetSize8Test()
         {
-            var size = TupleHelper.GetSize<(string, string, string, string, string, string, string, string)>();
+            var size = LabelsHelper.GetSize<(string, string, string, string, string, string, string, string)>();
 
             Assert.Equal(8, size);
         }
@@ -54,7 +54,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void GetSize16Test()
         {
-            var size = TupleHelper.GetSize<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>();
+            var size = LabelsHelper.GetSize<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>();
 
             Assert.Equal(16, size);
         }
@@ -63,7 +63,7 @@ namespace Prometheus.Client.Tests
         public void FormatTuple0()
         {
             var tuple = ValueTuple.Create();
-            var formatted = TupleHelper.GenerateFormatter<ValueTuple>()(tuple);
+            var formatted = LabelsHelper.ToArray(tuple);
 
             Assert.Equal(new string[0], formatted);
         }
@@ -72,7 +72,7 @@ namespace Prometheus.Client.Tests
         public void FormatTuple1()
         {
             var tuple = ValueTuple.Create("1");
-            var formatted = TupleHelper.GenerateFormatter<ValueTuple<string>>()(tuple);
+            var formatted = LabelsHelper.ToArray(tuple);
 
             Assert.Equal(new[] { "1" }, formatted);
         }
@@ -81,7 +81,7 @@ namespace Prometheus.Client.Tests
         public void FormatTuple2()
         {
             var tuple = ("1", "2");
-            var formatted = TupleHelper.GenerateFormatter<(string, string)>()(tuple);
+            var formatted = LabelsHelper.ToArray(tuple);
 
             Assert.Equal(new[] { "1", "2" }, formatted);
         }
@@ -90,7 +90,7 @@ namespace Prometheus.Client.Tests
         public void FormatTuple8()
         {
             var tuple = ("1", "2", "3", "4", "5", "6", "7", "8");
-            var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string)>()(tuple);
+            var formatted = LabelsHelper.ToArray(tuple);
 
             Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8" }, formatted);
         }
@@ -99,7 +99,7 @@ namespace Prometheus.Client.Tests
         public void FormatTuple16()
         {
             var tuple = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16");
-            var formatted = TupleHelper.GenerateFormatter<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>()(tuple);
+            var formatted = LabelsHelper.ToArray(tuple);
 
             Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }, formatted);
         }
@@ -108,7 +108,7 @@ namespace Prometheus.Client.Tests
         public void ParseTuple0()
         {
             var arr = new string[0];
-            var parsed = TupleHelper.GenerateParser<ValueTuple>()(arr);
+            var parsed = LabelsHelper.FromArray<ValueTuple>(arr);
 
             Assert.Equal(ValueTuple.Create(), parsed);
         }
@@ -117,7 +117,7 @@ namespace Prometheus.Client.Tests
         public void ParseTuple1()
         {
             var arr = new[] { "1" };
-            var parsed = TupleHelper.GenerateParser<ValueTuple<string>>()(arr);
+            var parsed = LabelsHelper.FromArray<ValueTuple<string>>(arr);
 
             Assert.Equal(ValueTuple.Create("1"), parsed);
         }
@@ -126,7 +126,7 @@ namespace Prometheus.Client.Tests
         public void ParseTuple2()
         {
             var arr = new[] { "1", "2" };
-            var parsed = TupleHelper.GenerateParser<(string, string)>()(arr);
+            var parsed = LabelsHelper.FromArray<(string, string)>(arr);
 
             Assert.Equal(("1", "2"), parsed);
         }
@@ -135,7 +135,7 @@ namespace Prometheus.Client.Tests
         public void ParseTuple8()
         {
             var arr = new[] { "1", "2", "3", "4", "5", "6", "7", "8" };
-            var parsed = TupleHelper.GenerateParser<(string, string, string, string, string, string, string, string)>()(arr);
+            var parsed = LabelsHelper.FromArray<(string, string, string, string, string, string, string, string)>(arr);
 
             Assert.Equal(("1", "2", "3", "4", "5", "6", "7", "8"), parsed);
         }
@@ -144,9 +144,45 @@ namespace Prometheus.Client.Tests
         public void ParseTuple16()
         {
             var arr = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" };
-            var parsed = TupleHelper.GenerateParser<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>()(arr);
+            var parsed = LabelsHelper.FromArray<(string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string)>(arr);
 
             Assert.Equal(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), parsed);
+        }
+
+        [Fact]
+        public void GetHashCode0()
+        {
+            var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create());
+            var arrayCode = LabelsHelper.GetHashCode(new string[0]);
+
+            Assert.Equal(tupleCode, arrayCode);
+        }
+
+        [Fact]
+        public void GetHashCode1()
+        {
+            var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1"));
+            var arrayCode = LabelsHelper.GetHashCode(new [] { "1" });
+
+            Assert.Equal(tupleCode, arrayCode);
+        }
+
+        [Fact]
+        public void GetHashCode2()
+        {
+            var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1", "2"));
+            var arrayCode = LabelsHelper.GetHashCode(new [] {"1", "2"});
+
+            Assert.Equal(tupleCode, arrayCode);
+        }
+
+        [Fact]
+        public void GetHashCode8()
+        {
+            var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create("1", "2", "3", "4", "5", "6", "7", "8"));
+            var arrayCode = LabelsHelper.GetHashCode(new [] {"1", "2", "3", "4", "5", "6", "7", "8"});
+
+            Assert.Equal(tupleCode, arrayCode);
         }
     }
 }

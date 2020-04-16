@@ -11,7 +11,7 @@ namespace Prometheus.Client
     {
         private ThreadSafeDouble _value;
 
-        public Gauge(MetricConfiguration configuration, IReadOnlyList<string> labels)
+        internal Gauge(MetricConfiguration configuration, IReadOnlyList<string> labels)
             : base(configuration, labels)
         {
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Prometheus.Client.Collectors.Abstractions;
@@ -31,7 +32,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             _process = process;
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
-            _processStartTime = _process.StartTime.ToUniversalTime().ToUnixTimeSeconds();
+            _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
             MetricNames = new[]
             {
                 _cpuSecondsTotalName,
@@ -44,7 +45,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             };
         }
 
-        public ICollectorConfiguration Configuration { get; }
+        public CollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

@@ -2,7 +2,6 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.MetricsWriter.Abstractions;
@@ -22,27 +21,22 @@ namespace Prometheus.Client
         private readonly object _lock = new object();
 
         private SampleBuffer _buffer;
-        private DateTime _bufferExpTime;
+        private DateTimeOffset _bufferExpTime;
         private long _count;
         private QuantileStream _headStream;
-        private DateTime _headStreamExpTime;
+        private DateTimeOffset _headStreamExpTime;
         private int _headStreamIdx;
 
         private TimeSpan _streamDuration;
         private QuantileStream[] _streams;
         private double _sum;
 
-        public Summary(SummaryConfiguration configuration, IReadOnlyList<string> labels)
-            : this(configuration, labels, DateTime.UtcNow)
-        {
-        }
-
-        public Summary(SummaryConfiguration configuration, IReadOnlyList<string> labels, DateTime now)
-            : base(configuration, labels)
+        public Summary(SummaryConfiguration configuration, IReadOnlyList<string> labels, Func<DateTimeOffset> currentTimeProvider = null)
+            : base(configuration, labels, currentTimeProvider)
         {
             _buffer = new SampleBuffer(Configuration.BufCap);
             _streamDuration = new TimeSpan(Configuration.MaxAge.Ticks / Configuration.AgeBuckets);
-            _headStreamExpTime = now.Add(_streamDuration);
+            _headStreamExpTime = CurrentTimeProvider().Add(_streamDuration);
             _bufferExpTime = _headStreamExpTime;
 
             _streams = new QuantileStream[Configuration.AgeBuckets];
@@ -57,7 +51,7 @@ namespace Prometheus.Client
             get
             {
                 var values = new double[Configuration.SortedObjectives.Count];
-                ForkState(DateTime.UtcNow, out var count, out var sum, values);
+                ForkState(out var count, out var sum, values);
                 var zipped = values.Zip(Configuration.SortedObjectives, (v, k) => new KeyValuePair<double, double>(k, v)).ToArray();
                 return new SummaryState(count, sum, zipped);
             }
@@ -65,42 +59,34 @@ namespace Prometheus.Client
 
         public void Observe(double val)
         {
-            Observe(val, null, DateTime.UtcNow);
+            Observe(val, null);
         }
 
         public void Observe(double val, long? timestamp)
         {
-            Observe(val, timestamp, DateTime.UtcNow);
-        }
-
-        /// <summary>
-        ///     For unit tests only
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Observe(double val, long? timestamp, DateTime now)
-        {
+            var now = CurrentTimeProvider();
             lock (_bufLock)
             {
                 if (now > _bufferExpTime)
-                    Flush(now);
+                    Flush();
 
                 _buffer.Append(val);
 
                 if (_buffer.IsFull)
-                    Flush(now);
+                    Flush();
             }
 
             TimestampIfRequired(timestamp);
         }
 
-        internal void ForkState(DateTime now, out long count, out double sum, double[] values)
+        internal void ForkState(out long count, out double sum, double[] values)
         {
             lock (_bufLock)
             {
                 lock (_lock)
                 {
                     // FlushBuffer even if buffer is empty to set new bufferExpTime.
-                    FlushBuffer(now);
+                    FlushBuffer();
 
                     for (int i = 0; i < Configuration.SortedObjectives.Count; i++)
                     {
@@ -122,7 +108,7 @@ namespace Prometheus.Client
 
             try
             {
-                ForkState(DateTime.UtcNow, out var count, out var sum, values);
+                ForkState(out var count, out var sum, values);
 
                 for (int i = 0; i < Configuration.SortedObjectives.Count; i++)
                 {
@@ -151,17 +137,18 @@ namespace Prometheus.Client
         }
 
         // Flush needs bufMtx locked.
-        private void Flush(DateTime now)
+        private void Flush()
         {
             lock (_lock)
             {
-                FlushBuffer(now);
+                FlushBuffer();
             }
         }
 
         // FlushBuffer needs mtx AND bufMtx locked.
-        private void FlushBuffer(DateTime now)
+        private void FlushBuffer()
         {
+            var now = CurrentTimeProvider();
             for (int bufIdx = 0; bufIdx < _buffer.Position; bufIdx++)
             {
                 double value = _buffer[bufIdx];

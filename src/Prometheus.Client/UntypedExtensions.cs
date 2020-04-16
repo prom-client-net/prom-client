@@ -10,7 +10,7 @@ namespace Prometheus.Client
     {
         public static void Set(this IUntyped untyped, double val, DateTimeOffset timestamp)
         {
-            untyped.Set(val, timestamp.ToUnixTime());
+            untyped.Set(val, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Set(this IMetricFamily<IUntyped> metricFamily, double val)

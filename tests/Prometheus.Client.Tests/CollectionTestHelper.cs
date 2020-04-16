@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,27 +8,16 @@ using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public abstract class MetricTestBase
+    internal static class CollectionTestHelper
     {
-        public static IEnumerable<object[]> InvalidLabels()
-        {
-            yield return new object[] { "" };
-            yield return new object[] { null };
-            yield return new object[] { "my-metric" };
-            yield return new object[] { "my!metric" };
-            yield return new object[] { "my%metric" };
-            yield return new object[] { "123label" };
-            yield return new object[] { "__label" };
-        }
-
-        protected async Task TestCollectionAsync(Action<MetricFactory> metricsSetup, string resourceName)
+        public static async Task TestCollectionAsync(Action<MetricFactory> metricsSetup, string resourceName)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
             metricsSetup(factory);
 
-            string formattedText = null;
+            string formattedText;
 
             using (var stream = new MemoryStream())
             {

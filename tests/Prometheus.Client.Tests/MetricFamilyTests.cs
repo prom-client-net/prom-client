@@ -1,35 +1,20 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Prometheus.Client.Abstractions;
-using Prometheus.Client.Collectors;
+using Prometheus.Client.Tests.Mocks;
 using Xunit;
 
 namespace Prometheus.Client.Tests
 {
-    public class MetricFamilyTests : MetricTestBase
+    public class MetricFamilyTests
     {
-        [Fact]
-        public void SameLabelReturnsSameSample()
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label");
-            var labeled1 = counter.WithLabels("value");
-            var labeled2 = counter.WithLabels("value");
-
-            Assert.Equal(labeled1, labeled2);
-        }
-
         [Fact]
         public void SameLabelsReturnsSameSample_Strings()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            var labeled1 = counter.WithLabels("value1", "value2");
-            var labeled2 = counter.WithLabels("value1", "value2");
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            var labeled1 = metricFamily.WithLabels("value1", "value2");
+            var labeled2 = metricFamily.WithLabels("value1", "value2");
 
             Assert.Equal(labeled1, labeled2);
         }
@@ -37,12 +22,9 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void SameLabelsReturnsSameSample_Tuples()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, ("label1", "label2"));
-            var labeled1 = counter.WithLabels(("value1", "value2"));
-            var labeled2 = counter.WithLabels(("value1", "value2"));
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            var labeled1 = metricFamily.WithLabels(("value1", "value2"));
+            var labeled2 = metricFamily.WithLabels(("value1", "value2"));
 
             Assert.Equal(labeled1, labeled2);
         }
@@ -50,14 +32,9 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void SameLabelsReturnsSameSample_StringsAndTuple()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            var labeled1 = counter.WithLabels("value1", "value2");
-
-            var counterTuple = factory.CreateCounter("test_counter", string.Empty, ("label1", "label2"));
-            var labeled2 = counterTuple.WithLabels(("value1", "value2"));
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            var labeled1 = ((IMetricFamily<IDummyMetric>)metricFamily).WithLabels("value1", "value2");
+            var labeled2 = metricFamily.WithLabels(("value1", "value2"));
 
             Assert.Equal(labeled1, labeled2);
         }
@@ -65,12 +42,9 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ShouldNotAllowWrongNumberOfLabels()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            Assert.Throws<ArgumentException>(() => counter.WithLabels("value1"));
-            Assert.Throws<ArgumentException>(() => counter.WithLabels("value1", "value2", "value3"));
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            Assert.Throws<ArgumentException>(() => metricFamily.WithLabels("value1"));
+            Assert.Throws<ArgumentException>(() => metricFamily.WithLabels("value1", "value2", "value3"));
         }
 
         [Theory]
@@ -78,11 +52,8 @@ namespace Prometheus.Client.Tests
         [InlineData("")]
         public void ShouldNotAllowEmptyLabelValue_Strings(string wrongLabel)
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
-            Assert.Throws<ArgumentException>(() => counter.WithLabels("value1", wrongLabel));
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            Assert.Throws<ArgumentException>(() => metricFamily.WithLabels("value1", wrongLabel));
         }
 
         [Theory]
@@ -90,40 +61,42 @@ namespace Prometheus.Client.Tests
         [InlineData("")]
         public void ShouldNotAllowEmptyLabelValue_Tuple(string wrongLabel)
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, ("label1", "label2"));
-            Assert.Throws<ArgumentException>(() => counter.WithLabels(("value1", wrongLabel)));
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            Assert.Throws<ArgumentException>(() => metricFamily.WithLabels(("value1", wrongLabel)));
         }
 
         [Fact]
         public void ShouldThrowIfNoLabels_Strings()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, new string[0]);
-            Assert.Throws<InvalidOperationException>(() => counter.WithLabels("value1"));
+            var metricFamily = CreateMetricFamily();
+            Assert.Throws<InvalidOperationException>(() => metricFamily.WithLabels("value1"));
         }
 
         [Fact]
         public void ShouldThrowIfNoLabels_Tuple()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
+            var metricFamily = CreateMetricFamily(ValueTuple.Create());
+            Assert.Throws<InvalidOperationException>(() => metricFamily.WithLabels(ValueTuple.Create()));
+        }
 
-            var counter = factory.CreateCounter("test_counter", string.Empty, ValueTuple.Create());
-            Assert.Throws<InvalidOperationException>(() => counter.WithLabels(ValueTuple.Create()));
+        [Fact]
+        public void ShouldEnumerateLabeledEmpty_Strings()
+        {
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            Assert.False(metricFamily.Labelled.Any());
+        }
+
+        [Fact]
+        public void ShouldEnumerateLabeledEmpty_Tuple()
+        {
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            Assert.False(metricFamily.Labelled.Any());
         }
 
         [Fact]
         public void ShouldEnumerateLabeled_Strings()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
+            var metricFamily = CreateMetricFamily("label1", "label2");
             var labeled = new[]
             {
                 new[] { "value1", "value1" },
@@ -132,9 +105,9 @@ namespace Prometheus.Client.Tests
             };
 
             foreach (var item in labeled)
-                counter.WithLabels(item).Inc();
+                metricFamily.WithLabels(item);
 
-            var items = counter.Labelled.Select(l => l.Key).ToArray();
+            var items = metricFamily.Labelled.Select(l => l.Key).ToArray();
 
             Assert.True(labeled.All(l => items.Any(i => l.SequenceEqual(i))));
         }
@@ -142,10 +115,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ShouldEnumerateLabeled_Tuple()
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            var counter = factory.CreateCounter("test_counter", string.Empty, ("label1", "label2"));
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
             var labeled = new[]
             {
                 ("value1", "value1"),
@@ -154,11 +124,36 @@ namespace Prometheus.Client.Tests
             };
 
             foreach (var item in labeled)
-                counter.WithLabels(item).Inc();
+                metricFamily.WithLabels(item);
 
-            var items = counter.Labelled.Select(l => l.Key).ToArray();
+            var items = metricFamily.Labelled.Select(l => l.Key).ToArray();
 
             Assert.True(labeled.All(items.Contains));
+        }
+
+        private IMetricFamily<IDummyMetric> CreateMetricFamily()
+        {
+            var config = new MetricConfiguration("dummy_metric", string.Empty, new string[0], MetricFlags.None);
+            return new MetricFamily<IDummyMetric, DummyMetric, ValueTuple, MetricConfiguration>(
+                config, MetricType.Untyped,
+                (configuration, list) => new DummyMetric(configuration, list, null));
+        }
+
+        private IMetricFamily<IDummyMetric> CreateMetricFamily(string label1, string label2)
+        {
+            var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, MetricFlags.None);
+            return new MetricFamily<IDummyMetric, DummyMetric, (string, string), MetricConfiguration>(
+                config, MetricType.Untyped,
+                (configuration, list) => new DummyMetric(configuration, list, null));
+        }
+
+        private MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration> CreateMetricFamily<TLabels>(TLabels labels)
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+        {
+            var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), MetricFlags.None);
+            return new MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration>(
+                config, MetricType.Untyped,
+                (configuration, list) => new DummyMetric(configuration, list, null));
         }
     }
 }

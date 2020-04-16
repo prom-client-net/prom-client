@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client
@@ -40,7 +39,7 @@ namespace Prometheus.Client
             if (labelName.Length >=2 && labelName[0] == '_' && labelName[1] == '_')
                 return false;
 
-            if (char.IsNumber(labelName[0]))
+            if (char.IsDigit(labelName[0]))
                 return false;
 
             foreach (var ch in labelName)

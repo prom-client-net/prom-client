@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.GaugeTests
 {
-    public class SampleTests : MetricTestBase
+    public class SampleTests
     {
         [Theory]
         [InlineData(0)]

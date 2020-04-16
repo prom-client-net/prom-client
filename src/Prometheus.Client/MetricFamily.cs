@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 #endif
 using Prometheus.Client.Abstractions;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.MetricsWriter.Abstractions;
@@ -27,7 +28,7 @@ namespace Prometheus.Client
         private readonly IReadOnlyList<string> _metricNames;
         private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
         private readonly TImplementation _unlabelled;
-        private readonly ConcurrentDictionary<TLabels, TImplementation> _labelledMetrics;
+        private readonly ConcurrentDictionary<int, TImplementation> _labelledMetrics;
 
         public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
         {
@@ -36,14 +37,14 @@ namespace Prometheus.Client
             _metricNames = new[] { _configuration.Name };
             _instanceFactory = instanceFactory;
             _unlabelled = _instanceFactory(_configuration, default);
-            LabelNames = TupleHelper.FromArray<TLabels>(configuration.LabelNames);
+            LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
             if(configuration.LabelNames.Count > 0)
-                _labelledMetrics = new ConcurrentDictionary<TLabels, TImplementation>();
+                _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
         }
 
         public IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled => EnumerateLabelled();
 
-        ICollectorConfiguration ICollector.Configuration => _configuration;
+        CollectorConfiguration ICollector.Configuration => _configuration;
 
         IReadOnlyList<string> ICollector.MetricNames => _metricNames;
 
@@ -65,8 +66,15 @@ namespace Prometheus.Client
             if (labels.Length != _configuration.LabelNames.Count)
                 throw new ArgumentException("Wrong number of labels");
 
-            var labelsTuple = TupleHelper.FromArray<TLabels>(labels);
-            return _labelledMetrics.GetOrAdd(labelsTuple, CreateLabelled);
+            var key = LabelsHelper.GetHashCode(labels);
+
+            if (_labelledMetrics.TryGetValue(key, out var metric))
+            {
+                return metric;
+            }
+
+            metric = CreateLabelled(labels);
+            return _labelledMetrics.GetOrAdd(key, metric);
         }
 
         [Obsolete("This method is obsolete. Use WithLabels instead.")]
@@ -80,7 +88,15 @@ namespace Prometheus.Client
             if (_labelledMetrics == null)
                 throw new InvalidOperationException("Metric family does not have any labels");
 
-            return _labelledMetrics.GetOrAdd(labels, CreateLabelled);
+            var key = LabelsHelper.GetHashCode(labels);
+
+            if (_labelledMetrics.TryGetValue(key, out var metric))
+            {
+                return metric;
+            }
+
+            metric = CreateLabelled(LabelsHelper.ToArray(labels));
+            return _labelledMetrics.GetOrAdd(key, metric);
         }
 
         void ICollector.Collect(IMetricsWriter writer)
@@ -104,7 +120,7 @@ namespace Prometheus.Client
                 yield break;
 
             foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<TLabels, TMetric>(labelled.Key, labelled.Value);
+                yield return new KeyValuePair<TLabels, TMetric>(LabelsHelper.FromArray<TLabels>(labelled.Value.LabelValues), labelled.Value);
         }
 
         private IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> EnumerateLabelledAsStrings()
@@ -113,17 +129,15 @@ namespace Prometheus.Client
                 yield break;
 
             foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(TupleHelper.ToArray(labelled.Key), labelled.Value);
+                yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(labelled.Value.LabelValues, labelled.Value);
         }
 
-        private TImplementation CreateLabelled(TLabels labels)
+        private TImplementation CreateLabelled(IReadOnlyList<string> labels)
         {
-            var labelValues = TupleHelper.ToArray(labels);
-
-            if (labelValues.Any(string.IsNullOrEmpty))
+            if (labels.Any(string.IsNullOrEmpty))
                 throw new ArgumentException("Label cannot be empty.");
 
-            return _instanceFactory(_configuration, labelValues);
+            return _instanceFactory(_configuration, labels);
         }
     }
 }

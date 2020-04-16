@@ -2,36 +2,19 @@ using System;
 using NSubstitute;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
+using Prometheus.Client.Tests.Mocks;
 using Xunit;
 
 namespace Prometheus.Client.Tests
 {
     public class CollectorRegistryTests
     {
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void CollectorShouldHaveName(string collectorName)
-        {
-            var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(new[] { "metric" });
-            collector.Configuration.Name.Returns(collectorName);
-
-            Assert.Throws<ArgumentNullException>(() => registry.Add(collector));
-        }
-
         [Fact]
         public void CannotAddDuplicatedCollectors()
         {
             var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(new[] { "metric" });
-            collector.Configuration.Name.Returns("testName");
-
-            var collector1 = Substitute.For<ICollector>();
-            collector1.MetricNames.Returns(new[] { "metric2" });
-            collector1.Configuration.Name.Returns("testName");
+            var collector = new DummyCollector("testName", "metric" );
+            var collector1 = new DummyCollector("testName", "metric2");
 
             registry.Add(collector);
             Assert.Throws<ArgumentException>(() => registry.Add(collector1));
@@ -41,14 +24,11 @@ namespace Prometheus.Client.Tests
         public void DoNotCallFactoryIfCollectorExists()
         {
             var registry = new CollectorRegistry();
-            var originalCollector = Substitute.For<ICollector>();
-            var cfg = new CollectorConfiguration("testName");
-            originalCollector.MetricNames.Returns(new[] { "metric" });
-            originalCollector.Configuration.Returns(cfg);
+            var originalCollector = new DummyCollector("testName", "metric" );
             var fn = Substitute.For<Func<CollectorConfiguration, ICollector>>();
 
             registry.Add(originalCollector);
-            var result = registry.GetOrAdd(cfg, fn);
+            var result = registry.GetOrAdd(originalCollector.Configuration, fn);
 
             Assert.Equal(originalCollector, result);
             fn.DidNotReceiveWithAnyArgs();
@@ -61,9 +41,7 @@ namespace Prometheus.Client.Tests
         {
             // parameter "name" is useless in the test, but it's needed to avoid CS0182 error
             var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(metrics);
-            collector.Configuration.Name.Returns(name);
+            var collector = new DummyCollector(name, metrics);
 
             Assert.Throws<ArgumentNullException>(() => registry.Add(collector));
         }
@@ -78,9 +56,7 @@ namespace Prometheus.Client.Tests
         public void MetricNameShouldBeValid(string metricName)
         {
             var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(new[] { metricName });
-            collector.Configuration.Name.Returns("tst");
+            var collector = new DummyCollector("testName", metricName);
 
             Assert.Throws<ArgumentException>(() => registry.Add(collector));
         }
@@ -93,36 +69,27 @@ namespace Prometheus.Client.Tests
         public void CannotAddWithDuplicatedMetricNames(string[] first, string[] second)
         {
             var registry = new CollectorRegistry();
-            var collector1 = Substitute.For<ICollector>();
-            collector1.MetricNames.Returns(first);
-            collector1.Configuration.Name.Returns("collector1");
-
-            var collector2 = Substitute.For<ICollector>();
-            collector2.MetricNames.Returns(second);
-            collector2.Configuration.Name.Returns("collector1");
+            var collector1 = new DummyCollector("testName1", first);
+            var collector2 = new DummyCollector("testName2", second);
 
             registry.Add(collector1);
             Assert.Throws<ArgumentException>(() => registry.Add(collector2));
         }
 
         [Fact]
-        public void CanRemoveByNameCollector()
+        public void CanRemoveCollectorByName()
         {
             var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(new[] { "metric" });
-            collector.Configuration.Name.Returns("collector");
+            var collector = new DummyCollector("collector", "metric");
             registry.Add(collector);
 
-            var collector1 = Substitute.For<ICollector>();
-            collector1.MetricNames.Returns(new[] { "metric1" });
-            collector1.Configuration.Name.Returns("metric1");
+            var collector1 = new DummyCollector("collector1", "metric1");
             registry.Add(collector1);
 
-            var res = registry.Remove("metric1");
+            var res = registry.Remove("collector1");
 
             Assert.Equal(collector1, res);
-            Assert.False(registry.TryGet("metric1", out var _));
+            Assert.False(registry.TryGet("collector1", out var _));
             Assert.True(registry.TryGet("collector", out var _));
         }
 
@@ -130,20 +97,16 @@ namespace Prometheus.Client.Tests
         public void CanRemoveCollector()
         {
             var registry = new CollectorRegistry();
-            var collector = Substitute.For<ICollector>();
-            collector.MetricNames.Returns(new[] { "metric" });
-            collector.Configuration.Name.Returns("collector");
+            var collector = new DummyCollector("collector", "metric");
             registry.Add(collector);
 
-            var collector1 = Substitute.For<ICollector>();
-            collector1.MetricNames.Returns(new[] { "metric1" });
-            collector1.Configuration.Name.Returns("metric1");
+            var collector1 = new DummyCollector("collector1", "metric1");
             registry.Add(collector1);
 
             var res = registry.Remove(collector1);
 
             Assert.True(res);
-            Assert.False(registry.TryGet("metric1", out var _));
+            Assert.False(registry.TryGet("collector1", out var _));
             Assert.True(registry.TryGet("collector", out var _));
         }
     }

@@ -4,28 +4,8 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.GaugeTests
 {
-    public class FactoryTests : MetricTestBase
+    public class FactoryTests
     {
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.Throws<ArgumentException>(() => factory.CreateGauge("test_gauge", string.Empty, "label1", label));
-        }
-
-        [Theory]
-        [MemberData(nameof(InvalidLabels))]
-        public void ThrowOnInvalidLabels_Tuple(string label)
-        {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            Assert.Throws<ArgumentException>(() => factory.CreateGauge("test_gauge", string.Empty, ValueTuple.Create(label)));
-        }
-
         [Fact]
         public void ThrowOnNameConflict_Strings()
         {
@@ -34,6 +14,7 @@ namespace Prometheus.Client.Tests.GaugeTests
 
             factory.CreateGauge("test_gauge", string.Empty, "label1", "label2");
 
+            Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, Array.Empty<string>()));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, "label1", "testlabel"));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, new[] { "label1" }));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, "label1", "label2", "label3"));
@@ -47,6 +28,7 @@ namespace Prometheus.Client.Tests.GaugeTests
 
             factory.CreateGauge("test_gauge", string.Empty, ("label1", "label2"));
 
+            Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, ValueTuple.Create()));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, ValueTuple.Create("label1")));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, ("label1", "testlabel")));
             Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_gauge", string.Empty, ("label1", "label2", "label3")));

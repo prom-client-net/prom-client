@@ -138,6 +138,49 @@ namespace Prometheus.Client
         }
 
         /// <summary>
+        ///     Create int-based gauge.
+        /// </summary>
+        /// <param name="factory">Metric factory</param>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMetricFamily<IGauge<long>> CreateGaugeInt64(this MetricFactory factory, string name, string help, params string[] labelNames)
+        {
+            return factory.CreateGaugeInt64(name, help, false, labelNames);
+        }
+
+        /// <summary>
+        ///     Create int-based gauge.
+        /// </summary>
+        /// <param name="factory">Metric factory</param>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMetricFamily<IGauge<long>> CreateGaugeInt64(this MetricFactory factory, string name, string help, bool includeTimestamp, params string[] labelNames)
+        {
+            return factory.CreateGaugeInt64(name, help, includeTimestamp, true, labelNames);
+        }
+
+        /// <summary>
+        ///     Create int-based gauge.
+        /// </summary>
+        /// <param name="factory">Metric factory</param>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="suppressEmptySamples">Define if empty samples should be included into scrape output</param>
+        /// <param name="labelNames">Array of label names.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IMetricFamily<IGauge<long>> CreateGaugeInt64(this MetricFactory factory, string name, string help, bool includeTimestamp, bool suppressEmptySamples, params string[] labelNames)
+        {
+            var options = BuildMetricFlags(includeTimestamp, suppressEmptySamples);
+            return factory.CreateGaugeInt64(name, help, options, labelNames);
+        }
+
+        /// <summary>
         ///     Create Histogram.
         /// </summary>
         /// <param name="factory">Metric factory</param>

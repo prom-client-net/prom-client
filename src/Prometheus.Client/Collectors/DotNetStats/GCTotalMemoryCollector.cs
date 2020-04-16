@@ -17,7 +17,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
             MetricNames = new[] { _name };
         }
 
-        public ICollectorConfiguration Configuration { get; }
+        public CollectorConfiguration Configuration { get; }
 
         public IReadOnlyList<string> MetricNames { get; }
 

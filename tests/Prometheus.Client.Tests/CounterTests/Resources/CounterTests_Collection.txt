@@ -1,8 +1,8 @@
 # HELP nextcounter with help text
 # TYPE nextcounter counter
-nextcounter 10
-nextcounter{group="any",type="2"} 5
+nextcounter 10.1
+nextcounter{group="any",type="2"} 5.2
 # HELP test with help text
 # TYPE test counter
 test 1
-test{category="some"} 2
+test{category="some"} 2.1

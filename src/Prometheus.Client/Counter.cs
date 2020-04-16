@@ -34,7 +34,7 @@ namespace Prometheus.Client
                 return;
 
             if (increment < 0.0D)
-                ThrowInvalidIncArgument();
+                throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
             _value.Add(increment);
             TimestampIfRequired(timestamp);
@@ -45,11 +45,6 @@ namespace Prometheus.Client
         protected internal override void Collect(IMetricsWriter writer)
         {
             writer.WriteSample(Value, string.Empty, Labels, Timestamp);
-        }
-
-        private void ThrowInvalidIncArgument()
-        {
-            throw new ArgumentOutOfRangeException("increment", "Counter cannot go down");
         }
     }
 }

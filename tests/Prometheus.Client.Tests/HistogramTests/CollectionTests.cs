@@ -1,17 +1,16 @@
 using System.Threading.Tasks;
 using Xunit;
-using Prometheus.Client;
 
 namespace Prometheus.Client.Tests.HistogramTests
 {
-    public class CollectionTests : MetricTestBase
+    public class CollectionTests
     {
         private const string _resourcesNamespace = "Prometheus.Client.Tests.HistogramTests.Resources";
 
         [Fact]
         public Task EmptyCollection()
         {
-            return TestCollectionAsync(factory => {
+            return CollectionTestHelper.TestCollectionAsync(factory => {
                 factory.CreateHistogram("hist1", "help", false, false, new[] { 1.0, 2.0, 3.0 });
             }, $"{_resourcesNamespace}.HistogramTests_Empty.txt");
         }
@@ -19,7 +18,7 @@ namespace Prometheus.Client.Tests.HistogramTests
         [Fact]
         public Task SuppressEmptySamples()
         {
-            return TestCollectionAsync(factory => {
+            return CollectionTestHelper.TestCollectionAsync(factory => {
                 factory.CreateHistogram("hist1", "help", new[] { -5.0, 0, 5.0, 10 }, "type");
             }, $"{_resourcesNamespace}.HistogramTests_SuppressEmpty.txt");
         }
@@ -27,7 +26,7 @@ namespace Prometheus.Client.Tests.HistogramTests
         [Fact]
         public Task Collection()
         {
-            return TestCollectionAsync(factory => {
+            return CollectionTestHelper.TestCollectionAsync(factory => {
                 var histogram = factory.CreateHistogram("hist1", "help", new[] { 1.0, 2.0, 3.0 });
                 histogram.Observe(1.5);
                 histogram.Observe(2.5);
