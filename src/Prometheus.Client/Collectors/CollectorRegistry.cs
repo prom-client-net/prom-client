@@ -107,6 +107,9 @@ namespace Prometheus.Client.Collectors
 
         public ICollector Remove(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                return null;
+
             ICollector collector;
             _lock.EnterReadLock();
             try
@@ -143,8 +146,11 @@ namespace Prometheus.Client.Collectors
                 _lock.ExitReadLock();
             }
 
+            if (string.IsNullOrEmpty(key))
+                return false;
+
             RemoveCollector(key, collector);
-            return !string.IsNullOrEmpty(key);
+            return true;
         }
 
         public async Task CollectToAsync(IMetricsWriter writer)
