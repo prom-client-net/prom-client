@@ -7,7 +7,8 @@ namespace Prometheus.Client
 {
     public class HistogramConfiguration : MetricConfiguration
     {
-        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
+        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10, double.PositiveInfinity };
+        private static readonly double[] _positiveInf = { double.PositiveInfinity };
 
         public HistogramConfiguration(string name, string help, IReadOnlyList<string> labels, IReadOnlyList<double> buckets, MetricFlags options)
             : base(name, help, labels, options)
@@ -21,7 +22,7 @@ namespace Prometheus.Client
                 throw new ArgumentException("Histogram must have at least one bucket");
 
             if (!double.IsPositiveInfinity(Buckets[Buckets.Count - 1]))
-                Buckets = Buckets.Concat(new[] { double.PositiveInfinity }).ToArray();
+                Buckets = Buckets.Concat(_positiveInf).ToArray();
 
             for (int i = 1; i < Buckets.Count; i++)
             {

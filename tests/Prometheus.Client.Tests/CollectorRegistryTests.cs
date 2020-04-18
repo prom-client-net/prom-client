@@ -109,5 +109,32 @@ namespace Prometheus.Client.Tests
             Assert.False(registry.TryGet("collector1", out var _));
             Assert.True(registry.TryGet("collector", out var _));
         }
+
+        [Fact]
+        public void ShouldNotThrowOnRemoveNonRegisteredCollector()
+        {
+            var registry = new CollectorRegistry();
+            var collector = new DummyCollector("collector", "metric");
+
+            var res = registry.Remove(collector);
+
+            Assert.False(res);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("collector1")]
+        public void ShouldNotThrowOnRemoveByNameNonRegisteredCollector(string keyToRemove)
+        {
+            var registry = new CollectorRegistry();
+            var collector = new DummyCollector("collector", "metric");
+            registry.Add(collector);
+
+            var res = registry.Remove(keyToRemove);
+
+            Assert.Equal(null, res);
+            Assert.True(registry.TryGet("collector", out var _));
+        }
     }
 }
