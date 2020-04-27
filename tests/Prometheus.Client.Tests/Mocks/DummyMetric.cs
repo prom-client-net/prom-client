@@ -13,7 +13,7 @@ namespace Prometheus.Client.Tests.Mocks
 
         public void Observe(long? ts)
         {
-            TimestampIfRequired(ts);
+            TrackObservation(ts);
         }
 
         protected internal override void Collect(IMetricsWriter writer)

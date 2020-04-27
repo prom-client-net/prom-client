@@ -35,7 +35,6 @@ namespace Prometheus.Client.MetricsWriter
         private int _position;
         private string _currentMetricName;
         private ArraySegment<byte> _currentMetricEncoded;
-        private bool _hasData;
         private WriterState _state = WriterState.None;
 
         public MetricsTextWriter(Stream stream)
@@ -73,10 +72,6 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteHelp), WriterState.MetricStarted);
 
-            if (_hasData)
-                Write(_newLine);
-
-            _hasData = true;
             Write(_helpPrefix);
             if (_currentMetricEncoded == default)
                 _currentMetricEncoded = Write(_currentMetricName);
@@ -85,6 +80,7 @@ namespace Prometheus.Client.MetricsWriter
             
             Write(_tokenSeparator);
             Write(EscapeValue(help));
+            Write(_newLine);
             _state = WriterState.HelpWritten;
 
             return this;
@@ -94,10 +90,6 @@ namespace Prometheus.Client.MetricsWriter
         {
             ValidateState(nameof(WriteType), WriterState.MetricStarted | WriterState.HelpWritten);
 
-            if (_hasData)
-                Write(_newLine);
-
-            _hasData = true;
             Write(_typePrefix);
             if (_currentMetricEncoded == default)
                 _currentMetricEncoded = Write(_currentMetricName);
@@ -106,6 +98,7 @@ namespace Prometheus.Client.MetricsWriter
 
             Write(_tokenSeparator);
             Write(_metricTypesMap[metricType]);
+            Write(_newLine);
             _state = WriterState.TypeWritten;
 
             return this;
@@ -116,10 +109,6 @@ namespace Prometheus.Client.MetricsWriter
             ValidateState(nameof(StartSample),
                 WriterState.MetricStarted | WriterState.HelpWritten | WriterState.TypeWritten | WriterState.SampleClosed);
 
-            if (_hasData)
-                Write(_newLine);
-
-            _hasData = true;
             if (_currentMetricEncoded == default)
                 _currentMetricEncoded = Write(_currentMetricName);
             else
@@ -186,6 +175,7 @@ namespace Prometheus.Client.MetricsWriter
         public IMetricsWriter EndSample()
         {
             ValidateState(nameof(EndSample), WriterState.ValueWritten | WriterState.TimestampWritten);
+            Write(_newLine);
             _state = WriterState.SampleClosed;
             return this;
         }
@@ -202,7 +192,6 @@ namespace Prometheus.Client.MetricsWriter
         public Task CloseWriterAsync()
         {
             ValidateState(nameof(CloseWriterAsync), WriterState.None | WriterState.MetricClosed);
-            Write(_newLine);
             _state = WriterState.Closed;
 
             return FlushInternalAsync(true);

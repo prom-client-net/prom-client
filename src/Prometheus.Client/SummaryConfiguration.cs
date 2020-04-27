@@ -25,13 +25,17 @@ namespace Prometheus.Client
                 new QuantileEpsilonPair(0.99, 0.001)
             };
 
+        private static readonly double[] DefaultSortedObjectives = { 0.5, 0.9, 0.99 };
+
         // Default duration for which observations stay relevant
         private static readonly TimeSpan _defaultMaxAge = TimeSpan.FromMinutes(10);
+
+        private readonly Lazy<string[]> _formattedObjectives;
 
         public SummaryConfiguration(
             string name,
             string help,
-            IReadOnlyList<string> labelNames,
+            string[] labelNames,
             MetricFlags options,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
@@ -43,17 +47,19 @@ namespace Prometheus.Client
             if (Objectives == null || Objectives.Count == 0)
             {
                 Objectives = DefaultObjectives;
+                SortedObjectives = DefaultSortedObjectives;
+            }
+            else
+            {
+                var sorted = new double[Objectives.Count];
+                for (int i = 0; i < Objectives.Count; i++)
+                    sorted[i] = Objectives[i].Quantile;
+
+                Array.Sort(sorted);
+                SortedObjectives = sorted;
             }
 
-            var sorted = new double[Objectives.Count];
-            for (int i = 0; i < Objectives.Count; i++)
-                sorted[i] = Objectives[i].Quantile;
-
-            Array.Sort(sorted);
-            SortedObjectives = sorted;
-            FormattedObjectives = SortedObjectives
-                .Select(o => o.ToString(CultureInfo.InvariantCulture))
-                .ToArray();
+            _formattedObjectives = new Lazy<string[]>(() => GetFormattedObjectives(SortedObjectives));
 
             MaxAge = maxAge ?? _defaultMaxAge;
             if (MaxAge < TimeSpan.Zero)
@@ -99,6 +105,18 @@ namespace Prometheus.Client
 
         internal IReadOnlyList<double> SortedObjectives { get; }
 
-        internal IReadOnlyList<string> FormattedObjectives { get; }
+        internal IReadOnlyList<string> FormattedObjectives => _formattedObjectives.Value;
+
+        private static string[] GetFormattedObjectives(IReadOnlyList<double> objectives)
+        {
+            if (objectives == null || objectives.Count == 0)
+                return Array.Empty<string>();
+
+            var result = new string[objectives.Count];
+            for (var i = 0; i < objectives.Count; i++)
+                result[i] = objectives[i].ToString(CultureInfo.InvariantCulture);
+
+            return result;
+        }
     }
 }

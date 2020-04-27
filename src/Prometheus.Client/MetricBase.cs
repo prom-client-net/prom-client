@@ -12,18 +12,15 @@ namespace Prometheus.Client
     {
         protected readonly TConfig Configuration;
         private readonly bool _includeTimestamp;
+        private readonly Func<DateTimeOffset> _currentTimeProvider;
         private long _timestamp;
-        private bool _hasObservations;
 
         protected IReadOnlyList<KeyValuePair<string, string>> Labels { get; }
 
         protected MetricBase(TConfig config, IReadOnlyList<string> labelValues, Func<DateTimeOffset> currentTimeProvider = null)
         {
-            if (currentTimeProvider == null)
-                currentTimeProvider = () => DateTimeOffset.UtcNow;
-
-            CurrentTimeProvider = currentTimeProvider;
             Configuration = config;
+            _currentTimeProvider = currentTimeProvider;
             _includeTimestamp = config.IncludeTimestamp;
 
             if (labelValues != null && labelValues.Count > 0)
@@ -31,8 +28,6 @@ namespace Prometheus.Client
 
             LabelValues = labelValues;
         }
-
-        protected internal bool HasObservations => Volatile.Read(ref _hasObservations);
 
         protected internal IReadOnlyList<string> LabelValues { get; }
 
@@ -49,17 +44,21 @@ namespace Prometheus.Client
 
         protected internal abstract void Collect(IMetricsWriter writer);
 
-        protected Func<DateTimeOffset> CurrentTimeProvider { get; }
+        protected DateTimeOffset GetUtcNow()
+        {
+            if (_currentTimeProvider == null)
+                return DateTimeOffset.UtcNow;
+
+            return _currentTimeProvider();
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void TimestampIfRequired(long? timestamp = null)
+        protected void TrackObservation(long? timestamp = null)
         {
-            Volatile.Write(ref _hasObservations, true);
-
             if (!_includeTimestamp)
                 return;
 
-            var now = CurrentTimeProvider().ToUnixTimeMilliseconds();
+            var now = GetUtcNow().ToUnixTimeMilliseconds();
 
             if (!timestamp.HasValue)
             {

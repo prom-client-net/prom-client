@@ -36,7 +36,7 @@ namespace Prometheus.Client
         {
             _buffer = new SampleBuffer(Configuration.BufCap);
             _streamDuration = new TimeSpan(Configuration.MaxAge.Ticks / Configuration.AgeBuckets);
-            _headStreamExpTime = CurrentTimeProvider().Add(_streamDuration);
+            _headStreamExpTime = GetUtcNow().Add(_streamDuration);
             _bufferExpTime = _headStreamExpTime;
 
             _streams = new QuantileStream[Configuration.AgeBuckets];
@@ -64,7 +64,7 @@ namespace Prometheus.Client
 
         public void Observe(double val, long? timestamp)
         {
-            var now = CurrentTimeProvider();
+            var now = GetUtcNow();
             lock (_bufLock)
             {
                 if (now > _bufferExpTime)
@@ -76,7 +76,7 @@ namespace Prometheus.Client
                     Flush();
             }
 
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         internal void ForkState(out long count, out double sum, double[] values)
@@ -148,7 +148,7 @@ namespace Prometheus.Client
         // FlushBuffer needs mtx AND bufMtx locked.
         private void FlushBuffer()
         {
-            var now = CurrentTimeProvider();
+            var now = GetUtcNow();
             for (int bufIdx = 0; bufIdx < _buffer.Position; bufIdx++)
             {
                 double value = _buffer[bufIdx];

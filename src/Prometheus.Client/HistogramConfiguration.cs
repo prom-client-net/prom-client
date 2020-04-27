@@ -7,36 +7,61 @@ namespace Prometheus.Client
 {
     public class HistogramConfiguration : MetricConfiguration
     {
-        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10, double.PositiveInfinity };
-        private static readonly double[] _positiveInf = { double.PositiveInfinity };
+        private static readonly double[] _defaultBuckets = { .005, .01, .025, .05, .075, .1, .25, .5, .75, 1, 2.5, 5, 7.5, 10 };
+        private static readonly string[] _defaultFormattedBuckets;
 
-        public HistogramConfiguration(string name, string help, IReadOnlyList<string> labels, IReadOnlyList<double> buckets, MetricFlags options)
+        private readonly Lazy<string[]> _formattedBuckets;
+
+        static HistogramConfiguration()
+        {
+            _defaultFormattedBuckets = GetFormattedBuckets(_defaultBuckets);
+        }
+
+        public HistogramConfiguration(string name, string help, string[] labels, double[] buckets, MetricFlags options)
             : base(name, help, labels, options)
         {
-            Buckets = buckets ?? _defaultBuckets;
-
             if (LabelNames.Any(l => l == "le"))
                 throw new ArgumentException("'le' is a reserved label name");
 
-            if (Buckets.Count == 0)
-                throw new ArgumentException("Histogram must have at least one bucket");
-
-            if (!double.IsPositiveInfinity(Buckets[Buckets.Count - 1]))
-                Buckets = Buckets.Concat(_positiveInf).ToArray();
-
-            for (int i = 1; i < Buckets.Count; i++)
+            if (buckets == null)
             {
-                if (Buckets[i] <= Buckets[i - 1])
-                    throw new ArgumentException("Bucket values must be increasing");
+                Buckets = _defaultBuckets;
+                _formattedBuckets = new Lazy<string[]>(() => _defaultFormattedBuckets);
             }
+            else
+            {
+                Buckets = buckets;
 
-            FormattedBuckets = Buckets
-                .Select(b => b.ToString(CultureInfo.InvariantCulture))
-                .ToArray();
+                if (Buckets.Length == 0)
+                    throw new ArgumentException("Histogram must have at least one bucket");
+
+                var lastVal = double.MinValue;
+                foreach (var val in buckets)
+                {
+                    if (lastVal >= val)
+                        throw new ArgumentException("Bucket values must be increasing");
+
+                    lastVal = val;
+                }
+
+                _formattedBuckets = new Lazy<string[]>(() => GetFormattedBuckets(Buckets));
+            }
         }
 
-        public IReadOnlyList<double> Buckets { get; }
+        public double[] Buckets { get; }
 
-        internal IReadOnlyList<string> FormattedBuckets { get; }
+        internal string[] FormattedBuckets => _formattedBuckets.Value;
+
+        private static string[] GetFormattedBuckets(double[] buckets)
+        {
+            var result = new string[buckets.Length + 1];
+            for (var i = 0; i < buckets.Length; i++)
+            {
+                result[i] = buckets[i].ToString(CultureInfo.InvariantCulture);
+            }
+
+            result[buckets.Length] = "+Inf";
+            return result;
+        }
     }
 }

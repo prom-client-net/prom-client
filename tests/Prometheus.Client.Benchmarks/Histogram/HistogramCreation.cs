@@ -9,7 +9,7 @@ namespace Prometheus.Client.Benchmarks.Histogram
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class HistogramCreation
     {
-        private MetricFactory _factory;
+        private IMetricFactory _factory;
 
         [GlobalSetup]
         public void Setup()

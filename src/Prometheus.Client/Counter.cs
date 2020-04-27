@@ -37,7 +37,7 @@ namespace Prometheus.Client
                 throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
             _value.Add(increment);
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public double Value => _value.Value;

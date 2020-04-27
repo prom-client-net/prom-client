@@ -9,7 +9,7 @@ namespace Prometheus.Client.Benchmarks.Gauge
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class GaugeCreation
     {
-        private MetricFactory _factory;
+        private IMetricFactory _factory;
 
         [GlobalSetup]
         public void Setup()

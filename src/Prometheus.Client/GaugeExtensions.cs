@@ -143,7 +143,7 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Set(value, timestamp);
         }
 
-        public static IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(this MetricFactory factory, string name, string help, string labelName, MetricFlags options = MetricFlags.Default)
+        public static IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(this IMetricFactory factory, string name, string help, string labelName, MetricFlags options = MetricFlags.Default)
         {
             return factory.CreateGauge(name, help, ValueTuple.Create(labelName), options);
         }

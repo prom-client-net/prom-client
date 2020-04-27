@@ -2,11 +2,11 @@ extern alias Their;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 
-namespace Prometheus.Client.Benchmarks.Comparison
+namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
-    public class CounterBenchmarks : ComparisonBenchmarkBase
+    public class CounterSampleBenchmarks : ComparisonBenchmarkBase
     {
         private const int _opIterations = 10000000;
 

@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Attributes;
+using Prometheus.Client;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 
@@ -9,7 +10,7 @@ namespace Prometheus.Client.Benchmarks.Counter
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class CounterCreation
     {
-        private MetricFactory _factory;
+        private IMetricFactory _factory;
 
         [GlobalSetup]
         public void Setup()

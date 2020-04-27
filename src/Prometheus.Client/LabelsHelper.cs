@@ -88,7 +88,7 @@ namespace Prometheus.Client
             return result;
         }
 
-        public static IReadOnlyList<string> ToArray<TTuple>(TTuple values)
+        public static string[] ToArray<TTuple>(TTuple values)
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
@@ -212,7 +212,7 @@ namespace Prometheus.Client
                 _parser = LabelsHelper.GenerateParser<TTuple>();
             }
 
-            public static IReadOnlyList<string> ToArray(TTuple values)
+            public static string[] ToArray(TTuple values)
             {
                 return FormatReducer(values, new string[_size], (item, index, aggregated) =>
                 {

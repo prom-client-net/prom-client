@@ -33,7 +33,7 @@ namespace Prometheus.Client
                 return;
 
             _value.Add(increment);
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public void Set(double val)
@@ -45,7 +45,7 @@ namespace Prometheus.Client
         public void Set(double val, long? timestamp)
         {
             _value.Value = val;
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public void Dec()
@@ -65,7 +65,7 @@ namespace Prometheus.Client
                 return;
 
             _value.Add(-decrement);
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public double Value => _value.Value;

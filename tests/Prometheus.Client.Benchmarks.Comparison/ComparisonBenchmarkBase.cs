@@ -1,12 +1,15 @@
 extern alias Their;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks.Comparison
 {
     public abstract class ComparisonBenchmarkBase
     {
-        private MetricFactory _factory;
+        private IMetricFactory _factory;
         private Their.Prometheus.MetricFactory _theirMetricFactory;
+
+        protected const string HelpText = "arbitrary help message for metric, not relevant for benchmarking";
 
         protected ComparisonBenchmarkBase()
         {
@@ -21,7 +24,7 @@ namespace Prometheus.Client.Benchmarks.Comparison
             _theirMetricFactory = Their.Prometheus.Metrics.WithCustomRegistry(registry);
         }
 
-        protected MetricFactory OurMetricFactory => _factory;
+        protected IMetricFactory OurMetricFactory => _factory;
 
         public Their::Prometheus.MetricFactory TheirMetricFactory => _theirMetricFactory;
     }
