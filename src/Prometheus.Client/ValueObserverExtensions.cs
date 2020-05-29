@@ -8,7 +8,7 @@ namespace Prometheus.Client
 {
     public static class ValueObserverExtensions
     {
-        public static void ObserveDuration(this IValueObserver observer, Action method, DurationUnit unit = DurationUnit.Seconds)
+        public static void ObserveDuration(this IValueObserver observer, Action method)
         {
             var ts = Stopwatch.GetTimestamp();
             try
@@ -17,11 +17,11 @@ namespace Prometheus.Client
             }
             finally
             {
-                observer.Observe(GetDuration(ts, unit));
+                observer.Observe(GetDuration(ts));
             }
         }
 
-        public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, DurationUnit unit = DurationUnit.Seconds)
+        public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method)
         {
             var ts = Stopwatch.GetTimestamp();
             try
@@ -30,11 +30,11 @@ namespace Prometheus.Client
             }
             finally
             {
-                observer.Observe(GetDuration(ts, unit));
+                observer.Observe(GetDuration(ts));
             }
         }
 
-        public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, DurationUnit unit = DurationUnit.Seconds)
+        public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method)
         {
             var ts = Stopwatch.GetTimestamp();
             try
@@ -43,11 +43,11 @@ namespace Prometheus.Client
             }
             finally
             {
-                observer.Observe(GetDuration(ts, unit));
+                observer.Observe(GetDuration(ts));
             }
         }
 
-        public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, DurationUnit unit = DurationUnit.Seconds)
+        public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method)
         {
             var ts = Stopwatch.GetTimestamp();
             try
@@ -56,15 +56,15 @@ namespace Prometheus.Client
             }
             finally
             {
-                observer.Observe(GetDuration(ts, unit));
+                observer.Observe(GetDuration(ts));
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static double GetDuration(long startTs, DurationUnit unit)
+        private static double GetDuration(long startTs)
         {
             var elapsed = Stopwatch.GetTimestamp() - startTs;
-            var frequency = (double)Stopwatch.Frequency / (unit == DurationUnit.Seconds ? 1 : 1000);
+            var frequency = (double)Stopwatch.Frequency;
 
             return elapsed / frequency;
         }
