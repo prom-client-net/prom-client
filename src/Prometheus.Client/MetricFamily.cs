@@ -27,7 +27,7 @@ namespace Prometheus.Client
         private readonly TConfig _configuration;
         private readonly IReadOnlyList<string> _metricNames;
         private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
-        private readonly TImplementation _unlabelled;
+        private readonly Lazy<TImplementation> _unlabelled;
         private readonly ConcurrentDictionary<int, TImplementation> _labelledMetrics;
 
         public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
@@ -36,7 +36,7 @@ namespace Prometheus.Client
             _configuration = configuration;
             _metricNames = new[] { _configuration.Name };
             _instanceFactory = instanceFactory;
-            _unlabelled = _instanceFactory(_configuration, default);
+            _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
             LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
             if(configuration.LabelNames.Count > 0)
                 _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
@@ -48,11 +48,11 @@ namespace Prometheus.Client
 
         IReadOnlyList<string> ICollector.MetricNames => _metricNames;
 
-        public TMetric Unlabelled => _unlabelled;
+        public TMetric Unlabelled => _unlabelled.Value;
 
         public TLabels LabelNames { get; }
 
-        TMetric IMetricFamily<TMetric>.Unlabelled => _unlabelled;
+        TMetric IMetricFamily<TMetric>.Unlabelled => _unlabelled.Value;
 
         IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> IMetricFamily<TMetric>.Labelled => EnumerateLabelledAsStrings();
 
@@ -102,8 +102,8 @@ namespace Prometheus.Client
         void ICollector.Collect(IMetricsWriter writer)
         {
             writer.WriteMetricHeader(_configuration.Name, _metricType, _configuration.Help);
-            if (!_configuration.SuppressEmptySamples || _unlabelled.HasObservations)
-                _unlabelled.Collect(writer);
+            if (!_configuration.SuppressEmptySamples || _unlabelled.IsValueCreated)
+                _unlabelled.Value.Collect(writer);
 
             if (_labelledMetrics != null)
             {

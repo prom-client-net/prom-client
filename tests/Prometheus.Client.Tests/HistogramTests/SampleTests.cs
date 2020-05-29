@@ -38,16 +38,30 @@ namespace Prometheus.Client.Tests.HistogramTests
 
         [Theory]
         [MemberData(nameof(BucketsTestCases))]
-        public void ShouldPopulateBucketsOnObservations(IReadOnlyList<double> buckets, IReadOnlyList<double> items, IReadOnlyList<KeyValuePair<double, long>> expectedBuckets)
+        public void HistogramLowBucketsStore(double[] buckets, IReadOnlyList<double> items, long[] expectedBuckets)
         {
-            var histogram = CreateHistogram(buckets);
+            var backetStore = new HistogramLowBucketsStore(buckets);
 
             foreach (var item in items)
             {
-                histogram.Observe(item);
+                backetStore.Observe(item);
             }
 
-            Assert.Equal(expectedBuckets, histogram.Value.Buckets);
+            Assert.Equal(expectedBuckets, backetStore.Buckets.Select(b => b.Value));
+        }
+
+        [Theory]
+        [MemberData(nameof(BucketsTestCases))]
+        public void HistogramHighBucketsStore(double[] buckets, IReadOnlyList<double> items, long[] expectedBuckets)
+        {
+            var backetStore = new HistogramHighBucketsStore(buckets);
+
+            foreach (var item in items)
+            {
+                backetStore.Observe(item);
+            }
+
+            Assert.Equal(expectedBuckets, backetStore.Buckets.Select(b => b.Value));
         }
 
         public static IEnumerable<object[]> SumTestCases()
@@ -57,26 +71,19 @@ namespace Prometheus.Client.Tests.HistogramTests
             => HistogramTestCases().Select(test => new object[] { test.Items, test.Items.Count });
 
         public static IEnumerable<object[]> BucketsTestCases()
-            => HistogramTestCases().Select(test => new object[] { test.Buckets, test.Items, MakeExpectedBuckets(test.Buckets, test.BucketsData) });
+            => HistogramTestCases().Select(test => new object[] { test.Buckets, test.Items, test.BucketsData });
 
         private static IEnumerable<(IReadOnlyList<double> Items, double Sum, IReadOnlyList<double> Buckets, IReadOnlyList<long> BucketsData)> HistogramTestCases()
         {
             yield return (new double[0], 0, new double[] {-1, 0, 1}, new long[] {0, 0, 0, 0});
-            yield return (new double[] {0}, 0, new double[] {-1, 0, 1}, new long[] {0, 1, 1, 1});
-            yield return (new double[] { 1, -1 }, 0, new double[] { -5, 0, 5 }, new long[] { 0, 1, 2, 2});
-            yield return (new double[] { 1, -1, 1.3 }, 1.3, new double[] { -5, 0, 5 }, new long[] { 0, 1, 3, 3});
-            yield return (new double[] { 1, -1 , 100}, 100, new double[] { -5, 0, 5 }, new long[] { 0, 1, 2, 3});
-            yield return (new double[] { 1, -1 , -100}, -100, new double[] { -5, 0, 5 }, new long[] { 1, 2, 3, 3});
+            yield return (new double[] {0}, 0, new double[] {-1, 0, 1}, new long[] {0, 1, 0, 0});
+            yield return (new double[] { 1, -1 }, 0, new double[] { -5, 0, 5 }, new long[] { 0, 1, 1, 0});
+            yield return (new double[] { 1, -1, 1.3 }, 1.3, new double[] { -5, 0, 5 }, new long[] { 0, 1, 2, 0});
+            yield return (new double[] { 1, -1 , 100}, 100, new double[] { -5, 0, 5 }, new long[] { 0, 1, 1, 1});
+            yield return (new double[] { 1, -1 , -100}, -100, new double[] { -5, 0, 5 }, new long[] { 1, 1, 1, 0});
         }
 
-        private static IReadOnlyList<KeyValuePair<double, long>> MakeExpectedBuckets(IReadOnlyList<double> buckets, IReadOnlyList<long> data)
-        {
-            return buckets.Union(new[] {double.PositiveInfinity})
-                .Zip(data, KeyValuePair.Create)
-                .ToList();
-        }
-
-        private IHistogram CreateHistogram(IReadOnlyList<double> buckets = null, MetricFlags options = MetricFlags.Default)
+        private IHistogram CreateHistogram(double[] buckets = null, MetricFlags options = MetricFlags.Default)
         {
             var config = new HistogramConfiguration("test", string.Empty, Array.Empty<string>(), buckets, options);
             return new Histogram(config, Array.Empty<string>());

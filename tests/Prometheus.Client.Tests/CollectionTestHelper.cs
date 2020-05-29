@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Prometheus.Client.Tests
 {
     internal static class CollectionTestHelper
     {
-        public static async Task TestCollectionAsync(Action<MetricFactory> metricsSetup, string resourceName)
+        public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);

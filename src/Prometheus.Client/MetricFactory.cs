@@ -8,7 +8,7 @@ using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client
 {
-    public class MetricFactory
+    public class MetricFactory : IMetricFactory
     {
         private readonly ICollectorRegistry _registry;
         private readonly object _factoryProxyLock = new object();
@@ -33,14 +33,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public ICounter CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<ICounter, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new MetricConfiguration(name, help, null, options);
-                metric = CreateCounterInternal<ValueTuple>( configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateCounter(name, help, ValueTuple.Create(), options);
             return metric.Unlabelled;
         }
 
@@ -97,14 +90,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public ICounter<long> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<ICounter<long>, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new MetricConfiguration(name, help, null, options);
-                metric = CreateCounterInt64Internal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateCounterInt64(name, help, ValueTuple.Create(), options);
             return metric.Unlabelled;
         }
 
@@ -161,14 +147,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public IGauge CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<IGauge, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new MetricConfiguration(name, help, null, options);
-                metric = CreateGaugeInternal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateGauge(name, help, ValueTuple.Create(), options);
             return metric.Unlabelled;
         }
 
@@ -225,14 +204,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public IGauge<long> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<IGauge<long>, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new MetricConfiguration(name, help, null, options);
-                metric = CreateGaugeInt64Internal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateGaugeInt64(name, help, ValueTuple.Create(), options);
             return metric.Unlabelled;
         }
 
@@ -290,14 +262,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public IHistogram CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<IHistogram, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new HistogramConfiguration(name, help, null, buckets, options);
-                metric = CreateHistogramInternal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateHistogram(name, help, ValueTuple.Create(), buckets, options);
             return metric.Unlabelled;
         }
 
@@ -356,14 +321,7 @@ namespace Prometheus.Client
         /// <param name="options">Metric flags</param>
         public IUntyped CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<IUntyped, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new MetricConfiguration(name, help, null, options);
-                metric = CreateUntypedInternal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateUntyped(name, help, ValueTuple.Create(), options);
             return metric.Unlabelled;
         }
 
@@ -431,14 +389,7 @@ namespace Prometheus.Client
             int? bufCap = null,
             MetricFlags options = MetricFlags.Default)
         {
-            var metric = TryGetByName<IMetricFamily<ISummary, ValueTuple>>(name);
-            if (metric == null)
-            {
-                var configuration = new SummaryConfiguration(name, help, null, options, objectives, maxAge, ageBuckets, bufCap);
-                metric = CreateSummaryInternal<ValueTuple>(configuration);
-            }
-
-            ValidateLabelNames(metric.LabelNames, default);
+            var metric = CreateSummary(name, help, ValueTuple.Create(), objectives, maxAge, ageBuckets, bufCap, options);
             return metric.Unlabelled;
         }
 

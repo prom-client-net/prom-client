@@ -46,7 +46,7 @@ namespace Prometheus.Client
         }
 
         public static IMetricFamily<ISummary, ValueTuple<string>> CreateSummary(
-            this MetricFactory factory,
+            this IMetricFactory factory,
             string name,
             string help,
             string labelName,

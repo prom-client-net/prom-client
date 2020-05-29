@@ -7,7 +7,7 @@ namespace Prometheus.Client
 {
     public class MetricConfiguration: CollectorConfiguration
     {
-        public MetricConfiguration(string name, string help, IReadOnlyList<string> labels, MetricFlags options)
+        public MetricConfiguration(string name, string help, string[] labels, MetricFlags options)
             : base(name)
         {
             Help = help;
@@ -15,13 +15,16 @@ namespace Prometheus.Client
             SuppressEmptySamples = options.HasFlag(MetricFlags.SupressEmptySamples);
             LabelNames = labels ?? Array.Empty<string>();
 
-            foreach (string labelName in LabelNames)
+            if (labels != null)
             {
-                if (string.IsNullOrEmpty(labelName))
-                    throw new ArgumentException("Label name cannot be empty");
+                foreach (string labelName in labels)
+                {
+                    if (string.IsNullOrEmpty(labelName))
+                        throw new ArgumentException("Label name cannot be empty");
 
-                if (!ValidateLabelName(labelName))
-                    throw new ArgumentException($"Invalid label name: {labelName}");
+                    if (!ValidateLabelName(labelName))
+                        throw new ArgumentException($"Invalid label name: {labelName}");
+                }
             }
         }
 

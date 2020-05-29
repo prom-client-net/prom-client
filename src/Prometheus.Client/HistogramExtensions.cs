@@ -43,7 +43,7 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
-        public static IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(this MetricFactory factory, string name, string help, string labelName, double[] buckets = null, MetricFlags options = MetricFlags.Default)
+        public static IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(this IMetricFactory factory, string name, string help, string labelName, double[] buckets = null, MetricFlags options = MetricFlags.Default)
         {
             return factory.CreateHistogram(name, help, ValueTuple.Create(labelName), buckets, options);
         }

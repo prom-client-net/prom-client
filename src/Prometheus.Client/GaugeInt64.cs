@@ -30,7 +30,7 @@ namespace Prometheus.Client
         public void Inc(long increment, long? timestamp)
         {
             _value.Add(increment);
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public void Set(long val)
@@ -42,7 +42,7 @@ namespace Prometheus.Client
         public void Set(long val, long? timestamp)
         {
             _value.Value = val;
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public void Dec()
@@ -59,7 +59,7 @@ namespace Prometheus.Client
         public void Dec(long decrement, long? timestamp)
         {
             _value.Add(-decrement);
-            TimestampIfRequired(timestamp);
+            TrackObservation(timestamp);
         }
 
         public long Value => _value.Value;

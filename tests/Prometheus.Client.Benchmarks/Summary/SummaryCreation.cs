@@ -9,7 +9,7 @@ namespace Prometheus.Client.Benchmarks.Summary
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class SummaryCreation
     {
-        private MetricFactory _factory;
+        private IMetricFactory _factory;
 
         [GlobalSetup]
         public void Setup()
@@ -18,15 +18,15 @@ namespace Prometheus.Client.Benchmarks.Summary
         }
 
         [Benchmark]
-        public ISummary Creation()
+        public ISummary Creation(int i)
         {
-            return _factory.CreateSummary("summary", string.Empty);
+            return _factory.CreateSummary($"summary1_{i.ToString()}", string.Empty);
         }
 
         [Benchmark]
         public IMetricFamily<ISummary> CreationWithLabels()
         {
-             return _factory.CreateSummary("summary", "help", "label1", "label2");
+             return _factory.CreateSummary("summary2", "help", "label1", "label2");
         }
     }
 }

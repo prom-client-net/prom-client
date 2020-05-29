@@ -53,21 +53,5 @@ namespace Prometheus.Client.Tests.HistogramTests
 
             Assert.Throws<ArgumentException>(Create);
         }
-
-        [Theory]
-        [InlineData(new[] { 0d, 1d })]
-        [InlineData(new[] { 0d, 1d, double.PositiveInfinity })]
-        public void ShouldAppendInfIfNotExists(double[] buckets)
-        {
-            var config = new HistogramConfiguration(
-                "test_name",
-                string.Empty,
-                Array.Empty<string>(),
-                buckets,
-                MetricFlags.Default);
-
-            Assert.True(double.IsPositiveInfinity(config.Buckets.Last()));
-            Assert.Equal(double.IsPositiveInfinity(buckets.Last()) ? buckets.Length : buckets.Length + 1, config.Buckets.Count);
-        }
     }
 }
