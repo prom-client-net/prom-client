@@ -15,7 +15,6 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         private Their.Prometheus.ISummary _theirSummary;
         private double[] _dataset;
 
-
         [IterationSetup]
         public void Setup()
         {

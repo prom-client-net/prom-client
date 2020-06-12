@@ -3,7 +3,6 @@ using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison
 {
-
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class GeneralBenchmarks : ComparisonBenchmarkBase
@@ -95,7 +94,7 @@ namespace Prometheus.Client.Benchmarks.Comparison
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64("testGauge", HelpText, ("foo", "bar", "baz")).Inc(i);
         }
-        
+
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Histogram")]
         public void Histogram_BaseLine()
@@ -119,7 +118,7 @@ namespace Prometheus.Client.Benchmarks.Comparison
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram("testHistogram", HelpText, ("foo", "bar", "baz")).Observe(i);
         }
-        
+
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Summary")]
         public void Summary_BaseLine()
