@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client
 {
@@ -103,9 +102,9 @@ namespace Prometheus.Client
         // "github.com/bmizerany/perks/quantile").
         public int BufCap { get; }
 
-        internal IReadOnlyList<double> SortedObjectives { get; }
+        internal double[] SortedObjectives { get; }
 
-        internal IReadOnlyList<string> FormattedObjectives => _formattedObjectives.Value;
+        internal string[] FormattedObjectives => _formattedObjectives.Value;
 
         private static string[] GetFormattedObjectives(IReadOnlyList<double> objectives)
         {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+
 #if HasITuple
 using System.Runtime.CompilerServices;
 #endif
-using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client.Abstractions
 {

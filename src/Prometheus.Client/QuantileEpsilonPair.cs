@@ -1,6 +1,6 @@
-﻿namespace Prometheus.Client.SummaryImpl
+﻿namespace Prometheus.Client
 {
-    public struct QuantileEpsilonPair
+    public readonly struct QuantileEpsilonPair
     {
         public QuantileEpsilonPair(double quantile, double epsilon)
         {

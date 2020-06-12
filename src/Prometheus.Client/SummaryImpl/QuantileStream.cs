@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Prometheus.Client.SummaryImpl
 {
@@ -18,131 +20,115 @@ namespace Prometheus.Client.SummaryImpl
     // Effective Computation of Biased Quantiles over Data Streams
     //
     // http://www.cs.rutgers.edu/~muthu/bquant.pdf
-
-    public delegate double Invariant(SampleStream stream, double r);
-
-    public class QuantileStream
+    internal sealed class QuantileStream
     {
-        private readonly List<Sample> _samples;
-        private readonly SampleStream _sampleStream;
-        private bool _sorted;
+        private readonly object _bufferLock = new object();
+        private readonly TimeSpan _streamDuration;
+        private readonly ReaderWriterLockSlim _sampleStreamsLock = new ReaderWriterLockSlim();
+        private readonly double[] _buffer;
+        private readonly SampleStream[] _sampleStreams;
+        private readonly Func<DateTimeOffset> _currentTimeProvider;
 
-        private QuantileStream(SampleStream sampleStream, List<Sample> samples, bool sorted)
+        private volatile int _bufferPosition = 0;
+        private int _headStreamIndex = 0;
+        private DateTimeOffset _nextStreamRotationOffset;
+
+        public QuantileStream(int bufferSize, TimeSpan streamDuration, int ageBuckets, Invariant invariant, Func<DateTimeOffset> currentTimeProvider = null)
         {
-            _sampleStream = sampleStream;
-            _samples = samples;
-            _sorted = sorted;
+            _buffer = new double[bufferSize];
+            _streamDuration = streamDuration;
+            _sampleStreams = new SampleStream[ageBuckets];
+            for(var i = 0; i < ageBuckets; i++)
+                _sampleStreams[i] = new SampleStream(invariant);
+
+            _currentTimeProvider = currentTimeProvider ?? (() => DateTimeOffset.UtcNow);
+            _nextStreamRotationOffset = _currentTimeProvider().Add(_streamDuration);
         }
 
-        // Count returns the total number of samples observed in the stream since initialization.
-        public int Count => _samples.Count + _sampleStream.Count;
-
-        public int SamplesCount => _samples.Count;
-
-        public bool Flushed => _sampleStream.SampleCount > 0;
-
-        public static QuantileStream NewStream(Invariant invariant)
+        public void Append(double value)
         {
-            return new QuantileStream(new SampleStream(invariant), new List<Sample> { Capacity = 500 }, true);
-        }
+            if (ShouldFlushBuffer())
+                FlushBuffer();
 
-        // NewLowBiased returns an initialized Stream for low-biased quantiles
-        // (e.g. 0.01, 0.1, 0.5) where the needed quantiles are not known a priori, but
-        // error guarantees can still be given even for the lower ranks of the data
-        // distribution.
-        //
-        // The provided epsilon is a relative error, i.e. the true quantile of a value
-        // returned by a query is guaranteed to be within (1±Epsilon)*Quantile.
-        //
-        // See http://www.cs.rutgers.edu/~muthu/bquant.pdf for time, space, and error
-        // properties.
-        public static QuantileStream NewLowBiased(double epsilon)
-        {
-            return NewStream((stream, r) => 2 * epsilon * r);
-        }
-
-        // NewHighBiased returns an initialized Stream for high-biased quantiles
-        // (e.g. 0.01, 0.1, 0.5) where the needed quantiles are not known a priori, but
-        // error guarantees can still be given even for the higher ranks of the data
-        // distribution.
-        //
-        // The provided epsilon is a relative error, i.e. the true quantile of a value
-        // returned by a query is guaranteed to be within 1-(1±Epsilon)*(1-Quantile).
-        //
-        // See http://www.cs.rutgers.edu/~muthu/bquant.pdf for time, space, and error
-        // properties.
-        public static QuantileStream NewHighBiased(double epsilon)
-        {
-            return NewStream((stream, r) => 2 * epsilon * (stream.N - r));
-        }
-
-        // NewTargeted returns an initialized Stream concerned with a particular set of
-        // quantile values that are supplied a priori. Knowing these a priori reduces
-        // space and computation time. The targets map maps the desired quantiles to
-        // their absolute errors, i.e. the true quantile of a value returned by a query
-        // is guaranteed to be within (Quantile±Epsilon).
-        //
-        // See http://www.cs.rutgers.edu/~muthu/bquant.pdf for time, space, and error properties.
-        public static QuantileStream NewTargeted(IReadOnlyList<QuantileEpsilonPair> targets)
-        {
-            return NewStream((stream, r) =>
+            lock (_bufferLock)
             {
-                double m = double.MaxValue;
-
-                foreach (var target in targets)
-                {
-                    double f;
-                    if (target.Quantile * stream.N <= r)
-                        f = (2 * target.Epsilon * r) / target.Quantile;
-                    else
-                        f = (2 * target.Epsilon * (stream.N - r)) / (1 - target.Quantile);
-
-                    if (f < m)
-                        m = f;
-                }
-
-                return m;
-            });
-        }
-
-        public void Insert(double value)
-        {
-            Insert(new Sample { Value = value, Width = 1 });
-        }
-
-        private void Insert(Sample sample)
-        {
-            _samples.Add(sample);
-            _sorted = false;
-            if (_samples.Count == _samples.Capacity)
-                Flush();
-        }
-
-        private void Flush()
-        {
-            MaybeSort();
-            _sampleStream.Merge(_samples);
-            _samples.Clear();
-        }
-
-        private void MaybeSort()
-        {
-            if (!_sorted)
-            {
-                _sorted = true;
-                _samples.Sort(SampleComparison);
+                _buffer[_bufferPosition++] = value;
             }
         }
 
-        private static int SampleComparison(Sample lhs, Sample rhs)
+        public void FlushBuffer()
         {
-            return lhs.Value.CompareTo(rhs.Value);
+            Span<double> data = stackalloc double[_buffer.Length];
+            FlushBuffer(data, out int bufferSize);
+            data = data.Slice(0, bufferSize);
+
+            PopulateSampleStreams(data);
         }
 
-        public void Reset()
+        private void FlushBuffer(Span<double> destination, out int bufferSize)
         {
-            _sampleStream.Reset();
-            _samples.Clear();
+            bufferSize = 0;
+            if (_bufferPosition == 0)
+                return;
+
+            lock (_bufferLock)
+            {
+                if (_bufferPosition == 0)
+                    return;
+
+                Array.Sort(_buffer, 0, _bufferPosition);
+
+                var data = new Span<double>(_buffer);
+                data = data.Slice(0, _bufferPosition);
+                data.CopyTo(destination);
+
+                bufferSize = _bufferPosition;
+                _bufferPosition = 0;
+            }
+        }
+
+        private void PopulateSampleStreams(ReadOnlySpan<double> data)
+        {
+            var now = _currentTimeProvider();
+            if (data.IsEmpty && now < _nextStreamRotationOffset)
+                return;
+
+            _sampleStreamsLock.EnterWriteLock();
+            try
+            {
+                while (now >= _nextStreamRotationOffset)
+                {
+                    _sampleStreams[_headStreamIndex].Reset();
+                    _headStreamIndex++;
+
+                    if (_headStreamIndex >= _sampleStreams.Length)
+                        _headStreamIndex = 0;
+
+                    _nextStreamRotationOffset = _nextStreamRotationOffset.Add(_streamDuration);
+                }
+
+                if (!data.IsEmpty)
+                {
+                    foreach (var sampleStream in _sampleStreams)
+                        sampleStream.InsertRange(data);
+                }
+            }
+            finally
+            {
+                _sampleStreamsLock.ExitWriteLock();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool ShouldFlushBuffer()
+        {
+            if (_bufferPosition >= _buffer.Length)
+                return true;
+
+            if (_currentTimeProvider() > _nextStreamRotationOffset)
+                return true;
+
+            return false;
         }
 
         // Query returns the computed qth percentiles value. If s was created with
@@ -150,26 +136,16 @@ namespace Prometheus.Client.SummaryImpl
         // will return an unspecified result.
         public double Query(double q)
         {
-            if (!Flushed)
+            _sampleStreamsLock.EnterReadLock();
+
+            try
             {
-                // Fast path when there hasn't been enough data for a flush;
-                // this also yields better accuracy for small sets of data.
-
-                int l = _samples.Count;
-
-                if (l == 0)
-                    return 0;
-
-                int i = (int) (l * q);
-                if (i > 0)
-                    i -= 1;
-
-                MaybeSort();
-                return _samples[i].Value;
+                return _sampleStreams[_headStreamIndex].Query(q);
             }
-
-            Flush();
-            return _sampleStream.Query(q);
+            finally
+            {
+                _sampleStreamsLock.ExitReadLock();
+            }
         }
     }
 }

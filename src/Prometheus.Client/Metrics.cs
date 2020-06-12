@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client
 {
