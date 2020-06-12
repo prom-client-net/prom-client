@@ -105,7 +105,7 @@ namespace Prometheus.Client.Tests.SummaryTests
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
-            var summary = factory.CreateSummary("Summary", "helpless", "labelName").WithLabels("labelValue");
+            var summary = factory.CreateSummary("Summary", "helpless", "labelName", ageBuckets: 1).WithLabels("labelValue");
 
             // Default objectives are 0.5, 0.9, 0.99 quantile
             const int numIterations = 1000;
@@ -147,9 +147,9 @@ namespace Prometheus.Client.Tests.SummaryTests
             var child = new Summary(summaryConfig, Array.Empty<string>(), () => currentTime);
             var values = new double[summaryConfig.Objectives.Count];
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 1; i <= 1000; i++)
             {
-                currentTime= baseTime.AddSeconds(i);
+                currentTime = baseTime.AddSeconds(i);
                 child.Observe(i, null);
 
                 if (i % 10 == 0)

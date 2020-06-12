@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 #endif
 using Prometheus.Client.Abstractions;
-using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client
 {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Prometheus.Client.SummaryImpl;
 using Xunit;
 
@@ -22,7 +21,7 @@ namespace Prometheus.Client.Tests.SummaryTests
 
         private const double _relativeEpsilon = 0.01;
 
-        private static double[] PopulateStream(QuantileStream stream, Random random)
+        private static double[] PopulateStream(SampleStream stream, Random random)
         {
             var a = new double[100100];
             for (int i = 0; i < a.Length; i++)
@@ -33,24 +32,29 @@ namespace Prometheus.Client.Tests.SummaryTests
                 if (i % 20 == 0)
                     v = (v * v) + 1;
 
-                stream.Insert(v);
                 a[i] = v;
             }
+
+            Array.Sort(a);
+
+            stream.InsertRange(a);
 
             return a;
         }
 
-        private void VerifyPercsWithAbsoluteEpsilon(double[] a, QuantileStream s)
+        private void VerifyPercsWithAbsoluteEpsilon(double[] a, SampleStream s, IReadOnlyList<QuantileEpsilonPair> targets)
         {
-            Array.Sort(a);
-
-            foreach (var target in _targets)
+            foreach (var target in targets)
             {
                 double n = a.Length;
                 int k = (int) (target.Quantile * n);
+                if (k < 1)
+                    k = 1;
+
                 int lower = (int) ((target.Quantile - target.Epsilon) * n);
                 if (lower < 1)
                     lower = 1;
+
                 int upper = (int) Math.Ceiling((target.Quantile + target.Epsilon) * n);
                 if (upper > a.Length)
                     upper = a.Length;
@@ -66,7 +70,7 @@ namespace Prometheus.Client.Tests.SummaryTests
             }
         }
 
-        private void VerifyLowPercsWithRelativeEpsilon(double[] a, QuantileStream s)
+        private void VerifyLowPercsWithRelativeEpsilon(double[] a, SampleStream s)
         {
             Array.Sort(a);
 
@@ -90,7 +94,7 @@ namespace Prometheus.Client.Tests.SummaryTests
             }
         }
 
-        private void VerifyHighPercsWithRelativeEpsilon(double[] a, QuantileStream s)
+        private void VerifyHighPercsWithRelativeEpsilon(double[] a, SampleStream s)
         {
             Array.Sort(a);
 
@@ -115,16 +119,16 @@ namespace Prometheus.Client.Tests.SummaryTests
         [Fact]
         public void TestDefaults()
         {
-            var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
+            var q = new SampleStream(Invariants.Targeted(new[] { new QuantileEpsilonPair(0.99d, 0.001d) }) );
             double g = q.Query(0.99);
-            Assert.Equal(0, g);
+            Assert.Equal(double.NaN, g);
         }
 
         [Fact]
         public void TestHighBiasedQuery()
         {
             var random = new Random(42);
-            var s = QuantileStream.NewHighBiased(_relativeEpsilon);
+            var s = new SampleStream(Invariants.HighBiased(_relativeEpsilon) );
             var a = PopulateStream(s, random);
             VerifyHighPercsWithRelativeEpsilon(a, s);
         }
@@ -133,57 +137,35 @@ namespace Prometheus.Client.Tests.SummaryTests
         public void TestLowBiasedQuery()
         {
             var random = new Random(42);
-            var s = QuantileStream.NewLowBiased(_relativeEpsilon);
+            var s = new SampleStream(Invariants.LowBiased(_relativeEpsilon) );
             var a = PopulateStream(s, random);
             VerifyLowPercsWithRelativeEpsilon(a, s);
         }
 
-        [Fact]
-        public void TestTargetedQuery()
+        [Theory]
+        //[InlineData(0.01, 0.001, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        [InlineData(0.10, 0.01, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        [InlineData(0.50, 0.05, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        [InlineData(0.90, 0.01, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        [InlineData(0.99, 0.001, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        public void TestTargetedQuery(double quantile, double epsilon, double[] data)
         {
-            var random = new Random(42);
-            var s = QuantileStream.NewTargeted(_targets);
-            var a = PopulateStream(s, random);
-            VerifyPercsWithAbsoluteEpsilon(a, s);
-        }
+            Array.Sort(data);
+            var targets = new[] { new QuantileEpsilonPair(quantile, epsilon) };
 
-        [Fact]
-        public void TestUncompressed()
-        {
-            var q = QuantileStream.NewTargeted(_targets);
+            var s = new SampleStream(Invariants.Targeted(targets) );
+            s.InsertRange(data);
 
-            for (int i = 100; i > 0; i--)
-                q.Insert(i);
-
-            Assert.Equal(100, q.Count);
-
-            // Before compression, Query should have 100% accuracy
-            foreach (double quantile in _targets.Select(_ => _.Quantile))
-            {
-                double w = quantile * 100;
-                double g = q.Query(quantile);
-                Assert.Equal(g, w);
-            }
+            VerifyPercsWithAbsoluteEpsilon(data, s, targets);
         }
 
         [Fact]
         public void TestUncompressedOne()
         {
-            var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
-            q.Insert(3.14);
+            var q = new SampleStream(Invariants.Targeted(new[] { new QuantileEpsilonPair(0.99d, 0.001d) }));
+            q.InsertRange(new[] { 3.14 });
             double g = q.Query(0.90);
             Assert.Equal(3.14, g);
-        }
-
-        [Fact]
-        public void TestUncompressedSamples()
-        {
-            var q = QuantileStream.NewTargeted(new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.99d, 0.001d) });
-
-            for (int i = 1; i <= 100; i++)
-                q.Insert(i);
-
-            Assert.Equal(100, q.SamplesCount);
         }
     }
 }
