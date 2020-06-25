@@ -105,8 +105,9 @@ namespace Prometheus.Client.SummaryImpl
             if (_samples.Count == 0)
                 return double.NaN;
 
-            double t = Math.Ceiling(q * _n);
-            t += Math.Ceiling(_invariant(this, t) / 2);
+            double t = q * _n;
+            t += _invariant(this, t) / 2;
+            t = Math.Ceiling(t);
             var p = _samples[0];
             double r = 0;
 

@@ -5,17 +5,8 @@ using Xunit;
 
 namespace Prometheus.Client.Tests.SummaryTests
 {
-    public class QuantileStreamTests
+    public class SampleStreamTests
     {
-        private readonly IReadOnlyList<QuantileEpsilonPair> _targets = new List<QuantileEpsilonPair>
-        {
-            new QuantileEpsilonPair(0.01, 0.001),
-            new QuantileEpsilonPair(0.10, 0.01),
-            new QuantileEpsilonPair(0.50, 0.05),
-            new QuantileEpsilonPair(0.90, 0.01),
-            new QuantileEpsilonPair(0.99, 0.001)
-        };
-
         private readonly double[] _lowQuantiles = { 0.01, 0.1, 0.5 };
         private readonly double[] _highQuantiles = { 0.99, 0.9, 0.5 };
 
@@ -143,7 +134,7 @@ namespace Prometheus.Client.Tests.SummaryTests
         }
 
         [Theory]
-        //[InlineData(0.01, 0.001, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
+        [InlineData(0.01, 0.001, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
         [InlineData(0.10, 0.01, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
         [InlineData(0.50, 0.05, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]
         [InlineData(0.90, 0.01, new double[] {1, 2, 5, 5, 6, 7, 9, 10, 11, 11, 12, 13, 13, 13, 15, 16, 17, 18, 19, 19} )]

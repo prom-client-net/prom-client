@@ -234,6 +234,7 @@ namespace Prometheus.Client.MetricsWriter
             return values.ToDictionary(k => k, v => _encoding.GetBytes(Enum.GetName(typeof(MetricType), v).ToLowerInvariant()));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ValidateState(string callerMethod, WriterState expectedStates)
         {
             if ((_state & expectedStates) != _state)
