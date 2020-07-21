@@ -95,6 +95,9 @@ namespace Prometheus.Client
             where TTuple : struct, IEquatable<TTuple>
 #endif
         {
+            if (!Validate(typeof(TTuple)))
+                throw new NotSupportedException("Invalid labels tuple. Use strings only as a labels.");
+
             return TupleHelper<TTuple>.ToArray(values);
         }
 
@@ -167,9 +170,16 @@ namespace Prometheus.Client
                 for (var i = 0; i < tupleSize; i++)
                 {
                     if (i == 7) // it's TRest
+                    {
                         args[i] = BuildUpTuple(tupleType.GenericTypeArguments[i], source, offset + 7);
+                    }
                     else
+                    {
+                        if(tupleType.GenericTypeArguments[i] != typeof(string))
+                            throw new NotSupportedException($"Cannot use {tupleType.GenericTypeArguments[i] .Name} as label name");
+
                         args[i] = Expression.Property(source, "Item", Expression.Constant(offset + i));
+                    }
                 }
 
                 // ReSharper disable once AssignNullToNotNullAttribute
@@ -192,6 +202,27 @@ namespace Prometheus.Client
             }
         }
 
+        private static bool Validate(Type tupleType)
+        {
+            if (tupleType == typeof(ValueTuple))
+                return true;
+
+            var tupleSize = tupleType.GenericTypeArguments.Length;
+
+            for (var i = 0; i < tupleSize; i++)
+            {
+                if (i == 7) // it's TRest
+                {
+                    return Validate(tupleType.GenericTypeArguments[i]);
+                }
+
+                if (tupleType.GenericTypeArguments[i] != typeof(string))
+                    return false;
+            }
+
+            return true;
+        }
+
         private static class TupleHelper<TTuple>
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
@@ -207,9 +238,9 @@ namespace Prometheus.Client
             static TupleHelper()
             {
                 _size = LabelsHelper.GetSize<TTuple>();
+                _parser = LabelsHelper.GenerateParser<TTuple>();
                 FormatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
                 HashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
-                _parser = LabelsHelper.GenerateParser<TTuple>();
             }
 
             public static string[] ToArray(TTuple values)

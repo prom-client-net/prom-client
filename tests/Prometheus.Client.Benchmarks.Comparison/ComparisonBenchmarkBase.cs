@@ -1,4 +1,5 @@
 extern alias Their;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Abstractions;
@@ -28,6 +29,8 @@ namespace Prometheus.Client.Benchmarks.Comparison
 
             _theirRegistry = Their.Prometheus.Metrics.NewCustomRegistry();
             _theirMetricFactory = Their.Prometheus.Metrics.WithCustomRegistry(_theirRegistry);
+
+            GC.Collect();
         }
 
         public IEnumerable<string> GenerateMetrics(int count)

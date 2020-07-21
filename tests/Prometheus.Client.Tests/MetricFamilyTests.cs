@@ -131,6 +131,24 @@ namespace Prometheus.Client.Tests
             Assert.True(labeled.All(items.Contains));
         }
 
+        [Fact]
+        public void ShoulNotAllowIntLabels1()
+        {
+            Assert.Throws<NotSupportedException>(() => CreateMetricFamily(ValueTuple.Create(1)));
+        }
+
+        [Fact]
+        public void ShoulNotAllowIntLabels2()
+        {
+            Assert.Throws<NotSupportedException>(() => CreateMetricFamily(("1", 2)));
+        }
+
+        [Fact]
+        public void ShoulNotAllowIntLabels8()
+        {
+            Assert.Throws<NotSupportedException>(() => CreateMetricFamily(("1", "2", "3", "4", "5", "6", "7", 8)));
+        }
+
         private IMetricFamily<IDummyMetric> CreateMetricFamily()
         {
             var config = new MetricConfiguration("dummy_metric", string.Empty, new string[0], MetricFlags.None);

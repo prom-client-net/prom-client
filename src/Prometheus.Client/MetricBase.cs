@@ -15,16 +15,11 @@ namespace Prometheus.Client
         private readonly Func<DateTimeOffset> _currentTimeProvider;
         private long _timestamp;
 
-        protected IReadOnlyList<KeyValuePair<string, string>> Labels { get; }
-
         protected MetricBase(TConfig config, IReadOnlyList<string> labelValues, Func<DateTimeOffset> currentTimeProvider = null)
         {
             Configuration = config;
             _currentTimeProvider = currentTimeProvider;
             _includeTimestamp = config.IncludeTimestamp;
-
-            if (labelValues != null && labelValues.Count > 0)
-                Labels = config.LabelNames.Zip(labelValues, (name, value) => new KeyValuePair<string, string>(name, value)).ToArray();
 
             LabelValues = labelValues;
         }

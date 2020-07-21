@@ -17,6 +17,17 @@ namespace Prometheus.Client.Tests.CounterTests
             Assert.Equal(inc, counter.Value);
         }
 
+        [Fact]
+        public void ShouldIgnoreNaN()
+        {
+            var counter = CreateCounter();
+            counter.Inc(42);
+
+            counter.Inc(double.NaN);
+
+            Assert.Equal(42, counter.Value);
+        }
+
         [Theory]
         [InlineData(-1)]
         [InlineData(-3.1)]

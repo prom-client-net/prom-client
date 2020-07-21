@@ -49,8 +49,8 @@ namespace Prometheus.Client
                 cumulativeCount += _bucketsStore.Buckets[i].Value;
                 var bucketSample = writer.StartSample("_bucket");
                 var labelWriter = bucketSample.StartLabels();
-                if (Labels != null)
-                    labelWriter.WriteLabels(Labels);
+                if (LabelValues != null && LabelValues.Count > 0)
+                    labelWriter.WriteLabels(Configuration.LabelNames, LabelValues);
 
                 string labelValue = Configuration.FormattedBuckets[i];
                 labelWriter.WriteLabel("le", labelValue);
@@ -63,8 +63,8 @@ namespace Prometheus.Client
                 bucketSample.EndSample();
             }
 
-            writer.WriteSample(_sum.Value, "_sum", Labels, Timestamp);
-            writer.WriteSample(cumulativeCount, "_count", Labels, Timestamp);
+            writer.WriteSample(_sum.Value, "_sum", Configuration.LabelNames, LabelValues, Timestamp);
+            writer.WriteSample(cumulativeCount, "_count", Configuration.LabelNames, LabelValues, Timestamp);
         }
 
         private HistogramState ForkState()

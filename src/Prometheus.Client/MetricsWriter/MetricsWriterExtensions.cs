@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Prometheus.Client.MetricsWriter.Abstractions;
 
@@ -9,14 +10,15 @@ namespace Prometheus.Client.MetricsWriter
             this IMetricsWriter writer,
             double value,
             string suffix = "",
-            IReadOnlyList<KeyValuePair<string, string>> labels = null,
+            IReadOnlyList<string> labelNames = null,
+            IReadOnlyList<string> labelValues = null,
             long? timestamp = null)
         {
             var sampleWriter = writer.StartSample(suffix);
-            if ((labels != null) && (labels.Count > 0))
+            if ((labelValues != null) && (labelValues.Count > 0))
             {
                 var labelWriter = sampleWriter.StartLabels();
-                labelWriter.WriteLabels(labels);
+                labelWriter.WriteLabels(labelNames, labelValues);
                 labelWriter.EndLabels();
             }
 
@@ -44,11 +46,23 @@ namespace Prometheus.Client.MetricsWriter
 
         public static ILabelWriter WriteLabels(
             this ILabelWriter labelWriter,
-            IReadOnlyList<KeyValuePair<string, string>> labels
+            IReadOnlyList<string> labelNames,
+            IReadOnlyList<string> labelValues
         )
         {
-            for (int i = 0; i < labels.Count; i++)
-                labelWriter.WriteLabel(labels[i].Key, labels[i].Value);
+            if(labelNames == null)
+                throw new ArgumentNullException(nameof(labelNames));
+
+            if(labelValues == null)
+                throw new ArgumentNullException(nameof(labelValues));
+
+            if (labelNames.Count != labelValues.Count)
+            {
+                throw new InvalidOperationException("Label names and values does not match");
+            }
+
+            for (int i = 0; i < labelNames.Count; i++)
+                labelWriter.WriteLabel(labelNames[i], labelValues[i]);
 
             return labelWriter;
         }
