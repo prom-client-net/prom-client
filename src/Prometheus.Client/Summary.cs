@@ -86,8 +86,8 @@ namespace Prometheus.Client
                 {
                     var bucketSample = writer.StartSample();
                     var labelWriter = bucketSample.StartLabels();
-                    if (Labels != null)
-                        labelWriter.WriteLabels(Labels);
+                    if (LabelValues != null && LabelValues.Count > 0)
+                        labelWriter.WriteLabels(Configuration.LabelNames, LabelValues);
 
                     labelWriter.WriteLabel("quantile", Configuration.FormattedObjectives[i]);
                     labelWriter.EndLabels();
@@ -99,8 +99,8 @@ namespace Prometheus.Client
                     bucketSample.EndSample();
                 }
 
-                writer.WriteSample(sum, "_sum", Labels, Timestamp);
-                writer.WriteSample(count, "_count", Labels, Timestamp);
+                writer.WriteSample(sum, "_sum", Configuration.LabelNames, LabelValues, Timestamp);
+                writer.WriteSample(count, "_count", Configuration.LabelNames, LabelValues, Timestamp);
             }
             finally
             {

@@ -32,7 +32,7 @@ namespace Prometheus.Client
 
         protected internal override void Collect(IMetricsWriter writer)
         {
-            writer.WriteSample(Value, string.Empty, Labels, Timestamp);
+            writer.WriteSample(Value, string.Empty, Configuration.LabelNames, LabelValues, Timestamp);
         }
     }
 }

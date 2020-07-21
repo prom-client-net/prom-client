@@ -18,17 +18,14 @@ namespace Prometheus.Client
         {
             get
             {
-                if (Volatile.Read(ref _isNan))
-                    return double.NaN;
-
                 return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _value));
             }
             set
             {
                 if (IsNaN(value))
                     Volatile.Write(ref _isNan, true);
-                else
-                    Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
+
+                Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
             }
         }
 

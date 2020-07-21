@@ -150,6 +150,54 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void ThrowOnIntLabelName1()
+        {
+            var labels = ValueTuple.Create(1);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
+        public void ThrowOnIntLabelName8()
+        {
+            var labels = ("1", "2", "3", "4", "5", "6", "7", 8);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
+        public void ThrowOnIntLabelName16()
+        {
+            var labels = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 16);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
+        public void ThrowOnEnumLabelName1()
+        {
+            var labels = ValueTuple.Create(MetricType.Untyped);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
+        public void ThrowOnEnumLabelName8()
+        {
+            var labels = ("1", "2", "3", "4", "5", "6", "7", MetricType.Untyped);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
+        public void ThrowOnEnumLabelName16()
+        {
+            var labels = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", MetricType.Untyped);
+
+            Assert.Throws<NotSupportedException>(() => LabelsHelper.ToArray(labels));
+        }
+
+        [Fact]
         public void GetHashCode0()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create());
