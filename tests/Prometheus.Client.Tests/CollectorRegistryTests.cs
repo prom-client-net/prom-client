@@ -133,7 +133,7 @@ namespace Prometheus.Client.Tests
 
             var res = registry.Remove(keyToRemove);
 
-            Assert.Equal(null, res);
+            Assert.Null(res);
             Assert.True(registry.TryGet("collector", out var _));
         }
     }

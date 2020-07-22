@@ -16,8 +16,8 @@ namespace Prometheus.Client
         private static readonly ArrayPool<double> _arrayPool = ArrayPool<double>.Shared;
 
         private readonly QuantileStream _quantileStream;
-        private ThreadSafeDouble _sum = new ThreadSafeDouble();
-        private ThreadSafeLong _count = new ThreadSafeLong();
+        private ThreadSafeDouble _sum = default;
+        private ThreadSafeLong _count = default;
 
         public Summary(SummaryConfiguration configuration, IReadOnlyList<string> labels, Func<DateTimeOffset> currentTimeProvider = null)
             : base(configuration, labels, currentTimeProvider)
