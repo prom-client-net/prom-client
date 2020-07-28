@@ -15,6 +15,10 @@ jobs:
         uses: actions/checkout@v1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/prometheusclientnet/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GH_DEPLOY_KEY}}
       - name: Restore
         run: dotnet restore
       - name: Build
@@ -31,4 +35,4 @@ jobs:
           name: nupkg
           path: artifacts/*
       - name: Publish to GitHub
-        run: dotnet nuget push "artifacts/*.nupkg" -k ${{secrets.GH_DEPLOY_KEY}} -s https://nuget.pkg.github.com/prometheusclientnet/index.json --skip-duplicate --no-symbols true
+        run: dotnet nuget push "artifacts/*.nupkg" --skip-duplicate --no-symbols true
