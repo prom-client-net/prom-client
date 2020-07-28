@@ -16,7 +16,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          source-url: https://nuget.pkg.github.com/PrometheusClientNet/index.json
+          source-url: https://nuget.pkg.github.com/prometheusclientnet/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GH_DEPLOY_KEY}}
       - name: Restore
@@ -29,5 +29,10 @@ jobs:
         uses: codecov/codecov-action@v1
       - name: Pack
         run: dotnet pack src/Prometheus.Client -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: nupkg
+          path: artifacts/*
       - name: Publish to GitHub
         run: dotnet nuget push "artifacts/*.nupkg" --skip-duplicate --no-symbols true
