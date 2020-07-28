@@ -20,5 +20,5 @@ jobs:
         run: dotnet restore
       - name: Tests
         run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      - name: Upload to Codecov
+      - name: Publish to Codecov
         uses: codecov/codecov-action@v1
