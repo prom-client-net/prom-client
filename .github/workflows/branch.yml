@@ -16,10 +16,9 @@ jobs:
         uses: actions/checkout@v1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
-      - name: Build
-        run: dotnet build -c Release
+      - name: Restore
+        run: dotnet restore
       - name: Tests
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      - name: Upload coverage to Codecov
+        run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      - name: Upload to Codecov
         uses: codecov/codecov-action@v1
-        
