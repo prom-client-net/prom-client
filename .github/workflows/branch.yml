@@ -1,0 +1,22 @@
+name: "branch"
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+    tags:
+      - '!refs/tags/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+      - name: Build
+        run: dotnet build -c Release
+      - name: Tests
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
