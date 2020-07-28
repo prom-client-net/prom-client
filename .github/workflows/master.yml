@@ -19,11 +19,15 @@ jobs:
           source-url: https://nuget.pkg.github.com/PrometheusClientNet/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GH_DEPLOY_KEY}}
+      - name: Restore
+        run: dotnet restore
       - name: Build
-        run: dotnet build -c Release
+        run: dotnet build src/Prometheus.Client --no-restore -c Release
       - name: Tests
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v1
       - name: Pack
-        run: dotnet pack src -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
+        run: dotnet pack src/Prometheus.Client -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
       - name: Publish to GitHub
         run: dotnet nuget push "artifacts/*.nupkg" --skip-duplicate --no-symbols true
