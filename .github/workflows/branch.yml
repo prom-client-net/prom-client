@@ -9,7 +9,7 @@ on:
       - '!refs/tags/*'
   pull_request:
     branches:
-      - master  
+      - master
 
 jobs:
   build-branch:
