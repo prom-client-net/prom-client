@@ -1,4 +1,4 @@
-name: "branch"
+name: CI
 
 on:
   push:
@@ -7,9 +7,12 @@ on:
       - '!master'
     tags:
       - '!refs/tags/*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
+  build-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
