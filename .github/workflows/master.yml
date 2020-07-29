@@ -1,4 +1,4 @@
-name: "master"
+name: CI
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - master
     tags:
       - '!refs/tags/*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:

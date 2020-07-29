@@ -1,6 +1,5 @@
 {
-  "branchPrefix": "renovate/",
-  "separateMajorMinor": false,
+  "separateMajorMinor": true,
   "labels": [
     "dependencies"
   ],

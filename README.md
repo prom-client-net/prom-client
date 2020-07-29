@@ -5,7 +5,7 @@
 [![Gitter](https://img.shields.io/gitter/room/PrometheusClientNet/community.svg)](https://gitter.im/PrometheusClientNet/community)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client/badge)](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client)
-![master](https://github.com/PrometheusClientNet/Prometheus.Client/workflows/master/badge.svg)
+![CI](https://github.com/PrometheusClientNet/Prometheus.Client/workflows/master/badge.svg)
 [![codecov](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
