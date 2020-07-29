@@ -9,7 +9,7 @@ on:
       - '!refs/tags/*'
 
 jobs:
-  build:
+  build-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
