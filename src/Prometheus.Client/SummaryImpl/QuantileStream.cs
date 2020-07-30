@@ -29,8 +29,8 @@ namespace Prometheus.Client.SummaryImpl
         private readonly SampleStream[] _sampleStreams;
         private readonly Func<DateTimeOffset> _currentTimeProvider;
 
-        private volatile int _bufferPosition = 0;
-        private int _headStreamIndex = 0;
+        private volatile int _bufferPosition;
+        private int _headStreamIndex;
         private DateTimeOffset _nextStreamRotationOffset;
 
         public QuantileStream(int bufferSize, TimeSpan streamDuration, int ageBuckets, Invariant invariant, Func<DateTimeOffset> currentTimeProvider = null)

@@ -9,11 +9,10 @@ namespace Prometheus.Client
     {
         public static async Task ProcessAsync(ICollectorRegistry registry, Stream outputStream)
         {
-            using (var metricsWriter = new MetricsTextWriter(outputStream))
-            {
-                await registry.CollectToAsync(metricsWriter).ConfigureAwait(false);
-                await metricsWriter.CloseWriterAsync().ConfigureAwait(false);
-            }
+            using var metricsWriter = new MetricsTextWriter(outputStream);
+
+            await registry.CollectToAsync(metricsWriter).ConfigureAwait(false);
+            await metricsWriter.CloseWriterAsync().ConfigureAwait(false);
         }
 
         public static async Task<MemoryStream> ProcessAsync(ICollectorRegistry registry)

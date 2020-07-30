@@ -317,7 +317,7 @@ namespace Prometheus.Client.MetricsWriter
             }
         }
 
-        // Ensure if current buffer has neccesary space available for next write
+        // Ensure if current buffer has necessary space available for next write
         // if there is not enough space available - rotate the buffers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EnsureBufferCapacity(int requiredCapacity)

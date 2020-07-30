@@ -41,7 +41,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
                 _privateBytesName,
                 _numThreadsName,
                 _processIdName,
-                _startTimeSecondsName,
+                _startTimeSecondsName
             };
         }
 

@@ -12,7 +12,7 @@ namespace Prometheus.Client
         {
             Help = help;
             IncludeTimestamp = options.HasFlag(MetricFlags.IncludeTimestamp);
-            SuppressEmptySamples = options.HasFlag(MetricFlags.SupressEmptySamples);
+            SuppressEmptySamples = options.HasFlag(MetricFlags.SuppressEmptySamples);
             LabelNames = labels ?? Array.Empty<string>();
 
             if (labels != null)

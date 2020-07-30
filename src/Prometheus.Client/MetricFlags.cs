@@ -7,10 +7,10 @@ namespace Prometheus.Client
     {
         None = 0,
 
-        SupressEmptySamples = 1,
+        SuppressEmptySamples = 1,
 
         IncludeTimestamp = 2,
 
-        Default = SupressEmptySamples,
+        Default = SuppressEmptySamples
     }
 }
