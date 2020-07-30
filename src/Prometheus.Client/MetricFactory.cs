@@ -469,7 +469,7 @@ namespace Prometheus.Client
                 if (collector is TCollector metric)
                     return metric;
 
-                ThrowLabelsValidationExceprion();
+                ThrowLabelsValidationException();
             }
 
             return default;
@@ -484,7 +484,7 @@ namespace Prometheus.Client
 #endif
         {
             if (!expectedNames.Equals(actualNames))
-                ThrowLabelsValidationExceprion();
+                ThrowLabelsValidationException();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -497,16 +497,16 @@ namespace Prometheus.Client
             actualNames ??= Array.Empty<string>();
 
             if (expectedNames.Count != actualNames.Count)
-                ThrowLabelsValidationExceprion();
+                ThrowLabelsValidationException();
 
             for (var i = 0; i < expectedNames.Count; i++)
             {
                 if(expectedNames[i] != actualNames[i])
-                    ThrowLabelsValidationExceprion();
+                    ThrowLabelsValidationException();
             }
         }
 
-        private static void ThrowLabelsValidationExceprion()
+        private static void ThrowLabelsValidationException()
         {
             throw new InvalidOperationException("Collector with same name must have same type and same label names");
         }

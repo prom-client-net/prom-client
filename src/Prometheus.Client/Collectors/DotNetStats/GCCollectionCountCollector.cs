@@ -18,9 +18,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
             MetricNames = new[] { _name };
             _genNames = new string[GC.MaxGeneration + 1];
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
-            {
                 _genNames[gen] = gen.ToString();
-            }
         }
 
         public CollectorConfiguration Configuration { get; }

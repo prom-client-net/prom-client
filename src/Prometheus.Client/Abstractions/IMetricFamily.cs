@@ -12,7 +12,7 @@ namespace Prometheus.Client.Abstractions
         IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> Labelled { get; }
         TMetric WithLabels(params string[] labels);
         IReadOnlyList<string> LabelNames { get; }
-        [Obsolete("This methos is obsolete. Use WithLabels instead.")]
+        [Obsolete("This method is obsolete. Use WithLabels instead.")]
         TMetric Labels(params string[] labels);
     }
 

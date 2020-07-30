@@ -30,8 +30,8 @@ namespace Prometheus.Client.Tests
         [Theory]
         [InlineData(MetricFlags.None, false, false)]
         [InlineData(MetricFlags.IncludeTimestamp, true, false)]
-        [InlineData(MetricFlags.SupressEmptySamples, false, true)]
-        [InlineData(MetricFlags.IncludeTimestamp | MetricFlags.SupressEmptySamples, true, true)]
+        [InlineData(MetricFlags.SuppressEmptySamples, false, true)]
+        [InlineData(MetricFlags.IncludeTimestamp | MetricFlags.SuppressEmptySamples, true, true)]
         public void CanReadOptions(MetricFlags options, bool includeTimestamp, bool suppressEmptySamples)
         {
             var config = new MetricConfiguration("test_name", string.Empty, null, options);

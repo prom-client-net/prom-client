@@ -5,7 +5,7 @@ using Prometheus.Client.Abstractions;
 
 namespace Prometheus.Client
 {
-    public static class IMetricFactoryLegacyExtensions
+    public static class MetricFactoryLegacyExtensions
     {
         /// <summary>
         ///     Create Counter.
@@ -379,7 +379,7 @@ namespace Prometheus.Client
                 options |= MetricFlags.IncludeTimestamp;
 
             if (suppressEmptySamples)
-                options |= MetricFlags.SupressEmptySamples;
+                options |= MetricFlags.SuppressEmptySamples;
 
             return options;
         }

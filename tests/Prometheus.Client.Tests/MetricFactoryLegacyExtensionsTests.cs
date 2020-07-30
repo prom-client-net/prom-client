@@ -23,7 +23,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateCounter("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateCounter("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateCounter("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateCounter("testName", "testHelp", true, true, "label1", "label2");
 
-            factory.Received().CreateCounter("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateCounter("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateCounterInt64("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateCounterInt64("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateCounterInt64("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateCounterInt64("testName", "testHelp", true, true, "label1", "label2");
 
-            factory.Received().CreateCounterInt64("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateCounterInt64("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateGauge("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateGauge("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateGauge("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateGauge("testName", "testHelp", true, true, "label1", "label2");
 
-            factory.Received().CreateGauge("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateGauge("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateGaugeInt64("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateGaugeInt64("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateGaugeInt64("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateGaugeInt64("testName", "testHelp", true, true, "label1", "label2");
 
-            factory.Received().CreateGaugeInt64("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateGaugeInt64("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateHistogram("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateHistogram("testName", "testHelp", null, MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateHistogram("testName", "testHelp", null, MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateHistogram("testName", "testHelp", true, buckets, "label1", "label2");
 
-            factory.Received().CreateHistogram("testName", "testHelp", buckets, MetricFlags.IncludeTimestamp | MetricFlags.SupressEmptySamples, "label1", "label2");
+            factory.Received().CreateHistogram("testName", "testHelp", buckets, MetricFlags.IncludeTimestamp | MetricFlags.SuppressEmptySamples, "label1", "label2");
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateUntyped("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
@@ -297,7 +297,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateUntyped("testName", "testHelp", true, true, "label1", "label2");
 
-            factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.SupressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
+            factory.Received().CreateUntyped("testName", "testHelp", MetricFlags.SuppressEmptySamples | MetricFlags.IncludeTimestamp, "label1", "label2");
         }
 
         [Fact]
