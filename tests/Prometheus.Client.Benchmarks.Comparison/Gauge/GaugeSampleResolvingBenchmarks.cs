@@ -17,17 +17,14 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         private Their.Prometheus.Gauge _theirGauge;
 
         private List<string[]> _labels;
-        private List<(string, string, string, string, string)> _tupleLabels;
 
         [GlobalSetup]
         public void Setup()
         {
             _labels = new List<string[]>();
-            _tupleLabels = new List<(string, string, string, string, string)>();
 
             for (var i = 0; i < _labelsCount; i++)
             {
-                _tupleLabels.Add(($"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"));
                 _labels.Add(new [] { $"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"});
             }
 
@@ -41,7 +38,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Gauge_ResolveLabeledBaseLine()
         {
             foreach (var lbls in _labels)
-                _theirGauge.WithLabels(lbls);
+                _theirGauge.WithLabels(lbls[0], lbls[1], lbls[2],lbls[3],lbls[4]);
         }
 
         [Benchmark]
@@ -49,15 +46,15 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Gauge_ResolveLabeled()
         {
             foreach (var lbls in _labels)
-                _gaugeFamily.WithLabels(lbls);
+                _gaugeFamily.WithLabels(lbls[0], lbls[1], lbls[2],lbls[3],lbls[4]);
         }
 
         [Benchmark]
         [BenchmarkCategory("Gauge_ResolveLabeled")]
         public void Gauge_ResolveLabeledTuples()
         {
-            foreach (var lbls in _tupleLabels)
-                _gaugeTuplesFamily.WithLabels(lbls);
+            foreach (var lbls in _labels)
+                _gaugeTuplesFamily.WithLabels((lbls[0], lbls[1], lbls[2],lbls[3],lbls[4]));
         }
     }
 }

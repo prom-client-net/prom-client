@@ -17,17 +17,14 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         private Their.Prometheus.Counter _theirCounter;
 
         private List<string[]> _labels;
-        private List<(string, string, string, string, string)> _tupleLabels;
 
         [GlobalSetup]
         public void Setup()
         {
             _labels = new List<string[]>();
-            _tupleLabels = new List<(string, string, string, string, string)>();
 
             for (var i = 0; i < _labelsCount; i++)
             {
-                _tupleLabels.Add(($"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"));
                 _labels.Add(new [] { $"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"});
             }
 
@@ -41,7 +38,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_ResolveLabeledBaseLine()
         {
             foreach (var lbls in _labels)
-                _theirCounter.WithLabels(lbls);
+                _theirCounter.WithLabels(lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]);
         }
 
         [Benchmark]
@@ -49,15 +46,15 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Counter_ResolveLabeled()
         {
             foreach (var lbls in _labels)
-                _counterFamily.WithLabels(lbls);
+                _counterFamily.WithLabels(lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]);
         }
 
         [Benchmark]
         [BenchmarkCategory("Counter_ResolveLabeled")]
         public void Counter_ResolveLabeledTuples()
         {
-            foreach (var lbls in _tupleLabels)
-                _counterTuplesFamily.WithLabels(lbls);
+            foreach (var lbls in _labels)
+                _counterTuplesFamily.WithLabels((lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]));
         }
     }
 }

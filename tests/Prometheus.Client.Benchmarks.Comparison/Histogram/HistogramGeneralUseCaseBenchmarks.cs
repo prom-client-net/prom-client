@@ -8,7 +8,23 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
     public class HistogramGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsCount = 1000;
-        private const int _samplesCount = 10;
+        private const int _metricsDuplicates = 10;
+        private const int _samplesCount = 100;
+        private const int _samplesDuplicates = 10;
+
+        private readonly string[] _metricNames;
+        private readonly string[][] _labelValues;
+        
+        public HistogramGeneralUseCaseBenchmarks()
+        {
+            _metricNames = new string[_metricsCount];
+            for (var i = 0; i < _metricsCount; i++)
+                _metricNames[i] = $"metric_{i / _metricsDuplicates}";
+
+            _labelValues = new string[_samplesCount][];
+            for (var i = 0; i < _samplesCount; i++)
+                _labelValues[i] = new [] { $"a{i / _samplesDuplicates}", $"b{i / _samplesDuplicates}", $"c{i / _samplesDuplicates}" };
+        }
 
         [IterationSetup]
         public void Setup()
@@ -22,7 +38,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = TheirMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText);
+                var histogram = TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText);
                 histogram.Observe(i / 100d);
             }
         }
@@ -33,7 +49,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText);
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText);
                 histogram.Observe(i / 100d);
             }
         }
@@ -44,7 +60,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = TheirMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, "foo", "bar", "baz");
+                var histogram = TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
                 histogram.Observe(i / 100d);
             }
         }
@@ -55,7 +71,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, "foo", "bar", "baz");
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
                 histogram.Observe(i / 100d);
             }
         }
@@ -66,7 +82,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, ("foo", "bar", "baz"));
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, ("foo", "bar", "baz"));
                 histogram.Observe(i / 100d);
             }
         }
@@ -77,9 +93,9 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = TheirMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, "foo", "bar", "baz");
+                var histogram = TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
                 for(var j = 0; j < _samplesCount; j++)
-                    histogram.WithLabels($"a{j}", $"b{j}", $"c{j}").Observe(i / 100d);
+                    histogram.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Observe(i / 100d);
             }
         }
 
@@ -89,9 +105,9 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, "foo", "bar", "baz");
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
                 for(var j = 0; j < _samplesCount; j++)
-                    histogram.WithLabels($"a{j}", $"b{j}", $"c{j}").Observe(i / 100d);
+                    histogram.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Observe(i / 100d);
             }
         }
 
@@ -101,9 +117,9 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram($"testHistogram_{i}", HelpText, ("foo", "bar", "baz"));
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, ("foo", "bar", "baz"));
                 for(var j = 0; j < _samplesCount; j++)
-                    histogram.WithLabels(($"a{j}", $"b{j}", $"c{j}")).Observe(i / 100d);
+                    histogram.WithLabels((_labelValues[j][0], _labelValues[j][1], _labelValues[j][2])).Observe(i / 100d);
             }
         }
     }

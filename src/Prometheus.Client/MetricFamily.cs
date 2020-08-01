@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 #if HasITuple
 using System.Runtime.CompilerServices;
 #endif
@@ -134,8 +133,11 @@ namespace Prometheus.Client
 
         private TImplementation CreateLabelled(IReadOnlyList<string> labels)
         {
-            if (labels.Any(string.IsNullOrEmpty))
-                throw new ArgumentException("Label cannot be empty.");
+            for (var i = 0; i < labels.Count; i++)
+            {
+                if(string.IsNullOrEmpty(labels[i]))
+                    throw new ArgumentException("Label cannot be empty.");
+            }
 
             return _instanceFactory(_configuration, labels);
         }

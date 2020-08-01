@@ -56,8 +56,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateCounterInternal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -76,8 +79,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, labels, options);
                 metric = GetCounterFactory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -113,8 +119,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateCounterInt64Internal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -133,8 +142,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, labels, options);
                 metric = GetCounterInt64Factory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -170,8 +182,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateGaugeInternal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -190,8 +205,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, labels, options);
                 metric = GetGaugeFactory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -227,8 +245,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateGaugeInt64Internal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -247,8 +268,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, labels, options);
                 metric = GetGaugeInt64Factory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -286,8 +310,11 @@ namespace Prometheus.Client
                 var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labels), buckets, options);
                 metric = CreateHistogramInternal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -307,8 +334,11 @@ namespace Prometheus.Client
                 var configuration = new HistogramConfiguration(name, help, labels, buckets, options);
                 metric = GetHistogramFactory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -344,8 +374,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
                 metric = CreateUntypedInternal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -364,8 +397,11 @@ namespace Prometheus.Client
                 var configuration = new MetricConfiguration(name, help, labels, options);
                 metric = GetUntypedFactory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -424,8 +460,11 @@ namespace Prometheus.Client
                 var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labels), options, objectives, maxAge, ageBuckets, bufCap);
                 metric = CreateSummaryInternal<TLabels>(configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -456,8 +495,11 @@ namespace Prometheus.Client
                 var configuration = new SummaryConfiguration(name, help, labels, options, objectives, maxAge, ageBuckets, bufCap);
                 metric = GetSummaryFactory(labels?.Length ?? 0)(this, configuration);
             }
+            else
+            {
+                ValidateLabelNames(metric.LabelNames, labels);
+            }
 
-            ValidateLabelNames(metric.LabelNames, labels);
             return metric;
         }
 
@@ -483,7 +525,7 @@ namespace Prometheus.Client
         where TLabels : struct, IEquatable<TLabels>
 #endif
         {
-            if (!expectedNames.Equals(actualNames))
+            if (LabelsHelper.GetHashCode(expectedNames) != LabelsHelper.GetHashCode(actualNames))
                 ThrowLabelsValidationException();
         }
 
