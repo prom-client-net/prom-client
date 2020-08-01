@@ -11,8 +11,8 @@ namespace Prometheus.Client
             : base(name)
         {
             Help = help;
-            IncludeTimestamp = options.HasFlag(MetricFlags.IncludeTimestamp);
-            SuppressEmptySamples = options.HasFlag(MetricFlags.SuppressEmptySamples);
+            IncludeTimestamp = (options & MetricFlags.IncludeTimestamp) == MetricFlags.IncludeTimestamp;
+            SuppressEmptySamples = (options & MetricFlags.SuppressEmptySamples) == MetricFlags.SuppressEmptySamples;
             LabelNames = labels ?? Array.Empty<string>();
 
             if (labels != null)

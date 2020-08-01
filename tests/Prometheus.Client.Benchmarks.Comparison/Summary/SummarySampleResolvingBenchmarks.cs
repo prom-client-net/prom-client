@@ -17,17 +17,14 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         private Their.Prometheus.Summary _theirSummary;
 
         private List<string[]> _labels;
-        private List<(string, string, string, string, string)> _tupleLabels;
 
         [GlobalSetup]
         public void Setup()
         {
             _labels = new List<string[]>();
-            _tupleLabels = new List<(string, string, string, string, string)>();
 
             for (var i = 0; i < _labelsCount; i++)
             {
-                _tupleLabels.Add(($"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"));
                 _labels.Add(new [] { $"lbl1_{i}", $"lbl2_{i}", $"lbl3_{i}", $"lbl4_{i}", $"lbl5_{i}"});
             }
 
@@ -41,7 +38,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void Summary_ResolveLabeledBaseLine()
         {
             foreach (var lbls in _labels)
-                _theirSummary.WithLabels(lbls);
+                _theirSummary.WithLabels(lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]);
         }
 
         [Benchmark]
@@ -49,15 +46,15 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void Summary_ResolveLabeled()
         {
             foreach (var lbls in _labels)
-                _summaryFamily.WithLabels(lbls);
+                _summaryFamily.WithLabels(lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]);
         }
 
         [Benchmark]
         [BenchmarkCategory("Summary_ResolveLabeled")]
         public void Summary_ResolveLabeledTuples()
         {
-            foreach (var lbls in _tupleLabels)
-                _summaryTuplesFamily.WithLabels(lbls);
+            foreach (var lbls in _labels)
+                _summaryTuplesFamily.WithLabels((lbls[0], lbls[1], lbls[2], lbls[3], lbls[4]));
         }
     }
 }
