@@ -5,7 +5,6 @@ using Prometheus.Client.Collectors;
 namespace Prometheus.Client.Benchmarks.Gauge
 {
     [MemoryDiagnoser]
-    [CoreJob]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class GaugeUsage
     {

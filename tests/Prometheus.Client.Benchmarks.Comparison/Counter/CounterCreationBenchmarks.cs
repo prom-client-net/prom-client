@@ -1,24 +1,18 @@
 using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
-    [MemoryDiagnoser]
-    [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class CounterCreationBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsPerIteration = 10000;
 
-        private static readonly string[] _metricNames;
+        private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
 
-        static CounterCreationBenchmarks()
+        public CounterCreationBenchmarks()
         {
-            _metricNames = new string[_metricsPerIteration];
-
-            for (var i = 0; i < _metricsPerIteration; i++)
-                _metricNames[i] = $"metric_{i:D4}";
+            _metricNames = GenerateMetricNames(_metricsPerIteration);
         }
 
         [IterationSetup]

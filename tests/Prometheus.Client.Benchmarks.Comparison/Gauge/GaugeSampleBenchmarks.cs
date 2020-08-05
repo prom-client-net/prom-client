@@ -1,11 +1,8 @@
 extern alias Their;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 {
-    [MemoryDiagnoser]
-    [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class GaugeSampleBenchmarks : ComparisonBenchmarkBase
     {
         private const int _opIterations = 10000000;

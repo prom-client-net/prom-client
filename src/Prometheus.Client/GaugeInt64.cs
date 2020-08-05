@@ -18,7 +18,7 @@ namespace Prometheus.Client
 
         public void Inc()
         {
-            Inc(1, null);
+            IncInternal(1, null);
         }
 
         public void Inc(long increment)
@@ -29,8 +29,7 @@ namespace Prometheus.Client
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Inc(long increment, long? timestamp)
         {
-            _value.Add(increment);
-            TrackObservation(timestamp);
+            IncInternal(increment, timestamp);
         }
 
         public void Set(long val)
@@ -47,7 +46,7 @@ namespace Prometheus.Client
 
         public void Dec()
         {
-            Dec(1, null);
+            IncInternal(-1, null);
         }
 
         public void Dec(long decrement)
@@ -58,8 +57,7 @@ namespace Prometheus.Client
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dec(long decrement, long? timestamp)
         {
-            _value.Add(-decrement);
-            TrackObservation(timestamp);
+            IncInternal(-decrement, timestamp);
         }
 
         public long Value => _value.Value;
@@ -67,6 +65,13 @@ namespace Prometheus.Client
         protected internal override void Collect(IMetricsWriter writer)
         {
             writer.WriteSample(Value, string.Empty, Configuration.LabelNames, LabelValues, Timestamp);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void IncInternal(long increment, long? timestamp)
+        {
+            _value.Add(increment);
+            TrackObservation(timestamp);
         }
     }
 }

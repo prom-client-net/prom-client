@@ -1,29 +1,21 @@
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
-    [MemoryDiagnoser]
-    [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class CounterGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsCount = 1000;
-        private const int _metricsDuplicates = 10;
+        private const int _metricsCount = 10000;
+        private const double _metricsDuplicates = 0.1;
         private const int _samplesCount = 100;
-        private const int _samplesDuplicates = 10;
+        private const double _samplesDuplicates = 0.1;
 
         private readonly string[] _metricNames;
         private readonly string[][] _labelValues;
 
         public CounterGeneralUseCaseBenchmarks()
         {
-            _metricNames = new string[_metricsCount];
-            for (var i = 0; i < _metricsCount; i++)
-                _metricNames[i] = $"metric_{i / _metricsDuplicates}";
-
-            _labelValues = new string[_samplesCount][];
-            for (var i = 0; i < _samplesCount; i++)
-                _labelValues[i] = new [] { $"a{i / _samplesDuplicates}", $"b{i / _samplesDuplicates}", $"c{i / _samplesDuplicates}" };
+            _metricNames = GenerateMetricNames(_metricsCount, _metricsDuplicates);
+            _labelValues = GenerateLabelValues(_samplesCount, 3, _samplesDuplicates);
         }
 
         [IterationSetup]
@@ -127,7 +119,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
             for (var i = 0; i < _metricsCount; i++)
             {
                 var counter = TheirMetricFactory.CreateCounter(_metricNames[i], HelpText, "foo", "bar", "baz");
-                for(var j = 0; j < _samplesCount; j++)
+                for(var j = 0; j < _labelValues.Length; j++)
                     counter.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Inc();
             }
         }
@@ -139,7 +131,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
             for (var i = 0; i < _metricsCount; i++)
             {
                 var counter = OurMetricFactory.CreateCounter(_metricNames[i], HelpText, "foo", "bar", "baz");
-                for(var j = 0; j < _samplesCount; j++)
+                for(var j = 0; j < _labelValues.Length; j++)
                     counter.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Inc();
             }
         }
@@ -151,7 +143,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
             for (var i = 0; i < _metricsCount; i++)
             {
                 var counter = OurMetricFactory.CreateCounter(_metricNames[i], HelpText, ("foo", "bar", "baz"));
-                for(var j = 0; j < _samplesCount; j++)
+                for(var j = 0; j < _labelValues.Length; j++)
                     counter.WithLabels((_labelValues[j][0], _labelValues[j][1], _labelValues[j][2])).Inc();
             }
         }
@@ -163,7 +155,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
             for (var i = 0; i < _metricsCount; i++)
             {
                 var counter = OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, "foo", "bar", "baz");
-                for(var j = 0; j < _samplesCount; j++)
+                for(var j = 0; j < _labelValues.Length; j++)
                     counter.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Inc();
             }
         }
@@ -175,7 +167,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
             for (var i = 0; i < _metricsCount; i++)
             {
                 var counter = OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, ("foo", "bar", "baz"));
-                for(var j = 0; j < _samplesCount; j++)
+                for(var j = 0; j < _labelValues.Length; j++)
                     counter.WithLabels((_labelValues[j][0], _labelValues[j][1], _labelValues[j][2])).Inc();
             }
         }

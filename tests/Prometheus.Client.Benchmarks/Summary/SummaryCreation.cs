@@ -5,7 +5,6 @@ using Prometheus.Client.Collectors;
 namespace Prometheus.Client.Benchmarks.Summary
 {
     [MemoryDiagnoser]
-    [CoreJob]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class SummaryCreation
     {
