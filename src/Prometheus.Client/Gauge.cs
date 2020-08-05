@@ -18,7 +18,7 @@ namespace Prometheus.Client
 
         public void Inc()
         {
-            Inc(1.0D, null);
+            IncInternal(1.0D, null);
         }
 
         public void Inc(double increment)
@@ -32,8 +32,7 @@ namespace Prometheus.Client
             if (ThreadSafeDouble.IsNaN(increment))
                 return;
 
-            _value.Add(increment);
-            TrackObservation(timestamp);
+            IncInternal(increment, timestamp);
         }
 
         public void Set(double val)
@@ -50,7 +49,7 @@ namespace Prometheus.Client
 
         public void Dec()
         {
-            Dec(1.0D, null);
+            IncInternal(-1.0D, null);
         }
 
         public void Dec(double decrement)
@@ -64,8 +63,7 @@ namespace Prometheus.Client
             if (ThreadSafeDouble.IsNaN(decrement))
                 return;
 
-            _value.Add(-decrement);
-            TrackObservation(timestamp);
+            IncInternal(-decrement, timestamp);
         }
 
         public double Value => _value.Value;
@@ -73,6 +71,13 @@ namespace Prometheus.Client
         protected internal override void Collect(IMetricsWriter writer)
         {
             writer.WriteSample(Value, string.Empty, Configuration.LabelNames, LabelValues, Timestamp);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void IncInternal(double increment, long? timestamp)
+        {
+            _value.Add(increment);
+            TrackObservation(timestamp);
         }
     }
 }

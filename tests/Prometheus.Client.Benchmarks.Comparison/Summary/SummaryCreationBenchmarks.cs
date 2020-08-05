@@ -1,25 +1,19 @@
 extern alias Their;
 using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Summary
 {
-    [MemoryDiagnoser]
-    [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class SummaryCreationBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsPerIteration = 10000;
 
-        private static readonly string[] _metricNames;
+        private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
 
-        static SummaryCreationBenchmarks()
+        public SummaryCreationBenchmarks()
         {
-            _metricNames = new string[_metricsPerIteration];
-
-            for (var i = 0; i < _metricsPerIteration; i++)
-                _metricNames[i] = $"metric_{i:D4}";
+            _metricNames = GenerateMetricNames(_metricsPerIteration);
         }
 
         [IterationSetup]

@@ -18,7 +18,7 @@ namespace Prometheus.Client
 
         public void Inc()
         {
-            Inc(1, null);
+            IncInternal(1, null);
         }
 
         public void Inc(long increment)
@@ -32,8 +32,7 @@ namespace Prometheus.Client
             if (increment < 0)
                 throw new ArgumentOutOfRangeException(nameof(increment), "Counter cannot go down");
 
-            _value.Add(increment);
-            TrackObservation(timestamp);
+            IncInternal(increment, timestamp);
         }
 
         public long Value => _value.Value;
@@ -41,6 +40,13 @@ namespace Prometheus.Client
         protected internal override void Collect(IMetricsWriter writer)
         {
             writer.WriteSample(Value, string.Empty, Configuration.LabelNames, LabelValues, Timestamp);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void IncInternal(long increment, long? timestamp)
+        {
+            _value.Add(increment);
+            TrackObservation(timestamp);
         }
     }
 }

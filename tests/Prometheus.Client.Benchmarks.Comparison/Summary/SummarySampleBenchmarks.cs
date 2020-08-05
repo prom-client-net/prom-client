@@ -1,12 +1,9 @@
 extern alias Their;
 using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Configs;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Summary
 {
-    [MemoryDiagnoser]
-    [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     public class SummarySampleBenchmarks : ComparisonBenchmarkBase
     {
         private const int _opIterations = 100000;

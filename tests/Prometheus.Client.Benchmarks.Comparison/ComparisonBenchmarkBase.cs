@@ -1,6 +1,5 @@
 extern alias Their;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
@@ -33,30 +32,25 @@ namespace Prometheus.Client.Benchmarks.Comparison
             GC.Collect();
         }
 
-        public IEnumerable<string> GenerateMetrics(int count)
+        protected string[] GenerateMetricNames(int count, double duplicates = 0)
         {
-            for (var i = 0; i < count; i++)
-            {
-                yield return $"metric_{i}";
-            }
+            return GenerateData(count, duplicates, n => $"metric_{n}");
         }
 
-        public IEnumerable<string> GenerateLabelNames(int count)
+        protected string[] GenerateLabelNames(int count)
         {
+            var result = new string[count];
             for (var i = 0; i < count; i++)
-            {
-                yield return $"label_{i}";
-            }
+                result[i] = $"label_{i}";
+
+            return result;
         }
 
-        public IEnumerable<string[]> GenerateLabels(int count, int labels)
+        protected string[][] GenerateLabelValues(int count, int labels, double duplicates = 0)
         {
             var labelsRange = Enumerable.Range(1, labels).ToArray();
 
-            for (var i = 0; i < count; i++)
-            {
-                yield return labelsRange.Select(l => $"label{i}_variant{l}").ToArray();
-            }
+            return GenerateData(count, duplicates, n => labelsRange.Select(i => $"label{n}_variant{i}").ToArray());
         }
 
         protected IMetricFactory OurMetricFactory => _factory;
@@ -66,5 +60,43 @@ namespace Prometheus.Client.Benchmarks.Comparison
         public Their::Prometheus.MetricFactory TheirMetricFactory => _theirMetricFactory;
 
         protected Their::Prometheus.CollectorRegistry TheirCollectorRegistry => _theirRegistry;
+
+        private T[] GenerateData<T>(int count, double duplicates, Func<int, T> valueGenerator)
+        {
+            var groupWidth = 1;
+            if (duplicates > 0)
+                groupWidth = (int)Math.Ceiling(count * duplicates);
+
+            var result = new T[count];
+            var groupNum = 1;
+            var i = 0;
+
+            while (i < result.Length)
+            {
+                var currentWidth = Math.Min(groupWidth, result.Length - i);
+                Array.Fill(result, valueGenerator(groupNum), i, currentWidth);
+
+                i += currentWidth;
+                groupNum++;
+            }
+
+            Shuffle(result);
+
+            return result;
+        }
+
+        private static void Shuffle<T>(T[] array)
+        {
+            var r = new Random();
+
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                int j = r.Next(0, i + 1);
+
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
     }
 }

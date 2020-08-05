@@ -6,7 +6,6 @@ using Prometheus.Client.Collectors;
 namespace Prometheus.Client.Benchmarks.Counter
 {
     [MemoryDiagnoser]
-    [CoreJob]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class CounterCreation
     {
