@@ -42,8 +42,8 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -53,12 +53,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), options);
                 metric = CreateCounterInternal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -70,18 +70,18 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<ICounter> CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter> CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<ICounter>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, labels, options);
-                metric = GetCounterFactory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new MetricConfiguration(name, help, labelNames, options);
+                metric = GetCounterFactory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -105,8 +105,8 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -116,12 +116,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), options);
                 metric = CreateCounterInt64Internal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -133,18 +133,18 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<ICounter<long>>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, labels, options);
-                metric = GetCounterInt64Factory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new MetricConfiguration(name, help, labelNames, options);
+                metric = GetCounterInt64Factory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -168,8 +168,8 @@ namespace Prometheus.Client
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -179,12 +179,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), options);
                 metric = CreateGaugeInternal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -196,18 +196,18 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IGauge> CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge> CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<IGauge>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, labels, options);
-                metric = GetGaugeFactory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new MetricConfiguration(name, help, labelNames, options);
+                metric = GetGaugeFactory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -231,8 +231,8 @@ namespace Prometheus.Client
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -242,12 +242,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IGauge<long>, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), options);
                 metric = CreateGaugeInt64Internal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -259,18 +259,18 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<IGauge<long>>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, labels, options);
-                metric = GetGaugeInt64Factory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new MetricConfiguration(name, help, labelNames, options);
+                metric = GetGaugeInt64Factory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -296,8 +296,8 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labels, double[] buckets = null, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, double[] buckets = null, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -307,12 +307,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labels), buckets, options);
+                var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labelNames), buckets, options);
                 metric = CreateHistogramInternal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -325,18 +325,18 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<IHistogram>>(name);
             if (metric == null)
             {
-                var configuration = new HistogramConfiguration(name, help, labels, buckets, options);
-                metric = GetHistogramFactory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new HistogramConfiguration(name, help, labelNames, buckets, options);
+                metric = GetHistogramFactory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -360,8 +360,8 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -371,12 +371,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labels), options);
+                var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), options);
                 metric = CreateUntypedInternal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -388,18 +388,18 @@ namespace Prometheus.Client
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        public IMetricFamily<IUntyped> CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels)
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IUntyped> CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<IUntyped>>(name);
             if (metric == null)
             {
-                var configuration = new MetricConfiguration(name, help, labels, options);
-                metric = GetUntypedFactory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new MetricConfiguration(name, help, labelNames, options);
+                metric = GetUntypedFactory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -434,7 +434,7 @@ namespace Prometheus.Client
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Array of label names.</param>
+        /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
@@ -442,7 +442,7 @@ namespace Prometheus.Client
         public IMetricFamily<ISummary, TLabels> CreateSummary<TLabels>(
             string name,
             string help,
-            TLabels labels,
+            TLabels labelNames,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
@@ -457,12 +457,12 @@ namespace Prometheus.Client
             var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
             if (metric == null)
             {
-                var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labels), options, objectives, maxAge, ageBuckets, bufCap);
+                var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labelNames), options, objectives, maxAge, ageBuckets, bufCap);
                 metric = CreateSummaryInternal<TLabels>(configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -474,7 +474,7 @@ namespace Prometheus.Client
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Array of label names.</param>
+        /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
@@ -487,17 +487,17 @@ namespace Prometheus.Client
             int? ageBuckets = null,
             int? bufCap = null,
             MetricFlags options = MetricFlags.Default,
-            params string[] labels)
+            params string[] labelNames)
         {
             var metric = TryGetByName<IMetricFamily<ISummary>>(name);
             if (metric == null)
             {
-                var configuration = new SummaryConfiguration(name, help, labels, options, objectives, maxAge, ageBuckets, bufCap);
-                metric = GetSummaryFactory(labels?.Length ?? 0)(this, configuration);
+                var configuration = new SummaryConfiguration(name, help, labelNames, options, objectives, maxAge, ageBuckets, bufCap);
+                metric = GetSummaryFactory(labelNames?.Length ?? 0)(this, configuration);
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labels);
+                ValidateLabelNames(metric.LabelNames, labelNames);
             }
 
             return metric;
@@ -564,7 +564,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<ICounter, Counter, TLabels, MetricConfiguration>(
                     config,
                     MetricType.Counter,
-                    (cfg, labels) => new Counter(cfg, labels)));
+                    (cfg, labelNames) => new Counter(cfg, labelNames)));
         }
 
         internal MetricFamily<ICounter<long>, CounterInt64, TLabels, MetricConfiguration> CreateCounterInt64Internal<TLabels>(MetricConfiguration configuration)
@@ -578,7 +578,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<ICounter<long>, CounterInt64, TLabels, MetricConfiguration>(
                     config,
                     MetricType.Counter,
-                    (cfg, labels) => new CounterInt64(cfg, labels)));
+                    (cfg, labelNames) => new CounterInt64(cfg, labelNames)));
         }
 
         internal MetricFamily<IGauge, Gauge, TLabels, MetricConfiguration> CreateGaugeInternal<TLabels>(MetricConfiguration configuration)
@@ -592,7 +592,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<IGauge, Gauge, TLabels, MetricConfiguration>(
                     config,
                     MetricType.Gauge,
-                    (cfg, labels) => new Gauge(cfg, labels)));
+                    (cfg, labelNames) => new Gauge(cfg, labelNames)));
         }
 
         internal MetricFamily<IGauge<long>, GaugeInt64, TLabels, MetricConfiguration> CreateGaugeInt64Internal<TLabels>(MetricConfiguration configuration)
@@ -606,7 +606,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<IGauge<long>, GaugeInt64, TLabels, MetricConfiguration>(
                     config,
                     MetricType.Gauge,
-                    (cfg, labels) => new GaugeInt64(cfg, labels)));
+                    (cfg, labelNames) => new GaugeInt64(cfg, labelNames)));
         }
 
         internal MetricFamily<IHistogram, Histogram, TLabels, HistogramConfiguration> CreateHistogramInternal<TLabels>(HistogramConfiguration configuration)
@@ -620,7 +620,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<IHistogram, Histogram, TLabels, HistogramConfiguration>(
                     config,
                     MetricType.Histogram,
-                    (cfg, labels) => new Histogram(cfg, labels)));
+                    (cfg, labelNames) => new Histogram(cfg, labelNames)));
         }
 
         internal MetricFamily<IUntyped, Untyped, TLabels, MetricConfiguration> CreateUntypedInternal<TLabels>(MetricConfiguration configuration)
@@ -634,7 +634,7 @@ namespace Prometheus.Client
                 config => new MetricFamily<IUntyped, Untyped, TLabels, MetricConfiguration>(
                     config,
                     MetricType.Untyped,
-                    (cfg, labels) => new Untyped(cfg, labels)));
+                    (cfg, labelNames) => new Untyped(cfg, labelNames)));
         }
 
         internal MetricFamily<ISummary, Summary, TLabels, SummaryConfiguration> CreateSummaryInternal<TLabels>(SummaryConfiguration configuration)
@@ -648,70 +648,70 @@ namespace Prometheus.Client
                 config => new MetricFamily<ISummary, Summary, TLabels, SummaryConfiguration>(
                     config,
                     MetricType.Summary,
-                    (cfg, labels) => new Summary(cfg, labels)));
+                    (cfg, labelNames) => new Summary(cfg, labelNames)));
         }
 
-        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter>> GetCounterFactory(int labelsLen)
+        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter>> GetCounterFactory(int labelNamesLen)
         {
-            return GetFactory(ref _counterFactoryProxies, nameof(CreateCounterInternal), labelsLen);
+            return GetFactory(ref _counterFactoryProxies, nameof(CreateCounterInternal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter<long>>> GetCounterInt64Factory(int labelsLen)
+        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter<long>>> GetCounterInt64Factory(int labelNamesLen)
         {
-            return GetFactory(ref _counterInt64FactoryProxies, nameof(CreateCounterInt64Internal), labelsLen);
+            return GetFactory(ref _counterInt64FactoryProxies, nameof(CreateCounterInt64Internal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge>> GetGaugeFactory(int labelsLen)
+        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge>> GetGaugeFactory(int labelNamesLen)
         {
-            return GetFactory(ref _gaugeFactoryProxies, nameof(CreateGaugeInternal), labelsLen);
+            return GetFactory(ref _gaugeFactoryProxies, nameof(CreateGaugeInternal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge<long>>> GetGaugeInt64Factory(int labelsLen)
+        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge<long>>> GetGaugeInt64Factory(int labelNamesLen)
         {
-            return GetFactory(ref _gaugeInt64FactoryProxies, nameof(CreateGaugeInt64Internal), labelsLen);
+            return GetFactory(ref _gaugeInt64FactoryProxies, nameof(CreateGaugeInt64Internal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IUntyped>> GetUntypedFactory(int labelsLen)
+        internal Func<MetricFactory, MetricConfiguration, IMetricFamily<IUntyped>> GetUntypedFactory(int labelNamesLen)
         {
-            return GetFactory(ref _untypedFactoryProxies, nameof(CreateUntypedInternal), labelsLen);
+            return GetFactory(ref _untypedFactoryProxies, nameof(CreateUntypedInternal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, HistogramConfiguration, IMetricFamily<IHistogram>> GetHistogramFactory(int labelsLen)
+        internal Func<MetricFactory, HistogramConfiguration, IMetricFamily<IHistogram>> GetHistogramFactory(int labelNamesLen)
         {
-            return GetFactory(ref _histogramFactoryProxies, nameof(CreateHistogramInternal), labelsLen);
+            return GetFactory(ref _histogramFactoryProxies, nameof(CreateHistogramInternal), labelNamesLen);
         }
 
-        internal Func<MetricFactory, SummaryConfiguration, IMetricFamily<ISummary>> GetSummaryFactory(int labelsLen)
+        internal Func<MetricFactory, SummaryConfiguration, IMetricFamily<ISummary>> GetSummaryFactory(int labelNamesLen)
         {
-            return GetFactory(ref _summaryFactoryProxies, nameof(CreateSummaryInternal), labelsLen);
+            return GetFactory(ref _summaryFactoryProxies, nameof(CreateSummaryInternal), labelNamesLen);
         }
 
-        private Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>> GetFactory<TConfiguration, TMetric>(ref Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[] cache, string targetMethodName, int labelsLen)
+        private Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>> GetFactory<TConfiguration, TMetric>(ref Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[] cache, string targetMethodName, int labelNamesLen)
             where TConfiguration : MetricConfiguration
             where TMetric : IMetric
         {
-            if (cache?.GetUpperBound(0) > labelsLen)
-                return cache[labelsLen];
+            if (cache?.GetUpperBound(0) > labelNamesLen)
+                return cache[labelNamesLen];
 
             lock (_factoryProxyLock)
             {
-                if (cache?.GetUpperBound(0) > labelsLen)
-                    return cache[labelsLen];
+                if (cache?.GetUpperBound(0) > labelNamesLen)
+                    return cache[labelNamesLen];
 
-                var tmp = new Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[labelsLen + 1];
+                var tmp = new Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[labelNamesLen + 1];
                 if (cache != null)
                     Array.Copy(cache, tmp, cache.Length);
 
                 var configurationParameter = Expression.Parameter(typeof(TConfiguration), "configuration");
                 var factoryParameter = Expression.Parameter(typeof(MetricFactory), "factory");
-                for (var i = cache?.Length ?? 0; i <= labelsLen; i++)
+                for (var i = cache?.Length ?? 0; i <= labelNamesLen; i++)
                 {
-                    var labelsTupleType = LabelsHelper.MakeValueTupleType(i);
+                    var labelNamesTupleType = LabelsHelper.MakeValueTupleType(i);
 
                     var targetMethodCall = Expression.Call(
                         factoryParameter,
                         targetMethodName,
-                        new [] { labelsTupleType },
+                        new [] { labelNamesTupleType },
                         configurationParameter);
 
                     tmp[i] = Expression.Lambda<Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>>(targetMethodCall, factoryParameter, configurationParameter).Compile();
@@ -720,7 +720,7 @@ namespace Prometheus.Client
                 cache = tmp;
             }
 
-            return cache[labelsLen];
+            return cache[labelNamesLen];
         }
     }
 }

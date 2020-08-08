@@ -1,4 +1,5 @@
 extern alias Their;
+using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Summary
@@ -34,7 +35,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary("testsummary", HelpText);
+                OurMetricFactory.CreateSummary("testsummary", HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
@@ -90,7 +91,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary(_metricNames[i], HelpText);
+                OurMetricFactory.CreateSummary(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
