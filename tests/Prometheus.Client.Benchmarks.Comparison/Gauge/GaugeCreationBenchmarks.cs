@@ -1,4 +1,3 @@
-using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Gauge
@@ -22,152 +21,152 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Single")]
-        public void Gauge_SingleBaseLine()
+        [BenchmarkCategory("Single")]
+        public void Single_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                TheirMetricFactory.CreateGauge("testgauge", HelpText, Array.Empty<string>());
+                TheirMetricFactory.CreateGauge("testgauge", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single")]
-        public void Gauge_Single()
+        [BenchmarkCategory("Single")]
+        public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge("testgauge", HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateGauge("testgauge", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single")]
-        public void GaugeInt64_Single()
+        [BenchmarkCategory("Single")]
+        public void Single_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64("testgauge", HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Single_WithLabels")]
-        public void Gauge_SingleLabelsBaseLine()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateGauge("testgauge", HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithLabels")]
-        public void Gauge_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGauge("testgauge", HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithLabels")]
-        public void Gauge_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGauge("testgauge", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithLabels")]
-        public void GaugeInt64_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithLabels")]
-        public void GaugeInt64_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Single_WithSharedLabels")]
-        public void Gauge_SingleSharedLabelsBaseLine()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateGauge("testgauge", HelpText, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithSharedLabels")]
-        public void Gauge_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGauge("testgauge", HelpText,MetricFlags.Default, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Single_WithSharedLabels")]
-        public void GaugeInt64_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Many")]
-        public void Gauge_ManyBaseLine()
+        [BenchmarkCategory("Many")]
+        public void Many_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateGauge(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many")]
-        public void Gauge_Many()
+        [BenchmarkCategory("Many")]
+        public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateGauge(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many")]
-        public void GaugeInt64_Many()
+        [BenchmarkCategory("Many")]
+        public void Many_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Many_WithLabels")]
-        public void Gauge_ManyWithLabelsBaseLine()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateGauge(_metricNames[i], HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many_WithLabels")]
-        public void Gauge_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGauge(_metricNames[i], HelpText,MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many_WithLabels")]
-        public void Gauge_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGauge(_metricNames[i], HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many_WithLabels")]
-        public void GaugeInt64_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Many_WithLabels")]
-        public void GaugeInt64_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, ("foo", "bar", "baz"));

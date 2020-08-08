@@ -1,12 +1,11 @@
 extern alias Their;
-using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Summary
 {
     public class SummaryCreationBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsPerIteration = 10000;
+        private const int _metricsPerIteration = 10_000;
 
         private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
@@ -23,96 +22,96 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Single")]
-        public void Summary_SingleBaseLine()
+        [BenchmarkCategory("Single")]
+        public void Single_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateSummary("testsummary", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Single")]
-        public void Summary_Single()
+        [BenchmarkCategory("Single")]
+        public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary("testsummary", HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateSummary("testsummary", HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Single_WithLabels")]
-        public void Summary_SingleLabelsBaseLine()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateSummary("testsummary", HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Single_WithLabels")]
-        public void Summary_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateSummary("testsummary", HelpText,null, null, null, null,MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Single_WithLabels")]
-        public void Summary_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateSummary("testsummary", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Single_WithSharedLabels")]
-        public void Summary_SingleSharedLabelsBaseLine()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateSummary("testsummary", HelpText, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Single_WithSharedLabels")]
-        public void Summary_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateSummary("testsummary", HelpText, null, null, null, null, MetricFlags.Default, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Many")]
-        public void Summary_ManyBaseLine()
+        [BenchmarkCategory("Many")]
+        public void Many_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateSummary(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Many")]
-        public void Summary_Many()
+        [BenchmarkCategory("Many")]
+        public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateSummary(_metricNames[i], HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Many_WithLabels")]
-        public void Summary_ManyWithLabelsBaseLine()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateSummary(_metricNames[i], HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Many_WithLabels")]
-        public void Summary_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateSummary(_metricNames[i], HelpText, null, null, null, null, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Many_WithLabels")]
-        public void Summary_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateSummary(_metricNames[i], HelpText, ("foo", "bar", "baz"));

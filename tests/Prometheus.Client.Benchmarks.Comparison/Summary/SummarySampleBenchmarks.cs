@@ -27,16 +27,16 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_Observe")]
-        public void Summary_ObserveBaseLine()
+        [BenchmarkCategory("Observe")]
+        public void Observe_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirSummary.Observe(_dataset[i]);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_Observe")]
-        public void Summary_Observe()
+        [BenchmarkCategory("Observe")]
+        public void Observe()
         {
             for (var i = 0; i < _opIterations; i++)
                 _summary.Observe(_dataset[i]);

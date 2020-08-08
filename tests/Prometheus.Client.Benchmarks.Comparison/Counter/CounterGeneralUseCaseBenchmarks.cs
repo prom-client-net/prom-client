@@ -4,7 +4,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
     public class CounterGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsCount = 10000;
+        private const int _metricsCount = 10_000;
         private const double _metricsDuplicates = 0.1;
         private const int _samplesCount = 100;
         private const double _samplesDuplicates = 0.1;
@@ -25,8 +25,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_NoLabels")]
-        public void Counter_NoLabelsBaseLine()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -36,8 +36,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_NoLabels")]
-        public void Counter_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -47,8 +47,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_NoLabels")]
-        public void CounterInt64_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Int64()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -58,8 +58,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_WithLabels")]
-        public void Counter_WithLabelsBaseLine()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -69,8 +69,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabels")]
-        public void Counter_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -80,8 +80,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabels")]
-        public void Counter_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -91,8 +91,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabels")]
-        public void CounterInt64_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -102,8 +102,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabels")]
-        public void CounterInt64_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -113,8 +113,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_WithLabelsAndSamples")]
-        public void Counter_WithLabelsAndSamplesBaseLine()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -125,8 +125,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabelsAndSamples")]
-        public void Counter_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -137,8 +137,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabelsAndSamples")]
-        public void Counter_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -149,8 +149,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabelsAndSamples")]
-        public void CounterInt64_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Int64Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -161,8 +161,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_WithLabelsAndSamples")]
-        public void CounterInt64_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Int64Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {

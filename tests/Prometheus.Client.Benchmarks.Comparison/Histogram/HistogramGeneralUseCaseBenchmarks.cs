@@ -4,7 +4,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
 {
     public class HistogramGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsCount = 10000;
+        private const int _metricsCount = 10_000;
         private const double _metricsDuplicates = 0.1;
         private const int _samplesCount = 100;
         private const double _samplesDuplicates = 0.1;
@@ -25,8 +25,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_NoLabels")]
-        public void Histogram_NoLabelsBaseLine()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -36,8 +36,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_NoLabels")]
-        public void Histogram_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -47,8 +47,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_WithLabels")]
-        public void Histogram_WithLabelsBaseLine()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -58,8 +58,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_WithLabels")]
-        public void Histogram_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -69,8 +69,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_WithLabels")]
-        public void Histogram_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -80,8 +80,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_WithLabelsAndSamples")]
-        public void Histogram_WithLabelsAndSamplesBaseLine()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -92,8 +92,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_WithLabelsAndSamples")]
-        public void Histogram_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -104,8 +104,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_WithLabelsAndSamples")]
-        public void Histogram_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {

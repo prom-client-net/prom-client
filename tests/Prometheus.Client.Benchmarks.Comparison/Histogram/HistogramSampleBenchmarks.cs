@@ -6,7 +6,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
 {
     public class HistogramSampleBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _opIterations = 1000000;
+        private const int _opIterations = 1_000_000;
         private readonly double[] _bucketsMany;
 
         private Abstractions.IHistogram _histogramDefaultBuckets;
@@ -30,32 +30,32 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Observe")]
-        public void Histogram_ObserveBaseLine()
+        [BenchmarkCategory("Observe")]
+        public void Observe_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirHistogramDefaultBuckets.Observe(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Observe")]
-        public void Histogram_Observe()
+        [BenchmarkCategory("Observe")]
+        public void Observe()
         {
             for (var i = 0; i < _opIterations; i++)
                 _histogramDefaultBuckets.Observe(i);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("HistogramManyBuckets_Observe")]
-        public void HistogramManyBuckets_ObserveBaseLine()
+        [BenchmarkCategory("ManyBuckets_Observe")]
+        public void ManyBuckets_Observe_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirHistogramManyBuckets.Observe(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("HistogramManyBuckets_Observe")]
-        public void HistogramManyBuckets_Observe()
+        [BenchmarkCategory("ManyBuckets_Observe")]
+        public void ManyBuckets_Observe()
         {
             for (var i = 0; i < _opIterations; i++)
                 _histogramManyBuckets.Observe(i);
