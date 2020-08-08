@@ -1,11 +1,10 @@
-using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
 {
     public class CounterCreationBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsPerIteration = 10000;
+        private const int _metricsPerIteration = 10_000;
 
         private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
@@ -22,152 +21,152 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Single")]
-        public void Counter_SingleBaseLine()
+        [BenchmarkCategory("Single")]
+        public void Single_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateCounter("testcounter", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single")]
-        public void Counter_Single()
+        [BenchmarkCategory("Single")]
+        public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter("testcounter", HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateCounter("testcounter", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single")]
-        public void CounterInt64_Single()
+        [BenchmarkCategory("Single")]
+        public void Single_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64("testcounter", HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateCounterInt64("testcounter", HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Single_WithLabels")]
-        public void Counter_SingleLabelsBaseLine()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateCounter("testcounter", HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithLabels")]
-        public void Counter_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounter("testcounter", HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithLabels")]
-        public void Counter_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounter("testcounter", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithLabels")]
-        public void CounterInt64_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64("testcounter", HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithLabels")]
-        public void CounterInt64_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64("testcounter", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Single_WithSharedLabels")]
-        public void Counter_SingleSharedLabelsBaseLine()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateCounter("testcounter", HelpText, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithSharedLabels")]
-        public void Counter_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounter("testcounter", HelpText,MetricFlags.Default, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Single_WithSharedLabels")]
-        public void CounterInt64_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64("testcounter", HelpText, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Many")]
-        public void Counter_ManyBaseLine()
+        [BenchmarkCategory("Many")]
+        public void Many_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateCounter(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many")]
-        public void Counter_Many()
+        [BenchmarkCategory("Many")]
+        public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateCounter(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many")]
-        public void CounterInt64_Many()
+        [BenchmarkCategory("Many")]
+        public void Many_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Many_WithLabels")]
-        public void Counter_ManyWithLabelsBaseLine()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateCounter(_metricNames[i], HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many_WithLabels")]
-        public void Counter_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounter(_metricNames[i], HelpText,MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many_WithLabels")]
-        public void Counter_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounter(_metricNames[i], HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many_WithLabels")]
-        public void CounterInt64_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Many_WithLabels")]
-        public void CounterInt64_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, ("foo", "bar", "baz"));

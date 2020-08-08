@@ -4,7 +4,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
 {
     public class SummaryGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsCount = 10000;
+        private const int _metricsCount = 10_000;
         private const double _metricsDuplicates = 0.1;
         private const int _samplesCount = 100;
         private const double _samplesDuplicates = 0.1;
@@ -25,8 +25,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_NoLabels")]
-        public void Summary_NoLabelsBaseLine()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -36,8 +36,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_NoLabels")]
-        public void Summary_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -47,8 +47,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_WithLabels")]
-        public void Summary_WithLabelsBaseLine()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -58,8 +58,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_WithLabels")]
-        public void Summary_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -69,8 +69,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_WithLabels")]
-        public void Summary_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -80,8 +80,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Summary_WithLabelsAndSamples")]
-        public void Summary_WithLabelsAndSamplesBaseLine()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -92,8 +92,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_WithLabelsAndSamples")]
-        public void Summary_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -104,8 +104,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         }
 
         [Benchmark]
-        [BenchmarkCategory("Summary_WithLabelsAndSamples")]
-        public void Summary_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {

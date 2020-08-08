@@ -1,16 +1,14 @@
 extern alias Their;
-using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Histogram
 {
     public class HistogramCreationBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsPerIteration = 10000;
+        private const int _metricsPerIteration = 10_000;
 
         private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
-        private readonly double[] _customBuckets = { -1, 0, 1 };
 
         public HistogramCreationBenchmarks()
         {
@@ -24,131 +22,99 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Single")]
-        public void Histogram_SingleBaseLine()
+        [BenchmarkCategory("Single")]
+        public void Single_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateHistogram("testhistogram", HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Single")]
-        public void Histogram_Single()
+        [BenchmarkCategory("Single")]
+        public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram("testhistogram", HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateHistogram("testhistogram", HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Single_WithLabels")]
-        public void Histogram_SingleLabelsBaseLine()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateHistogram("testhistogram", HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Single_WithLabels")]
-        public void Histogram_SingleLabels()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram("testhistogram", HelpText, null, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Single_WithLabels")]
-        public void Histogram_SingleLabelsTuple()
+        [BenchmarkCategory("Single_WithLabels")]
+        public void SingleWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram("testhistogram", HelpText, ("foo", "bar", "baz"));
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Single_WithSharedLabels")]
-        public void Histogram_SingleSharedLabelsBaseLine()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateHistogram("testhistogram", HelpText, _labelNames);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Single_WithSharedLabels")]
-        public void Histogram_SingleSharedLabels()
+        [BenchmarkCategory("Single_WithSharedLabels")]
+        public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram("testhistogram", HelpText, null, MetricFlags.Default, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Many")]
-        public void Histogram_ManyBaseLine()
+        [BenchmarkCategory("Many")]
+        public void Many_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Many")]
-        public void Histogram_Many()
+        [BenchmarkCategory("Many")]
+        public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, Array.Empty<string>());
+                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_Many_WithLabels")]
-        public void Histogram_ManyWithLabelsBaseLine()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Baseline()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Many_WithLabels")]
-        public void Histogram_ManyWithLabels()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, null, MetricFlags.Default, "foo", "bar", "baz");
         }
 
         [Benchmark]
-        [BenchmarkCategory("Histogram_Many_WithLabels")]
-        public void Histogram_ManyWithLabelsTuple()
+        [BenchmarkCategory("Many_WithLabels")]
+        public void ManyWithLabels_Tuple()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
                 OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, ("foo", "bar", "baz"));
-        }
-
-        [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_SingleWithBuckets")]
-        public void Histogram_SingleWithBucketsBaseLine()
-        {
-            for (var i = 0; i < _metricsPerIteration; i++)
-                TheirMetricFactory.CreateHistogram("testhistogram", HelpText, new Their.Prometheus.HistogramConfiguration() { Buckets = _customBuckets});
-        }
-
-        [Benchmark]
-        [BenchmarkCategory("Histogram_SingleWithBuckets")]
-        public void Histogram_SingleWithBuckets()
-        {
-            for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram("testhistogram", HelpText, _customBuckets);
-        }
-
-        [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Histogram_ManyWithBuckets")]
-        public void Histogram_ManyWithBucketsBaseLine()
-        {
-            for (var i = 0; i < _metricsPerIteration; i++)
-                TheirMetricFactory.CreateHistogram(_metricNames[i], HelpText, new Their.Prometheus.HistogramConfiguration() { Buckets = _customBuckets});
-        }
-
-        [Benchmark]
-        [BenchmarkCategory("Histogram_ManyWithBuckets")]
-        public void Histogram_ManyWithBuckets()
-        {
-            for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, _customBuckets);
         }
     }
 }

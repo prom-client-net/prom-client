@@ -34,7 +34,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        public void Collection_BaseLine()
+        public void Collection_Baseline()
         {
             using var stream = Stream.Null;
             TheirCollectorRegistry.CollectAndExportAsTextAsync(stream).GetAwaiter().GetResult();

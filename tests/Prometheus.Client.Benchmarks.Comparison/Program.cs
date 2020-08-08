@@ -8,17 +8,18 @@ namespace Prometheus.Client.Benchmarks.Comparison
 {
     internal class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(null,
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args,
                 DefaultConfig.Instance
                     .With(MemoryDiagnoser.Default)
                     .With(new Job
                     {
                         Run =
                         {
-                            RunStrategy = RunStrategy.ColdStart,
+                            RunStrategy = RunStrategy.Monitoring,
                             IterationCount = 20,
+                            WarmupCount = 2,
                         }
                     })
                     .With(BenchmarkLogicalGroupRule.ByCategory)

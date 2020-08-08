@@ -5,7 +5,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 {
     public class GaugeSampleBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _opIterations = 10000000;
+        private const int _opIterations = 10_000_000;
 
         private Abstractions.IGauge _gauge;
         private Abstractions.IGauge<long> _gaugeInt64;
@@ -21,120 +21,120 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_IncDefault")]
-        public void Gauge_IncDefaultBaseLine()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirGauge.Inc();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_IncDefault")]
-        public void Gauge_IncDefault()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gauge.Inc();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_IncDefault")]
-        public void GaugeInt64_IncDefault()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gaugeInt64.Inc();
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Inc")]
-        public void Gauge_IncBaseLine()
+        [BenchmarkCategory("Inc")]
+        public void Inc_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirGauge.Inc(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Inc")]
-        public void Gauge_Inc()
+        [BenchmarkCategory("Inc")]
+        public void Inc()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gauge.Inc(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Inc")]
-        public void GaugeInt64_Inc()
+        [BenchmarkCategory("Inc")]
+        public void Inc_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gaugeInt64.Inc(i);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_DecDefault")]
-        public void Gauge_DecDefaultBaseLine()
+        [BenchmarkCategory("DecDefault")]
+        public void DecDefault_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirGauge.Dec();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_DecDefault")]
-        public void Gauge_DecDefault()
+        [BenchmarkCategory("DecDefault")]
+        public void DecDefault()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gauge.Dec();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_DecDefault")]
-        public void GaugeInt64_DecDefault()
+        [BenchmarkCategory("DecDefault")]
+        public void DecDefault_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gaugeInt64.Dec();
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Dec")]
-        public void Gauge_DecBaseLine()
+        [BenchmarkCategory("Dec")]
+        public void Dec_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirGauge.Dec(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Dec")]
-        public void Gauge_Dec()
+        [BenchmarkCategory("Dec")]
+        public void Dec()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gauge.Dec(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Dec")]
-        public void GaugeInt64_Dec()
+        [BenchmarkCategory("Dec")]
+        public void Dec_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gaugeInt64.Dec(i);
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_Set")]
-        public void Gauge_SetBaseLine()
+        [BenchmarkCategory("Set")]
+        public void Set_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirGauge.Set(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Set")]
-        public void Gauge_Set()
+        [BenchmarkCategory("Set")]
+        public void Set()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gauge.Set(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_Set")]
-        public void GaugeInt64_Set()
+        [BenchmarkCategory("Set")]
+        public void Set_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _gaugeInt64.Set(i);

@@ -4,7 +4,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 {
     public class GaugeGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsCount = 10000;
+        private const int _metricsCount = 10_000;
         private const double _metricsDuplicates = 0.1;
         private const int _samplesCount = 100;
         private const double _samplesDuplicates = 0.1;
@@ -25,8 +25,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_NoLabels")]
-        public void Gauge_NoLabelsBaseLine()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -36,8 +36,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_NoLabels")]
-        public void Gauge_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -47,8 +47,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_NoLabels")]
-        public void GaugeInt64_NoLabels()
+        [BenchmarkCategory("NoLabels")]
+        public void NoLabels_Int64()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -58,8 +58,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_WithLabels")]
-        public void Gauge_WithLabelsBaseLine()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -69,8 +69,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabels")]
-        public void Gauge_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -80,8 +80,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabels")]
-        public void Gauge_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -91,8 +91,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabels")]
-        public void GaugeInt64_WithLabels()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -102,8 +102,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabels")]
-        public void GaugeInt64_WithLabelsTuple()
+        [BenchmarkCategory("WithLabels")]
+        public void WithLabels_Int64Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -113,8 +113,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Gauge_WithLabelsAndSamples")]
-        public void Gauge_WithLabelsAndSamplesBaseLine()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Baseline()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -125,8 +125,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabelsAndSamples")]
-        public void Gauge_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -137,8 +137,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabelsAndSamples")]
-        public void Gauge_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -149,8 +149,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabelsAndSamples")]
-        public void GaugeInt64_WithLabelsAndSamples()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Int64Array()
         {
             for (var i = 0; i < _metricsCount; i++)
             {
@@ -161,8 +161,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark]
-        [BenchmarkCategory("Gauge_WithLabelsAndSamples")]
-        public void GaugeInt64_WithLabelsAndSamplesTuple()
+        [BenchmarkCategory("WithLabelsAndSamples")]
+        public void WithLabelsAndSamples_Int64Tuple()
         {
             for (var i = 0; i < _metricsCount; i++)
             {

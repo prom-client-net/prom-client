@@ -21,48 +21,48 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_IncDefault")]
-        public void Counter_IncDefaultBaseLine()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirCounter.Inc();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_IncDefault")]
-        public void Counter_IncDefault()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault()
         {
             for (var i = 0; i < _opIterations; i++)
                 _counter.Inc();
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_IncDefault")]
-        public void CounterInt64_IncDefault()
+        [BenchmarkCategory("IncDefault")]
+        public void IncDefault_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _counterInt64.Inc();
         }
 
         [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Counter_Inc")]
-        public void Counter_IncBaseLine()
+        [BenchmarkCategory("Inc")]
+        public void Inc_Baseline()
         {
             for (var i = 0; i < _opIterations; i++)
                 _theirCounter.Inc(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Inc")]
-        public void Counter_Inc()
+        [BenchmarkCategory("Inc")]
+        public void Inc()
         {
             for (var i = 0; i < _opIterations; i++)
                 _counter.Inc(i);
         }
 
         [Benchmark]
-        [BenchmarkCategory("Counter_Inc")]
-        public void CounterInt64_Inc()
+        [BenchmarkCategory("Inc")]
+        public void Inc_Int64()
         {
             for (var i = 0; i < _opIterations; i++)
                 _counterInt64.Inc(i);
