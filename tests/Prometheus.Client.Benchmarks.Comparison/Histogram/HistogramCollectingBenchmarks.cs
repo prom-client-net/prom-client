@@ -6,14 +6,14 @@ using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Histogram
 {
-    public class HistogramCollectionBenchmarks : ComparisonBenchmarkBase
+    public class HistogramCollectingBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsCount = 100;
         private const int _labelsCount = 5;
         private const int _variantsCount = 100;
         private const int _observationsCount = 100;
 
-        public HistogramCollectionBenchmarks()
+        public HistogramCollectingBenchmarks()
         {
             var labelNames = GenerateLabelNames(_labelsCount).ToArray();
             var labelVariants = GenerateLabelValues(_variantsCount, _labelsCount);
@@ -37,14 +37,14 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         }
 
         [Benchmark(Baseline = true)]
-        public void Collection_Baseline()
+        public void Collecting_Baseline()
         {
             using var stream = Stream.Null;
             TheirCollectorRegistry.CollectAndExportAsTextAsync(stream).GetAwaiter().GetResult();
         }
 
         [Benchmark]
-        public void Collection()
+        public void Collecting()
         {
             using var stream = Stream.Null;
             ScrapeHandler.ProcessAsync(OurCollectorRegistry , stream).GetAwaiter().GetResult();

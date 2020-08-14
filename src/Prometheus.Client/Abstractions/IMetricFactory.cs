@@ -23,8 +23,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -37,8 +37,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<ICounter> CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter> CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default, params string[]labelNames);
 
         /// <summary>
         ///     Create int-based Counter.
@@ -54,8 +54,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -68,8 +68,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[]labelNames);
 
         /// <summary>
         ///     Create Gauge.
@@ -85,8 +85,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -99,8 +99,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IGauge> CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge> CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
 
         /// <summary>
         ///     Create int-based Gauge.
@@ -116,8 +116,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -130,8 +130,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
 
         /// <summary>
         ///     Create Histogram.
@@ -149,8 +149,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labels, double[] buckets = null, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, double[] buckets = null, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -164,8 +164,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default, params string[] labelNames);
 
         /// <summary>
         ///     Create Untyped.
@@ -181,8 +181,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labels, MetricFlags options = MetricFlags.Default)
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -195,8 +195,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Label names</param>
-        IMetricFamily<IUntyped> CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labels);
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IUntyped> CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
 
         /// <summary>
         ///     Create Summary
@@ -223,7 +223,7 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Array of label names.</param>
+        /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
@@ -231,7 +231,7 @@ namespace Prometheus.Client.Abstractions
         IMetricFamily<ISummary, TLabels> CreateSummary<TLabels>(
             string name,
             string help,
-            TLabels labels,
+            TLabels labelNames,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
@@ -249,7 +249,7 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="options">Metric flags</param>
-        /// <param name="labels">Array of label names.</param>
+        /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
@@ -262,6 +262,6 @@ namespace Prometheus.Client.Abstractions
             int? ageBuckets = null,
             int? bufCap = null,
             MetricFlags options = MetricFlags.Default,
-            params string[] labels);
+            params string[] labelNames);
     }
 }

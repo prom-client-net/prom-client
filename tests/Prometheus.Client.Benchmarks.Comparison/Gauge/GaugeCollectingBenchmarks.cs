@@ -5,7 +5,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 {
-    public class GaugeCollectionBenchmarks : ComparisonBenchmarkBase
+    public class GaugeCollectingBenchmarks : ComparisonBenchmarkBase
     {
         private const int _metricsCount = 100;
         private const int _labelsCount = 5;
@@ -13,7 +13,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 
         private const string _helpText = "some help text";
 
-        public GaugeCollectionBenchmarks()
+        public GaugeCollectingBenchmarks()
         {
             var labelNames = GenerateLabelNames(_labelsCount);
             var labelVariants = GenerateLabelValues(_variantsCount, _labelsCount);
@@ -34,14 +34,14 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         }
 
         [Benchmark(Baseline = true)]
-        public void Collection_Baseline()
+        public void Collecting_Baseline()
         {
             using var stream = Stream.Null;
             TheirCollectorRegistry.CollectAndExportAsTextAsync(stream).GetAwaiter().GetResult();
         }
 
         [Benchmark]
-        public void Collection()
+        public void Collecting()
         {
             using var stream = Stream.Null;
             ScrapeHandler.ProcessAsync(OurCollectorRegistry , stream).GetAwaiter().GetResult();

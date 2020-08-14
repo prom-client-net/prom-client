@@ -1,4 +1,5 @@
 extern alias Their;
+using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Histogram
@@ -34,7 +35,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram("testhistogram", HelpText);
+                OurMetricFactory.CreateHistogram("testhistogram", HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
@@ -90,7 +91,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText);
+                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]

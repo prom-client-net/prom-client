@@ -1,10 +1,11 @@
+using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Gauge
 {
     public class GaugeCreationBenchmarks : ComparisonBenchmarkBase
     {
-        private const int _metricsPerIteration = 10000;
+        private const int _metricsPerIteration = 10_000;
 
         private readonly string[] _metricNames;
         private readonly string[] _labelNames = { "foo", "bar", "baz" };
@@ -33,7 +34,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge("testgauge", HelpText);
+                OurMetricFactory.CreateGauge("testgauge", HelpText, ValueTuple.Create());
         }
 
         [Benchmark]
@@ -41,7 +42,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Single_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGaugeInt64("testgauge", HelpText);
+                OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
@@ -121,7 +122,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge(_metricNames[i], HelpText);
+                OurMetricFactory.CreateGauge(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark]
@@ -129,7 +130,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void Many_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText);
+                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]

@@ -1,3 +1,4 @@
+using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Counter
@@ -33,7 +34,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Single()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter("testcounter", HelpText);
+                OurMetricFactory.CreateCounter("testcounter", HelpText, ValueTuple.Create());
         }
 
         [Benchmark]
@@ -41,7 +42,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Single_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64("testcounter", HelpText);
+                OurMetricFactory.CreateCounterInt64("testcounter", HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
@@ -121,7 +122,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Many()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter(_metricNames[i], HelpText);
+                OurMetricFactory.CreateCounter(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark]
@@ -129,7 +130,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void Many_Int64()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText);
+                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, ValueTuple.Create());
         }
 
         [Benchmark(Baseline = true)]
