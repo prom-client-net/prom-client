@@ -181,7 +181,7 @@ Contributions to the package are always welcome!
 
 ## Support
 
-If you are having problems, send a mail to [prometheus@phnx47.net](mailto://prometheus@phnx47.net). I will try to help you.
+If you are having problems, send a mail to [prometheus@phnx47.net](mailto://prometheus@phnx47.net). We will try to help you.
 
 ## License
 
