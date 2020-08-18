@@ -1,6 +1,6 @@
 # Comparison Benchmarks
 
-There are number of benchmarks in Prometheus.Client.Benchmarks.Comparison project dedicated to compare performance and memory allocation of the Prometheus.Client library with prometheus-net.
+There are number of benchmarks in Prometheus.Client.Benchmarks.Comparison project dedicated to compare performance and memory allocation of the Prometheus.Client library with prometheus-net. All benchamrks were done for Prometheus.Client v 4.0.0 and prometheus-net 3.6.0.
 
 ## General structure
 
