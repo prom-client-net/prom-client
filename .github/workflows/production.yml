@@ -13,10 +13,6 @@ jobs:
         uses: actions/checkout@v1
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
-        with:
-          source-url: https://api.nuget.org/v3/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.NUGET_DEPLOY_KEY}}
       - name: Build
         run: dotnet build -c Release
       - name: Tests
@@ -26,7 +22,7 @@ jobs:
       - name: Publish artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: nupkg
+          name: artifacts
           path: artifacts/*
       - name: Publish to NuGet
-        run: dotnet nuget push "artifacts/*.nupkg"
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
