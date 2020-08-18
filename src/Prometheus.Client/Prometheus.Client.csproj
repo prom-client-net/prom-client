@@ -25,10 +25,6 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>Full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
-  </PropertyGroup>
   <ItemGroup>
     <None Include="../../icon.png">
       <Pack>true</Pack>
