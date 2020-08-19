@@ -11,7 +11,7 @@ namespace Prometheus.Client.Tests.GaugeTests
         public Task EmptyCollection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                factory.CreateGauge("test", "with help text", false, false, "category");
+                factory.CreateGauge("test", "with help text");
             }, $"{_resourcesNamespace}.GaugeTests_Empty.txt");
         }
 

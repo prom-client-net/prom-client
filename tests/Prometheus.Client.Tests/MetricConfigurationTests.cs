@@ -10,7 +10,7 @@ namespace Prometheus.Client.Tests
         [InlineData("")]
         public void ThrowOnInvalidCollectorName(string collectorName)
         {
-            Assert.Throws<ArgumentNullException>(() => new MetricConfiguration(collectorName, string.Empty, null, MetricFlags.Default));
+            Assert.Throws<ArgumentNullException>(() => new MetricConfiguration(collectorName, string.Empty, null, false));
         }
 
         [Theory]
@@ -24,19 +24,7 @@ namespace Prometheus.Client.Tests
         [InlineData("__label")]
         public void ThrowOnInvalidLabels(string label)
         {
-            Assert.Throws<ArgumentException>(() => new MetricConfiguration("test_metric", string.Empty, new[] { label }, MetricFlags.Default));
-        }
-
-        [Theory]
-        [InlineData(MetricFlags.None, false, false)]
-        [InlineData(MetricFlags.IncludeTimestamp, true, false)]
-        [InlineData(MetricFlags.SuppressEmptySamples, false, true)]
-        [InlineData(MetricFlags.IncludeTimestamp | MetricFlags.SuppressEmptySamples, true, true)]
-        public void CanReadOptions(MetricFlags options, bool includeTimestamp, bool suppressEmptySamples)
-        {
-            var config = new MetricConfiguration("test_name", string.Empty, null, options);
-            Assert.Equal(includeTimestamp, config.IncludeTimestamp);
-            Assert.Equal(suppressEmptySamples, config.SuppressEmptySamples);
+            Assert.Throws<ArgumentException>(() => new MetricConfiguration("test_metric", string.Empty, new[] { label }, false));
         }
     }
 }

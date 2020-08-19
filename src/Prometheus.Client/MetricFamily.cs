@@ -101,7 +101,7 @@ namespace Prometheus.Client
         void ICollector.Collect(IMetricsWriter writer)
         {
             writer.WriteMetricHeader(_configuration.Name, _metricType, _configuration.Help);
-            if (!_configuration.SuppressEmptySamples || _unlabelled.IsValueCreated)
+            if (_unlabelled.IsValueCreated)
                 _unlabelled.Value.Collect(writer);
 
             if (_labelledMetrics != null)

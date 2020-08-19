@@ -11,7 +11,7 @@ namespace Prometheus.Client.Tests.HistogramTests
         public Task EmptyCollection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                factory.CreateHistogram("hist1", "help", false, false, new[] { 1.0, 2.0, 3.0 });
+                factory.CreateHistogram("hist1", "help", false, new[] { 1.0, 2.0, 3.0 });
             }, $"{_resourcesNamespace}.HistogramTests_Empty.txt");
         }
 

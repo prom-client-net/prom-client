@@ -13,7 +13,7 @@ namespace Prometheus.Client.Tests
         [InlineData(1586594808, 1586594700, 1586594700)]
         public void TimestampTests(long now, long? ts, long expectedTs)
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), MetricFlags.IncludeTimestamp);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true);
 
             var metric = new DummyMetric(config, Array.Empty<string>(), () => DateTimeOffset.FromUnixTimeMilliseconds(now));
             metric.Observe(ts);
@@ -24,7 +24,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ShouldIgnoreTsIfDisabled()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), MetricFlags.None);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
 
             var metric = new DummyMetric(config, Array.Empty<string>(), null);
             metric.Observe(1586594808);
@@ -35,7 +35,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ShouldIgnoreTsIfCurrentIsMore()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), MetricFlags.IncludeTimestamp);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true);
 
             var metric = new DummyMetric(config, Array.Empty<string>(), null);
             metric.Observe(1586594808);

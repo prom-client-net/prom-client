@@ -58,7 +58,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter("testcounter", HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounter("testcounter", HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -74,7 +74,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void SingleWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64("testcounter", HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounterInt64("testcounter", HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -98,7 +98,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter("testcounter", HelpText,MetricFlags.Default, _labelNames);
+                OurMetricFactory.CreateCounter("testcounter", HelpText, false, _labelNames);
         }
 
         [Benchmark]
@@ -146,7 +146,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounter(_metricNames[i], HelpText,MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounter(_metricNames[i], HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -162,7 +162,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
         public void ManyWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateCounterInt64(_metricNames[i], HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]

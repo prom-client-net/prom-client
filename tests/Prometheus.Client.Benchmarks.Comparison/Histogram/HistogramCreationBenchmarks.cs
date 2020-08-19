@@ -51,7 +51,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram("testhistogram", HelpText, null, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateHistogram("testhistogram", HelpText, false, null, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -75,7 +75,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram("testhistogram", HelpText, null, MetricFlags.Default, _labelNames);
+                OurMetricFactory.CreateHistogram("testhistogram", HelpText, false, null, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
@@ -107,7 +107,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, null, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, false, null, "foo", "bar", "baz");
         }
 
         [Benchmark]
