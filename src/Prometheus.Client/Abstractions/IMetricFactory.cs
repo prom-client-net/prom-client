@@ -14,17 +14,17 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
-        ICounter CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        ICounter CreateCounter(string name, string help, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create  Counter.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -36,26 +36,26 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter> CreateCounter(string name, string help, MetricFlags options = MetricFlags.Default, params string[]labelNames);
+        IMetricFamily<ICounter> CreateCounter(string name, string help, bool includeTimestamp = false, params string[]labelNames);
 
         /// <summary>
         ///     Create int-based Counter.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
-        ICounter<long> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        ICounter<long> CreateCounterInt64(string name, string help, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create int-based Counter.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -67,26 +67,26 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[]labelNames);
+        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, bool includeTimestamp = false, params string[]labelNames);
 
         /// <summary>
         ///     Create Gauge.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
-        IGauge CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IGauge CreateGauge(string name, string help, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create Gauge.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -98,26 +98,26 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IGauge> CreateGauge(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
+        IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
         ///     Create int-based Gauge.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
-        IGauge<long> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IGauge<long> CreateGaugeInt64(string name, string help, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create int-based Gauge.
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -129,9 +129,9 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
+        IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
         ///     Create Histogram.
@@ -139,8 +139,8 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
-        /// <param name="options">Metric flags</param>
-        IHistogram CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IHistogram CreateHistogram(string name, string help, bool includeTimestamp = false, double[] buckets = null);
 
         /// <summary>
         ///     Create Histogram.
@@ -148,9 +148,9 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, double[] buckets = null, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -163,26 +163,26 @@ namespace Prometheus.Client.Abstractions
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, MetricFlags options = MetricFlags.Default, params string[] labelNames);
+        IMetricFamily<IHistogram> CreateHistogram(string name, string help, bool includeTimestamp = false, double[] buckets = null, params string[] labelNames);
 
         /// <summary>
         ///     Create Untyped.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
-        IUntyped CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default);
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IUntyped CreateUntyped(string name, string help, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create Untyped.
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, MetricFlags options = MetricFlags.Default)
+        IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -194,16 +194,16 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<IUntyped> CreateUntyped(string name, string help, MetricFlags options = MetricFlags.Default, params string[] labelNames);
+        IMetricFamily<IUntyped> CreateUntyped(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
         ///     Create Summary
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
@@ -211,18 +211,18 @@ namespace Prometheus.Client.Abstractions
         ISummary CreateSummary(
             string name,
             string help,
+            bool includeTimestamp = false,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
-            int? bufCap = null,
-            MetricFlags options = MetricFlags.Default);
+            int? bufCap = null);
 
         /// <summary>
         ///     Create Summary
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
@@ -232,11 +232,11 @@ namespace Prometheus.Client.Abstractions
             string name,
             string help,
             TLabels labelNames,
+            bool includeTimestamp = false,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
-            int? bufCap = null,
-            MetricFlags options = MetricFlags.Default)
+            int? bufCap = null)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
@@ -248,7 +248,7 @@ namespace Prometheus.Client.Abstractions
         /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
-        /// <param name="options">Metric flags</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Array of label names.</param>
         /// <param name="objectives">.</param>
         /// <param name="maxAge"></param>
@@ -257,11 +257,11 @@ namespace Prometheus.Client.Abstractions
         IMetricFamily<ISummary> CreateSummary(
             string name,
             string help,
+            string[] labelNames,
+            bool includeTimestamp = false,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
-            int? bufCap = null,
-            MetricFlags options = MetricFlags.Default,
-            params string[] labelNames);
+            int? bufCap = null);
     }
 }

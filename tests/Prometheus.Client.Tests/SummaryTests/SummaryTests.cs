@@ -21,7 +21,7 @@ namespace Prometheus.Client.Tests.SummaryTests
             int concLevel = (n % 5) + 1;
             int total = mutations * concLevel;
 
-            var sum = new Summary(new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None), Array.Empty<string>());
+            var sum = new Summary(new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), false), Array.Empty<string>());
 
             var allVars = new double[total];
             double sampleSum = 0;
@@ -142,7 +142,7 @@ namespace Prometheus.Client.Tests.SummaryTests
         {
             var baseTime = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTimeOffset currentTime = baseTime;
-            var summaryConfig = new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), MetricFlags.None,
+            var summaryConfig = new SummaryConfiguration("test_summary", "helpless", Array.Empty<string>(), false,
                 new List<QuantileEpsilonPair> { new QuantileEpsilonPair(0.1d, 0.001d) }, TimeSpan.FromSeconds(100), 10);
             var child = new Summary(summaryConfig, Array.Empty<string>(), () => currentTime);
             var values = new double[summaryConfig.Objectives.Count];

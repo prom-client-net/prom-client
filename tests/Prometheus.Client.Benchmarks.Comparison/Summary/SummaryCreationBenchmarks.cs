@@ -51,7 +51,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void SingleLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary("testsummary", HelpText,null, null, null, null,MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateSummary("testsummary", HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -75,7 +75,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void SingleWithSharedLabels()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary("testsummary", HelpText, null, null, null, null, MetricFlags.Default, _labelNames);
+                OurMetricFactory.CreateSummary("testsummary", HelpText, _labelNames);
         }
 
         [Benchmark(Baseline = true)]
@@ -107,7 +107,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
         public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateSummary(_metricNames[i], HelpText, null, null, null, null, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateSummary(_metricNames[i], HelpText, "foo", "bar", "baz");
         }
 
         [Benchmark]

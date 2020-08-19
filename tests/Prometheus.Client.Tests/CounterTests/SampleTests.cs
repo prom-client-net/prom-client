@@ -46,9 +46,9 @@ namespace Prometheus.Client.Tests.CounterTests
             Assert.Equal(1, counter.Value);
         }
 
-        private Counter CreateCounter(MetricFlags options = MetricFlags.Default)
+        private Counter CreateCounter()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
             return new Counter(config, Array.Empty<string>());
         }
     }

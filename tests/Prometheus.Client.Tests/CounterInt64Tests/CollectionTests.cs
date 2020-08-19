@@ -11,7 +11,7 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
         public Task EmptyCollection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                factory.CreateCounterInt64("test", "with help text", MetricFlags.None);
+                factory.CreateCounterInt64("test", "with help text");
             }, $"{_resourcesNamespace}.CounterTests_Empty.txt");
         }
 
@@ -28,11 +28,11 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
         public Task Collection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                var counter = factory.CreateCounterInt64("test", "with help text", MetricFlags.None, "category");
+                var counter = factory.CreateCounterInt64("test", "with help text", false, "category");
                 counter.Unlabelled.Inc();
                 counter.WithLabels("some").Inc(2);
 
-                var counter2 = factory.CreateCounterInt64("nextcounter", "with help text", ("group", "type"), MetricFlags.None);
+                var counter2 = factory.CreateCounterInt64("nextcounter", "with help text", ("group", "type"));
                 counter2.Unlabelled.Inc(10);
                 counter2.WithLabels(("any", "2")).Inc(5);
             }, $"{_resourcesNamespace}.CounterTests_Collection.txt");

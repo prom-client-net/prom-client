@@ -7,12 +7,11 @@ namespace Prometheus.Client
 {
     public class MetricConfiguration: CollectorConfiguration
     {
-        public MetricConfiguration(string name, string help, string[] labels, MetricFlags options)
+        public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp)
             : base(name)
         {
             Help = help;
-            IncludeTimestamp = (options & MetricFlags.IncludeTimestamp) == MetricFlags.IncludeTimestamp;
-            SuppressEmptySamples = (options & MetricFlags.SuppressEmptySamples) == MetricFlags.SuppressEmptySamples;
+            IncludeTimestamp = includeTimestamp;
             LabelNames = labels ?? Array.Empty<string>();
 
             if (labels != null)
@@ -31,8 +30,6 @@ namespace Prometheus.Client
         public string Help { get; }
 
         public bool IncludeTimestamp { get; }
-
-        public bool SuppressEmptySamples { get; }
 
         public IReadOnlyList<string> LabelNames { get; }
 

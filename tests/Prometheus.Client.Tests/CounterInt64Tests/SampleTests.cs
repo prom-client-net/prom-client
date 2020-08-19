@@ -35,9 +35,9 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
             Assert.Equal(1, counter.Value);
         }
 
-        private CounterInt64 CreateCounter(MetricFlags options = MetricFlags.Default)
+        private CounterInt64 CreateCounter()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
             return new CounterInt64(config, Array.Empty<string>());
         }
     }

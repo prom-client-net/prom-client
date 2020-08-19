@@ -83,9 +83,9 @@ namespace Prometheus.Client.Tests.HistogramTests
             yield return (new double[] { 1, -1 , -100}, -100, new double[] { -5, 0, 5 }, new long[] { 1, 1, 1, 0});
         }
 
-        private IHistogram CreateHistogram(double[] buckets = null, MetricFlags options = MetricFlags.Default)
+        private IHistogram CreateHistogram(double[] buckets = null)
         {
-            var config = new HistogramConfiguration("test", string.Empty, Array.Empty<string>(), buckets, options);
+            var config = new HistogramConfiguration("test", string.Empty, Array.Empty<string>(), buckets, false);
             return new Histogram(config, Array.Empty<string>());
         }
     }

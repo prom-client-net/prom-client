@@ -16,8 +16,8 @@ namespace Prometheus.Client
             _defaultFormattedBuckets = GetFormattedBuckets(_defaultBuckets);
         }
 
-        public HistogramConfiguration(string name, string help, string[] labels, double[] buckets, MetricFlags options)
-            : base(name, help, labels, options)
+        public HistogramConfiguration(string name, string help, string[] labels, double[] buckets, bool includeTimestamp)
+            : base(name, help, labels, includeTimestamp)
         {
             if (LabelNames.Any(l => l == "le"))
                 throw new ArgumentException("'le' is a reserved label name");

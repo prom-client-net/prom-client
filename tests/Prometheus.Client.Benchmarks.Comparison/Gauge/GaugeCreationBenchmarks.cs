@@ -58,7 +58,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void SingleWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge("testgauge", HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateGauge("testgauge", HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -74,7 +74,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void SingleWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateGaugeInt64("testgauge", HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -98,7 +98,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void SingleWithSharedLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge("testgauge", HelpText,MetricFlags.Default, _labelNames);
+                OurMetricFactory.CreateGauge("testgauge", HelpText, false, _labelNames);
         }
 
         [Benchmark]
@@ -146,7 +146,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void ManyWithLabels_Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGauge(_metricNames[i], HelpText,MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateGauge(_metricNames[i], HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]
@@ -162,7 +162,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         public void ManyWithLabels_Int64Array()
         {
             for (var i = 0; i < _metricsPerIteration; i++)
-                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, MetricFlags.Default, "foo", "bar", "baz");
+                OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, false, "foo", "bar", "baz");
         }
 
         [Benchmark]

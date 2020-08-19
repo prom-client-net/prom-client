@@ -49,13 +49,13 @@ namespace Prometheus.Client
             string name,
             string help,
             string labelName,
+            bool includeTimestamp = false,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
-            int? bufCap = null,
-            MetricFlags options = MetricFlags.Default)
+            int? bufCap = null)
         {
-            return factory.CreateSummary(name, help, ValueTuple.Create(labelName), objectives, maxAge, ageBuckets, bufCap, options);
+            return factory.CreateSummary(name, help, ValueTuple.Create(labelName), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
         }
     }
 }

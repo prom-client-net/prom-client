@@ -58,9 +58,9 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Inc(increment, timestamp);
         }
 
-        public static IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(this IMetricFactory factory, string name, string help, string labelName, MetricFlags options = MetricFlags.Default)
+        public static IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)
         {
-            return factory.CreateCounter(name, help, ValueTuple.Create(labelName), options);
+            return factory.CreateCounter(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }
     }
 }

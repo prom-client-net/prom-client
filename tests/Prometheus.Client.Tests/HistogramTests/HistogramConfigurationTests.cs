@@ -16,7 +16,7 @@ namespace Prometheus.Client.Tests.HistogramTests
                     string.Empty,
                     new[] {"le"},
                     null,
-                    MetricFlags.Default);
+                    false);
             }
 
             Assert.Throws<ArgumentException>(Create);
@@ -32,7 +32,7 @@ namespace Prometheus.Client.Tests.HistogramTests
                     string.Empty,
                     Array.Empty<string>(),
                     new double[0],
-                    MetricFlags.Default);
+                    false);
             }
 
             Assert.Throws<ArgumentException>(Create);
@@ -48,7 +48,7 @@ namespace Prometheus.Client.Tests.HistogramTests
                     string.Empty,
                     Array.Empty<string>(),
                     new [] { 0d, -1d },
-                    MetricFlags.Default);
+                    false);
             }
 
             Assert.Throws<ArgumentException>(Create);

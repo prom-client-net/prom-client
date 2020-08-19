@@ -58,9 +58,9 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Set(val, timestamp);
         }
 
-        public static IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(this IMetricFactory factory, string name, string help, string labelName, MetricFlags options = MetricFlags.Default)
+        public static IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)
         {
-            return factory.CreateUntyped(name, help, ValueTuple.Create(labelName), options);
+            return factory.CreateUntyped(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }
     }
 }

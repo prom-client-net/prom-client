@@ -20,9 +20,9 @@ namespace Prometheus.Client.Tests.UntypedTests
             Assert.Equal(val, untyped.Value);
         }
 
-        private IUntyped CreateUntyped(MetricFlags options = MetricFlags.Default)
+        private IUntyped CreateUntyped()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
             return new Untyped(config, Array.Empty<string>());
         }
     }

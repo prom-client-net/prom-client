@@ -11,7 +11,7 @@ namespace Prometheus.Client.Tests.UntypedTests
         public Task EmptyCollection()
         {
             return CollectionTestHelper.TestCollectionAsync(factory => {
-                factory.CreateUntyped("test", "with help text", false, false, "category");
+                factory.CreateUntyped("test", "with help text");
             }, $"{_resourcesNamespace}.UntypedTests_Empty.txt");
         }
 

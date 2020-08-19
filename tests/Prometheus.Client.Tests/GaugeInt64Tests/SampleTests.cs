@@ -61,9 +61,9 @@ namespace Prometheus.Client.Tests.GaugeInt64Tests
             Assert.Equal(1, gauge.Value);
         }
 
-        private IGauge<long> CreateGauge(MetricFlags options = MetricFlags.Default)
+        private IGauge<long> CreateGauge()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
             return new GaugeInt64(config, Array.Empty<string>());
         }
     }

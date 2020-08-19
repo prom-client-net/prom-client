@@ -89,9 +89,9 @@ namespace Prometheus.Client.Tests.GaugeTests
             Assert.Throws<InvalidOperationException>(() => gauge.Dec());
         }
 
-        private IGauge CreateGauge(MetricFlags options = MetricFlags.Default)
+        private IGauge CreateGauge()
         {
-            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), options);
+            var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
             return new Gauge(config, Array.Empty<string>());
         }
     }

@@ -151,7 +151,7 @@ namespace Prometheus.Client.Tests
 
         private IMetricFamily<IDummyMetric> CreateMetricFamily()
         {
-            var config = new MetricConfiguration("dummy_metric", string.Empty, new string[0], MetricFlags.None);
+            var config = new MetricConfiguration("dummy_metric", string.Empty, new string[0], false);
             return new MetricFamily<IDummyMetric, DummyMetric, ValueTuple, MetricConfiguration>(
                 config, MetricType.Untyped,
                 (configuration, list) => new DummyMetric(configuration, list, null));
@@ -159,7 +159,7 @@ namespace Prometheus.Client.Tests
 
         private IMetricFamily<IDummyMetric> CreateMetricFamily(string label1, string label2)
         {
-            var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, MetricFlags.None);
+            var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, false);
             return new MetricFamily<IDummyMetric, DummyMetric, (string, string), MetricConfiguration>(
                 config, MetricType.Untyped,
                 (configuration, list) => new DummyMetric(configuration, list, null));
@@ -168,7 +168,7 @@ namespace Prometheus.Client.Tests
         private MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration> CreateMetricFamily<TLabels>(TLabels labels)
             where TLabels : struct, ITuple, IEquatable<TLabels>
         {
-            var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), MetricFlags.None);
+            var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), false);
             return new MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration>(
                 config, MetricType.Untyped,
                 (configuration, list) => new DummyMetric(configuration, list, null));
