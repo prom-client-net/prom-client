@@ -81,10 +81,8 @@ public class MetricsController : Controller
     public async Task Get()
     {
         Response.StatusCode = 200;
-        using (var outputStream = Response.Body)
-        {
-            await ScrapeHandler.ProcessAsync(Metrics.DefaultCollectorRegistry, outputStream);
-        }
+        await using var outputStream = Response.Body;
+        await ScrapeHandler.ProcessAsync(_registry, outputStream);
     }
 }
 
