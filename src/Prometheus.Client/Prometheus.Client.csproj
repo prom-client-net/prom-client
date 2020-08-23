@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>.NET client for Prometheus</Description>
-    <Copyright>2020 © Sergey Kuznetsov, Oleksandr Poliakov</Copyright>
+    <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
     <VersionPrefix>4.1.1</VersionPrefix>
     <Authors>Sergey Kuznetsov, Oleksandr Poliakov</Authors>
