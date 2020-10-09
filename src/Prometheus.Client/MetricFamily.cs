@@ -76,6 +76,20 @@ namespace Prometheus.Client
             return _labelledMetrics.GetOrAdd(key, metric);
         }
 
+        TMetric IMetricFamily<TMetric>.RemoveLabelled(params string[] labels)
+        {
+            if (_labelledMetrics == null)
+                throw new InvalidOperationException("Metric family does not have any labels");
+
+            if (labels.Length != _configuration.LabelNames.Count)
+                throw new ArgumentException("Wrong number of labels");
+
+            var key = LabelsHelper.GetHashCode(labels);
+            _labelledMetrics.TryRemove(key, out var removed);
+
+            return removed;
+        }
+
         [Obsolete("This method is obsolete. Use WithLabels instead.")]
         TMetric IMetricFamily<TMetric>.Labels(params string[] labels)
         {
@@ -96,6 +110,17 @@ namespace Prometheus.Client
 
             metric = CreateLabelled(LabelsHelper.ToArray(labels));
             return _labelledMetrics.GetOrAdd(key, metric);
+        }
+
+        public TMetric RemoveLabelled(TLabels labels)
+        {
+            if (_labelledMetrics == null)
+                throw new InvalidOperationException("Metric family does not have any labels");
+
+            var key = LabelsHelper.GetHashCode(labels);
+            _labelledMetrics.TryRemove(key, out var removed);
+
+            return removed;
         }
 
         void ICollector.Collect(IMetricsWriter writer)

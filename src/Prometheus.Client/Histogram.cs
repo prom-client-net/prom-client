@@ -23,6 +23,12 @@ namespace Prometheus.Client
 
         public HistogramState Value => ForkState();
 
+        public void Reset()
+        {
+            _bucketsStore.Reset();
+            _sum.Value = default;
+        }
+
         public void Observe(double val)
         {
             Observe(val, null);

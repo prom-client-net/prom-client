@@ -43,6 +43,13 @@ namespace Prometheus.Client
             }
         }
 
+        public void Reset()
+        {
+            _quantileStream.Reset();
+            _count.Value = 0;
+            _sum.Value = 0;
+        }
+
         public void Observe(double val)
         {
             Observe(val, null);

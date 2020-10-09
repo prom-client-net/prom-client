@@ -11,6 +11,7 @@ namespace Prometheus.Client.Abstractions
         TMetric Unlabelled { get; }
         IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> Labelled { get; }
         TMetric WithLabels(params string[] labels);
+        TMetric RemoveLabelled(params string[] labels);
         IReadOnlyList<string> LabelNames { get; }
         [Obsolete("This method is obsolete. Use WithLabels instead.")]
         TMetric Labels(params string[] labels);
@@ -26,6 +27,7 @@ namespace Prometheus.Client.Abstractions
         TMetric Unlabelled { get; }
         IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled { get; }
         TMetric WithLabels(TLabels labels);
+        TMetric RemoveLabelled(TLabels labels);
         TLabels LabelNames { get; }
     }
 }

@@ -35,6 +35,16 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
             Assert.Equal(1, counter.Value);
         }
 
+        [Fact]
+        public void ShouldResetValue()
+        {
+            var counter = CreateCounter();
+            counter.Inc();
+
+            counter.Reset();
+            Assert.Equal(0, counter.Value);
+        }
+
         private CounterInt64 CreateCounter()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);

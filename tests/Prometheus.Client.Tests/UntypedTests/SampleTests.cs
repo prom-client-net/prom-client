@@ -20,6 +20,16 @@ namespace Prometheus.Client.Tests.UntypedTests
             Assert.Equal(val, untyped.Value);
         }
 
+        [Fact]
+        public void ShouldResetValue()
+        {
+            var untyped = CreateUntyped();
+            untyped.Set(12);
+
+            untyped.Reset();
+            Assert.Equal(0, untyped.Value);
+        }
+
         private IUntyped CreateUntyped()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
