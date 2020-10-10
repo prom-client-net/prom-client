@@ -4,8 +4,10 @@ namespace Prometheus.Client.Abstractions
         where TState: struct
     {
         TState Value { get; }
+
+        void Reset();
     }
 
     public interface IMetric
-    { }
+    {}
 }

@@ -41,6 +41,11 @@ namespace Prometheus.Client
 
         public double Value => _value.Value;
 
+        public void Reset()
+        {
+            _value.Value = default;
+        }
+
         protected internal override void Collect(IMetricsWriter writer)
         {
             writer.WriteSample(Value, string.Empty, Configuration.LabelNames, LabelValues, Timestamp);

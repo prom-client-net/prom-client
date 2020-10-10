@@ -56,6 +56,18 @@ namespace Prometheus.Client.SummaryImpl
             }
         }
 
+        public void Reset()
+        {
+            lock (_bufferLock)
+            {
+                _bufferPosition = 0;
+                _headStreamIndex = 0;
+
+                for(var i = 0; i < _sampleStreams.Length; i++)
+                    _sampleStreams[i].Reset();
+            }
+        }
+
         public void FlushBuffer()
         {
             Span<double> data = stackalloc double[_buffer.Length];

@@ -2,8 +2,10 @@ namespace Prometheus.Client
 {
     internal interface IHistogramBucketStore
     {
-        public abstract void Observe(double value);
+        void Observe(double value);
 
-        public ThreadSafeLong[] Buckets { get; }
+        void Reset();
+
+        ThreadSafeLong[] Buckets { get; }
     }
 }

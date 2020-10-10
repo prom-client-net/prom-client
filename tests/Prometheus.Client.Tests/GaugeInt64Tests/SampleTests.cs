@@ -61,6 +61,16 @@ namespace Prometheus.Client.Tests.GaugeInt64Tests
             Assert.Equal(1, gauge.Value);
         }
 
+        [Fact]
+        public void ShouldResetValue()
+        {
+            var gauge = CreateGauge();
+            gauge.Inc();
+
+            gauge.Reset();
+            Assert.Equal(0, gauge.Value);
+        }
+
         private IGauge<long> CreateGauge()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);

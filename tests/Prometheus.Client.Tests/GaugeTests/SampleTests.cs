@@ -89,6 +89,16 @@ namespace Prometheus.Client.Tests.GaugeTests
             Assert.Throws<InvalidOperationException>(() => gauge.Dec());
         }
 
+        [Fact]
+        public void ShouldResetValue()
+        {
+            var gauge = CreateGauge();
+            gauge.Inc();
+
+            gauge.Reset();
+            Assert.Equal(0, gauge.Value);
+        }
+
         private IGauge CreateGauge()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);

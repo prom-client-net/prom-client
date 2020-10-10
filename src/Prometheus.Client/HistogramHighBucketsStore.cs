@@ -21,6 +21,14 @@ namespace Prometheus.Client
             Buckets[bucketIndex].Add(1);
         }
 
+        public void Reset()
+        {
+            for (var i = 0; i < Buckets.Length; i++)
+            {
+                Buckets[i].Value = default;
+            }
+        }
+
         public ThreadSafeLong[] Buckets { get; }
     }
 }

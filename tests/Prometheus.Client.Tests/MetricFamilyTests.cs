@@ -80,6 +80,77 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void ShouldRemoveSample_Tuple()
+        {
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            var sample = metricFamily.WithLabels(("a", "b"));
+
+            var removed = metricFamily.RemoveLabelled(("a", "b"));
+
+            Assert.Empty(metricFamily.Labelled);
+            Assert.Equal(sample, removed);
+        }
+
+        [Fact]
+        public void ShouldReturnNullOnRemoveNonExistingSample_Tuple()
+        {
+            var metricFamily = CreateMetricFamily(("label1", "label2"));
+            metricFamily.WithLabels(("a", "b"));
+
+            var removed = metricFamily.RemoveLabelled(("b", "c"));
+
+            Assert.Equal(1, metricFamily.Labelled.Count());
+            Assert.Null(removed);
+        }
+
+        [Fact]
+        public void ShouldRemoveSample_Array()
+        {
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            var sample = metricFamily.WithLabels("a", "b");
+
+            var removed = metricFamily.RemoveLabelled("a", "b");
+
+            Assert.Empty(metricFamily.Labelled);
+            Assert.Equal(sample, removed);
+        }
+
+        [Fact]
+        public void ShouldReturnNullOnRemoveNonExistingSample_Array()
+        {
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            metricFamily.WithLabels("a", "b");
+
+            var removed = metricFamily.RemoveLabelled("b", "c");
+
+            Assert.Equal(1, metricFamily.Labelled.Count());
+            Assert.Null(removed);
+        }
+
+        [Fact]
+        public void RemoveThrowIfNoLabels_Array()
+        {
+            var metricFamily = CreateMetricFamily();
+            Assert.Throws<InvalidOperationException>(() => metricFamily.RemoveLabelled("value1"));
+        }
+
+        [Fact]
+        public void RemoveThrowIfNoLabels_Tuple()
+        {
+            var metricFamily = CreateMetricFamily(ValueTuple.Create());
+            Assert.Throws<InvalidOperationException>(() => metricFamily.RemoveLabelled(ValueTuple.Create()));
+        }
+
+        [Fact]
+        public void RemoveThrowsOnLabelsMismatch_Array()
+        {
+            var metricFamily = CreateMetricFamily("label1", "label2");
+            metricFamily.WithLabels("a", "b");
+
+            Assert.Throws<ArgumentException>(() => metricFamily.RemoveLabelled("a"));
+        }
+
+        [Fact]
         public void ShouldEnumerateLabeledEmpty_Strings()
         {
             var metricFamily = CreateMetricFamily("label1", "label2");

@@ -37,6 +37,25 @@ namespace Prometheus.Client.Tests.HistogramTests
         }
 
         [Theory]
+        [MemberData(nameof(CountTestCases))]
+        public void ResetShouldClearObservations(IReadOnlyList<double> items, int _)
+        {
+            var histogram = CreateHistogram();
+
+            foreach (var item in items)
+            {
+                histogram.Observe(item);
+            }
+
+            histogram.Reset();
+
+            var state = histogram.Value;
+            Assert.Equal(0,state.Count);
+            Assert.Equal(0, state.Sum);
+            Assert.True(state.Buckets.All(b => b.Value == 0));
+        }
+
+        [Theory]
         [MemberData(nameof(BucketsTestCases))]
         public void HistogramLowBucketsStore(double[] buckets, IReadOnlyList<double> items, long[] expectedBuckets)
         {
@@ -60,6 +79,40 @@ namespace Prometheus.Client.Tests.HistogramTests
             {
                 backetStore.Observe(item);
             }
+
+            Assert.Equal(expectedBuckets, backetStore.Buckets.Select(b => b.Value));
+        }
+
+        [Theory]
+        [MemberData(nameof(BucketsTestCases))]
+        public void HistogramLowBucketsStoreReset(double[] buckets, IReadOnlyList<double> items, long[] _)
+        {
+            var expectedBuckets = new long[buckets.Length + 1];
+            var backetStore = new HistogramLowBucketsStore(buckets);
+
+            foreach (var item in items)
+            {
+                backetStore.Observe(item);
+            }
+
+            backetStore.Reset();
+
+            Assert.Equal(expectedBuckets, backetStore.Buckets.Select(b => b.Value));
+        }
+
+        [Theory]
+        [MemberData(nameof(BucketsTestCases))]
+        public void HistogramHighBucketsStoreReset(double[] buckets, IReadOnlyList<double> items, long[] _)
+        {
+            var expectedBuckets = new long[buckets.Length + 1];
+            var backetStore = new HistogramHighBucketsStore(buckets);
+
+            foreach (var item in items)
+            {
+                backetStore.Observe(item);
+            }
+
+            backetStore.Reset();
 
             Assert.Equal(expectedBuckets, backetStore.Buckets.Select(b => b.Value));
         }
