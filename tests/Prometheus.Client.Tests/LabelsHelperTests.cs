@@ -87,6 +87,15 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void FormatTuple7()
+        {
+            var tuple = ("1", "2", "3", "4", "5", "6", "7");
+            var formatted = LabelsHelper.ToArray(tuple);
+
+            Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7" }, formatted);
+        }
+
+        [Fact]
         public void FormatTuple8()
         {
             var tuple = ("1", "2", "3", "4", "5", "6", "7", "8");
@@ -129,6 +138,15 @@ namespace Prometheus.Client.Tests
             var parsed = LabelsHelper.FromArray<(string, string)>(arr);
 
             Assert.Equal(("1", "2"), parsed);
+        }
+
+        [Fact]
+        public void ParseTuple7()
+        {
+            var arr = new[] { "1", "2", "3", "4", "5", "6", "7" };
+            var parsed = LabelsHelper.FromArray<(string, string, string, string, string, string, string)>(arr);
+
+            Assert.Equal(("1", "2", "3", "4", "5", "6", "7"), parsed);
         }
 
         [Fact]
