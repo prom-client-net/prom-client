@@ -99,7 +99,7 @@ namespace Prometheus.Client.Tests
 
             var removed = metricFamily.RemoveLabelled(("b", "c"));
 
-            Assert.Equal(1, metricFamily.Labelled.Count());
+            Assert.Single(metricFamily.Labelled);
             Assert.Null(removed);
         }
 
@@ -123,7 +123,7 @@ namespace Prometheus.Client.Tests
 
             var removed = metricFamily.RemoveLabelled("b", "c");
 
-            Assert.Equal(1, metricFamily.Labelled.Count());
+            Assert.Single(metricFamily.Labelled);
             Assert.Null(removed);
         }
 

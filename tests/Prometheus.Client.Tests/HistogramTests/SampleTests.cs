@@ -4,6 +4,8 @@ using System.Linq;
 using Prometheus.Client.Abstractions;
 using Xunit;
 
+#pragma warning disable SA1313, xUnit1026
+
 namespace Prometheus.Client.Tests.HistogramTests
 {
     public class SampleTests
@@ -143,3 +145,5 @@ namespace Prometheus.Client.Tests.HistogramTests
         }
     }
 }
+
+#pragma warning restore SA1313, xUnit1026
