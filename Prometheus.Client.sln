@@ -6,7 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D994EEE1-378
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client", "src\Prometheus.Client\Prometheus.Client.csproj", "{B0E7B525-2F11-446F-A2F3-9A07083E3D6E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7847B574-86FF-4D13-ADD9-85C6D37A86B9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{7847B574-86FF-4D13-ADD9-85C6D37A86B9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
@@ -27,6 +27,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prometheus.Client.Benchmarks", "tests\Prometheus.Client.Benchmarks\Prometheus.Client.Benchmarks.csproj", "{7938605B-A516-4B8C-A8E0-40901CB903DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Benchmarks.Comparison", "tests\Prometheus.Client.Benchmarks.Comparison\Prometheus.Client.Benchmarks.Comparison.csproj", "{5B614BED-2C54-40F3-8F01-3995E4298137}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{7F0C12DB-909E-4061-80C2-87CE8DF7CDA7}"
+ProjectSection(SolutionItems) = preProject
+	.github\CODEOWNERS = .github\CODEOWNERS
+	.github\FUNDING.yml = .github\FUNDING.yml
+	.github\renovate.json = .github\renovate.json
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C9643321-CB54-4E2E-B02D-6A6538F3B45F}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\branch.yml = .github\workflows\branch.yml
+	.github\workflows\master.yml = .github\workflows\master.yml
+	.github\workflows\production.yml = .github\workflows\production.yml
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +73,7 @@ Global
 		{B11769F3-421B-4B79-A883-335331847542} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 		{7938605B-A516-4B8C-A8E0-40901CB903DE} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
 		{5B614BED-2C54-40F3-8F01-3995E4298137} = {FE42C2D5-9D20-44A2-A9ED-477527A832AD}
+		{C9643321-CB54-4E2E-B02D-6A6538F3B45F} = {7F0C12DB-909E-4061-80C2-87CE8DF7CDA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A21B7555-E98B-4C23-9545-70BCF791DE3E}
