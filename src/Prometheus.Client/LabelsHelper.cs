@@ -139,7 +139,7 @@ namespace Prometheus.Client
                                 Expression.Constant(i - 1),
                                 result)));
 
-                if (i % 7 == 0)
+                if (i < size && i % 7 == 0)
                 {
                     itemNumber = 0;
                     getterTarget = Expression.PropertyOrField(getterTarget, "Rest");
