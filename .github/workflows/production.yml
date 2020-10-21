@@ -1,9 +1,9 @@
-name: "CI"
+name: CI
 
 on:
   push:
     tags:
-      - '[34].[0-9]+.[0-9]+'
+      - 'v*'
 
 jobs:
   build:
@@ -25,4 +25,4 @@ jobs:
           name: artifacts
           path: artifacts/*
       - name: Publish to NuGet
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ secrets.NUGET_DEPLOY_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "artifacts/*.nupkg" -k ${{ secrets.NUGET_DEPLOY_KEY }} -s https://api.nuget.org/v3/index.json
