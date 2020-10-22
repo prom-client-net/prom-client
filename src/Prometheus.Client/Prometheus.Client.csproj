@@ -4,7 +4,7 @@
     <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
     <VersionPrefix>4.2.0</VersionPrefix>
-    <Authors>Sergey Kuznetsov, Oleksandr Poliakov</Authors>
+    <Authors>Serge K, Oleksandr Poliakov</Authors>
     <TargetFrameworks>netstandard2.0;netcoreapp2.2;netstandard2.1</TargetFrameworks>
     <AssemblyName>Prometheus.Client</AssemblyName>
     <PackageId>Prometheus.Client</PackageId>
