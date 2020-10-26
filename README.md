@@ -25,9 +25,9 @@ It was started as a fork of [prometheus-net](https://github.com/prometheus-net/p
 Find more details on [benchmarks description](/docs/benchmarks/GeneralUseCase.md)
 
 ## Installation
-
-    dotnet add package Prometheus.Client
-	
+```shell script
+dotnet add package Prometheus.Client
+```
 
 ## Configuration
 
@@ -39,34 +39,27 @@ Find more details on [benchmarks description](/docs/benchmarks/GeneralUseCase.md
 ## Quick start:
 1) Add IMetricFactory and ICollectorRegistry into DI container with extension library Prometheus.Client.DependencyInjection 
 
-```csharp
-
+```c#
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddMetricFactory();
 }
-
-
 ```
 
 2) Add metrics endpoint
 
 With Prometheus.Client.AspNetCore:
 
-```csharp
-
+```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
 {
     app.UsePrometheusServer();
 }
-
-
 ```
 
 Without extensions:
 
-```csharp
-
+```c#
 [Route("[controller]")]
 public class MetricsController : Controller
 {
@@ -85,22 +78,18 @@ public class MetricsController : Controller
         await ScrapeHandler.ProcessAsync(_registry, outputStream);
     }
 }
-
 ```
 
 For collect http requests, use Prometheus.Client.HttpRequestDurations.
 It does not depend of Prometheus.Client.AspNetCore, however together it's very convenient to use:
 
-```csharp
-
+```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
 {
     app.UsePrometheusServer();
     app.UsePrometheusRequestDurations(); 
 }
-
 ```
-
 
 ### Instrumenting
 
@@ -113,8 +102,7 @@ on how to use them.
 
 Counters go up, and reset when the process restarts.
 
-
-```csharp
+```c#
 var counter = metricFactory.CreateCounter("myCounter", "some help about this");
 counter.Inc(5.5);
 ```
@@ -123,8 +111,7 @@ counter.Inc(5.5);
 
 Gauges can go up and down.
 
-
-```csharp
+```c#
 var gauge = metricFactory.CreateGauge("gauge", "help text");
 gauge.Inc(3.4);
 gauge.Dec(2.1);
@@ -135,7 +122,7 @@ gauge.Set(5.3);
 
 Summaries track the size and number of events.
 
-```csharp
+```c#
 var summary = metricFactory.CreateSummary("mySummary", "help text");
 summary.Observe(5.3);
 ```
@@ -145,7 +132,7 @@ summary.Observe(5.3);
 Histograms track the size and number of events in buckets.
 This allows for aggregatable calculation of quantiles.
 
-```csharp
+```c#
 var hist = metricFactory.CreateHistogram("my_histogram", "help text", buckets: new[] { 0, 0.2, 0.4, 0.6, 0.8, 0.9 });
 hist.Observe(0.4);
 ```
@@ -162,14 +149,14 @@ and [labels](http://prometheus.io/docs/practices/instrumentation/#use-labels).
 
 Taking a counter as an example:
 
-```csharp
+```c#
 var counter = metricFactory.CreateCounter("myCounter", "help text", labelNames: new []{ "method", "endpoint"});
 counter.WithLabels("GET", "/").Inc();
 counter.WithLabels("POST", "/cancel").Inc();
 ```
 
 Since v4 there is alternative new way to provide a labels via ValueTuple that allow to reduce memory allocation:
-```csharp
+```c#
 var counter = metricFactory.CreateCounter("myCounter", "help text", labelNames: ("method", "endpoint"));
 counter.WithLabels(("GET", "/")).Inc();
 counter.WithLabels(("POST", "/cancel")).Inc();
@@ -178,21 +165,22 @@ counter.WithLabels(("POST", "/cancel")).Inc();
 ## Extensions
 	
 AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
-	
-	dotnet add package Prometheus.Client.AspNetCore
-
+```shell script
+dotnet add package Prometheus.Client.AspNetCore
+```
 Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
-
-	dotnet add package Prometheus.Client.MetricServer
+```shell script
+dotnet add package Prometheus.Client.MetricServer
+```
 	
-Push metrics to a PushGateaway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
-
-	dotnet add package Prometheus.Client.MetricPusher
-
+Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
+```shell script
+dotnet add package Prometheus.Client.MetricPusher
+```
 Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
-
-	dotnet add package Prometheus.Client.HttpRequestDurations
-
+```shell script
+dotnet add package Prometheus.Client.HttpRequestDurations
+```
 ## Contribute
 
 Contributions to the package are always welcome!
@@ -202,7 +190,12 @@ Contributions to the package are always welcome!
 
 ## Support
 
-If you are having problems, send a mail to [prometheus@phnx47.net](mailto://prometheus@phnx47.net). We will try to help you.
+I would also very much appreciate your support:
+
+<a href="https://www.buymeacoffee.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/bmac0.png" alt="Buy Me A Coffee"></a>
+<a href="https://ko-fi.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/kofi0.png" alt="Support me on ko-fi"></a>
+<a href="https://www.patreon.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" alt="Support me on Patreon"></a>
+
 
 ## License
 
