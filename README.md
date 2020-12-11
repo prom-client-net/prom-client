@@ -196,6 +196,8 @@ I would also very much appreciate your support:
 <a href="https://ko-fi.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/kofi0.png" alt="Support me on ko-fi"></a>
 <a href="https://www.patreon.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" alt="Support me on Patreon"></a>
 
+## JetBrains - you're cool!
+We much appreciate free Rider's licenses provided by JetBrains to support our library.
 
 ## License
 
