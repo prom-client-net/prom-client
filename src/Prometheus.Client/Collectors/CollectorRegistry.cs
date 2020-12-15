@@ -200,7 +200,8 @@ namespace Prometheus.Client.Collectors
 
             _collectors.Add(collector.Configuration.Name, collector);
             _usedMetricNames.UnionWith(collector.MetricNames);
-            _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+            if (_enumerableCollectors.IsValueCreated)
+                _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
         }
 
         private IEnumerable<ICollector> GetImmutableValueCollection()

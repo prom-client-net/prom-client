@@ -79,10 +79,11 @@ namespace Prometheus.Client
             // do not use for-each here, it allocates which is easy to avoid by for loop
             for (var i = 0; i < values.Count; i++)
             {
-                if(values[i] == null)
+                var val = values[i];
+                if(string.IsNullOrEmpty(val))
                     throw new ArgumentException("Label value cannot be empty");
 
-                result = HashCode.Combine(result, values[i].GetHashCode());
+                result = HashCombine(result, val.GetHashCode());
             }
 
             return result;
@@ -202,6 +203,13 @@ namespace Prometheus.Client
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int HashCombine(int h1, int h2)
+        {
+            uint rol5 = ((uint)h1 << 5) | ((uint)h1 >> 27);
+            return ((int)rol5 + h1) ^ h2;
+        }
+
         private static bool Validate(Type tupleType)
         {
             if (tupleType == typeof(ValueTuple))
@@ -256,9 +264,9 @@ namespace Prometheus.Client
             {
                 return HashCodeReducer(values, 0, (item, _, aggregated) =>
                 {
-                    if(item == null)
+                    if(string.IsNullOrEmpty(item))
                         throw new ArgumentException("Label value cannot be empty");
-                    return HashCode.Combine(aggregated, item.GetHashCode());
+                    return HashCombine(aggregated, item.GetHashCode());
                 });
             }
 

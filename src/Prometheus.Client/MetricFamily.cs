@@ -72,7 +72,7 @@ namespace Prometheus.Client
                 return metric;
             }
 
-            metric = CreateLabelled(labels);
+            metric = _instanceFactory(_configuration, labels);
             return _labelledMetrics.GetOrAdd(key, metric);
         }
 
@@ -108,7 +108,7 @@ namespace Prometheus.Client
                 return metric;
             }
 
-            metric = CreateLabelled(LabelsHelper.ToArray(labels));
+            metric = _instanceFactory(_configuration, LabelsHelper.ToArray(labels));
             return _labelledMetrics.GetOrAdd(key, metric);
         }
 
@@ -154,17 +154,6 @@ namespace Prometheus.Client
 
             foreach (var labelled in _labelledMetrics)
                 yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(labelled.Value.LabelValues, labelled.Value);
-        }
-
-        private TImplementation CreateLabelled(IReadOnlyList<string> labels)
-        {
-            for (var i = 0; i < labels.Count; i++)
-            {
-                if(string.IsNullOrEmpty(labels[i]))
-                    throw new ArgumentException("Label cannot be empty.");
-            }
-
-            return _instanceFactory(_configuration, labels);
         }
     }
 }
