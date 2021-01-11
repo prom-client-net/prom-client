@@ -13,7 +13,6 @@
 <details>
   <summary>Counter</summary>
 
-```
 |                          Method |      Mean |     Error |    StdDev | Ratio | RatioSD |     Gen 0 |     Gen 1 | Gen 2 |  Allocated |
 |-------------------------------- |----------:|----------:|----------:|------:|--------:|----------:|----------:|------:|-----------:|
 |                 Single_Baseline |  5.387 ms | 1.1263 ms | 1.2971 ms |  1.00 |    0.00 |         - |         - |     - |  1121944 B |
@@ -39,14 +38,13 @@
 |            ManyWithLabels_Tuple | 43.865 ms | 2.6253 ms | 3.0233 ms |  0.66 |    0.03 | 2000.0000 | 1000.0000 |     - | 15614912 B |
 |       ManyWithLabels_Int64Array | 39.144 ms | 1.9684 ms | 2.2668 ms |  0.59 |    0.03 | 2000.0000 | 1000.0000 |     - | 14922408 B |
 |       ManyWithLabels_Int64Tuple | 42.778 ms | 1.8482 ms | 2.1284 ms |  0.65 |    0.03 | 2000.0000 | 1000.0000 |     - | 15614912 B | 
-```
+
 
 </details>
 
 <details>
   <summary>Gauge</summary>
 
-```
 |                            Method |      Mean |     Error |    StdDev | Ratio | RatioSD |     Gen 0 |     Gen 1 | Gen 2 |  Allocated |
 |---------------------------------- |----------:|----------:|----------:|------:|--------:|----------:|----------:|------:|-----------:|
 |                   Single_Baseline |  5.395 ms | 1.0058 ms | 1.1582 ms |  1.00 |    0.00 |         - |         - |     - |  1121912 B |
@@ -72,14 +70,12 @@
 |              ManyWithLabels_Tuple | 41.824 ms | 2.3347 ms | 2.6887 ms |  0.69 |    0.03 | 2000.0000 | 1000.0000 |     - | 15614912 B |
 |         ManyWithLabels_Int64Array | 38.847 ms | 1.5547 ms | 1.7904 ms |  0.64 |    0.04 | 2000.0000 | 1000.0000 |     - | 14922408 B |
 |         ManyWithLabels_Int64Tuple | 42.357 ms | 1.7864 ms | 2.0572 ms |  0.70 |    0.04 | 2000.0000 | 1000.0000 |     - | 15614912 B | 
-```
 
 </details>
 
 <details>
   <summary>Histogram</summary>
 
-```
 |                          Method |      Mean |     Error |    StdDev | Ratio | RatioSD |     Gen 0 |     Gen 1 | Gen 2 |  Allocated |
 |-------------------------------- |----------:|----------:|----------:|------:|--------:|----------:|----------:|------:|-----------:|
 |                 Single_Baseline |  5.025 ms | 0.6478 ms | 0.7460 ms |  1.00 |    0.00 |         - |         - |     - |  1122248 B |
@@ -98,14 +94,12 @@
 |         ManyWithLabels_Baseline | 72.071 ms | 5.3968 ms | 6.2150 ms |  1.00 |    0.00 | 3000.0000 | 1000.0000 |     - | 21368080 B |
 |            ManyWithLabels_Array | 39.936 ms | 2.5998 ms | 2.9939 ms |  0.55 |    0.02 | 2000.0000 | 1000.0000 |     - | 16121944 B |
 |            ManyWithLabels_Tuple | 43.566 ms | 2.8220 ms | 3.2498 ms |  0.61 |    0.02 | 2000.0000 | 1000.0000 |     - | 16814912 B | 
-```
 
 </details>
 
 <details>
   <summary>Summary</summary>
 
-```
 |                          Method |      Mean |     Error |    StdDev |    Median | Ratio | RatioSD |     Gen 0 |     Gen 1 | Gen 2 |  Allocated |
 |-------------------------------- |----------:|----------:|----------:|----------:|------:|--------:|----------:|----------:|------:|-----------:|
 |                 Single_Baseline |  4.609 ms | 0.2174 ms | 0.2504 ms |  4.515 ms |  1.00 |    0.00 |         - |         - |     - |  1121968 B |
@@ -124,7 +118,6 @@
 |         ManyWithLabels_Baseline | 65.739 ms | 3.6652 ms | 4.2208 ms | 64.706 ms |  1.00 |    0.00 | 3000.0000 | 1000.0000 |     - | 18934680 B |
 |            ManyWithLabels_Array | 41.503 ms | 2.4628 ms | 2.8361 ms | 40.307 ms |  0.63 |    0.04 | 2000.0000 | 1000.0000 |     - | 17002280 B |
 |            ManyWithLabels_Tuple | 43.879 ms | 2.3097 ms | 2.6599 ms | 42.866 ms |  0.67 |    0.04 | 2000.0000 | 1000.0000 |     - | 17694912 B | 
-```
 
 </details>
 
