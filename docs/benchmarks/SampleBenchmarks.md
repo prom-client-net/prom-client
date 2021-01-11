@@ -11,7 +11,6 @@ Each benchmark
   
 Each benchmark has 10 000 000 observations.
 
-```
 |              Method |      Mean |    Error |   StdDev |    Median | Ratio | RatioSD | Gen 0 | Gen 1 | Gen 2 | Allocated |
 |-------------------- |----------:|---------:|---------:|----------:|------:|--------:|------:|------:|------:|----------:|
 | IncDefault_Baseline | 147.66 ms | 1.983 ms | 2.284 ms | 146.21 ms |  1.00 |    0.00 |     - |     - |     - |         - |
@@ -21,7 +20,6 @@ Each benchmark has 10 000 000 observations.
 |        Inc_Baseline | 150.48 ms | 3.195 ms | 3.679 ms | 150.36 ms |  1.00 |    0.00 |     - |     - |     - |         - |
 |                 Inc | 149.80 ms | 1.791 ms | 2.062 ms | 150.76 ms |  1.00 |    0.02 |     - |     - |     - |         - |
 |           Inc_Int64 |  91.95 ms | 1.128 ms | 1.299 ms |  91.09 ms |  0.61 |    0.02 |     - |     - |     - |         - |
-```
   
 </details>
 
@@ -30,7 +28,6 @@ Each benchmark has 10 000 000 observations.
 
 Each benchmark has 10 000 000 observations.
 
-```
 |              Method |      Mean |    Error |   StdDev |    Median | Ratio | RatioSD | Gen 0 | Gen 1 | Gen 2 | Allocated |
 |-------------------- |----------:|---------:|---------:|----------:|------:|--------:|------:|------:|------:|----------:|
 | IncDefault_Baseline | 158.44 ms | 3.879 ms | 4.468 ms | 158.01 ms |  1.00 |    0.00 |     - |     - |     - |         - |
@@ -52,7 +49,6 @@ Each benchmark has 10 000 000 observations.
 |        Set_Baseline |  93.83 ms | 0.050 ms | 0.058 ms |  93.81 ms |  1.00 |    0.00 |     - |     - |     - |         - |
 |                 Set |  96.51 ms | 0.968 ms | 1.115 ms |  97.12 ms |  1.03 |    0.01 |     - |     - |     - |         - |
 |           Set_Int64 |  88.67 ms | 1.130 ms | 1.301 ms |  87.73 ms |  0.94 |    0.01 |     - |     - |     - |         - |
-```
 
 </details>
 
@@ -61,7 +57,6 @@ Each benchmark has 10 000 000 observations.
 
 Each benchmark has 1 000 000 observations.
 
-```
 |                       Method |      Mean |    Error |   StdDev | Ratio | RatioSD | Gen 0 | Gen 1 | Gen 2 | Allocated |
 |----------------------------- |----------:|---------:|---------:|------:|--------:|------:|------:|------:|----------:|
 |             Observe_Baseline |  34.85 ms | 0.933 ms | 1.075 ms |  1.00 |    0.00 |     - |     - |     - |         - |
@@ -69,7 +64,6 @@ Each benchmark has 1 000 000 observations.
 |                              |           |          |          |       |         |       |       |       |           |
 | ManyBuckets_Observe_Baseline | 130.58 ms | 1.892 ms | 2.179 ms |  1.00 |    0.00 |     - |     - |     - |         - |
 |          ManyBuckets_Observe |  65.26 ms | 3.880 ms | 4.468 ms |  0.50 |    0.03 |     - |     - |     - |         - |
-```
 
 </details>
 
@@ -78,12 +72,10 @@ Each benchmark has 1 000 000 observations.
 
 Each benchmark has 100 000 observations.
 
-```
 |           Method |      Mean |    Error |   StdDev | Ratio | RatioSD | Gen 0 | Gen 1 | Gen 2 | Allocated |
 |----------------- |----------:|---------:|---------:|------:|--------:|------:|------:|------:|----------:|
 | Observe_Baseline | 100.02 ms | 2.123 ms | 2.445 ms |  1.00 |    0.00 |     - |     - |     - |   64000 B |
 |          Observe |  82.64 ms | 2.036 ms | 2.344 ms |  0.83 |    0.02 |     - |     - |     - |         - |
-```
 
 </details>
 
