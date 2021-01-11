@@ -9,8 +9,7 @@
 
 <details>
   <summary>Counter</summary>
-  
-```
+
 |                          Method |       Mean |     Error |    StdDev |     Median | Ratio | RatioSD |      Gen 0 | Gen 1 | Gen 2 |    Allocated |
 |-------------------------------- |-----------:|----------:|----------:|-----------:|------:|--------:|-----------:|------:|------:|-------------:|
 |               NoLabels_Baseline |   5.527 ms | 0.8440 ms | 0.9719 ms |   5.896 ms |  1.00 |    0.00 |          - |     - |     - |   1110.38 KB |
@@ -28,14 +27,12 @@
 |      WithLabelsAndSamples_Tuple | 131.681 ms | 1.8447 ms | 2.1243 ms | 132.430 ms |  0.63 |    0.03 |          - |     - |     - |     49.62 KB |
 | WithLabelsAndSamples_Int64Array | 166.056 ms | 2.4496 ms | 2.8210 ms | 167.168 ms |  0.79 |    0.03 | 11000.0000 |     - |     - |     47395 KB |
 | WithLabelsAndSamples_Int64Tuple | 128.643 ms | 1.3117 ms | 1.5105 ms | 129.282 ms |  0.62 |    0.02 |          - |     - |     - |     48.84 KB |
-```
   
 </details>
 
 <details>
   <summary>Gauge</summary>
 
-```
 |                          Method |       Mean |     Error |    StdDev | Ratio | RatioSD |      Gen 0 | Gen 1 | Gen 2 |    Allocated |
 |-------------------------------- |-----------:|----------:|----------:|------:|--------:|-----------:|------:|------:|-------------:|
 |               NoLabels_Baseline |   5.902 ms | 1.0438 ms | 1.2021 ms |  1.00 |    0.00 |          - |     - |     - |   1111.71 KB |
@@ -53,14 +50,12 @@
 |      WithLabelsAndSamples_Tuple | 128.261 ms | 1.2731 ms | 1.4661 ms |  0.65 |    0.01 |          - |     - |     - |     62.82 KB |
 | WithLabelsAndSamples_Int64Array | 163.231 ms | 2.0083 ms | 2.3127 ms |  0.83 |    0.01 | 11000.0000 |     - |     - |  47408.98 KB |
 | WithLabelsAndSamples_Int64Tuple | 130.312 ms | 1.4413 ms | 1.6598 ms |  0.66 |    0.01 |          - |     - |     - |     48.84 KB |
-```
 
 </details>
 
 <details>
   <summary>Histogram</summary>
 
-```
 |                        Method |       Mean |     Error |    StdDev | Ratio | RatioSD |      Gen 0 |     Gen 1 | Gen 2 |    Allocated |
 |------------------------------ |-----------:|----------:|----------:|------:|--------:|-----------:|----------:|------:|-------------:|
 |             NoLabels_Baseline |   6.875 ms | 0.1550 ms | 0.1785 ms |  1.00 |    0.00 |          - |         - |     - |   1251.83 KB |
@@ -73,14 +68,12 @@
 | WithLabelsAndSamples_Baseline | 225.711 ms | 3.3234 ms | 3.8272 ms |  1.00 |    0.00 | 44000.0000 | 1000.0000 |     - | 184119.51 KB |
 |    WithLabelsAndSamples_Array | 189.502 ms | 2.6804 ms | 3.0868 ms |  0.84 |    0.02 | 11000.0000 |         - |     - |  47414.56 KB |
 |    WithLabelsAndSamples_Tuple | 153.720 ms | 1.9484 ms | 2.2438 ms |  0.68 |    0.01 |          - |         - |     - |     68.76 KB |
-```
 
 </details>
 
 <details>
   <summary>Summary</summary>
 
-```
 |                        Method |       Mean |     Error |    StdDev | Ratio | RatioSD |      Gen 0 |     Gen 1 |     Gen 2 |    Allocated |
 |------------------------------ |-----------:|----------:|----------:|------:|--------:|-----------:|----------:|----------:|-------------:|
 |             NoLabels_Baseline |   9.607 ms | 0.5922 ms | 0.6820 ms |  1.00 |    0.00 |          - |         - |         - |   3003.81 KB |
@@ -93,7 +86,6 @@
 | WithLabelsAndSamples_Baseline | 770.187 ms | 4.5413 ms | 5.2298 ms |  1.00 |    0.00 | 46000.0000 | 1000.0000 |         - | 201468.94 KB |
 |    WithLabelsAndSamples_Array | 570.796 ms | 7.6545 ms | 8.8150 ms |  0.74 |    0.01 | 13000.0000 | 2000.0000 | 1000.0000 |  63936.28 KB |
 |    WithLabelsAndSamples_Tuple | 520.198 ms | 4.9866 ms | 5.7426 ms |  0.68 |    0.01 |  3000.0000 | 1000.0000 |         - |  16590.71 KB |
-```
 
 </details>
 
