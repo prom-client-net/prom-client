@@ -63,7 +63,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, false,"foo", "bar", "baz");
                 histogram.Observe(i / 100d);
             }
         }
@@ -97,7 +97,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, false,"foo", "bar", "baz");
                 for(var j = 0; j < _samplesCount; j++)
                     histogram.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Observe(i / 100d);
             }

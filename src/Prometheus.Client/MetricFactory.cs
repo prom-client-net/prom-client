@@ -538,14 +538,8 @@ namespace Prometheus.Client
             expectedNames ??= Array.Empty<string>();
             actualNames ??= Array.Empty<string>();
 
-            if (expectedNames.Count != actualNames.Count)
+            if (LabelsHelper.GetHashCode(expectedNames) != LabelsHelper.GetHashCode(actualNames))
                 ThrowLabelsValidationException();
-
-            for (var i = 0; i < expectedNames.Count; i++)
-            {
-                if(expectedNames[i] != actualNames[i])
-                    ThrowLabelsValidationException();
-            }
         }
 
         private static void ThrowLabelsValidationException()

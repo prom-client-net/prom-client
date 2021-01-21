@@ -74,7 +74,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var gauge = OurMetricFactory.CreateGauge(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var gauge = OurMetricFactory.CreateGauge(_metricNames[i], HelpText, false, "foo", "bar", "baz");
                 gauge.Inc();
             }
         }
@@ -96,7 +96,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var gauge = OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var gauge = OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, false, "foo", "bar", "baz");
                 gauge.Inc();
             }
         }
@@ -130,7 +130,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var gauge = OurMetricFactory.CreateGauge(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var gauge = OurMetricFactory.CreateGauge(_metricNames[i], HelpText, false, "foo", "bar", "baz");
                 for(var j = 0; j < _samplesCount; j++)
                     gauge.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Inc();
             }
@@ -154,7 +154,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
         {
             for (var i = 0; i < _metricsCount; i++)
             {
-                var gauge = OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, "foo", "bar", "baz");
+                var gauge = OurMetricFactory.CreateGaugeInt64(_metricNames[i], HelpText, false, "foo", "bar", "baz");
                 for(var j = 0; j < _samplesCount; j++)
                     gauge.WithLabels(_labelValues[j][0], _labelValues[j][1], _labelValues[j][2]).Inc();
             }
