@@ -7,8 +7,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Gauge
     {
         private const int _opIterations = 10_000_000;
 
-        private Abstractions.IGauge _gauge;
-        private Abstractions.IGauge<long> _gaugeInt64;
+        private IGauge _gauge;
+        private IGauge<long> _gaugeInt64;
         private Their.Prometheus.IGauge _theirGauge;
 
         [IterationSetup]

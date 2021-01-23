@@ -1,6 +1,4 @@
 using BenchmarkDotNet.Attributes;
-using Prometheus.Client;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks.Counter

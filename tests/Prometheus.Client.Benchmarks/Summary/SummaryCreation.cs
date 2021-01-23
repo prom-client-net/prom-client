@@ -1,5 +1,4 @@
 using BenchmarkDotNet.Attributes;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client.Benchmarks.Summary

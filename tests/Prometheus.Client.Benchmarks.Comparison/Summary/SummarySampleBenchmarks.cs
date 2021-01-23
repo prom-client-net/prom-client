@@ -8,7 +8,7 @@ namespace Prometheus.Client.Benchmarks.Comparison.Summary
     {
         private const int _opIterations = 100000;
 
-        private Abstractions.ISummary _summary;
+        private ISummary _summary;
         private Their.Prometheus.ISummary _theirSummary;
         private double[] _dataset;
 

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.MetricsWriter;
-using Prometheus.Client.MetricsWriter.Abstractions;
 
 namespace Prometheus.Client
 {

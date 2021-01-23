@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using Prometheus.Client.Collectors.Abstractions;
+using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client

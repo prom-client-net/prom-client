@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
-using Prometheus.Client.MetricsWriter.Abstractions;
+using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Tests.Mocks
 {

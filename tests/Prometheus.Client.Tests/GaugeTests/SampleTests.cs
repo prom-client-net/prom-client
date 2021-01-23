@@ -1,5 +1,4 @@
 using System;
-using Prometheus.Client.Abstractions;
 using Xunit;
 
 namespace Prometheus.Client.Tests.GaugeTests
