@@ -1,6 +1,5 @@
 extern alias Their;
 using BenchmarkDotNet.Attributes;
-using Prometheus.Client.Abstractions;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Histogram
 {

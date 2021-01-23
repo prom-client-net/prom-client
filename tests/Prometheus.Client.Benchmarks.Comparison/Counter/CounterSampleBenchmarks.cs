@@ -7,8 +7,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Counter
     {
         private const int _opIterations = 10_000_000;
 
-        private Abstractions.ICounter _counter;
-        private Abstractions.ICounter<long> _counterInt64;
+        private ICounter _counter;
+        private ICounter<long> _counterInt64;
         private Their.Prometheus.ICounter _theirCounter;
 
         [IterationSetup]

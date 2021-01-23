@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.Tests.Mocks;
 using Xunit;
 

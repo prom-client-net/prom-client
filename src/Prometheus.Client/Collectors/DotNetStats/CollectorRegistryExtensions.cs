@@ -1,5 +1,3 @@
-using Prometheus.Client.Collectors.Abstractions;
-
 namespace Prometheus.Client.Collectors.DotNetStats
 {
     public static class CollectorRegistryExtensions

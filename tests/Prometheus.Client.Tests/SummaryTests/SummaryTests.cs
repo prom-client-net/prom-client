@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.SummaryImpl;
 using Xunit;
 
 namespace Prometheus.Client.Tests.SummaryTests

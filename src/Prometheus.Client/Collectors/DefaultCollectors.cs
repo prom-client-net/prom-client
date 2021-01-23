@@ -1,4 +1,3 @@
-using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Collectors.DotNetStats;
 using Prometheus.Client.Collectors.ProcessStats;
 
