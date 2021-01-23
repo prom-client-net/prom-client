@@ -18,7 +18,9 @@ jobs:
       - name: Tests
         run: dotnet test -c Release --no-build
       - name: Pack artifacts
-        run: dotnet pack src/Prometheus.Client -c Release --no-build -o artifacts/
+        run: | 
+          dotnet pack src/Prometheus.Client -c Release --no-build -o artifacts/
+          dotnet pack src/Prometheus.Client.Abstractions -c Release --no-build -o artifacts/
       - name: Publish artifacts
         uses: actions/upload-artifact@v2
         with:
