@@ -3,10 +3,10 @@
     <Description>.NET client for Prometheus</Description>
     <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
     <AssemblyTitle>Prometheus.Client.Abstractions</AssemblyTitle>
-    <VersionPrefix>4.2.1</VersionPrefix>
+    <VersionPrefix>4.3.0</VersionPrefix>
     <Authors>Serge K, Oleksandr Poliakov</Authors>
     <RootNamespace>Prometheus.Client</RootNamespace>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.2;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <AssemblyName>Prometheus.Client.Abstractions</AssemblyName>
     <PackageId>Prometheus.Client.Abstractions</PackageId>
     <PackageTags>prometheus;metrics</PackageTags>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp2.2'">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans;</DefineConstants>
   </PropertyGroup>
 </Project>
