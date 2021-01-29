@@ -1,5 +1,4 @@
 using NSubstitute;
-using Prometheus.Client;
 using Xunit;
 
 namespace Prometheus.Client.Tests
