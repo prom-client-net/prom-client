@@ -47,12 +47,20 @@ namespace Prometheus.Client.SummaryImpl
 
         public void Append(double value)
         {
-            if (ShouldFlushBuffer())
-                FlushBuffer();
-
-            lock (_bufferLock)
+            while (true)
             {
-                _buffer[_bufferPosition++] = value;
+                if(ShouldFlushBuffer())
+                    FlushBuffer();
+
+                lock (_bufferLock)
+                {
+                    // use this trick to make FlushBuffer outside of the lock
+                    if (ShouldFlushBuffer())
+                        continue;
+
+                    _buffer[_bufferPosition++] = value;
+                    return;
+                }
             }
         }
 
@@ -62,9 +70,17 @@ namespace Prometheus.Client.SummaryImpl
             {
                 _bufferPosition = 0;
                 _headStreamIndex = 0;
+            }
 
+            _sampleStreamsLock.EnterWriteLock();
+            try
+            {
                 for(var i = 0; i < _sampleStreams.Length; i++)
                     _sampleStreams[i].Reset();
+            }
+            finally
+            {
+                _sampleStreamsLock.ExitWriteLock();
             }
         }
 
