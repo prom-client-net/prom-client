@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
-using Prometheus.Client.MetricsWriter.Abstractions;
 using System.Runtime.CompilerServices;
 
 namespace Prometheus.Client.MetricsWriter

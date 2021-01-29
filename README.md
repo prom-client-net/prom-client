@@ -13,7 +13,6 @@
 Supports: 
 <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>
 <img src="https://img.shields.io/badge/.netstandard-2.1-green.svg"></img>
-<img src="https://img.shields.io/badge/.netcore-2.2-green.svg"></img>
 
 It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
 - Keep possibility of rapid development.

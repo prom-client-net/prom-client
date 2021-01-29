@@ -24,7 +24,9 @@ jobs:
       - name: Publish to Codecov
         uses: codecov/codecov-action@v1
       - name: Pack artifacts
-        run: dotnet pack src/Prometheus.Client -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
+        run: |
+          dotnet pack src/Prometheus.Client -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
+          dotnet pack src/Prometheus.Client.Abstractions -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:

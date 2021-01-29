@@ -1,7 +1,6 @@
 using System;
 using NSubstitute;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
 using Prometheus.Client.Tests.Mocks;
 using Xunit;
 

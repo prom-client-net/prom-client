@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Prometheus.Client.Abstractions;
+using Prometheus.Client.HistogramImpl;
 using Xunit;
 
 #pragma warning disable SA1313, xUnit1026

@@ -3,9 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.MetricsWriter;
-using Prometheus.Client.MetricsWriter.Abstractions;
 using Prometheus.Client.SummaryImpl;
 
 namespace Prometheus.Client

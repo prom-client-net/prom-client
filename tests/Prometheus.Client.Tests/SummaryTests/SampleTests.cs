@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Prometheus.Client.Abstractions;
 using Xunit;
 
 namespace Prometheus.Client.Tests.SummaryTests

@@ -3,9 +3,9 @@
     <Description>.NET client for Prometheus</Description>
     <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
-    <VersionPrefix>4.2.1</VersionPrefix>
+    <VersionPrefix>4.3.0</VersionPrefix>
     <Authors>Serge K, Oleksandr Poliakov</Authors>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.2;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <AssemblyName>Prometheus.Client</AssemblyName>
     <PackageId>Prometheus.Client</PackageId>
     <PackageTags>prometheus;metrics</PackageTags>
@@ -39,7 +39,10 @@
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp2.2'">
+  <ItemGroup>
+    <ProjectReference Include="..\Prometheus.Client.Abstractions\Prometheus.Client.Abstractions.csproj" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans;</DefineConstants>
   </PropertyGroup>
 </Project>

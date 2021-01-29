@@ -1,5 +1,4 @@
 using System;
-using Prometheus.Client.Collectors.Abstractions;
 
 namespace Prometheus.Client.Collectors
 {

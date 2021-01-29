@@ -1,5 +1,5 @@
 using NSubstitute;
-using Prometheus.Client.Abstractions;
+using Prometheus.Client;
 using Xunit;
 
 namespace Prometheus.Client.Tests

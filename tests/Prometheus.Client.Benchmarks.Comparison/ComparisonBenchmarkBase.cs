@@ -1,9 +1,7 @@
 extern alias Their;
 using System;
 using System.Linq;
-using Prometheus.Client.Abstractions;
 using Prometheus.Client.Collectors;
-using Prometheus.Client.Collectors.Abstractions;
 
 namespace Prometheus.Client.Benchmarks.Comparison
 {

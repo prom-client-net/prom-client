@@ -9,8 +9,8 @@ namespace Prometheus.Client.Benchmarks.Comparison.Histogram
         private const int _opIterations = 1_000_000;
         private readonly double[] _bucketsMany;
 
-        private Abstractions.IHistogram _histogramDefaultBuckets;
-        private Abstractions.IHistogram _histogramManyBuckets;
+        private IHistogram _histogramDefaultBuckets;
+        private IHistogram _histogramManyBuckets;
         private Their.Prometheus.IHistogram _theirHistogramDefaultBuckets;
         private Their.Prometheus.IHistogram _theirHistogramManyBuckets;
 
