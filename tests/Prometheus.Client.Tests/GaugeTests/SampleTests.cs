@@ -71,6 +71,28 @@ namespace Prometheus.Client.Tests.GaugeTests
         }
 
         [Fact]
+        public void IncShouldIgnoreNaN()
+        {
+            var gauge = CreateGauge();
+            gauge.Set(42);
+
+            gauge.Inc(double.NaN);
+
+            Assert.Equal(42, gauge.Value);
+        }
+
+        [Fact]
+        public void DecShouldIgnoreNaN()
+        {
+            var gauge = CreateGauge();
+            gauge.Set(42);
+
+            gauge.Dec(double.NaN);
+
+            Assert.Equal(42, gauge.Value);
+        }
+
+        [Fact]
         public void ShouldThrowOnIncIfNaN()
         {
             var gauge = CreateGauge();
@@ -96,6 +118,56 @@ namespace Prometheus.Client.Tests.GaugeTests
 
             gauge.Reset();
             Assert.Equal(0, gauge.Value);
+        }
+
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 10, 10)]
+        [InlineData(10, 2, 10)]
+        [InlineData(-10, 10, 10)]
+        [InlineData(-10, -2, -2)]
+        [InlineData(-10, -20, -10)]
+        public void IncTo(double initial, double value, double expected)
+        {
+            var gauge = CreateGauge();
+            gauge.Set(initial);
+
+            gauge.IncTo(value);
+
+            Assert.Equal(expected, gauge.Value);
+        }
+
+        [Fact]
+        public void IncToThrowsOnNaN()
+        {
+            var gauge = CreateGauge();
+
+            Assert.Throws<InvalidOperationException>(() => gauge.IncTo(double.NaN));
+        }
+
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 10, 2)]
+        [InlineData(10, 2, 2)]
+        [InlineData(-10, 10, -10)]
+        [InlineData(-10, -2, -10)]
+        [InlineData(-10, -20, -20)]
+        public void DecTo(double initial, double value, double expected)
+        {
+            var gauge = CreateGauge();
+            gauge.Set(initial);
+
+            gauge.DecTo(value);
+
+            Assert.Equal(expected, gauge.Value);
+        }
+
+        [Fact]
+        public void DecToThrowsOnNaN()
+        {
+            var gauge = CreateGauge();
+
+            Assert.Throws<InvalidOperationException>(() => gauge.DecTo(double.NaN));
         }
 
         private IGauge CreateGauge()

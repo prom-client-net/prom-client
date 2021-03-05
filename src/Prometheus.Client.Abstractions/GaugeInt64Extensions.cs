@@ -12,6 +12,11 @@ namespace Prometheus.Client
             gauge.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
+        public static void IncTo(this IGauge<long> gauge, long value, DateTimeOffset timestamp)
+        {
+            gauge.IncTo(value, timestamp.ToUnixTimeMilliseconds());
+        }
+
         public static void Inc(this IMetricFamily<IGauge<long>> metricFamily, long increment = 1)
         {
             metricFamily.Unlabelled.Inc(increment);
@@ -27,9 +32,29 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
+        public static void IncTo(this IMetricFamily<IGauge<long>> metricFamily, long value)
+        {
+            metricFamily.Unlabelled.IncTo(value);
+        }
+
+        public static void IncTo(this IMetricFamily<IGauge<long>> metricFamily, long value, long timestamp)
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
+        }
+
+        public static void IncTo(this IMetricFamily<IGauge<long>> metricFamily, long value, DateTimeOffset timestamp)
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp.ToUnixTimeMilliseconds());
+        }
+
         public static void Dec(this IGauge<long> gauge, long decrement, DateTimeOffset timestamp)
         {
             gauge.Dec(decrement, timestamp.ToUnixTimeMilliseconds());
+        }
+
+        public static void DecTo(this IGauge<long> gauge, long value, DateTimeOffset timestamp)
+        {
+            gauge.DecTo(value, timestamp.ToUnixTimeMilliseconds());
         }
 
         public static void Dec(this IMetricFamily<IGauge<long>> metricFamily, long decrement = 1)
@@ -37,9 +62,29 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Dec(decrement);
         }
 
+        public static void Dec(this IMetricFamily<IGauge<long>> metricFamily, long decrement, long timestamp)
+        {
+            metricFamily.Unlabelled.Dec(decrement, timestamp);
+        }
+
         public static void Dec(this IMetricFamily<IGauge<long>> metricFamily, long decrement, DateTimeOffset timestamp)
         {
             metricFamily.Unlabelled.Dec(decrement, timestamp);
+        }
+
+        public static void DecTo(this IMetricFamily<IGauge<long>> metricFamily, long value)
+        {
+            metricFamily.Unlabelled.DecTo(value);
+        }
+
+        public static void DecTo(this IMetricFamily<IGauge<long>> metricFamily, long value, long timestamp)
+        {
+            metricFamily.Unlabelled.DecTo(value, timestamp);
+        }
+
+        public static void DecTo(this IMetricFamily<IGauge<long>> metricFamily, long value, DateTimeOffset timestamp)
+        {
+            metricFamily.Unlabelled.DecTo(value, timestamp);
         }
 
         public static void Set(this IGauge<long> gauge, long val, DateTimeOffset timestamp)
@@ -92,6 +137,36 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Inc(increment, timestamp);
         }
 
+        public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value);
+        }
+
+        public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
+        }
+
+        public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
+        }
+
         public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement = 1)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
@@ -102,6 +177,16 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Dec(decrement);
         }
 
+        public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement, long timestamp)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.Dec(decrement, timestamp);
+        }
+
         public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement, DateTimeOffset timestamp)
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
@@ -110,6 +195,36 @@ namespace Prometheus.Client
 #endif
         {
             metricFamily.Unlabelled.Dec(decrement, timestamp);
+        }
+
+        public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.DecTo(value);
+        }
+
+        public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.DecTo(value, timestamp);
+        }
+
+        public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.DecTo(value, timestamp);
         }
 
         public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)

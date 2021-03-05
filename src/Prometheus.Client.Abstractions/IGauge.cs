@@ -15,6 +15,10 @@ namespace Prometheus.Client
 
         void Inc(T increment, long? timestamp);
 
+        void IncTo(T value);
+
+        void IncTo(T value, long? timestamp);
+
         void Set(T val);
 
         void Set(T val, long? timestamp);
@@ -24,6 +28,10 @@ namespace Prometheus.Client
         void Dec(T decrement);
 
         void Dec(T decrement, long? timestamp);
+
+        void DecTo(T value);
+
+        void DecTo(T value, long? timestamp);
     }
 
     public interface IGauge : IGauge<double>

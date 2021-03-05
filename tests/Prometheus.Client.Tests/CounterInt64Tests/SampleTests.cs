@@ -45,6 +45,20 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
             Assert.Equal(0, counter.Value);
         }
 
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 10, 10)]
+        [InlineData(10, 2, 10)]
+        public void IncTo(long initial, long value, long expected)
+        {
+            var counter = CreateCounter();
+            counter.Inc(initial);
+
+            counter.IncTo(value);
+
+            Assert.Equal(expected, counter.Value);
+        }
+
         private CounterInt64 CreateCounter()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);

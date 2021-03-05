@@ -70,6 +70,40 @@ namespace Prometheus.Client.Tests.GaugeInt64Tests
             Assert.Equal(0, gauge.Value);
         }
 
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 10, 10)]
+        [InlineData(10, 2, 10)]
+        [InlineData(-10, 10, 10)]
+        [InlineData(-10, -2, -2)]
+        [InlineData(-10, -20, -10)]
+        public void IncTo(long initial, long value, long expected)
+        {
+            var gauge = CreateGauge();
+            gauge.Set(initial);
+
+            gauge.IncTo(value);
+
+            Assert.Equal(expected, gauge.Value);
+        }
+
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 10, 2)]
+        [InlineData(10, 2, 2)]
+        [InlineData(-10, 10, -10)]
+        [InlineData(-10, -2, -10)]
+        [InlineData(-10, -20, -20)]
+        public void DecTo(long initial, long value, long expected)
+        {
+            var gauge = CreateGauge();
+            gauge.Set(initial);
+
+            gauge.DecTo(value);
+
+            Assert.Equal(expected, gauge.Value);
+        }
+
         private IGauge<long> CreateGauge()
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
