@@ -14,6 +14,10 @@ namespace Prometheus.Client
         void Inc(T increment);
 
         void Inc(T increment, long? timestamp);
+
+        void IncTo(T value);
+
+        void IncTo(T value, long? timestamp);
     }
 
     public interface ICounter : ICounter<double>

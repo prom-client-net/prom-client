@@ -12,6 +12,11 @@ namespace Prometheus.Client
             counter.Inc(increment, timestamp.ToUnixTimeMilliseconds());
         }
 
+        public static void IncTo(this ICounter counter, double value, DateTimeOffset timestamp)
+        {
+            counter.IncTo(value, timestamp.ToUnixTimeMilliseconds());
+        }
+
         public static void Inc(this IMetricFamily<ICounter> metricFamily, double increment = 1)
         {
             metricFamily.Unlabelled.Inc(increment);
@@ -25,6 +30,21 @@ namespace Prometheus.Client
         public static void Inc(this IMetricFamily<ICounter> metricFamily, double increment, DateTimeOffset timestamp)
         {
             metricFamily.Unlabelled.Inc(increment, timestamp);
+        }
+
+        public static void IncTo(this IMetricFamily<ICounter> metricFamily, double value)
+        {
+            metricFamily.Unlabelled.IncTo(value);
+        }
+
+        public static void IncTo(this IMetricFamily<ICounter> metricFamily, double value, long timestamp)
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
+        }
+
+        public static void IncTo(this IMetricFamily<ICounter> metricFamily, double value, DateTimeOffset timestamp)
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
         }
 
         public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment = 1)
@@ -55,6 +75,36 @@ namespace Prometheus.Client
 #endif
         {
             metricFamily.Unlabelled.Inc(increment, timestamp);
+        }
+
+        public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value)
+#if HasITuple
+        where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+            where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value);
+        }
+
+        public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, long timestamp)
+#if HasITuple
+        where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+            where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
+        }
+
+        public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, DateTimeOffset timestamp)
+#if HasITuple
+        where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+            where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            metricFamily.Unlabelled.IncTo(value, timestamp);
         }
 
         public static IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)

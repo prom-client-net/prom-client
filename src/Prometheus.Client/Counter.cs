@@ -37,6 +37,15 @@ namespace Prometheus.Client
             IncInternal(increment, timestamp);
         }
 
+        public void IncTo(double value)
+            => IncTo(value, null);
+
+        public void IncTo(double value, long? timestamp)
+        {
+            _value.IncTo(value);
+            TrackObservation(timestamp);
+        }
+
         public double Value => _value.Value;
 
         public void Reset()

@@ -31,16 +31,76 @@ namespace Prometheus.Client
 
         public void Add(double increment)
         {
+            if (IsNaN(increment))
+                throw new InvalidOperationException("Cannot increment the NaN value.");
+
+            long currentValue = Interlocked.Read(ref _value);
+
             while (true)
             {
-                if (Volatile.Read(ref _isNan) || IsNaN(increment))
+                if (Volatile.Read(ref _isNan))
                     throw new InvalidOperationException("Cannot increment the NaN value.");
 
-                long initialValue = _value;
-                double computedValue = BitConverter.Int64BitsToDouble(initialValue) + increment;
+                double computedValue = BitConverter.Int64BitsToDouble(currentValue) + increment;
 
-                if (initialValue == Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), initialValue))
+                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), currentValue);
+
+                if (lastValue == currentValue)
                     return;
+
+                currentValue = lastValue;
+            }
+        }
+
+        public void IncTo(double value)
+        {
+            if (IsNaN(value))
+                throw new InvalidOperationException("Cannot increment the NaN value.");
+
+            long currentValue = Interlocked.Read(ref _value);
+
+            while (true)
+            {
+                if (Volatile.Read(ref _isNan))
+                    throw new InvalidOperationException("Cannot increment the NaN value.");
+
+                double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
+
+                if (decodedValue >= value)
+                    return;
+
+                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
+
+                if (lastValue == currentValue)
+                    return;
+
+                currentValue = lastValue;
+            }
+        }
+
+        public void DecTo(double value)
+        {
+            if (IsNaN(value))
+                throw new InvalidOperationException("Cannot decrement the NaN value.");
+
+            long currentValue = Interlocked.Read(ref _value);
+
+            while (true)
+            {
+                if (Volatile.Read(ref _isNan))
+                    throw new InvalidOperationException("Cannot decrement the NaN value.");
+
+                double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
+
+                if (decodedValue <= value)
+                    return;
+
+                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
+
+                if (lastValue == currentValue)
+                    return;
+
+                currentValue = lastValue;
             }
         }
 

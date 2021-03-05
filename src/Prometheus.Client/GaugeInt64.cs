@@ -30,6 +30,15 @@ namespace Prometheus.Client
             IncInternal(increment, timestamp);
         }
 
+        public void IncTo(long value)
+            => IncTo(value, null);
+
+        public void IncTo(long value, long? timestamp)
+        {
+            _value.IncTo(value);
+            TrackObservation(timestamp);
+        }
+
         public void Set(long val)
         {
             Set(val, null);
@@ -56,6 +65,15 @@ namespace Prometheus.Client
         public void Dec(long decrement, long? timestamp)
         {
             IncInternal(-decrement, timestamp);
+        }
+
+        public void DecTo(long value)
+            => DecTo(value, null);
+
+        public void DecTo(long value, long? timestamp)
+        {
+            _value.DecTo(value);
+            TrackObservation(timestamp);
         }
 
         public long Value => _value.Value;

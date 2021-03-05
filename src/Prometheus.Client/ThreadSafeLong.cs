@@ -21,5 +21,39 @@ namespace Prometheus.Client
         {
             Interlocked.Add(ref _value, increment);
         }
+
+        public void IncTo(long value)
+        {
+            var currentValue = Interlocked.Read(ref _value);
+
+            while (true)
+            {
+                if (currentValue >= value)
+                    return;
+
+                var lastValue = Interlocked.CompareExchange(ref _value, value, currentValue);
+                if (lastValue == currentValue)
+                    return;
+
+                currentValue = lastValue;
+            }
+        }
+
+        public void DecTo(long value)
+        {
+            var currentValue = Interlocked.Read(ref _value);
+
+            while (true)
+            {
+                if (currentValue <= value)
+                    return;
+
+                var lastValue = Interlocked.CompareExchange(ref _value, value, currentValue);
+                if (lastValue == currentValue)
+                    return;
+
+                currentValue = lastValue;
+            }
+        }
     }
 }
