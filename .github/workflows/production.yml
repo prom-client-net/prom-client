@@ -1,4 +1,4 @@
-name: CI
+name: CI Production
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  build-publish-prod:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout

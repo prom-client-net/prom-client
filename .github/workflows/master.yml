@@ -1,4 +1,4 @@
-name: CI
+name: CI Master
 
 on:
   push:
@@ -33,6 +33,5 @@ jobs:
           name: nupkg
           path: artifacts/*
       - name: Publish to GitHub
-        run: |
-          dotnet tool install -g gpr --no-cache -v q
-          gpr push "artifacts/*.nupkg" -k ${{ secrets.GH_DEPLOY_KEY }} || true   
+        run: dotnet nuget push "artifacts/*.nupkg" -s "github" -k ${{ secrets.GH_DEPLOY_KEY }} --skip-duplicate
+  
