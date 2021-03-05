@@ -33,5 +33,5 @@ jobs:
           name: nupkg
           path: artifacts/*
       - name: Publish to GitHub
-        run: dotnet nuget push "artifacts/*.nupkg" -s "github" -k ${{ secrets.GH_DEPLOY_KEY }} --skip-duplicate
+        run: dotnet nuget push "artifacts/*.nupkg" -s https://nuget.pkg.github.com/PrometheusClientNet/index.json -k ${{ secrets.GH_DEPLOY_KEY }} --skip-duplicate
   
