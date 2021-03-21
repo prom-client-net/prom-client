@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{7847B574-8
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		.ruleset = .ruleset
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		Prometheus.Client.sln.DotSettings = Prometheus.Client.sln.DotSettings
 		Prometheus.Client.snk = Prometheus.Client.snk
 		README.md = README.md
 		stylecop.json = stylecop.json
+		.ruleset = .ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FE42C2D5-9D20-44A2-A9ED-477527A832AD}"

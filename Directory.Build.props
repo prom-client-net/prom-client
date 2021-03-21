@@ -1,16 +1,6 @@
 <Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <VersionPrefix>4.4.0</VersionPrefix>
-    <Description>.NET client for Prometheus</Description>
-    <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
-    <Authors>Serge K, Oleksandr Poliakov</Authors>
-    <PackageProjectUrl>https://github.com/PrometheusClientNet/Prometheus.Client</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/PrometheusClientNet/Prometheus.Client</RepositoryUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -20,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)stylecop.json">
-      <Link>Properties\stylecop.json</Link>
+      <Link>stylecop.json</Link>
     </AdditionalFiles>
   </ItemGroup>
   <PropertyGroup>

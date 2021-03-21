@@ -10,20 +10,23 @@
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
-Supports: 
+Supports:
 <img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>
 <img src="https://img.shields.io/badge/.netstandard-2.1-green.svg"></img>
 
 It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
+
 - Keep possibility of rapid development.
 - Extensibility is one of the core values, together with performance and minimal allocation.
 - We are open for suggestions and new ideas, contribution is always welcomed.
 
 ## Performance comparison with prometheus-net
+
 ![General use case benchmarks](/docs/benchmarks/generalcase.png)
 Find more details on [benchmarks description](/docs/benchmarks/GeneralUseCase.md)
 
 ## Installation
+
 ```shell script
 dotnet add package Prometheus.Client
 ```
@@ -34,9 +37,9 @@ dotnet add package Prometheus.Client
 
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
-
 ## Quick start:
-1) Add IMetricFactory and ICollectorRegistry into DI container with extension library Prometheus.Client.DependencyInjection 
+
+1) Add IMetricFactory and ICollectorRegistry into DI container with extension library Prometheus.Client.DependencyInjection
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -155,6 +158,7 @@ counter.WithLabels("POST", "/cancel").Inc();
 ```
 
 Since v4 there is alternative new way to provide a labels via ValueTuple that allow to reduce memory allocation:
+
 ```c#
 var counter = metricFactory.CreateCounter("myCounter", "help text", labelNames: ("method", "endpoint"));
 counter.WithLabels(("GET", "/")).Inc();
@@ -162,30 +166,37 @@ counter.WithLabels(("POST", "/cancel")).Inc();
 ```
 
 ## Extensions
-	
-AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)	
+
+AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)
+
 ```shell script
 dotnet add package Prometheus.Client.AspNetCore
 ```
+
 Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
+
 ```shell script
 dotnet add package Prometheus.Client.MetricServer
 ```
-	
+
 Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
+
 ```shell script
 dotnet add package Prometheus.Client.MetricPusher
 ```
+
 Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
+
 ```shell script
 dotnet add package Prometheus.Client.HttpRequestDurations
 ```
+
 ## Contribute
 
 Contributions to the package are always welcome!
 
-* Report any bugs or issues you find on the [issue tracker](https://github.com/PrometheusClientNet/Prometheus.Client/issues).
-* You can grab the source code at the package's [git repository](https://github.com/PrometheusClientNet/Prometheus.Client).
+- Report any bugs or issues you find on the [issue tracker](https://github.com/PrometheusClientNet/Prometheus.Client/issues).
+- You can grab the source code at the package's [git repository](https://github.com/PrometheusClientNet/Prometheus.Client).
 
 ## Support
 
@@ -196,6 +207,7 @@ I would also very much appreciate your support:
 <a href="https://www.patreon.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" alt="Support me on Patreon"></a>
 
 ## JetBrains - you're cool!
+
 We much appreciate free Rider's licenses provided by JetBrains to support our library.
 
 ## License

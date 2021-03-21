@@ -2,6 +2,16 @@
   <PropertyGroup>
     <AssemblyTitle>Prometheus.Client</AssemblyTitle>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <VersionPrefix>4.4.0</VersionPrefix>
+    <Description>.NET client for Prometheus</Description>
+    <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
+    <Authors>Serge K, Oleksandr Poliakov</Authors>
+    <PackageProjectUrl>https://github.com/PrometheusClientNet/Prometheus.Client</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/PrometheusClientNet/Prometheus.Client</RepositoryUrl>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
     <AssemblyName>Prometheus.Client</AssemblyName>
     <PackageId>Prometheus.Client</PackageId>
     <PackageTags>prometheus;metrics</PackageTags>
