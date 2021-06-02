@@ -18,9 +18,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>Full</DebugType>
-  </PropertyGroup>
   <ItemGroup>
     <None Include="../../icon.png">
       <Pack>true</Pack>
