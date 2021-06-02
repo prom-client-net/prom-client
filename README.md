@@ -33,7 +33,7 @@ dotnet add package Prometheus.Client
 
 ## Configuration
 
-[Examples](https://github.com/prom-client-net/prom-client-examples)
+[Examples](https://github.com/prom-client-net/prom-examples)
 
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
