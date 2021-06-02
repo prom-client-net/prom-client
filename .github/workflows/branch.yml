@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
       - "master"
+  pull_request:
+    branches:
+      - "master"
 
 jobs:
   build-branch:
@@ -19,6 +22,6 @@ jobs:
       - name: 🏭 Build
         run: dotnet build --no-restore -c Release
       - name: 🧪 Tests
-        run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: ☢ Publish to Codecov
         uses: codecov/codecov-action@v1
