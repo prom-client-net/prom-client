@@ -2,17 +2,13 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-[![Gitter](https://img.shields.io/gitter/room/PrometheusClientNet/community.svg)](https://gitter.im/PrometheusClientNet/community)
-
-[![CodeFactor](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client/badge)](https://www.codefactor.io/repository/github/prometheusclientnet/prometheus.client)
-[![CI Master](https://github.com/PrometheusClientNet/Prometheus.Client/actions/workflows/master.yml/badge.svg)](https://github.com/PrometheusClientNet/Prometheus.Client/actions/workflows/master.yml?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
 
+[![CodeFactor](https://www.codefactor.io/repository/github/prom-client-net/prometheus.client/badge)](https://www.codefactor.io/repository/github/prom-client-net/prometheus.client)
+[![CI](https://img.shields.io/github/workflow/status/prom-client-net/prom-client/master?label=CI&logo=githubg)](https://github.com/prom-client-net/prom-client/actions/workflows/master.yml)
+[![codecov](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client)
+
 .NET Client library for [prometheus.io](https://prometheus.io/)  
-Supports:
-<img src="https://img.shields.io/badge/.netstandard-2.0-green.svg"></img>
-<img src="https://img.shields.io/badge/.netstandard-2.1-green.svg"></img>
 
 It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
 
