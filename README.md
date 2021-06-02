@@ -1,12 +1,16 @@
+[bmac]: https://www.buymeacoffee.com/phnx47
+[ko-fi]: https://ko-fi.com/phnx47
+[patreon]: https://www.patreon.com/phnx47
+
 # Prometheus.Client
 
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT) 
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/prom-client-net/prom-client/badge)](https://www.codefactor.io/repository/github/prom-client-net/prometheus.client)
 [![CI](https://img.shields.io/github/workflow/status/prom-client-net/prom-client/master?label=CI&logo=githubg)](https://github.com/prom-client-net/prom-client/actions/workflows/master.yml)
-[![codecov](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client/branch/master/graph/badge.svg)](https://codecov.io/gh/PrometheusClientNet/Prometheus.Client)
+[![codecov](https://codecov.io/gh/prom-client-net/prom-client/branch/master/graph/badge.svg)](https://codecov.io/gh/prom-client-net/prom-client)
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
 
@@ -29,11 +33,11 @@ dotnet add package Prometheus.Client
 
 ## Configuration
 
-[Examples](https://github.com/PrometheusClientNet/Prometheus.Client.Examples)
+[Examples](https://github.com/prom-client-net/prom-client-examples)
 
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
-## Quick start:
+## Quick start
 
 1) Add IMetricFactory and ICollectorRegistry into DI container with extension library Prometheus.Client.DependencyInjection
 
@@ -163,25 +167,25 @@ counter.WithLabels(("POST", "/cancel")).Inc();
 
 ## Extensions
 
-AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/PrometheusClientNet/Prometheus.Client.AspNetCore)
+AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/prom-client-net/prom-client-aspnetcore)
 
 ```shell script
 dotnet add package Prometheus.Client.AspNetCore
 ```
 
-Standalone host: [Prometheus.Client.MetricServer](https://github.com/PrometheusClientNet/Prometheus.Client.MetricServer)
+Standalone host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
 
 ```shell script
 dotnet add package Prometheus.Client.MetricServer
 ```
 
-Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/PrometheusClientNet/Prometheus.Client.MetricPusher)
+Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher)
 
 ```shell script
 dotnet add package Prometheus.Client.MetricPusher
 ```
 
-Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/PrometheusClientNet/Prometheus.Client.HttpRequestDurations)
+Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations)
 
 ```shell script
 dotnet add package Prometheus.Client.HttpRequestDurations
@@ -191,16 +195,18 @@ dotnet add package Prometheus.Client.HttpRequestDurations
 
 Contributions to the package are always welcome!
 
-- Report any bugs or issues you find on the [issue tracker](https://github.com/PrometheusClientNet/Prometheus.Client/issues).
-- You can grab the source code at the package's [git repository](https://github.com/PrometheusClientNet/Prometheus.Client).
+- Report any bugs or issues you find on the [issue tracker](https://github.com/prom-client-net/prom-client/issues).
+- You can grab the source code at the package's [git repository](https://github.com/prom-client-net/prom-client).
 
 ## Support
 
-I would also very much appreciate your support:
+If you like what I'm accomplishing, feel free to buy me a coffee
 
-<a href="https://www.buymeacoffee.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/bmac0.png" alt="Buy Me A Coffee"></a>
-<a href="https://ko-fi.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/kofi0.png" alt="Support me on ko-fi"></a>
-<a href="https://www.patreon.com/phnx47"><img width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" alt="Support me on Patreon"></a>
+[<img align="left" alt="phnx47 | Buy Me a Coffe" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/bmac0.png" />][bmac]
+[<img align="left" alt="phnx47 | Kofi" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/kofi0.png" />][ko-fi]
+[<img align="left" alt="phnx47 | Patreon" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" />][patreon]
+
+&nbsp;
 
 ## JetBrains - you're cool!
 
