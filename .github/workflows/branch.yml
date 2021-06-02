@@ -1,27 +1,24 @@
-name: CI Branch
+name: 💿 CI Branch
 
 on:
   push:
-    branches:
-      - '*'
-      - '!master'
-    tags:
-      - '!refs/tags/*'
-  pull_request:
-    branches:
-      - master
+    branches-ignore:
+      - "master"
 
 jobs:
   build-branch:
+    name: 🏭 Build Branch
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-      - name: Restore
+      - name: 🚚 Checkout
+        uses: actions/checkout@master
+      - name: 🛠 Setup .NET Core
+        uses: actions/setup-dotnet@master
+      - name: ⚙ Restore
         run: dotnet restore
-      - name: Tests
+      - name: 🏭 Build
+        run: dotnet build --no-restore -c Release
+      - name: 🧪 Tests
         run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      - name: Publish to Codecov
+      - name: ☢ Publish to Codecov
         uses: codecov/codecov-action@v1

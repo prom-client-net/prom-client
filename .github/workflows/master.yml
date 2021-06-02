@@ -1,37 +1,35 @@
-name: CI Master
+name: 💿 CI Master
 
 on:
   push:
     branches:
-      - 'master'
-    tags:
-      - '!refs/tags/*'
+      - "master"
 
 jobs:
-  build-publish-dev:
+  build-dev:
+    name: 🏭 Build Dev
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-      - name: Restore
+      - name: 🚚 Checkout
+        uses: actions/checkout@master
+      - name: 🛠 Setup .NET Core
+        uses: actions/setup-dotnet@master
+      - name: ⚙ Restore
         run: dotnet restore
-      - name: Build
+      - name: 🏭 Build
         run: dotnet build --no-restore -c Release
-      - name: Tests
+      - name: 🧪 Tests
         run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-      - name: Publish to Codecov
+      - name: ☢ Publish to Codecov
         uses: codecov/codecov-action@v1
-      - name: Pack artifacts
+      - name: 🗜 Pack artifacts
         run: |
           dotnet pack src/Prometheus.Client -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
           dotnet pack src/Prometheus.Client.Abstractions -c Release --no-build --version-suffix dev-$(date +%s) -o artifacts/
-      - name: Upload artifacts
+      - name: 🗄 Publish artifacts
         uses: actions/upload-artifact@v2
         with:
           name: nupkg
           path: artifacts/*
-      - name: Publish to GitHub
-        run: dotnet nuget push "artifacts/*.nupkg" -s https://nuget.pkg.github.com/PrometheusClientNet/index.json -k ${{ secrets.GH_DEPLOY_KEY }} --skip-duplicate
-  
+      - name: 📦 Publish to GitHub
+        run: dotnet nuget push "artifacts/*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_DEPLOY_KEY }} --skip-duplicate
