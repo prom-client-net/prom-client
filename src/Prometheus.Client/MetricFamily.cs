@@ -34,7 +34,7 @@ namespace Prometheus.Client
             _instanceFactory = instanceFactory;
             _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
             LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
-            if(configuration.LabelNames.Count > 0)
+            if (configuration.LabelNames.Count > 0)
                 _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
         }
 
@@ -85,12 +85,6 @@ namespace Prometheus.Client
             _labelledMetrics.TryRemove(key, out var removed);
 
             return removed;
-        }
-
-        [Obsolete("This method is obsolete. Use WithLabels instead.")]
-        TMetric IMetricFamily<TMetric>.Labels(params string[] labels)
-        {
-            return ((IMetricFamily<TMetric>)this).WithLabels(labels);
         }
 
         public TMetric WithLabels(TLabels labels)
