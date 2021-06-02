@@ -52,7 +52,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateHistogram("testName", "testHelp", "label1", "label2");
 
-            factory.Received().CreateHistogram("testName", "testHelp", false,null, "label1", "label2");
+            factory.Received().CreateHistogram("testName", "testHelp", "label1", "label2");
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Prometheus.Client.Tests
 
             factory.CreateHistogram("testName", "testHelp", true, "label1", "label2");
 
-            factory.Received().CreateHistogram("testName", "testHelp", true, null, "label1", "label2");
+            factory.Received().CreateHistogram("testName", "testHelp", true, "label1", "label2");
         }
 
         [Fact]
