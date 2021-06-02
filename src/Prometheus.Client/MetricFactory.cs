@@ -495,6 +495,45 @@ namespace Prometheus.Client
         }
 
         /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        public IMetricFamily<ISummary> CreateSummary(string name, string help, params string[] labelNames)
+        {
+            return CreateSummary(name, help, false, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        public IMetricFamily<ISummary> CreateSummary(string name, string help, bool includeTimestamp = false, params string[] labelNames)
+        {
+            return CreateSummary(name, help, labelNames, includeTimestamp);
+        }
+
+        /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        /// <param name="objectives">.</param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        public IMetricFamily<ISummary> CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+            int? bufCap)
+        {
+            return CreateSummary(name, help, labelNames, false, objectives, maxAge, ageBuckets, bufCap);
+        }
+
+        /// <summary>
         ///     Create Summary
         /// </summary>
         /// <param name="name">Name.</param>
@@ -572,7 +611,7 @@ namespace Prometheus.Client
             string name,
             string help,
             string[] labelNames,
-            bool includeTimestamp = false,
+            bool includeTimestamp,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,

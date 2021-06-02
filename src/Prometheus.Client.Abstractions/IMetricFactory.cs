@@ -265,6 +265,36 @@ namespace Prometheus.Client
         IMetricFamily<IUntyped> CreateUntyped(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        IMetricFamily<ISummary> CreateSummary(string name, string help, params string[] labelNames);
+
+        /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        IMetricFamily<ISummary> CreateSummary(string name, string help, bool includeTimestamp = false, params string[] labelNames);
+
+        /// <summary>
+        ///     Create Summary.
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Array of label names.</param>
+        /// <param name="objectives">.</param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        IMetricFamily<ISummary> CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+            int? bufCap);
+
+        /// <summary>
         ///     Create Summary
         /// </summary>
         /// <param name="name">Name.</param>
@@ -324,7 +354,7 @@ namespace Prometheus.Client
             string name,
             string help,
             string[] labelNames,
-            bool includeTimestamp = false,
+            bool includeTimestamp,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
