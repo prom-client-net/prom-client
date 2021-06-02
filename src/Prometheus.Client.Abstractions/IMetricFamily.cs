@@ -13,8 +13,6 @@ namespace Prometheus.Client
         TMetric WithLabels(params string[] labels);
         TMetric RemoveLabelled(params string[] labels);
         IReadOnlyList<string> LabelNames { get; }
-        [Obsolete("This method is obsolete. Use WithLabels instead.")]
-        TMetric Labels(params string[] labels);
     }
 
     public interface IMetricFamily<TMetric, TLabels>

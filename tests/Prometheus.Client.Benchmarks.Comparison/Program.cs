@@ -12,17 +12,15 @@ namespace Prometheus.Client.Benchmarks.Comparison
         {
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args,
                 DefaultConfig.Instance
-                    .With(MemoryDiagnoser.Default)
-                    .With(new Job
+                    .AddDiagnoser(MemoryDiagnoser.Default)
+                    .AddJob(new Job
                     {
                         Run =
                         {
-                            RunStrategy = RunStrategy.Monitoring,
-                            IterationCount = 20,
-                            WarmupCount = 2,
+                            RunStrategy = RunStrategy.Monitoring, IterationCount = 20, WarmupCount = 2,
                         }
                     })
-                    .With(BenchmarkLogicalGroupRule.ByCategory)
+                    .AddLogicalGroupRules(BenchmarkLogicalGroupRule.ByCategory)
             );
         }
     }
