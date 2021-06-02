@@ -46,7 +46,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
@@ -61,6 +61,17 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create  Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter> CreateCounter(string name, string help, params string[] labelNames)
+        {
+            return CreateCounter(name, help, false, labelNames);
         }
 
         /// <summary>
@@ -109,7 +120,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
@@ -124,6 +135,17 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create int-based Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, params string[] labelNames)
+        {
+            return CreateCounterInt64(name, help, false, labelNames);
         }
 
         /// <summary>
@@ -172,7 +194,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
@@ -187,6 +209,17 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge> CreateGauge(string name, string help, params string[] labelNames)
+        {
+            return CreateGauge(name, help, false, labelNames);
         }
 
         /// <summary>
@@ -235,7 +268,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<IGauge<long>, TLabels>>(name);
@@ -250,6 +283,17 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, params string[] labelNames)
+        {
+            return CreateGaugeInt64(name, help, false, labelNames);
         }
 
         /// <summary>
@@ -300,7 +344,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
@@ -315,6 +359,29 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IHistogram> CreateHistogram(string name, string help, params string[] labelNames)
+        {
+            return CreateHistogram(name, help, false, null, labelNames);
+        }
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="buckets">Buckets.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, params string[] labelNames)
+        {
+            return CreateHistogram(name, help, false, buckets, labelNames);
         }
 
         /// <summary>
@@ -364,7 +431,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
@@ -379,6 +446,17 @@ namespace Prometheus.Client
             }
 
             return metric;
+        }
+
+        /// <summary>
+        ///     Create Untyped.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        public IMetricFamily<IUntyped> CreateUntyped(string name, string help, params string[] labelNames)
+        {
+            return CreateUntyped(name, help, false, labelNames);
         }
 
         /// <summary>
@@ -450,7 +528,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
@@ -521,7 +599,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             if (LabelsHelper.GetHashCode(expectedNames) != LabelsHelper.GetHashCode(actualNames))
@@ -550,7 +628,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -564,7 +642,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -578,7 +656,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -606,7 +684,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -620,7 +698,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -634,7 +712,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+            where TLabels : struct, IEquatable<TLabels>
 #endif
         {
             return _registry.GetOrAdd(configuration,
@@ -679,7 +757,8 @@ namespace Prometheus.Client
             return GetFactory(ref _summaryFactoryProxies, nameof(CreateSummaryInternal), labelNamesLen);
         }
 
-        private Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>> GetFactory<TConfiguration, TMetric>(ref Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[] cache, string targetMethodName, int labelNamesLen)
+        private Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>> GetFactory<TConfiguration, TMetric>(
+            ref Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>[] cache, string targetMethodName, int labelNamesLen)
             where TConfiguration : MetricConfiguration
             where TMetric : IMetric
         {
@@ -704,7 +783,7 @@ namespace Prometheus.Client
                     var targetMethodCall = Expression.Call(
                         factoryParameter,
                         targetMethodName,
-                        new [] { labelNamesTupleType },
+                        new[] { labelNamesTupleType },
                         configurationParameter);
 
                     tmp[i] = Expression.Lambda<Func<MetricFactory, TConfiguration, IMetricFamily<TMetric>>>(targetMethodCall, factoryParameter, configurationParameter).Compile();

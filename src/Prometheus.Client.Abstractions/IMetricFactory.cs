@@ -28,8 +28,16 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create  Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter> CreateCounter(string name, string help, params string[] labelNames);
 
         /// <summary>
         ///     Create  Counter.
@@ -38,7 +46,7 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter> CreateCounter(string name, string help, bool includeTimestamp = false, params string[]labelNames);
+        IMetricFamily<ICounter> CreateCounter(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
         ///     Create int-based Counter.
@@ -59,8 +67,16 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create int-based Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, params string[] labelNames);
 
         /// <summary>
         ///     Create int-based Counter.
@@ -69,7 +85,7 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
-        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, bool includeTimestamp = false, params string[]labelNames);
+        IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
         ///     Create Gauge.
@@ -90,8 +106,16 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge> CreateGauge(string name, string help, params string[] labelNames);
 
         /// <summary>
         ///     Create Gauge.
@@ -121,8 +145,16 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create int-based Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, params string[] labelNames);
 
         /// <summary>
         ///     Create int-based Gauge.
@@ -154,8 +186,25 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IHistogram> CreateHistogram(string name, string help, params string[] labelNames);
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="buckets">Buckets.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, params string[] labelNames);
 
         /// <summary>
         ///     Create Histogram.
@@ -186,8 +235,16 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
+
+        /// <summary>
+        ///     Create Untyped.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelNames">Label names</param>
+        IMetricFamily<IUntyped> CreateUntyped(string name, string help, params string[] labelNames);
 
         /// <summary>
         ///     Create Untyped.
@@ -240,7 +297,7 @@ namespace Prometheus.Client
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
-        where TLabels : struct, IEquatable<TLabels>;
+            where TLabels : struct, IEquatable<TLabels>;
 #endif
 
         /// <summary>
