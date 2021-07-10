@@ -1,14 +1,13 @@
 <Project>
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>9.0</LangVersion>
+    <Authors>prom-client-net contributors</Authors>
+    <Copyright>Copyright © prom-client-net</Copyright>
     <VersionPrefix>4.4.0</VersionPrefix>
     <Description>.NET client for Prometheus</Description>
-    <Copyright>2020 © Serge K, Oleksandr Poliakov</Copyright>
-    <Authors>Serge K, Oleksandr Poliakov</Authors>
-    <PackageProjectUrl>https://github.com/PrometheusClientNet/Prometheus.Client</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/PrometheusClientNet/Prometheus.Client</RepositoryUrl>
+    <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
