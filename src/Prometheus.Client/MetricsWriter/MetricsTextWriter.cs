@@ -76,7 +76,7 @@ namespace Prometheus.Client.MetricsWriter
                 _currentMetricEncoded = Write(_currentMetricName);
             else
                 Write(_currentMetricEncoded.AsSpan());
-            
+
             Write(_tokenSeparator);
             Write(EscapeValue(help));
             Write(_newLine);

@@ -3,6 +3,12 @@
     <LangVersion>9.0</LangVersion>
     <Authors>prom-client-net contributors</Authors>
     <Copyright>Copyright © prom-client-net</Copyright>
+    <VersionPrefix>4.5.0</VersionPrefix>
+
+
+
+    <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
+
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
