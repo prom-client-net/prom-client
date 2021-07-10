@@ -11,22 +11,27 @@ namespace Prometheus.Client.Collectors.ProcessStats
     /// </summary>
     public class ProcessCollector : ICollector
     {
-        private const string _cpuSecondsTotalName = "process_cpu_seconds_total";
-        private const string _virtualBytesName = "process_virtual_bytes";
-        private const string _workingSetName = "process_working_set";
-        private const string _privateBytesName = "process_private_bytes";
-        private const string _numThreadsName = "process_num_threads";
-        private const string _processIdName = "process_processid";
-        private const string _startTimeSecondsName = "process_start_time_seconds";
+        private readonly string _cpuSecondsTotalName;
+        private readonly string _virtualBytesName;
+        private readonly string _workingSetName;
+        private readonly string _privateBytesName;
+        private readonly string _numThreadsName;
+        private readonly string _processIdName;
+        private readonly string _startTimeSecondsName;
 
         private readonly Process _process;
         private readonly double _processStartTime;
 
-        /// <summary>
-        ///     Constructors
-        /// </summary>
-        public ProcessCollector(Process process)
+        public ProcessCollector(Process process, string prefixName = "")
         {
+            _cpuSecondsTotalName = prefixName + "process_cpu_seconds_total";
+            _virtualBytesName = prefixName + "process_virtual_bytes";
+            _workingSetName = prefixName + "process_working_set";
+            _privateBytesName = prefixName + "process_private_bytes";
+            _numThreadsName = prefixName + "process_num_threads";
+            _processIdName = prefixName + "process_processid";
+            _startTimeSecondsName = prefixName + "process_start_time_seconds";
+
             _process = process;
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
