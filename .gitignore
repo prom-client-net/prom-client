@@ -8,3 +8,4 @@ bin
 obj
 BenchmarkDotNet.Artifacts
 *.opencover.xml
+*.orig
