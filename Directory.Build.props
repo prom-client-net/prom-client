@@ -3,7 +3,7 @@
     <LangVersion>9.0</LangVersion>
     <Authors>prom-client-net contributors</Authors>
     <Copyright>Copyright © prom-client-net</Copyright>
-    <VersionPrefix>4.5.0</VersionPrefix>
+    <VersionPrefix>4.5.1</VersionPrefix>
     <Description>.NET client for Prometheus</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>

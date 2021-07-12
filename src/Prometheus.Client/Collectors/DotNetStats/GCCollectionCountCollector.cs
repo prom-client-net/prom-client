@@ -10,7 +10,12 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private readonly string _name;
         private readonly string[] _genNames;
 
-        public GCCollectionCountCollector(string prefixName = "")
+        public GCCollectionCountCollector()
+            : this("")
+        {
+        }
+
+        public GCCollectionCountCollector(string prefixName)
         {
             _name = prefixName + "dotnet_collection_count_total";
             Configuration = new CollectorConfiguration(nameof(GCCollectionCountCollector));

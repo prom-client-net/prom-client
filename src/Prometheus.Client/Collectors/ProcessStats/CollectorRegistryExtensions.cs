@@ -4,7 +4,12 @@ namespace Prometheus.Client.Collectors.ProcessStats
 {
     public static class CollectorRegistryExtensions
     {
-        public static ICollectorRegistry UseProcessStats(this ICollectorRegistry registry, string prefixName = "")
+        public static ICollectorRegistry UseProcessStats(this ICollectorRegistry registry)
+        {
+            return UseProcessStats(registry, "");
+        }
+
+        public static ICollectorRegistry UseProcessStats(this ICollectorRegistry registry, string prefixName)
         {
             registry.Add(new ProcessCollector(Process.GetCurrentProcess(), prefixName));
 
