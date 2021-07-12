@@ -22,7 +22,12 @@ namespace Prometheus.Client.Collectors.ProcessStats
         private readonly Process _process;
         private readonly double _processStartTime;
 
-        public ProcessCollector(Process process, string prefixName = "")
+        public ProcessCollector(Process process)
+            : this(process, "")
+        {
+        }
+
+        public ProcessCollector(Process process, string prefixName)
         {
             _cpuSecondsTotalName = prefixName + "process_cpu_seconds_total";
             _virtualBytesName = prefixName + "process_virtual_bytes";
@@ -36,16 +41,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
-            MetricNames = new[]
-            {
-                _cpuSecondsTotalName,
-                _virtualBytesName,
-                _workingSetName,
-                _privateBytesName,
-                _numThreadsName,
-                _processIdName,
-                _startTimeSecondsName
-            };
+            MetricNames = new[] { _cpuSecondsTotalName, _virtualBytesName, _workingSetName, _privateBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
         }
 
         public CollectorConfiguration Configuration { get; }

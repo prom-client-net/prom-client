@@ -5,7 +5,12 @@ namespace Prometheus.Client.Collectors
 {
     public static class DefaultCollectors
     {
-        public static ICollectorRegistry UseDefaultCollectors(this ICollectorRegistry registry, string prefixName = "")
+        public static ICollectorRegistry UseDefaultCollectors(this ICollectorRegistry registry)
+        {
+            return UseDefaultCollectors(registry, "");
+        }
+
+        public static ICollectorRegistry UseDefaultCollectors(this ICollectorRegistry registry, string prefixName)
         {
             registry.UseDotNetStats(prefixName);
             registry.UseProcessStats(prefixName);
