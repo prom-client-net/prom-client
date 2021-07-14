@@ -16,7 +16,6 @@ namespace Prometheus.Client.Tests.Mocks
         public IReadOnlyList<string> MetricNames { get; }
         public void Collect(IMetricsWriter writer)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -212,14 +212,14 @@ namespace Prometheus.Client.Collectors
             {
                 collectors = new ICollector[_collectors.Count];
                 _collectors.Values.CopyTo(collectors, 0);
+
+                Array.Sort(collectors, (a, b) => string.Compare(a.Configuration.Name, b.Configuration.Name, StringComparison.OrdinalIgnoreCase));
+                return collectors;
             }
             finally
             {
                 _lock.ExitReadLock();
             }
-
-            Array.Sort(collectors, (a, b) => string.Compare(a.Configuration.Name, b.Configuration.Name, StringComparison.OrdinalIgnoreCase));
-            return collectors;
         }
     }
 }
