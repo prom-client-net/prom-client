@@ -1,6 +1,9 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using NSubstitute;
 using Prometheus.Client.Collectors;
+using Prometheus.Client.MetricsWriter;
 using Prometheus.Client.Tests.Mocks;
 using Xunit;
 
@@ -134,6 +137,41 @@ namespace Prometheus.Client.Tests
 
             Assert.Null(res);
             Assert.True(registry.TryGet("collector", out var _));
+        }
+
+        [Theory]
+        [InlineData(10, 1)]
+        [InlineData(10000, 5)]
+        [InlineData(10000, 10)]
+        [InlineData(10000, 20)]
+        [InlineData(10000, 100)]
+        public async Task AddAndEnumInParallel(int initialMetricsCount, int additionalMetrics)
+        {
+            var writer = Substitute.For<IMetricsWriter>();
+            writer.FlushAsync().ReturnsForAnyArgs((c) => Task.Delay(0));
+
+            var registry = new CollectorRegistry();
+            for (var i = initialMetricsCount; i > 0; i--)
+            {
+                registry.Add(new DummyCollector($"{i}collector", $"metric{i}"));
+            }
+
+            var tasks = Enumerable.Range(0, additionalMetrics)
+                .Select(async i =>
+                {
+                    await Task.Yield();
+                    registry.Add(new DummyCollector($"{i}collector_add", $"metric_add{i}"));
+                }).ToList();
+
+            tasks.Add(registry.CollectToAsync(writer));
+
+            await Task.WhenAll(tasks);
+
+            writer.ClearReceivedCalls();
+
+            await registry.CollectToAsync(writer);
+
+            await writer.Received(initialMetricsCount + additionalMetrics).FlushAsync();
         }
     }
 }
