@@ -196,7 +196,7 @@ Contributions to the package are always welcome!
 
 ## Sponsors
 
-Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/).
+Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/):
 
 <table>
    <tr>
