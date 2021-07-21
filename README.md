@@ -1,7 +1,3 @@
-[bmac]: https://www.buymeacoffee.com/phnx47
-[ko-fi]: https://ko-fi.com/phnx47
-[patreon]: https://www.patreon.com/phnx47
-
 # Prometheus.Client
 
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
@@ -198,19 +194,19 @@ Contributions to the package are always welcome!
 - Report any bugs or issues you find on the [issue tracker](https://github.com/prom-client-net/prom-client/issues).
 - You can grab the source code at the package's [git repository](https://github.com/prom-client-net/prom-client).
 
-## Support
+## Sponsors
 
-If you like what I'm accomplishing, feel free to buy me a coffee
+Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/).
 
-[<img align="left" alt="phnx47 | Buy Me a Coffe" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/bmac0.png" />][bmac]
-[<img align="left" alt="phnx47 | Kofi" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/kofi0.png" />][ko-fi]
-[<img align="left" alt="phnx47 | Patreon" width="32px" src="https://raw.githubusercontent.com/phnx47/files/master/button-sponsors/patreon0.png" />][patreon]
+<table>
+   <tr>
+      <td align="center"><a href="https://github.com/tomkerkhove"><img src="https://avatars.githubusercontent.com/u/4345663?v=4" width="100px;" alt=""/><br /><sub><b>Tom Kerkhove</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/promitor"><img src="https://avatars.githubusercontent.com/u/53140212?s=200&v=4" width="100px;" alt=""/><br /><sub><b>Promitor</b></sub></a><br /></td>
+   </tr>
+</table>
 
-&nbsp;
+[JetBrains](https://www.jetbrains.com/) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
 
-## JetBrains - you're cool!
-
-We much appreciate free Rider's licenses provided by JetBrains to support our library.
 
 ## License
 
