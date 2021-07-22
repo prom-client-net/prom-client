@@ -194,7 +194,7 @@ Contributions to the package are always welcome!
 - Report any bugs or issues you find on the [issue tracker](https://github.com/prom-client-net/prom-client/issues).
 - You can grab the source code at the package's [git repository](https://github.com/prom-client-net/prom-client).
 
-## Sponsors
+## Supporters
 
 Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/):
 
