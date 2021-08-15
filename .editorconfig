@@ -7,7 +7,6 @@ indent_style = space
 max_line_length = 180
 insert_final_newline = true
 
-# XML
 [{*.csproj, *.props, .ruleset}]
 indent_size = 2
 
