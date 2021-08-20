@@ -14,14 +14,14 @@ namespace Prometheus.Client.Collectors
         private readonly ReaderWriterLockSlim _lock;
         private readonly HashSet<string> _usedMetricNames;
         private readonly Dictionary<string, ICollector> _collectors;
-        private Lazy<IEnumerable<ICollector>> _enumerableCollectors;
+        private IEnumerable<ICollector> _enumerableCollectors;
 
         public CollectorRegistry()
         {
             _lock = new ReaderWriterLockSlim();
             _usedMetricNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             _collectors = new Dictionary<string, ICollector>();
-            _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+            _enumerableCollectors = null;
         }
 
         public void Dispose()
@@ -155,7 +155,7 @@ namespace Prometheus.Client.Collectors
         public async Task CollectToAsync(IMetricsWriter writer)
         {
             var wrapped = new MetricWriterWrapper(writer);
-            foreach (var collector in _enumerableCollectors.Value)
+            foreach (var collector in GetSortedCollectors())
             {
                 wrapped.SetCurrentCollector(collector);
                 collector.Collect(wrapped);
@@ -170,8 +170,7 @@ namespace Prometheus.Client.Collectors
             {
                 _collectors.Remove(key);
                 _usedMetricNames.ExceptWith(collector.MetricNames);
-                if (_enumerableCollectors.IsValueCreated)
-                    _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+                _enumerableCollectors = null;
             }
             finally
             {
@@ -199,21 +198,25 @@ namespace Prometheus.Client.Collectors
 
             _collectors.Add(collector.Configuration.Name, collector);
             _usedMetricNames.UnionWith(collector.MetricNames);
-            if (_enumerableCollectors.IsValueCreated)
-                _enumerableCollectors = new Lazy<IEnumerable<ICollector>>(GetImmutableValueCollection);
+            _enumerableCollectors = null;
         }
 
-        private IEnumerable<ICollector> GetImmutableValueCollection()
+        private IEnumerable<ICollector> GetSortedCollectors()
         {
-            ICollector[] collectors;
+            if (_enumerableCollectors != null)
+            {
+                return _enumerableCollectors;
+            }
 
             _lock.EnterReadLock();
             try
             {
-                collectors = new ICollector[_collectors.Count];
+                var collectors = new ICollector[_collectors.Count];
                 _collectors.Values.CopyTo(collectors, 0);
 
                 Array.Sort(collectors, (a, b) => string.Compare(a.Configuration.Name, b.Configuration.Name, StringComparison.OrdinalIgnoreCase));
+                _enumerableCollectors = collectors;
+
                 return collectors;
             }
             finally
