@@ -216,6 +216,12 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void LabelEmpty()
+        {
+            LabelsHelper.GetHashCode(new string[] { "a", "" });
+        }
+
+        [Fact]
         public void GetHashCode0()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create());
