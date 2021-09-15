@@ -80,7 +80,7 @@ namespace Prometheus.Client
             for (var i = 0; i < values.Count; i++)
             {
                 var val = values[i];
-                if(string.IsNullOrEmpty(val))
+                if(val == null)
                     throw new ArgumentException("Label value cannot be empty");
 
                 result = HashCombine(result, val.GetHashCode());
