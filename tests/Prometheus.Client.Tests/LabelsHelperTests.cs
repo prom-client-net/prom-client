@@ -216,6 +216,32 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
+        public void ShouldAllowEmptyString()
+        {
+            var ex = Record.Exception(() => LabelsHelper.GetHashCode(new [] { string.Empty }));
+            Assert.Null(ex);
+        }
+
+        [Fact]
+        public void ShouldAllowEmptyStringTuple()
+        {
+            var ex = Record.Exception(() => LabelsHelper.GetHashCode(ValueTuple.Create(string.Empty)));
+            Assert.Null(ex);
+        }
+
+        [Fact]
+        public void ThrowsOnNull()
+        {
+            Assert.Throws<ArgumentException>(() => LabelsHelper.GetHashCode(new string[] { null }));
+        }
+
+        [Fact]
+        public void ThrowsOnNullTuple()
+        {
+            Assert.Throws<ArgumentException>(() => LabelsHelper.GetHashCode(ValueTuple.Create<string>(null)));
+        }
+
+        [Fact]
         public void GetHashCode0()
         {
             var tupleCode = LabelsHelper.GetHashCode(ValueTuple.Create());
@@ -249,6 +275,24 @@ namespace Prometheus.Client.Tests
             var arrayCode = LabelsHelper.GetHashCode(new [] {"1", "2", "3", "4", "5", "6", "7", "8"});
 
             Assert.Equal(tupleCode, arrayCode);
+        }
+
+        [Fact]
+        public void GetHashCodeWithEmptyStrings()
+        {
+            var hash1 = LabelsHelper.GetHashCode(new [] { string.Empty, "b" });
+            var hash2 = LabelsHelper.GetHashCode(new [] { "b", string.Empty });
+
+            Assert.NotEqual(hash1, hash2);
+        }
+
+        [Fact]
+        public void GetHashCodeWithEmptyStringsTuple()
+        {
+            var hash1 = LabelsHelper.GetHashCode((string.Empty, "b" ));
+            var hash2 = LabelsHelper.GetHashCode(("b", string.Empty ));
+
+            Assert.NotEqual(hash1, hash2);
         }
     }
 }
