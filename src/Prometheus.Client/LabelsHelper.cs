@@ -264,7 +264,7 @@ namespace Prometheus.Client
             {
                 return HashCodeReducer(values, 0, (item, _, aggregated) =>
                 {
-                    if(string.IsNullOrEmpty(item))
+                    if(item == null)
                         throw new ArgumentException("Label value cannot be empty");
                     return HashCombine(aggregated, item.GetHashCode());
                 });

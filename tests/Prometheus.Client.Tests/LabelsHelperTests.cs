@@ -216,9 +216,18 @@ namespace Prometheus.Client.Tests
         }
 
         [Fact]
-        public void LabelEmpty()
+        public void LabelCanBeEmpty()
         {
+            // Doesn't throw exception
             LabelsHelper.GetHashCode(new string[] { "a", "" });
+            LabelsHelper.GetHashCode(ValueTuple.Create("a", ""));
+        }
+
+        [Fact]
+        public void LabelCannotBeNull()
+        {
+            Assert.Throws<ArgumentException>(() => LabelsHelper.GetHashCode(new string[] {"a", null}));
+            Assert.Throws<ArgumentException>(() => LabelsHelper.GetHashCode(ValueTuple.Create<string, string>("a", null)));
         }
 
         [Fact]
