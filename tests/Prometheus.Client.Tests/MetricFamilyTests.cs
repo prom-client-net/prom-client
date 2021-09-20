@@ -48,7 +48,6 @@ namespace Prometheus.Client.Tests
 
         [Theory]
         [InlineData(null)]
-        [InlineData("")]
         public void ShouldNotAllowEmptyLabelValue_Strings(string wrongLabel)
         {
             var metricFamily = CreateMetricFamily("label1", "label2");
@@ -57,7 +56,6 @@ namespace Prometheus.Client.Tests
 
         [Theory]
         [InlineData(null)]
-        [InlineData("")]
         public void ShouldNotAllowEmptyLabelValue_Tuple(string wrongLabel)
         {
             var metricFamily = CreateMetricFamily(("label1", "label2"));
