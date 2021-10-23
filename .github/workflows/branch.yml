@@ -1,16 +1,13 @@
-name: 💿 CI Branch
+name: 💿 CI PR
 
 on:
-  push:
-    branches-ignore:
-      - "master"
   pull_request:
     branches:
       - "master"
 
 jobs:
-  build-branch:
-    name: 🏭 Build Branch
+  build-pr:
+    name: 🏭 Build PR
     runs-on: ubuntu-20.04
     steps:
       - name: 🚚 Checkout
@@ -20,8 +17,8 @@ jobs:
       - name: ⚙ Restore
         run: dotnet restore
       - name: 🏭 Build
-        run: dotnet build --no-restore -c Release
-      - name: 🧪 Tests
-        run: dotnet test --no-build -c Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet build --no-restore -c Release /p:ContinuousIntegrationBuild=true
+      - name: 🧪 Run tests
+        run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: ☢ Publish to Codecov
         uses: codecov/codecov-action@v2
