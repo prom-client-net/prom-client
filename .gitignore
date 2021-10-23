@@ -1,5 +1,6 @@
 *.user
 *.opencover.xml
+*.orig
 
 .vs
 .vscode
