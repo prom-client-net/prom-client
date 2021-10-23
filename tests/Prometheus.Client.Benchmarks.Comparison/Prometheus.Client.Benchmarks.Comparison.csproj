@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
     <NoWarn>SA1133</NoWarn>
   </PropertyGroup>
@@ -15,7 +16,6 @@
     <ProjectReference Include="..\..\src\Prometheus.Client\Prometheus.Client.csproj" />
   </ItemGroup>
 
-
   <Target Name="DisableLegacyExtantions" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Prometheus.NetStandard'">
@@ -23,6 +23,5 @@
       </ReferencePath>
     </ItemGroup>
   </Target>
-
 
 </Project>

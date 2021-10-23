@@ -20,11 +20,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../icon.png">
-      <Pack>true</Pack>
-      <Visible>false</Visible>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
