@@ -9,6 +9,7 @@
     "@phnx47"
   ],
   "ignoreDeps": [
-    "Microsoft.Extensions.DependencyInjection.Abstractions"
+    "Microsoft.Extensions.DependencyInjection.Abstractions",
+    "Microsoft.SourceLink.GitHub"
   ]
 }
