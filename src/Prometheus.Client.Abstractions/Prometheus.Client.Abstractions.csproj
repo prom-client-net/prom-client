@@ -22,9 +22,6 @@
   <ItemGroup>
     <None Include="..\..\icon.png" Visible="false" Pack="true" PackagePath="" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans;</DefineConstants>
   </PropertyGroup>
