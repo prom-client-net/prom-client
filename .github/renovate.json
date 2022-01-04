@@ -1,6 +1,11 @@
 {
   "extends": [
-    "config:base"
+    ":dependencyDashboard",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":prHourlyLimit2",
+    ":prConcurrentLimit10",
+    "group:monorepos",
+    "workarounds:all"
   ],
   "labels": [
     "dependencies"
