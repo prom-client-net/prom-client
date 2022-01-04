@@ -1,6 +1,6 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Prometheus.Client;
 
 namespace Prometheus.Client.MetricsWriter
 {
@@ -16,8 +16,8 @@ namespace Prometheus.Client.MetricsWriter
 
         IMetricsWriter EndMetric();
 
-        Task CloseWriterAsync();
+        Task CloseWriterAsync(CancellationToken ct = default);
 
-        Task FlushAsync();
+        Task FlushAsync(CancellationToken ct = default);
     }
 }

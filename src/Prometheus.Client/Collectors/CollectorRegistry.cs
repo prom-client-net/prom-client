@@ -152,14 +152,14 @@ namespace Prometheus.Client.Collectors
             return true;
         }
 
-        public async Task CollectToAsync(IMetricsWriter writer)
+        public async Task CollectToAsync(IMetricsWriter writer, CancellationToken ct = default)
         {
             var wrapped = new MetricWriterWrapper(writer);
             foreach (var collector in GetSortedCollectors())
             {
                 wrapped.SetCurrentCollector(collector);
                 collector.Collect(wrapped);
-                await writer.FlushAsync().ConfigureAwait(false);
+                await writer.FlushAsync(ct).ConfigureAwait(false);
             }
         }
 

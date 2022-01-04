@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace Prometheus.Client.MetricsWriter
 {
@@ -188,34 +189,34 @@ namespace Prometheus.Client.MetricsWriter
             return this;
         }
 
-        public Task CloseWriterAsync()
+        public Task CloseWriterAsync(CancellationToken ct = default)
         {
             ValidateState(nameof(CloseWriterAsync), WriterState.None | WriterState.MetricClosed);
             _state = WriterState.Closed;
 
-            return FlushInternalAsync(true);
+            return FlushInternalAsync(true, ct);
         }
 
-        public Task FlushAsync()
+        public Task FlushAsync(CancellationToken ct = default)
         {
             if (_chunks.Count == 0 && _position == 0)
             {
                 return Task.CompletedTask;
             }
 
-            return FlushInternalAsync(false);
+            return FlushInternalAsync(false, ct);
         }
 
-        private async Task FlushInternalAsync(bool freeUpCurrentBuffer)
+        private async Task FlushInternalAsync(bool freeUpCurrentBuffer, CancellationToken ct)
         {
             while (_chunks.Count > 0)
             {
                 var chunk = _chunks.Dequeue();
-                await _stream.WriteAsync(chunk.Array, chunk.Offset, chunk.Count).ConfigureAwait(false);
+                await _stream.WriteAsync(chunk.Array, chunk.Offset, chunk.Count, ct).ConfigureAwait(false);
                 _arrayPool.Return(chunk.Array);
             }
 
-            await _stream.WriteAsync(_buffer, 0, _position).ConfigureAwait(false);
+            await _stream.WriteAsync(_buffer, 0, _position, ct).ConfigureAwait(false);
             if (freeUpCurrentBuffer)
             {
                 _arrayPool.Return(_buffer);
