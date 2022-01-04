@@ -11,10 +11,26 @@
     "dependencies"
   ],
   "assignees": [
-    "@prom-client-net/devs"
+    "@phnx47"
   ],
   "ignoreDeps": [
     "Microsoft.Extensions.DependencyInjection.Abstractions",
     "Microsoft.SourceLink.GitHub"
+  ],
+  "packageRules": [
+    {
+      "automerge": true,
+      "sourceUrlPrefixes": [
+        "https://github.com/xunit"
+      ],
+      "groupName": "xUnit packages"
+    },
+    {
+      "automerge": true,
+      "sourceUrlPrefixes": [
+        "https://github.com/coverlet-coverage"
+      ],
+      "groupName": "coverlet packages"
+    }
   ]
 }
