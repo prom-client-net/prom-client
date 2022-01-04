@@ -37,9 +37,9 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C9643321-CB54-4E2E-B02D-6A6538F3B45F}"
 ProjectSection(SolutionItems) = preProject
-	.github\workflows\branch.yml = .github\workflows\branch.yml
+	.github\workflows\pr.yml = .github\workflows\pr.yml
 	.github\workflows\master.yml = .github\workflows\master.yml
-	.github\workflows\production.yml = .github\workflows\production.yml
+	.github\workflows\prod.yml = .github\workflows\prod.yml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prometheus.Client.Abstractions", "src\Prometheus.Client.Abstractions\Prometheus.Client.Abstractions.csproj", "{9A9877F3-719E-4237-BE84-6008E214B7FD}"
