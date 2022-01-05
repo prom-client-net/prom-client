@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Prometheus.Client.MetricsWriter;
 
@@ -18,6 +19,6 @@ namespace Prometheus.Client.Collectors
 
         bool Remove(ICollector collector);
 
-        Task CollectToAsync(IMetricsWriter writer);
+        Task CollectToAsync(IMetricsWriter writer, CancellationToken ct = default);
     }
 }

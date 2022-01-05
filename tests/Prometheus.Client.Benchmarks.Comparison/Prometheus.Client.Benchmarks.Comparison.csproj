@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
-    <NoWarn>SA1133</NoWarn>
+    <NoWarn>SA1133;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
