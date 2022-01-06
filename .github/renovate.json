@@ -14,6 +14,7 @@
     "@phnx47"
   ],
   "ignoreDeps": [
+    "System.Text.Encodings.Web",
     "Microsoft.Extensions.DependencyInjection.Abstractions",
     "Microsoft.SourceLink.GitHub"
   ],
@@ -21,16 +22,11 @@
     {
       "automerge": true,
       "sourceUrlPrefixes": [
-        "https://github.com/xunit"
+        "https://github.com/coverlet-coverage",
+        "https://github.com/xunit",
+        "https://github.com/microsoft/vstest"
       ],
-      "groupName": "xUnit packages"
-    },
-    {
-      "automerge": true,
-      "sourceUrlPrefixes": [
-        "https://github.com/coverlet-coverage"
-      ],
-      "groupName": "coverlet packages"
+      "groupName": "tests"
     }
   ]
 }
