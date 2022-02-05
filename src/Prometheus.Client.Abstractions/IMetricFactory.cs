@@ -359,5 +359,19 @@ namespace Prometheus.Client
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
             int? bufCap = null);
+
+        void Release(string name);
+
+        void Release<TMetric>(IMetricFamily<TMetric> metricFamily)
+            where TMetric : IMetric;
+
+        void Release<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metricFamily)
+            where TMetric : IMetric
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
+#else
+            where TLabels : struct, IEquatable<TLabels>;
+#endif
+
     }
 }

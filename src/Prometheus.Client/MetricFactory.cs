@@ -631,6 +631,37 @@ namespace Prometheus.Client
             return metric;
         }
 
+        public void Release(string name)
+        {
+            if(string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            _registry.Remove(name);
+        }
+
+        public void Release<TMetric>(IMetricFamily<TMetric> metricFamily)
+            where TMetric : IMetric
+        {
+            if (metricFamily == null)
+                throw new ArgumentNullException(nameof(metricFamily));
+
+            _registry.Remove(metricFamily.Name);
+        }
+
+        public void Release<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metricFamily)
+            where TMetric : IMetric
+#if HasITuple
+            where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+            where TLabels : struct, IEquatable<TLabels>
+#endif
+        {
+            if (metricFamily == null)
+                throw new ArgumentNullException(nameof(metricFamily));
+
+            _registry.Remove(metricFamily.Name);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private TCollector TryGetByName<TCollector>(string name)
         {
