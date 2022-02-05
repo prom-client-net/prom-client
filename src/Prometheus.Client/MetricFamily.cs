@@ -38,6 +38,8 @@ namespace Prometheus.Client
                 _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
         }
 
+        public string Name => _configuration.Name;
+
         public IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled => EnumerateLabelled();
 
         CollectorConfiguration ICollector.Configuration => _configuration;
