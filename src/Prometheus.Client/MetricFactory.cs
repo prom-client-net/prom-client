@@ -633,8 +633,8 @@ namespace Prometheus.Client
 
         public void Release(string name)
         {
-            if(string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
 
             _registry.Remove(name);
         }

@@ -42,7 +42,7 @@ namespace Prometheus.Client.Tests
             var registry = Substitute.For<ICollectorRegistry>();
             var factory = new MetricFactory(registry);
 
-            Assert.Throws<ArgumentNullException>(() => factory.Release(metricName));
+            Assert.Throws<ArgumentException>(() => factory.Release(metricName));
         }
 
         [Fact]
