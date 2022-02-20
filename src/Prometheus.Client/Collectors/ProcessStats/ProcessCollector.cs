@@ -14,7 +14,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
         private readonly string _cpuSecondsTotalName;
         private readonly string _virtualMemoryBytesName;
         private readonly string _workingSetName;
-        private readonly string _privateBytesName;
+        private readonly string _privateMemoryBytesName;
         private readonly string _numThreadsName;
         private readonly string _processIdName;
         private readonly string _startTimeSecondsName;
@@ -32,7 +32,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             _cpuSecondsTotalName = prefixName + "process_cpu_seconds_total";
             _virtualMemoryBytesName = prefixName + "process_virtual_memory_bytes";
             _workingSetName = prefixName + "process_working_set";
-            _privateBytesName = prefixName + "process_private_bytes";
+            _privateMemoryBytesName = prefixName + "process_private_memory_bytes";
             _numThreadsName = prefixName + "process_num_threads";
             _processIdName = prefixName + "process_processid";
             _startTimeSecondsName = prefixName + "process_start_time_seconds";
@@ -41,7 +41,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
-            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetName, _privateBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
+            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetName, _privateMemoryBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
         }
 
         public CollectorConfiguration Configuration { get; }
@@ -64,7 +64,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             writer.WriteSample(_process.WorkingSet64);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_privateBytesName, MetricType.Gauge, "Process private memory size");
+            writer.WriteMetricHeader(_privateMemoryBytesName, MetricType.Gauge, "Process private memory size in bytes");
             writer.WriteSample(_process.PrivateMemorySize64);
             writer.EndMetric();
 
