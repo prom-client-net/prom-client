@@ -16,6 +16,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
         private readonly string _workingSetBytesName;
         private readonly string _privateMemoryBytesName;
         private readonly string _numThreadsName;
+        private readonly string _openHandlesName;
         private readonly string _processIdName;
         private readonly string _startTimeSecondsName;
 
@@ -34,6 +35,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             _workingSetBytesName = prefixName + "process_working_set_bytes";
             _privateMemoryBytesName = prefixName + "process_private_memory_bytes";
             _numThreadsName = prefixName + "process_num_threads";
+            _openHandlesName = prefixName + "process_open_handles";
             _processIdName = prefixName + "process_processid";
             _startTimeSecondsName = prefixName + "process_start_time_seconds";
 
@@ -41,7 +43,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
-            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetBytesName, _privateMemoryBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
+            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetBytesName, _privateMemoryBytesName, _numThreadsName, _openHandlesName, _processIdName, _startTimeSecondsName };
         }
 
         public CollectorConfiguration Configuration { get; }
@@ -70,6 +72,10 @@ namespace Prometheus.Client.Collectors.ProcessStats
 
             writer.WriteMetricHeader(_numThreadsName, MetricType.Gauge, "Total number of threads");
             writer.WriteSample(_process.Threads.Count);
+            writer.EndMetric();
+
+            writer.WriteMetricHeader(_openHandlesName, MetricType.Gauge, "Number of open handles");
+            writer.WriteSample(_process.HandleCount);
             writer.EndMetric();
 
             writer.WriteMetricHeader(_processIdName, MetricType.Gauge, "Process ID");
