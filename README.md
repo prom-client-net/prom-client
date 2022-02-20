@@ -199,7 +199,7 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
 
 <table>
    <tr>
-      <td style="text-align: center"><a href="https://github.com/promitor"><img src="https://avatars.githubusercontent.com/u/53140212?s=200&v=4" width="100px;" alt=""/><br /><sub><b>Promitor</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/promitor"><img src="https://avatars.githubusercontent.com/u/53140212?s=200&v=4" width="100px;" alt=""/><br /><sub><b>Promitor</b></sub></a><br /></td>
    </tr>
 </table>
 
