@@ -24,26 +24,33 @@ namespace Prometheus.Client.Collectors.ProcessStats
         private readonly double _processStartTime;
 
         public ProcessCollector(Process process)
-            : this(process, "")
+            : this(process, string.Empty)
         {
         }
 
         public ProcessCollector(Process process, string prefixName)
         {
+            _processIdName = prefixName + "process_processid";
+
             _cpuSecondsTotalName = prefixName + "process_cpu_seconds_total";
+            _startTimeSecondsName = prefixName + "process_start_time_seconds";
+
             _virtualMemoryBytesName = prefixName + "process_virtual_memory_bytes";
             _workingSetBytesName = prefixName + "process_working_set_bytes";
             _privateMemoryBytesName = prefixName + "process_private_memory_bytes";
+
             _numThreadsName = prefixName + "process_num_threads";
             _openHandlesName = prefixName + "process_open_handles";
-            _processIdName = prefixName + "process_processid";
-            _startTimeSecondsName = prefixName + "process_start_time_seconds";
 
             _process = process;
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
-            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetBytesName, _privateMemoryBytesName, _numThreadsName, _openHandlesName, _processIdName, _startTimeSecondsName };
+            MetricNames = new[]
+            {
+                _processIdName, _cpuSecondsTotalName, _startTimeSecondsName, _virtualMemoryBytesName, _workingSetBytesName, _privateMemoryBytesName, _numThreadsName,
+                _openHandlesName
+            };
         }
 
         public CollectorConfiguration Configuration { get; }
@@ -54,8 +61,16 @@ namespace Prometheus.Client.Collectors.ProcessStats
         {
             _process.Refresh();
 
+            writer.WriteMetricHeader(_processIdName, MetricType.Gauge, "Process ID");
+            writer.WriteSample(_process.Id);
+            writer.EndMetric();
+
             writer.WriteMetricHeader(_cpuSecondsTotalName, MetricType.Counter, "Total user and system CPU time spent in seconds");
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
+            writer.EndMetric();
+
+            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Gauge, "Start time of the process since unix epoch in seconds");
+            writer.WriteSample(_processStartTime);
             writer.EndMetric();
 
             writer.WriteMetricHeader(_virtualMemoryBytesName, MetricType.Gauge, "Process virtual memory size in bytes");
@@ -76,14 +91,6 @@ namespace Prometheus.Client.Collectors.ProcessStats
 
             writer.WriteMetricHeader(_openHandlesName, MetricType.Gauge, "Number of open handles");
             writer.WriteSample(_process.HandleCount);
-            writer.EndMetric();
-
-            writer.WriteMetricHeader(_processIdName, MetricType.Gauge, "Process ID");
-            writer.WriteSample(_process.Id);
-            writer.EndMetric();
-
-            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Gauge, "Start time of the process since unix epoch in seconds");
-            writer.WriteSample(_processStartTime);
             writer.EndMetric();
         }
     }
