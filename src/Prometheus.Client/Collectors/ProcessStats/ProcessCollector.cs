@@ -12,7 +12,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
     public class ProcessCollector : ICollector
     {
         private readonly string _cpuSecondsTotalName;
-        private readonly string _virtualBytesName;
+        private readonly string _virtualMemoryBytesName;
         private readonly string _workingSetName;
         private readonly string _privateBytesName;
         private readonly string _numThreadsName;
@@ -30,7 +30,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
         public ProcessCollector(Process process, string prefixName)
         {
             _cpuSecondsTotalName = prefixName + "process_cpu_seconds_total";
-            _virtualBytesName = prefixName + "process_virtual_bytes";
+            _virtualMemoryBytesName = prefixName + "process_virtual_memory_bytes";
             _workingSetName = prefixName + "process_working_set";
             _privateBytesName = prefixName + "process_private_bytes";
             _numThreadsName = prefixName + "process_num_threads";
@@ -41,7 +41,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             Configuration = new CollectorConfiguration(nameof(ProcessCollector));
 
             _processStartTime = ((DateTimeOffset)_process.StartTime.ToUniversalTime()).ToUnixTimeSeconds();
-            MetricNames = new[] { _cpuSecondsTotalName, _virtualBytesName, _workingSetName, _privateBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
+            MetricNames = new[] { _cpuSecondsTotalName, _virtualMemoryBytesName, _workingSetName, _privateBytesName, _numThreadsName, _processIdName, _startTimeSecondsName };
         }
 
         public CollectorConfiguration Configuration { get; }
@@ -56,7 +56,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_virtualBytesName, MetricType.Gauge, "Process virtual memory size");
+            writer.WriteMetricHeader(_virtualMemoryBytesName, MetricType.Gauge, "Process virtual memory size in bytes");
             writer.WriteSample(_process.VirtualMemorySize64);
             writer.EndMetric();
 
