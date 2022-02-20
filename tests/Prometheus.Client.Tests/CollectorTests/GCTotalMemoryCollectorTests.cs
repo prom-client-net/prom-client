@@ -18,7 +18,7 @@ namespace Prometheus.Client.Tests.CollectorTests
         {
             var collector = new GCTotalMemoryCollector(prefixName);
 
-            Assert.Equal(prefixName + "dotnet_totalmemory", collector.MetricNames.First());
+            Assert.Equal(prefixName + "dotnet_total_memory_bytes", collector.MetricNames.First());
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Prometheus.Client.Tests.CollectorTests
 
             var response = Encoding.UTF8.GetString(stream.ToArray());
 
-            Assert.Contains("# TYPE dotnet_totalmemory gauge", response);
+            Assert.Contains("# TYPE dotnet_total_memory_bytes gauge", response);
         }
 
         [Theory]
@@ -50,7 +50,7 @@ namespace Prometheus.Client.Tests.CollectorTests
 
             var response = Encoding.UTF8.GetString(stream.ToArray());
 
-            Assert.Contains($"# TYPE {prefixName}dotnet_totalmemory gauge", response);
+            Assert.Contains($"# TYPE {prefixName}dotnet_total_memory_bytes gauge", response);
         }
     }
 }
