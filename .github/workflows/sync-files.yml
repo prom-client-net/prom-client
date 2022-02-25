@@ -1,0 +1,21 @@
+name: 📁 Sync Files
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync-files:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 🚚 Checkout
+        uses: actions/checkout@v2
+      - name: 📁 Synchonization
+        uses: BetaHuhn/repo-file-sync-action@v1
+        with:
+          GH_PAT: ${{ secrets.GH_DEPLOY_KEY }}
+          ASSIGNEES: phnx47
+          SKIP_PR: true
+          GIT_USERNAME: github-actions[bot]
+          GIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
