@@ -16,8 +16,7 @@
   ],
   "ignoreDeps": [
     "System.Text.Encodings.Web",
-    "Microsoft.Extensions.DependencyInjection.Abstractions",
-    "Microsoft.SourceLink.GitHub"
+    "Microsoft.Extensions.DependencyInjection.Abstractions"
   ],
   "packageRules": [
     {
