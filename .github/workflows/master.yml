@@ -25,7 +25,7 @@ jobs:
       - name: 🗜 Pack artifacts
         run: dotnet pack --no-build -c Release --version-suffix dev-$(date +%s) -o artifacts/
       - name: 🗄 Publish artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: nupkg
           path: artifacts/*
