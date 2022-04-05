@@ -21,4 +21,4 @@ jobs:
       - name: 🧪 Run tests
         run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
       - name: ☢ Publish to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
