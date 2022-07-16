@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Prometheus.Client.MetricsWriter;
 
+#pragma warning disable CS0618
+
 namespace Prometheus.Client.Collectors.DotNetStats
 {
     public class GCTotalMemoryCollector : ICollector
@@ -11,12 +13,24 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private readonly string _legacyName;
         private readonly bool _addLegacyMetricNames;
 
-        public GCTotalMemoryCollector(bool addLegacyMetricNames = false)
+        public GCTotalMemoryCollector()
+            : this(string.Empty)
+        {
+        }
+
+        public GCTotalMemoryCollector(string prefixName)
+            : this(prefixName, false)
+        {
+        }
+
+        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
+        public GCTotalMemoryCollector(bool addLegacyMetricNames)
             : this(string.Empty, addLegacyMetricNames)
         {
         }
 
-        public GCTotalMemoryCollector(string prefixName, bool addLegacyMetricNames = false)
+        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
+        public GCTotalMemoryCollector(string prefixName, bool addLegacyMetricNames)
         {
             _legacyName = prefixName + "dotnet_totalmemory";
             _name = prefixName + "dotnet_total_memory_bytes";
