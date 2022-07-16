@@ -21,6 +21,22 @@ namespace Prometheus.Client.Tests.CollectorTests
             Assert.Equal(prefixName + "dotnet_total_memory_bytes", collector.MetricNames.First());
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData("123")]
+        [InlineData("promitor_")]
+        [InlineData("myprefix_")]
+        public void Check_MetricNames_WithAddLegacy(string prefixName)
+        {
+            var collector = new GCTotalMemoryCollector(prefixName, true);
+
+            var legacyMetric = collector.MetricNames[0];
+            var metric = collector.MetricNames[1];
+
+            Assert.Equal(prefixName + "dotnet_totalmemory", legacyMetric);
+            Assert.Equal(prefixName + "dotnet_total_memory_bytes", metric);
+        }
+
         [Fact]
         public void Check_Collect_NoPrefix()
         {
