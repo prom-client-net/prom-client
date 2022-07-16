@@ -11,8 +11,8 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private readonly string _legacyName;
         private readonly bool _addLegacyMetricNames;
 
-        public GCTotalMemoryCollector()
-            : this(string.Empty)
+        public GCTotalMemoryCollector(bool addLegacyMetricNames = false)
+            : this(string.Empty, addLegacyMetricNames)
         {
         }
 

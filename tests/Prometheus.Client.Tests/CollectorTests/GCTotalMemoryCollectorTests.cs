@@ -51,6 +51,20 @@ namespace Prometheus.Client.Tests.CollectorTests
             Assert.Contains("# TYPE dotnet_total_memory_bytes gauge", response);
         }
 
+        [Fact]
+        public void Check_Collect_NoPrefix_WithAddLegacy()
+        {
+            using var stream = new MemoryStream();
+            var metricWriter = new MetricsTextWriter(stream);
+            var collector = new GCTotalMemoryCollector(true);
+            collector.Collect(metricWriter);
+            metricWriter.FlushAsync();
+
+            var response = Encoding.UTF8.GetString(stream.ToArray());
+
+            Assert.Contains("# TYPE dotnet_totalmemory gauge", response);
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData("123")]
