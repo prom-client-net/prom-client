@@ -11,7 +11,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private readonly string[] _genNames;
 
         public GCCollectionCountCollector()
-            : this("")
+            : this(string.Empty)
         {
         }
 

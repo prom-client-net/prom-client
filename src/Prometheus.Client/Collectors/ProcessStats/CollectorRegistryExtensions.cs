@@ -6,7 +6,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
     {
         public static ICollectorRegistry UseProcessStats(this ICollectorRegistry registry)
         {
-            return UseProcessStats(registry, "");
+            return UseProcessStats(registry, string.Empty);
         }
 
         public static ICollectorRegistry UseProcessStats(this ICollectorRegistry registry, string prefixName)

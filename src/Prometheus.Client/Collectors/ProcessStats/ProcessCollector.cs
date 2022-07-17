@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Prometheus.Client.MetricsWriter;
 
+#pragma warning disable CS0618
+
 namespace Prometheus.Client.Collectors.ProcessStats
 {
     /// <inheritdoc />
@@ -11,14 +13,25 @@ namespace Prometheus.Client.Collectors.ProcessStats
     /// </summary>
     public class ProcessCollector : ICollector
     {
-        private readonly string _cpuSecondsTotalName;
-        private readonly string _virtualMemoryBytesName;
-        private readonly string _workingSetBytesName;
-        private readonly string _privateMemoryBytesName;
-        private readonly string _numThreadsName;
-        private readonly string _openHandlesName;
         private readonly string _processIdName;
+        private const string _processIdHelp = "Process ID";
+
+        private readonly string _cpuSecondsTotalName;
+        private const string _cpuSecondsTotalHelp = "Total user and system CPU time spent in seconds";
         private readonly string _startTimeSecondsName;
+        private const string _startTimeSecondsHelp = "Start time of the process since unix epoch in seconds";
+
+        private readonly string _virtualMemoryBytesName;
+        private const string _virtualMemoryBytesHelp = "Process virtual memory size in bytes";
+        private readonly string _workingSetBytesName;
+        private const string _workingSetBytesHelp = "Process working set in bytes";
+        private readonly string _privateMemoryBytesName;
+        private const string _privateMemoryBytesHelp = "Process private memory size in bytes";
+
+        private readonly string _numThreadsName;
+        private const string _numThreadsHelp = "Total number of threads";
+        private readonly string _openHandlesName;
+        private const string _openHandlesHelp = "Number of open handles";
 
         private readonly Process _process;
         private readonly double _processStartTime;
@@ -61,35 +74,35 @@ namespace Prometheus.Client.Collectors.ProcessStats
         {
             _process.Refresh();
 
-            writer.WriteMetricHeader(_processIdName, MetricType.Gauge, "Process ID");
+            writer.WriteMetricHeader(_processIdName, MetricType.Gauge, _processIdHelp);
             writer.WriteSample(_process.Id);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_cpuSecondsTotalName, MetricType.Counter, "Total user and system CPU time spent in seconds");
+            writer.WriteMetricHeader(_cpuSecondsTotalName, MetricType.Counter, _cpuSecondsTotalHelp);
             writer.WriteSample(_process.TotalProcessorTime.TotalSeconds);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Gauge, "Start time of the process since unix epoch in seconds");
+            writer.WriteMetricHeader(_startTimeSecondsName, MetricType.Gauge, _startTimeSecondsHelp);
             writer.WriteSample(_processStartTime);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_virtualMemoryBytesName, MetricType.Gauge, "Process virtual memory size in bytes");
+            writer.WriteMetricHeader(_virtualMemoryBytesName, MetricType.Gauge, _virtualMemoryBytesHelp);
             writer.WriteSample(_process.VirtualMemorySize64);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_workingSetBytesName, MetricType.Gauge, "Process working set in bytes");
+            writer.WriteMetricHeader(_workingSetBytesName, MetricType.Gauge, _workingSetBytesHelp);
             writer.WriteSample(_process.WorkingSet64);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_privateMemoryBytesName, MetricType.Gauge, "Process private memory size in bytes");
+            writer.WriteMetricHeader(_privateMemoryBytesName, MetricType.Gauge, _privateMemoryBytesHelp);
             writer.WriteSample(_process.PrivateMemorySize64);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_numThreadsName, MetricType.Gauge, "Total number of threads");
+            writer.WriteMetricHeader(_numThreadsName, MetricType.Gauge, _numThreadsHelp);
             writer.WriteSample(_process.Threads.Count);
             writer.EndMetric();
 
-            writer.WriteMetricHeader(_openHandlesName, MetricType.Gauge, "Number of open handles");
+            writer.WriteMetricHeader(_openHandlesName, MetricType.Gauge, _openHandlesHelp);
             writer.WriteSample(_process.HandleCount);
             writer.EndMetric();
         }
