@@ -73,7 +73,7 @@ namespace Prometheus.Client.Collectors.ProcessStats
             _workingSetBytesName = prefixName + "process_working_set_bytes";
             _legacyWorkingSetBytesName = prefixName + "process_working_set";
             _privateMemoryBytesName = prefixName + "process_private_memory_bytes";
-            _legacyPrivateMemoryBytesName = prefixName + "process_working_set";
+            _legacyPrivateMemoryBytesName = prefixName + "process_private_bytes";
 
             _numThreadsName = prefixName + "process_num_threads";
             _openHandlesName = prefixName + "process_open_handles";
@@ -142,7 +142,6 @@ namespace Prometheus.Client.Collectors.ProcessStats
                 writer.WriteSample(_process.PrivateMemorySize64);
                 writer.EndMetric();
             }
-
 
             writer.WriteMetricHeader(_privateMemoryBytesName, MetricType.Gauge, _privateMemoryBytesHelp);
             writer.WriteSample(_process.PrivateMemorySize64);
