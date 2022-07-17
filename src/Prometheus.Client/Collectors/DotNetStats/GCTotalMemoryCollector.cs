@@ -11,7 +11,10 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private const string _help = "Total known allocated memory in bytes";
         private readonly string _name;
         private readonly string _legacyName;
-        private readonly bool _addLegacyMetricNames;
+        private readonly bool _addLegacyMetrics;
+
+        public CollectorConfiguration Configuration { get; }
+        public IReadOnlyList<string> MetricNames { get; }
 
         public GCTotalMemoryCollector()
             : this(string.Empty)
@@ -23,26 +26,23 @@ namespace Prometheus.Client.Collectors.DotNetStats
         {
         }
 
-        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
-        public GCTotalMemoryCollector(bool addLegacyMetricNames)
-            : this(string.Empty, addLegacyMetricNames)
+        [Obsolete("'addLegacyMetrics' will be removed in future versions")]
+        public GCTotalMemoryCollector(bool addLegacyMetrics)
+            : this(string.Empty, addLegacyMetrics)
         {
         }
 
-        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
-        public GCTotalMemoryCollector(string prefixName, bool addLegacyMetricNames)
+        [Obsolete("'addLegacyMetrics' will be removed in future versions")]
+        public GCTotalMemoryCollector(string prefixName, bool addLegacyMetrics)
         {
             _legacyName = prefixName + "dotnet_totalmemory";
             _name = prefixName + "dotnet_total_memory_bytes";
 
-            _addLegacyMetricNames = addLegacyMetricNames;
+            _addLegacyMetrics = addLegacyMetrics;
 
             Configuration = new CollectorConfiguration(nameof(GCTotalMemoryCollector));
-            MetricNames = _addLegacyMetricNames ? new[] { _legacyName, _name } : new[] { _name };
+            MetricNames = _addLegacyMetrics ? new[] { _legacyName, _name } : new[] { _name };
         }
-
-        public CollectorConfiguration Configuration { get; }
-        public IReadOnlyList<string> MetricNames { get; }
 
         public void Collect(IMetricsWriter writer)
         {
@@ -50,7 +50,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
             writer.WriteSample(GC.GetTotalMemory(false));
             writer.EndMetric();
 
-            if (_addLegacyMetricNames)
+            if (_addLegacyMetrics)
             {
                 writer.WriteMetricHeader(_legacyName, MetricType.Gauge, _help);
                 writer.WriteSample(GC.GetTotalMemory(false));

@@ -16,17 +16,17 @@ namespace Prometheus.Client.Collectors.DotNetStats
             return registry;
         }
 
-        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
-        public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry, bool addLegacyMetricNames)
+        [Obsolete("'addLegacyMetrics' will be removed in future versions")]
+        public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry, bool addLegacyMetrics)
         {
-            return UseDotNetStats(registry, string.Empty, addLegacyMetricNames);
+            return UseDotNetStats(registry, string.Empty, addLegacyMetrics);
         }
 
-        [Obsolete("'addLegacyMetricNames' will be removed in future versions")]
-        public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry, string prefixName, bool addLegacyMetricNames)
+        [Obsolete("'addLegacyMetrics' will be removed in future versions")]
+        public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry, string prefixName, bool addLegacyMetrics)
         {
             registry.Add(new GCCollectionCountCollector(prefixName));
-            registry.Add(new GCTotalMemoryCollector(prefixName, addLegacyMetricNames));
+            registry.Add(new GCTotalMemoryCollector(prefixName, addLegacyMetrics));
 
             return registry;
         }
