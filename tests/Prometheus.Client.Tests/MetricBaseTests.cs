@@ -7,10 +7,10 @@ namespace Prometheus.Client.Tests
     public class MetricBaseTests
     {
         [Theory]
-        [InlineData(1586594808, null, 1586594808)]
-        [InlineData(1586594808, 1586594808, 1586594808)]
-        [InlineData(1586594808, 1586594900, 1586594808)]
-        [InlineData(1586594808, 1586594700, 1586594700)]
+        [InlineData(1586594808L, null, 1586594808L)]
+        [InlineData(1586594808L, 1586594808L, 1586594808L)]
+        [InlineData(1586594808L, 1586594900L, 1586594808L)]
+        [InlineData(1586594808L, 1586594700L, 1586594700L)]
         public void TimestampTests(long now, long? ts, long expectedTs)
         {
             var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true);
