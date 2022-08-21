@@ -2,11 +2,10 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-
 [![CodeFactor](https://www.codefactor.io/repository/github/prom-client-net/prom-client/badge)](https://www.codefactor.io/repository/github/prom-client-net/prom-client)
 [![CI](https://img.shields.io/github/workflow/status/prom-client-net/prom-client/%F0%9F%92%BF%20CI%20Master?label=CI&logo=github)](https://github.com/prom-client-net/prom-client/actions/workflows/master.yml)
 [![codecov](https://codecov.io/gh/prom-client-net/prom-client/branch/master/graph/badge.svg)](https://codecov.io/gh/prom-client-net/prom-client)
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 .NET Client library for [prometheus.io](https://prometheus.io/)  
 
@@ -23,7 +22,7 @@ Find more details on [benchmarks description](/docs/benchmarks/GeneralUseCase.md
 
 ## Installation
 
-```shell script
+```sh
 dotnet add package Prometheus.Client
 ```
 
@@ -128,7 +127,7 @@ summary.Observe(5.3);
 ### Histogram
 
 Histograms track the size and number of events in buckets.
-This allows for aggregatable calculation of quantiles.
+This allows for aggregate calculation of quantiles.
 
 ```c#
 var hist = metricFactory.CreateHistogram("my_histogram", "help text", buckets: new[] { 0, 0.2, 0.4, 0.6, 0.8, 0.9 });
@@ -165,25 +164,25 @@ counter.WithLabels(("POST", "/cancel")).Inc();
 
 AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/prom-client-net/prom-client-aspnetcore)
 
-```shell script
+```sh
 dotnet add package Prometheus.Client.AspNetCore
 ```
 
 Standalone host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
 
-```shell script
+```sh
 dotnet add package Prometheus.Client.MetricServer
 ```
 
 Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher)
 
-```shell script
+```sh
 dotnet add package Prometheus.Client.MetricPusher
 ```
 
 Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations)
 
-```shell script
+```sh
 dotnet add package Prometheus.Client.HttpRequestDurations
 ```
 
@@ -200,7 +199,6 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
 
 <table>
    <tr>
-      <td align="center"><a href="https://github.com/tomkerkhove"><img src="https://avatars.githubusercontent.com/u/4345663?v=4" width="100px;" alt=""/><br /><sub><b>Tom Kerkhove</b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/promitor"><img src="https://avatars.githubusercontent.com/u/53140212?s=200&v=4" width="100px;" alt=""/><br /><sub><b>Promitor</b></sub></a><br /></td>
    </tr>
 </table>

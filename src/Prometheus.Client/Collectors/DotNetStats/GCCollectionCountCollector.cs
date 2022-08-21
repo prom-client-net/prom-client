@@ -10,8 +10,12 @@ namespace Prometheus.Client.Collectors.DotNetStats
         private readonly string _name;
         private readonly string[] _genNames;
 
+        public CollectorConfiguration Configuration { get; }
+
+        public IReadOnlyList<string> MetricNames { get; }
+
         public GCCollectionCountCollector()
-            : this("")
+            : this(string.Empty)
         {
         }
 
@@ -24,10 +28,6 @@ namespace Prometheus.Client.Collectors.DotNetStats
             for (var gen = 0; gen <= GC.MaxGeneration; gen++)
                 _genNames[gen] = gen.ToString();
         }
-
-        public CollectorConfiguration Configuration { get; }
-
-        public IReadOnlyList<string> MetricNames { get; }
 
         public void Collect(IMetricsWriter writer)
         {

@@ -18,7 +18,23 @@ namespace Prometheus.Client.Tests.CollectorTests
         {
             var collector = new GCTotalMemoryCollector(prefixName);
 
-            Assert.Equal(prefixName + "dotnet_totalmemory", collector.MetricNames.First());
+            Assert.Equal(prefixName + "dotnet_total_memory_bytes", collector.MetricNames.First());
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("123")]
+        [InlineData("promitor_")]
+        [InlineData("myprefix_")]
+        public void Check_MetricNames_WithAddLegacy(string prefixName)
+        {
+            var collector = new GCTotalMemoryCollector(prefixName, true);
+
+            var legacyMetric = collector.MetricNames[0];
+            var metric = collector.MetricNames[1];
+
+            Assert.Equal(prefixName + "dotnet_totalmemory", legacyMetric);
+            Assert.Equal(prefixName + "dotnet_total_memory_bytes", metric);
         }
 
         [Fact]
@@ -27,6 +43,20 @@ namespace Prometheus.Client.Tests.CollectorTests
             using var stream = new MemoryStream();
             var metricWriter = new MetricsTextWriter(stream);
             var collector = new GCTotalMemoryCollector();
+            collector.Collect(metricWriter);
+            metricWriter.FlushAsync();
+
+            var response = Encoding.UTF8.GetString(stream.ToArray());
+
+            Assert.Contains("# TYPE dotnet_total_memory_bytes gauge", response);
+        }
+
+        [Fact]
+        public void Check_Collect_NoPrefix_WithAddLegacy()
+        {
+            using var stream = new MemoryStream();
+            var metricWriter = new MetricsTextWriter(stream);
+            var collector = new GCTotalMemoryCollector(true);
             collector.Collect(metricWriter);
             metricWriter.FlushAsync();
 
@@ -50,7 +80,7 @@ namespace Prometheus.Client.Tests.CollectorTests
 
             var response = Encoding.UTF8.GetString(stream.ToArray());
 
-            Assert.Contains($"# TYPE {prefixName}dotnet_totalmemory gauge", response);
+            Assert.Contains($"# TYPE {prefixName}dotnet_total_memory_bytes gauge", response);
         }
     }
 }
