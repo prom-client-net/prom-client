@@ -16,7 +16,17 @@ namespace Prometheus.Client.Tests.CollectorTests
             Assert.True(collectorRegistry.TryGet(nameof(GCCollectionCountCollector), out _));
             Assert.True(collectorRegistry.TryGet(nameof(GCTotalMemoryCollector), out _));
         }
-        
+
+        [Fact]
+        public void UseDotNetStatsWithPrefix_TryGet()
+        {
+            var collectorRegistry = new CollectorRegistry();
+            collectorRegistry.UseDotNetStats("prefix");
+
+            Assert.True(collectorRegistry.TryGet(nameof(GCCollectionCountCollector), out _));
+            Assert.True(collectorRegistry.TryGet(nameof(GCTotalMemoryCollector), out _));
+        }
+
         [Fact]
         public void UseProcessStats_TryGet()
         {
@@ -25,7 +35,16 @@ namespace Prometheus.Client.Tests.CollectorTests
 
             Assert.True(collectorRegistry.TryGet(nameof(ProcessCollector), out _));
         }
-        
+
+        [Fact]
+        public void UseProcessStatsWithPrefix_TryGet()
+        {
+            var collectorRegistry = new CollectorRegistry();
+            collectorRegistry.UseProcessStats("prefix");
+
+            Assert.True(collectorRegistry.TryGet(nameof(ProcessCollector), out _));
+        }
+
         [Fact]
         public void UseDefaultCollectors_TryGet()
         {
@@ -36,7 +55,16 @@ namespace Prometheus.Client.Tests.CollectorTests
             Assert.True(collectorRegistry.TryGet(nameof(GCTotalMemoryCollector), out _));
             Assert.True(collectorRegistry.TryGet(nameof(ProcessCollector), out _));
         }
-        
-        //TODO: add more checks
+
+        [Fact]
+        public void UseDefaultCollectorsWithPrefix_TryGet()
+        {
+            var collectorRegistry = new CollectorRegistry();
+            collectorRegistry.UseDefaultCollectors("prefix");
+
+            Assert.True(collectorRegistry.TryGet(nameof(GCCollectionCountCollector), out _));
+            Assert.True(collectorRegistry.TryGet(nameof(GCTotalMemoryCollector), out _));
+            Assert.True(collectorRegistry.TryGet(nameof(ProcessCollector), out _));
+        }
     }
 }

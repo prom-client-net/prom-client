@@ -8,6 +8,7 @@ namespace Prometheus.Client.Collectors.DotNetStats
         {
             return UseDotNetStats(registry, string.Empty);
         }
+
         public static ICollectorRegistry UseDotNetStats(this ICollectorRegistry registry, string prefixName)
         {
             registry.Add(new GCCollectionCountCollector(prefixName));
