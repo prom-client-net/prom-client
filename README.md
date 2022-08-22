@@ -203,7 +203,7 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
    </tr>
 </table>
 
-[JetBrains](https://www.jetbrains.com/) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
+[JetBrains](https://github.com/jetbrains) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
 
 
 ## License
