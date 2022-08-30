@@ -15,8 +15,7 @@
     "@phnx47"
   ],
   "ignoreDeps": [
-    "System.Text.Encodings.Web",
-    "Microsoft.Extensions.DependencyInjection.Abstractions"
+    "System.Text.Encodings.Web"
   ],
   "packageRules": [
     {
