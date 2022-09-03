@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
 [![CodeFactor](https://www.codefactor.io/repository/github/prom-client-net/prom-client/badge)](https://www.codefactor.io/repository/github/prom-client-net/prom-client)
-[![CI](https://img.shields.io/github/workflow/status/prom-client-net/prom-client/%F0%9F%92%BF%20CI%20Master?label=CI&logo=github)](https://github.com/prom-client-net/prom-client/actions/workflows/master.yml)
+[![CI](https://img.shields.io/github/workflow/status/prom-client-net/prom-client/%F0%9F%92%BF%20CI?label=CI&logo=github)](https://github.com/prom-client-net/prom-client/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/prom-client-net/prom-client/branch/master/graph/badge.svg)](https://codecov.io/gh/prom-client-net/prom-client)
 [![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
