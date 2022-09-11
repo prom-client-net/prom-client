@@ -26,7 +26,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -65,7 +65,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -104,7 +104,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -143,7 +143,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -184,7 +184,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -242,7 +242,7 @@ namespace Prometheus.Client
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -334,7 +334,7 @@ namespace Prometheus.Client
             int? ageBuckets = null,
             int? bufCap = null)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>;
+            where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
@@ -372,6 +372,5 @@ namespace Prometheus.Client
 #else
             where TLabels : struct, IEquatable<TLabels>;
 #endif
-
     }
 }

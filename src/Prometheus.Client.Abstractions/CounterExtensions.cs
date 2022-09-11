@@ -49,7 +49,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment = 1)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -59,7 +59,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment, long timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -69,7 +69,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -79,7 +79,7 @@ namespace Prometheus.Client
 
         public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -89,7 +89,7 @@ namespace Prometheus.Client
 
         public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, long timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -99,7 +99,7 @@ namespace Prometheus.Client
 
         public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -107,7 +107,8 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.IncTo(value, timestamp);
         }
 
-        public static IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)
+        public static IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(this IMetricFactory factory, string name, string help, string labelName,
+            bool includeTimestamp = false)
         {
             return factory.CreateCounter(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }

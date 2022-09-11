@@ -29,7 +29,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -39,7 +39,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val, int timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -49,7 +49,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -57,7 +57,8 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Set(val, timestamp);
         }
 
-        public static IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)
+        public static IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(this IMetricFactory factory, string name, string help, string labelName,
+            bool includeTimestamp = false)
         {
             return factory.CreateUntyped(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }

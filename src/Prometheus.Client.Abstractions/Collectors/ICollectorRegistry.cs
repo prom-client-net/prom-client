@@ -13,7 +13,7 @@ namespace Prometheus.Client.Collectors
 
         TCollector GetOrAdd<TCollector, TConfig>(TConfig config, Func<TConfig, TCollector> collectorFactory)
             where TCollector : class, ICollector
-            where TConfig: CollectorConfiguration;
+            where TConfig : CollectorConfiguration;
 
         ICollector Remove(string name);
 

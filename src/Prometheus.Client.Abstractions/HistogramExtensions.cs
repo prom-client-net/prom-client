@@ -29,7 +29,7 @@ namespace Prometheus.Client
 
         public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -49,7 +49,7 @@ namespace Prometheus.Client
 
         public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -57,7 +57,8 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
 
-        public static IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false, double[] buckets = null)
+        public static IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(this IMetricFactory factory, string name, string help, string labelName,
+            bool includeTimestamp = false, double[] buckets = null)
         {
             return factory.CreateHistogram(name, help, ValueTuple.Create(labelName), includeTimestamp, buckets);
         }

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace Prometheus.Client
 {
     public interface IMetricFamily<TMetric>
-        where TMetric: IMetric
+        where TMetric : IMetric
     {
         string Name { get; }
         TMetric Unlabelled { get; }
@@ -18,7 +18,7 @@ namespace Prometheus.Client
     }
 
     public interface IMetricFamily<TMetric, TLabels>
-        where TMetric: IMetric
+        where TMetric : IMetric
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
