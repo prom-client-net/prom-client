@@ -1,7 +1,7 @@
 namespace Prometheus.Client
 {
     public interface IMetric<out TState> : IMetric
-        where TState: struct
+        where TState : struct
     {
         TState Value { get; }
 
@@ -9,5 +9,6 @@ namespace Prometheus.Client
     }
 
     public interface IMetric
-    {}
+    {
+    }
 }

@@ -49,10 +49,10 @@ namespace Prometheus.Client.MetricsWriter
             IReadOnlyList<string> labelValues
         )
         {
-            if(labelNames == null)
+            if (labelNames == null)
                 throw new ArgumentNullException(nameof(labelNames));
 
-            if(labelValues == null)
+            if (labelValues == null)
                 throw new ArgumentNullException(nameof(labelValues));
 
             if (labelNames.Count != labelValues.Count)

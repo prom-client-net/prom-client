@@ -30,7 +30,7 @@ namespace Prometheus.Client
 
         public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -50,7 +50,7 @@ namespace Prometheus.Client
 
         public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif

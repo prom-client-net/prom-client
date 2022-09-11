@@ -57,7 +57,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -91,7 +91,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -131,7 +131,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -165,7 +165,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -205,7 +205,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -239,7 +239,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -279,7 +279,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -313,7 +313,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -355,7 +355,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -414,7 +414,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -454,7 +454,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -488,7 +488,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -590,7 +590,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -625,7 +625,7 @@ namespace Prometheus.Client
             }
             else
             {
-                ValidateLabelNames(metric.LabelNames, labelNames);
+                ValidateLabelNames(metric, labelNames);
             }
 
             return metric;
@@ -670,40 +670,50 @@ namespace Prometheus.Client
                 if (collector is TCollector metric)
                     return metric;
 
-                ThrowLabelsValidationException();
+                var prop = collector.GetType().GetProperty("LabelNames");
+                if (prop != null)
+                {
+                    var expectedLabels = prop.GetValue(collector);
+                    throw new InvalidOperationException($"Metric name ({name}). Must have same Type. Expected labels {expectedLabels}");
+                }
+
+                throw new InvalidOperationException($"Metric name ({name}). Must have same Type");
             }
 
             return default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ValidateLabelNames<TLabels>(TLabels expectedNames, TLabels actualNames)
+        private static void ValidateLabelNames<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metric, TLabels actualNames)
+            where TMetric : IMetric
 #if HasITuple
             where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
 #endif
         {
-            if (LabelsHelper.GetHashCode(expectedNames) != LabelsHelper.GetHashCode(actualNames))
-                ThrowLabelsValidationException();
+            if (LabelsHelper.GetHashCode(metric.LabelNames) != LabelsHelper.GetHashCode(actualNames))
+            {
+                throw new InvalidOperationException(
+                    $"Metric name ({metric.Name}). Expected labels {metric.LabelNames.ToString()}, but actual labels {actualNames.ToString()}");
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ValidateLabelNames(IReadOnlyList<string> expectedNames, IReadOnlyList<string> actualNames)
+        private static void ValidateLabelNames<TMetric>(IMetricFamily<TMetric> metric, IReadOnlyList<string> actualNames)
+            where TMetric : IMetric
         {
-            if (expectedNames == null && actualNames == null)
+            if (metric.LabelNames == null && actualNames == null)
                 return;
 
-            expectedNames ??= Array.Empty<string>();
+            var expectedNames = metric.LabelNames ?? Array.Empty<string>();
             actualNames ??= Array.Empty<string>();
 
             if (LabelsHelper.GetHashCode(expectedNames) != LabelsHelper.GetHashCode(actualNames))
-                ThrowLabelsValidationException();
-        }
-
-        private static void ThrowLabelsValidationException()
-        {
-            throw new InvalidOperationException("Collector with same name must have same type and same label names");
+            {
+                throw new InvalidOperationException(
+                    $"Metric name ({metric.Name}). Expected labels ({string.Join(", ", expectedNames)}), but actual labels ({string.Join(", ", actualNames)})");
+            }
         }
 
         internal MetricFamily<ICounter, Counter, TLabels, MetricConfiguration> CreateCounterInternal<TLabels>(MetricConfiguration configuration)

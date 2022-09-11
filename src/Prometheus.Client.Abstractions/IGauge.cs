@@ -35,5 +35,6 @@ namespace Prometheus.Client
     }
 
     public interface IGauge : IGauge<double>
-    {}
+    {
+    }
 }

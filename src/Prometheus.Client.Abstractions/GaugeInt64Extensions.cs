@@ -109,7 +109,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment = 1)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -119,7 +119,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment, long timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -129,7 +129,7 @@ namespace Prometheus.Client
 
         public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -169,7 +169,7 @@ namespace Prometheus.Client
 
         public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement = 1)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -189,7 +189,7 @@ namespace Prometheus.Client
 
         public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -229,7 +229,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -239,7 +239,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -249,7 +249,7 @@ namespace Prometheus.Client
 
         public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+            where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
@@ -257,7 +257,8 @@ namespace Prometheus.Client
             metricFamily.Unlabelled.Set(value, timestamp);
         }
 
-        public static IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(this IMetricFactory factory, string name, string help, string labelName, bool includeTimestamp = false)
+        public static IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(this IMetricFactory factory, string name, string help, string labelName,
+            bool includeTimestamp = false)
         {
             return factory.CreateGaugeInt64(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }
