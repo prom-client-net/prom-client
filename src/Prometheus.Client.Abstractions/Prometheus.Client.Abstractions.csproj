@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <VersionPrefix>5.0.1</VersionPrefix>
+    <VersionPrefix>5.1.0</VersionPrefix>
     <Description>.NET client for Prometheus</Description>
     <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
