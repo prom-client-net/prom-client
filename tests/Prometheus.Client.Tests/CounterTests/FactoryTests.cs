@@ -6,18 +6,22 @@ namespace Prometheus.Client.Tests.CounterTests
 {
     public class FactoryTests
     {
-        [Fact]
-        public void ThrowOnNameConflict_Strings()
+        [Theory]
+        [InlineData]
+        [InlineData("label1")]
+        [InlineData("label1", "testlabel")]
+        [InlineData("label1", "label2", "label3")]
+        public void ThrowOnNameConflict_Strings(params string[] labels)
         {
             var registry = new CollectorRegistry();
             var factory = new MetricFactory(registry);
 
-            factory.CreateCounter("test_counter", string.Empty, "label1", "label2");
+            const string name = "test_counter";
+            var expectedLabels = new[] { "label1", "label2" };
+            factory.CreateCounter("test_counter", string.Empty, expectedLabels);
 
-            Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, Array.Empty<string>()));
-            Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, "label1", "testlabel"));
-            Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, new[] { "label1" }));
-            Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, "label1", "label2", "label3"));
+            var ex = Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, labels));
+            Assert.Equal($"Metric name ({name}). Expected labels ({string.Join(", ", expectedLabels)}), but actual labels ({string.Join(", ", labels)})", ex.Message);
         }
 
         [Fact]
