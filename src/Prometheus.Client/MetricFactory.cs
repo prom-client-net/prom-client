@@ -669,8 +669,6 @@ namespace Prometheus.Client
             {
                 if (collector is TCollector metric)
                     return metric;
-
-                ThrowLabelsValidationException();
             }
 
             return default;
