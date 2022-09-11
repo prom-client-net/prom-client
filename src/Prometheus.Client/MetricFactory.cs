@@ -670,6 +670,13 @@ namespace Prometheus.Client
                 if (collector is TCollector metric)
                     return metric;
 
+                var prop = collector.GetType().GetProperty("LabelNames");
+                if (prop != null)
+                {
+                    var expectedLabels = prop.GetValue(collector);
+                    throw new InvalidOperationException($"Metric name ({name}). Must have same Type. Expected labels {expectedLabels}");
+                }
+
                 throw new InvalidOperationException($"Metric name ({name}). Must have same Type");
             }
 

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using Prometheus.Client.Collectors;
 using Xunit;
 
@@ -28,6 +25,20 @@ namespace Prometheus.Client.Tests.CounterTests
         }
 
         [Fact]
+        public void ThrowOnTypeConflict_Strings()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            const string name = "test_counter";
+            var labels = new[] { "label1", "label2" };
+            factory.CreateCounter(name, string.Empty, labels);
+
+            var ex = Assert.Throws<InvalidOperationException>(() => factory.CreateGauge("test_counter", string.Empty, labels));
+            Assert.Equal($"Metric name ({name}). Must have same Type. Expected labels ({string.Join(", ", labels)})", ex.Message);
+        }
+
+        [Fact]
         public void ThrowOnNameConflict_Tuple0()
         {
             var registry = new CollectorRegistry();
@@ -40,7 +51,7 @@ namespace Prometheus.Client.Tests.CounterTests
             var labels = ValueTuple.Create();
             var ex = Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, labels));
 
-            Assert.Equal($"Metric name ({name}). Must have same Type", ex.Message);
+            Assert.Equal($"Metric name ({name}). Must have same Type. Expected labels {expectedLabels}", ex.Message);
         }
 
         [Fact]
@@ -56,7 +67,7 @@ namespace Prometheus.Client.Tests.CounterTests
             var labels = ValueTuple.Create("label1");
             var ex = Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, labels));
 
-            Assert.Equal($"Metric name ({name}). Must have same Type", ex.Message);
+            Assert.Equal($"Metric name ({name}). Must have same Type. Expected labels {expectedLabels}", ex.Message);
         }
 
         [Fact]
@@ -88,7 +99,7 @@ namespace Prometheus.Client.Tests.CounterTests
             var labels = ValueTuple.Create("label1");
             var ex = Assert.Throws<InvalidOperationException>(() => factory.CreateCounter("test_counter", string.Empty, labels));
 
-            Assert.Equal($"Metric name ({name}). Must have same Type", ex.Message);
+            Assert.Equal($"Metric name ({name}). Must have same Type. Expected labels {expectedLabels}", ex.Message);
         }
 
         [Fact]
