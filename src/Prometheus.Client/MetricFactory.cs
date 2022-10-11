@@ -227,6 +227,18 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        public IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(string name, string help, string labelName, bool includeTimestamp = false)
+        {
+            return CreateGauge(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        }
+
+        /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         public IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, params string[] labelNames)

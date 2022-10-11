@@ -127,6 +127,15 @@ namespace Prometheus.Client
         IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, params string[] labelNames);
 
         /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
         ///     Create int-based Gauge.
         /// </summary>
         /// <param name="name">Metric name.</param>
