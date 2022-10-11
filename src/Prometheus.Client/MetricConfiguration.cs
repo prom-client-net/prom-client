@@ -5,7 +5,7 @@ using Prometheus.Client.Collectors;
 
 namespace Prometheus.Client
 {
-    public class MetricConfiguration: CollectorConfiguration
+    public class MetricConfiguration : CollectorConfiguration
     {
         public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp)
             : base(name)
@@ -34,9 +34,9 @@ namespace Prometheus.Client
         public IReadOnlyList<string> LabelNames { get; }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool ValidateLabelName(string labelName)
+        private static bool ValidateLabelName(string labelName)
         {
-            if (labelName.Length >=2 && labelName[0] == '_' && labelName[1] == '_')
+            if (labelName.Length >= 2 && labelName[0] == '_' && labelName[1] == '_')
                 return false;
 
             if (char.IsDigit(labelName[0]))
