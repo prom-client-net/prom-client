@@ -57,7 +57,7 @@ jobs:
         with:
           name: nupkg
       - name: 📦 Publish to GitHub
-        run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_PKG_PAT }} --skip-duplicate
+        run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
   nuget:
     name: 🚀 Deploy to Nuget
     needs: [build]
