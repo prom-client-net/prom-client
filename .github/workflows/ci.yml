@@ -29,9 +29,9 @@ jobs:
       - name: ⚙ Restore
         run: dotnet restore
       - name: 🏭 Build
-        run: dotnet build --no-restore -c Release /p:ContinuousIntegrationBuild=true
+        run: dotnet build --no-restore -c Release -p:ContinuousIntegrationBuild=true
       - name: 🧪 Run tests
-        run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
       - name: ☢ Publish to Codecov
         uses: codecov/codecov-action@v3
       - name: 🗜 Pack Dev NuGet artifacts
@@ -41,6 +41,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: dotnet pack --no-build -c Release -o artifacts/
       - name: 📤 Upload artifacts
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v3
         with:
           name: nupkg
