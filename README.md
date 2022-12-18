@@ -1,13 +1,13 @@
 # Prometheus.Client
 
-[![NuGet](https://img.shields.io/nuget/v/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-[![NuGet](https://img.shields.io/nuget/dt/Prometheus.Client.svg)](https://www.nuget.org/packages/Prometheus.Client)
-[![CodeFactor](https://www.codefactor.io/repository/github/prom-client-net/prom-client/badge)](https://www.codefactor.io/repository/github/prom-client-net/prom-client)
-[![ci](https://img.shields.io/github/actions/workflow/status/prom-client-net/prom-client/ci.yml?branch=master&label=ci&logo=github)](https://github.com/prom-client-net/prom-client/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/prom-client-net/prom-client/branch/master/graph/badge.svg)](https://codecov.io/gh/prom-client-net/prom-client)
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![ci](https://img.shields.io/github/actions/workflow/status/prom-client-net/prom-client/ci.yml?branch=main&label=ci&logo=github&style=flat-square)](https://github.com/prom-client-net/prom-client/actions/workflows/ci.yml)
+[![nuget](https://img.shields.io/nuget/v/Prometheus.Client?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Prometheus.Client)
+[![nuget](https://img.shields.io/nuget/dt/Prometheus.Client?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Prometheus.Client)
+[![codecov](https://img.shields.io/codecov/c/github/prom-client-net/prom-client?logo=codecov&style=flat-square)](https://app.codecov.io/gh/prom-client-net/prom-client)
+[![codefactor](https://img.shields.io/codefactor/grade/github/prom-client-net/prom-client?logo=codefactor&style=flat-square)](https://www.codefactor.io/repository/github/prom-client-net/prom-client)
+[![license](https://img.shields.io/github/license/prom-client-net/prom-client?style=flat-square)](https://github.com/prom-client-net/prom-client/blob/main/LICENSE)
 
-.NET Client library for [prometheus.io](https://prometheus.io/)  
+.NET Client library for [prometheus.io](https://prometheus.io/)
 
 It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
 
@@ -17,8 +17,8 @@ It was started as a fork of [prometheus-net](https://github.com/prometheus-net/p
 
 ## Performance comparison with prometheus-net
 
-![General use case benchmarks](/docs/benchmarks/generalcase.png)
-Find more details on [benchmarks description](/docs/benchmarks/GeneralUseCase.md)
+![General use case benchmarks](https://raw.githubusercontent.com/prom-client-net/prom-client/main/docs/benchmarks/generalcase.png)
+Find more details on [benchmarks description](https://github.com/prom-client-net/prom-client/blob/main/docs/benchmarks/GeneralUseCase.md)
 
 ## Installation
 
@@ -84,7 +84,7 @@ It does not depend of Prometheus.Client.AspNetCore, however together it's very c
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
 {
     app.UsePrometheusServer();
-    app.UsePrometheusRequestDurations(); 
+    app.UsePrometheusRequestDurations();
 }
 ```
 
@@ -204,7 +204,6 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
 </table>
 
 [JetBrains](https://github.com/jetbrains) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
-
 
 ## License
 
