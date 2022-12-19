@@ -2,8 +2,6 @@
 *.opencover.xml
 *.orig
 
-.vs
-.vscode
 .idea
 
 bin
