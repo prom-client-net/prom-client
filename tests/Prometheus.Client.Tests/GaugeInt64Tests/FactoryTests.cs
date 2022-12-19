@@ -119,5 +119,15 @@ namespace Prometheus.Client.Tests.GaugeInt64Tests
             // Cannot compare metrics families, because of different contracts, should check if sample the same
             Assert.Equal(gauge1.Unlabelled, gauge2.Unlabelled);
         }
+
+        [Fact]
+        public void SingleLabel_ConvertToTuple()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateGaugeInt64("metricname", "help", "label");
+            Assert.Equal(typeof(ValueTuple<string>), gauge.LabelNames.GetType());
+        }
     }
 }

@@ -178,6 +178,11 @@ namespace Prometheus.Client
             return metric.Unlabelled;
         }
 
+        public IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(string name, string help, string labelName, bool includeTimestamp = false)
+        {
+            return CreateGaugeInt64(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        }
+
         public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
             where TLabels : struct, ITuple, IEquatable<TLabels>
