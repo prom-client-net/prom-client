@@ -22,6 +22,15 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create  Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)

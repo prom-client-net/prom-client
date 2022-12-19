@@ -9,7 +9,7 @@ namespace Prometheus.Client
     public class MetricFactory : IMetricFactory
     {
         private readonly ICollectorRegistry _registry;
-        private readonly object _factoryProxyLock = new object();
+        private readonly object _factoryProxyLock = new();
         private Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter>>[] _counterFactoryProxies;
         private Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter<long>>>[] _counterInt64FactoryProxies;
         private Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge>>[] _gaugeFactoryProxies;
@@ -27,6 +27,11 @@ namespace Prometheus.Client
         {
             var metric = CreateCounter(name, help, ValueTuple.Create(), includeTimestamp);
             return metric.Unlabelled;
+        }
+
+        public IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(string name, string help, string labelName, bool includeTimestamp = false)
+        {
+            return CreateCounter(name, help, ValueTuple.Create(labelName), includeTimestamp);
         }
 
         public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
