@@ -197,11 +197,7 @@ Contributions to the package are always welcome!
 
 Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/):
 
-<table>
-   <tr>
-      <td align="center"><a href="https://github.com/promitor"><img src="https://avatars.githubusercontent.com/u/53140212?s=200&v=4" width="100px;" alt=""/><br /><sub><b>Promitor</b></sub></a><br /></td>
-   </tr>
-</table>
+[![Promitor](https://avatars.githubusercontent.com/u/53140212?s=75&v=4)](https://github.com/promitor)
 
 [JetBrains](https://github.com/jetbrains) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
 
