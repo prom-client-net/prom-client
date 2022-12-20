@@ -5,6 +5,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <NoWarn>$(NoWarn);0618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="UntypedTests\Resources\CounterTests_SuppressEmpty.txt" />
