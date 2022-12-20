@@ -132,5 +132,15 @@ namespace Prometheus.Client.Tests.CounterInt64Tests
             // Cannot compare metrics families, because of different contracts, should check if sample the same
             Assert.Equal(counter1.Unlabelled, counter2.Unlabelled);
         }
+
+        [Fact]
+        public void SingleLabel_ConvertToTuple()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateCounterInt64("metricname", "help", "label");
+            Assert.Equal(typeof(ValueTuple<string>), gauge.LabelNames.GetType());
+        }
     }
 }
