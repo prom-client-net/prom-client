@@ -265,6 +265,15 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create Untyped.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)

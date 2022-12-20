@@ -294,6 +294,11 @@ namespace Prometheus.Client
             return metric.Unlabelled;
         }
 
+        public IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(string name, string help, string labelName, bool includeTimestamp = false)
+        {
+            return CreateUntyped(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        }
+
         public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
 #if HasITuple
             where TLabels : struct, ITuple, IEquatable<TLabels>
