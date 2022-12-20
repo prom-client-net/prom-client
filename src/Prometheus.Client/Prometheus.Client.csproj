@@ -10,7 +10,8 @@
     <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\icon.png" Visible="false" Pack="true" PackagePath="" />
+    <None Include="../../icon.png" Visible="false" Pack="true" PackagePath="" />
+    <None Include="../../README.md" Visible="false"  Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Memory" Version="4.5.5" />

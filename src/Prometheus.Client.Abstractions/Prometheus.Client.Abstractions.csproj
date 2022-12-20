@@ -11,7 +11,8 @@
     <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="..\..\icon.png" Visible="false" Pack="true" PackagePath="" />
+    <None Include="../../icon.png" Visible="false" Pack="true" PackagePath="" />
+    <None Include="../../README.md" Visible="false"  Pack="true" PackagePath="" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
     <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans;</DefineConstants>
