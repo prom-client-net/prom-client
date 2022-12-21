@@ -48,7 +48,7 @@ jobs:
           path: artifacts/*
 
   github:
-    name: 🚀 Deploy to GitHub
+    name: 🚀 Deploy to GPR
     needs: [build]
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
@@ -60,7 +60,7 @@ jobs:
       - name: 📦 Publish to GitHub
         run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
   nuget:
-    name: 🚀 Deploy to Nuget
+    name: 🚀 Deploy to NuGet
     needs: [build]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
