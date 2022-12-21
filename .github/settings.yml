@@ -15,7 +15,8 @@ repository:
 
 collaborators:
   - username: phnx47-bot
-    permission: admin # direct push to main branch. Try integrate automerge like this https://github.com/marketplace/actions/enable-github-automerge
+    # Direct push to 'main' branch. Try integrate automerge like this https://github.com/marketplace/actions/enable-github-automerge
+    permission: admin
 teams:
   - name: devs
     permission: maintain
