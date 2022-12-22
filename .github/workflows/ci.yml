@@ -18,14 +18,6 @@ jobs:
     steps:
       - name: 🚚 Checkout
         uses: actions/checkout@v3
-      - name: 🛠 Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-
       - name: ⚙ Restore
         run: dotnet restore
       - name: 🏭 Build
