@@ -16,16 +16,5 @@
   ],
   "ignoreDeps": [
     "System.Text.Encodings.Web"
-  ],
-  "packageRules": [
-    {
-      "automerge": true,
-      "sourceUrlPrefixes": [
-        "https://github.com/coverlet-coverage",
-        "https://github.com/xunit",
-        "https://github.com/microsoft/vstest"
-      ],
-      "groupName": "test packages"
-    }
   ]
 }
