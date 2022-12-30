@@ -4,50 +4,49 @@ using System.IO;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 
-namespace Prometheus.Client.Benchmarks.Comparison.Histogram
+namespace Prometheus.Client.Benchmarks.Comparison.Histogram;
+
+public class HistogramCollectingBenchmarks : ComparisonBenchmarkBase
 {
-    public class HistogramCollectingBenchmarks : ComparisonBenchmarkBase
+    private const int _metricsCount = 100;
+    private const int _labelsCount = 5;
+    private const int _variantsCount = 100;
+    private const int _observationsCount = 100;
+
+    public HistogramCollectingBenchmarks()
     {
-        private const int _metricsCount = 100;
-        private const int _labelsCount = 5;
-        private const int _variantsCount = 100;
-        private const int _observationsCount = 100;
+        var labelNames = GenerateLabelNames(_labelsCount).ToArray();
+        var labelVariants = GenerateLabelValues(_variantsCount, _labelsCount);
+        var rnd = new Random();
 
-        public HistogramCollectingBenchmarks()
+        foreach (var metric in GenerateMetricNames(_metricsCount))
         {
-            var labelNames = GenerateLabelNames(_labelsCount).ToArray();
-            var labelVariants = GenerateLabelValues(_variantsCount, _labelsCount);
-            var rnd = new Random();
+            var ourMetric = OurMetricFactory.CreateHistogram(metric, HelpText, labelNames);
+            var theirMetric = TheirMetricFactory.CreateHistogram(metric, HelpText, labelNames);
 
-            foreach (var metric in GenerateMetricNames(_metricsCount))
+            foreach (var labels in labelVariants)
             {
-                var ourMetric = OurMetricFactory.CreateHistogram(metric, HelpText, labelNames);
-                var theirMetric = TheirMetricFactory.CreateHistogram(metric, HelpText, labelNames);
-
-                foreach (var labels in labelVariants)
+                for (var i = 0; i < _observationsCount; i++)
                 {
-                    for (var i = 0; i < _observationsCount; i++)
-                    {
-                        var val = rnd.Next(10);
-                        ourMetric.WithLabels(labels).Observe(val);
-                        theirMetric.WithLabels(labels).Observe(val);
-                    }
+                    var val = rnd.Next(10);
+                    ourMetric.WithLabels(labels).Observe(val);
+                    theirMetric.WithLabels(labels).Observe(val);
                 }
             }
         }
+    }
 
-        [Benchmark(Baseline = true)]
-        public void Collecting_Baseline()
-        {
-            using var stream = Stream.Null;
-            TheirCollectorRegistry.CollectAndExportAsTextAsync(stream).GetAwaiter().GetResult();
-        }
+    [Benchmark(Baseline = true)]
+    public void Collecting_Baseline()
+    {
+        using var stream = Stream.Null;
+        TheirCollectorRegistry.CollectAndExportAsTextAsync(stream).GetAwaiter().GetResult();
+    }
 
-        [Benchmark]
-        public void Collecting()
-        {
-            using var stream = Stream.Null;
-            ScrapeHandler.ProcessAsync(OurCollectorRegistry , stream).GetAwaiter().GetResult();
-        }
+    [Benchmark]
+    public void Collecting()
+    {
+        using var stream = Stream.Null;
+        ScrapeHandler.ProcessAsync(OurCollectorRegistry , stream).GetAwaiter().GetResult();
     }
 }

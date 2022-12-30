@@ -2,22 +2,21 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Prometheus.Client.MetricsWriter
+namespace Prometheus.Client.MetricsWriter;
+
+public interface IMetricsWriter : IDisposable
 {
-    public interface IMetricsWriter : IDisposable
-    {
-        IMetricsWriter StartMetric(string metricName);
+    IMetricsWriter StartMetric(string metricName);
 
-        IMetricsWriter WriteHelp(string help);
+    IMetricsWriter WriteHelp(string help);
 
-        IMetricsWriter WriteType(MetricType metricType);
+    IMetricsWriter WriteType(MetricType metricType);
 
-        ISampleWriter StartSample(string suffix = "");
+    ISampleWriter StartSample(string suffix = "");
 
-        IMetricsWriter EndMetric();
+    IMetricsWriter EndMetric();
 
-        Task CloseWriterAsync(CancellationToken ct = default);
+    Task CloseWriterAsync(CancellationToken ct = default);
 
-        Task FlushAsync(CancellationToken ct = default);
-    }
+    Task FlushAsync(CancellationToken ct = default);
 }

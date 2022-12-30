@@ -6,46 +6,45 @@ using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
 using Xunit;
 
-namespace Prometheus.Client.Tests
+namespace Prometheus.Client.Tests;
+
+internal static class CollectionTestHelper
 {
-    internal static class CollectionTestHelper
+    public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
     {
-        public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
+        var registry = new CollectorRegistry();
+        var factory = new MetricFactory(registry);
+
+        metricsSetup(factory);
+
+        string formattedText;
+
+        using (var stream = new MemoryStream())
         {
-            var registry = new CollectorRegistry();
-            var factory = new MetricFactory(registry);
-
-            metricsSetup(factory);
-
-            string formattedText;
-
-            using (var stream = new MemoryStream())
+            using (var writer = new MetricsTextWriter(stream))
             {
-                using (var writer = new MetricsTextWriter(stream))
-                {
-                    await registry.CollectToAsync(writer);
+                await registry.CollectToAsync(writer);
 
-                    await writer.CloseWriterAsync();
-                }
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                using (var streamReader = new StreamReader(stream))
-                {
-                    formattedText = streamReader.ReadToEnd();
-                }
+                await writer.CloseWriterAsync();
             }
 
-            Assert.Equal(GetFileContent(resourceName), formattedText);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using (var streamReader = new StreamReader(stream))
+            {
+                formattedText = streamReader.ReadToEnd();
+            }
         }
 
-        private static string GetFileContent(string resourcePath)
+        Assert.Equal(GetFileContent(resourceName), formattedText);
+    }
+
+    private static string GetFileContent(string resourcePath)
+    {
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath);
+        using (var reader = new StreamReader(stream))
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath);
-            using (var reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+            return reader.ReadToEnd();
         }
     }
 }

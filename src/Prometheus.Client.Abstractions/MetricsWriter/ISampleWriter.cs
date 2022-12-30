@@ -1,13 +1,12 @@
-namespace Prometheus.Client.MetricsWriter
+namespace Prometheus.Client.MetricsWriter;
+
+public interface ISampleWriter
 {
-    public interface ISampleWriter
-    {
-        ILabelWriter StartLabels();
+    ILabelWriter StartLabels();
 
-        ISampleWriter WriteValue(double value);
+    ISampleWriter WriteValue(double value);
 
-        ISampleWriter WriteTimestamp(long timestamp);
+    ISampleWriter WriteTimestamp(long timestamp);
 
-        IMetricsWriter EndSample();
-    }
+    IMetricsWriter EndSample();
 }

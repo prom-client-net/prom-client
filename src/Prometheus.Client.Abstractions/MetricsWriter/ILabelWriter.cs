@@ -1,9 +1,8 @@
-namespace Prometheus.Client.MetricsWriter
-{
-    public interface ILabelWriter
-    {
-        ILabelWriter WriteLabel(string name, string value);
+namespace Prometheus.Client.MetricsWriter;
 
-        ISampleWriter EndLabels();
-    }
+public interface ILabelWriter
+{
+    ILabelWriter WriteLabel(string name, string value);
+
+    ISampleWriter EndLabels();
 }

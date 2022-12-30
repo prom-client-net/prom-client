@@ -2,33 +2,32 @@ using System;
 using BenchmarkDotNet.Attributes;
 using Prometheus.Client.Collectors;
 
-namespace Prometheus.Client.Benchmarks.Histogram
+namespace Prometheus.Client.Benchmarks.Histogram;
+
+[MemoryDiagnoser]
+[MinColumn, MaxColumn, MeanColumn, MedianColumn]
+public class HistogramUsage
 {
-    [MemoryDiagnoser]
-    [MinColumn, MaxColumn, MeanColumn, MedianColumn]
-    public class HistogramUsage
+    private IMetricFamily<IHistogram> _histogram;
+    private Random _rnd;
+
+    [GlobalSetup]
+    public void Setup()
     {
-        private IMetricFamily<IHistogram> _histogram;
-        private Random _rnd;
+        var factory = new MetricFactory(new CollectorRegistry());
+        _histogram = factory.CreateHistogram("histogram", string.Empty, "label1", "label2");
+        _rnd = new Random();
+    }
 
-        [GlobalSetup]
-        public void Setup()
-        {
-            var factory = new MetricFactory(new CollectorRegistry());
-            _histogram = factory.CreateHistogram("histogram", string.Empty, "label1", "label2");
-            _rnd = new Random();
-        }
+    [Benchmark]
+    public IHistogram LabelledCreation()
+    {
+        return _histogram.WithLabels("test label");
+    }
 
-        [Benchmark]
-        public IHistogram LabelledCreation()
-        {
-            return _histogram.WithLabels("test label");
-        }
-
-        [Benchmark]
-        public void Observe()
-        {
-            _histogram.Observe(_rnd.Next(100));
-        }
+    [Benchmark]
+    public void Observe()
+    {
+        _histogram.Observe(_rnd.Next(100));
     }
 }

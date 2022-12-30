@@ -1,115 +1,114 @@
 using System;
 using System.Threading;
 
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+internal struct ThreadSafeDouble
 {
-    internal struct ThreadSafeDouble
+    private long _value;
+    private bool _isNan;
+
+    public ThreadSafeDouble(double value)
     {
-        private long _value;
-        private bool _isNan;
+        _value = BitConverter.DoubleToInt64Bits(value);
+        _isNan = IsNaN(value);
+    }
 
-        public ThreadSafeDouble(double value)
+    public double Value
+    {
+        get
         {
-            _value = BitConverter.DoubleToInt64Bits(value);
-            _isNan = IsNaN(value);
+            return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _value));
         }
-
-        public double Value
-        {
-            get
-            {
-                return BitConverter.Int64BitsToDouble(Interlocked.Read(ref _value));
-            }
-            set
-            {
-                if (IsNaN(value))
-                    Volatile.Write(ref _isNan, true);
-
-                Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
-            }
-        }
-
-        public void Add(double increment)
-        {
-            if (IsNaN(increment))
-                throw new InvalidOperationException("Cannot increment the NaN value.");
-
-            long currentValue = Interlocked.Read(ref _value);
-
-            while (true)
-            {
-                if (Volatile.Read(ref _isNan))
-                    throw new InvalidOperationException("Cannot increment the NaN value.");
-
-                double computedValue = BitConverter.Int64BitsToDouble(currentValue) + increment;
-
-                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), currentValue);
-
-                if (lastValue == currentValue)
-                    return;
-
-                currentValue = lastValue;
-            }
-        }
-
-        public void IncTo(double value)
+        set
         {
             if (IsNaN(value))
+                Volatile.Write(ref _isNan, true);
+
+            Interlocked.Exchange(ref _value, BitConverter.DoubleToInt64Bits(value));
+        }
+    }
+
+    public void Add(double increment)
+    {
+        if (IsNaN(increment))
+            throw new InvalidOperationException("Cannot increment the NaN value.");
+
+        long currentValue = Interlocked.Read(ref _value);
+
+        while (true)
+        {
+            if (Volatile.Read(ref _isNan))
                 throw new InvalidOperationException("Cannot increment the NaN value.");
 
-            long currentValue = Interlocked.Read(ref _value);
+            double computedValue = BitConverter.Int64BitsToDouble(currentValue) + increment;
 
-            while (true)
-            {
-                if (Volatile.Read(ref _isNan))
-                    throw new InvalidOperationException("Cannot increment the NaN value.");
+            var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(computedValue), currentValue);
 
-                double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
+            if (lastValue == currentValue)
+                return;
 
-                if (decodedValue >= value)
-                    return;
-
-                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
-
-                if (lastValue == currentValue)
-                    return;
-
-                currentValue = lastValue;
-            }
+            currentValue = lastValue;
         }
+    }
 
-        public void DecTo(double value)
+    public void IncTo(double value)
+    {
+        if (IsNaN(value))
+            throw new InvalidOperationException("Cannot increment the NaN value.");
+
+        long currentValue = Interlocked.Read(ref _value);
+
+        while (true)
         {
-            if (IsNaN(value))
+            if (Volatile.Read(ref _isNan))
+                throw new InvalidOperationException("Cannot increment the NaN value.");
+
+            double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
+
+            if (decodedValue >= value)
+                return;
+
+            var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
+
+            if (lastValue == currentValue)
+                return;
+
+            currentValue = lastValue;
+        }
+    }
+
+    public void DecTo(double value)
+    {
+        if (IsNaN(value))
+            throw new InvalidOperationException("Cannot decrement the NaN value.");
+
+        long currentValue = Interlocked.Read(ref _value);
+
+        while (true)
+        {
+            if (Volatile.Read(ref _isNan))
                 throw new InvalidOperationException("Cannot decrement the NaN value.");
 
-            long currentValue = Interlocked.Read(ref _value);
+            double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
 
-            while (true)
-            {
-                if (Volatile.Read(ref _isNan))
-                    throw new InvalidOperationException("Cannot decrement the NaN value.");
+            if (decodedValue <= value)
+                return;
 
-                double decodedValue = BitConverter.Int64BitsToDouble(currentValue);
+            var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
 
-                if (decodedValue <= value)
-                    return;
+            if (lastValue == currentValue)
+                return;
 
-                var lastValue = Interlocked.CompareExchange(ref _value, BitConverter.DoubleToInt64Bits(value), currentValue);
-
-                if (lastValue == currentValue)
-                    return;
-
-                currentValue = lastValue;
-            }
+            currentValue = lastValue;
         }
+    }
 
-        internal static bool IsNaN(double val)
-        {
-            if (val >= 0d || val < 0d)
-                return false;
+    internal static bool IsNaN(double val)
+    {
+        if (val >= 0d || val < 0d)
+            return false;
 
-            return true;
-        }
+        return true;
     }
 }

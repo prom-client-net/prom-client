@@ -1,14 +1,13 @@
-﻿namespace Prometheus.Client
-{
-    public readonly struct QuantileEpsilonPair
-    {
-        public QuantileEpsilonPair(double quantile, double epsilon)
-        {
-            Quantile = quantile;
-            Epsilon = epsilon;
-        }
+﻿namespace Prometheus.Client;
 
-        public double Quantile { get; }
-        public double Epsilon { get; }
+public readonly struct QuantileEpsilonPair
+{
+    public QuantileEpsilonPair(double quantile, double epsilon)
+    {
+        Quantile = quantile;
+        Epsilon = epsilon;
     }
+
+    public double Quantile { get; }
+    public double Epsilon { get; }
 }

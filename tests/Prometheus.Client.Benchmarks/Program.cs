@@ -1,12 +1,11 @@
 using BenchmarkDotNet.Running;
 
-namespace Prometheus.Client.Benchmarks
+namespace Prometheus.Client.Benchmarks;
+
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run();
-        }
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run();
     }
 }

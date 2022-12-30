@@ -1,14 +1,13 @@
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+public interface IMetric<out TState> : IMetric
+    where TState : struct
 {
-    public interface IMetric<out TState> : IMetric
-        where TState : struct
-    {
-        TState Value { get; }
+    TState Value { get; }
 
-        void Reset();
-    }
+    void Reset();
+}
 
-    public interface IMetric
-    {
-    }
+public interface IMetric
+{
 }

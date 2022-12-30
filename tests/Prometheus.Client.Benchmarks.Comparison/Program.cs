@@ -4,24 +4,23 @@ using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 
-namespace Prometheus.Client.Benchmarks.Comparison
+namespace Prometheus.Client.Benchmarks.Comparison;
+
+internal class Program
 {
-    internal class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
-        {
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args,
-                DefaultConfig.Instance
-                    .AddDiagnoser(MemoryDiagnoser.Default)
-                    .AddJob(new Job
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args,
+            DefaultConfig.Instance
+                .AddDiagnoser(MemoryDiagnoser.Default)
+                .AddJob(new Job
+                {
+                    Run =
                     {
-                        Run =
-                        {
-                            RunStrategy = RunStrategy.Monitoring, IterationCount = 20, WarmupCount = 2,
-                        }
-                    })
-                    .AddLogicalGroupRules(BenchmarkLogicalGroupRule.ByCategory)
-            );
-        }
+                        RunStrategy = RunStrategy.Monitoring, IterationCount = 20, WarmupCount = 2,
+                    }
+                })
+                .AddLogicalGroupRules(BenchmarkLogicalGroupRule.ByCategory)
+        );
     }
 }

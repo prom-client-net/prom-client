@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using Prometheus.Client.MetricsWriter;
 
-namespace Prometheus.Client.Collectors
+namespace Prometheus.Client.Collectors;
+
+public interface ICollector
 {
-    public interface ICollector
-    {
-        CollectorConfiguration Configuration { get; }
+    CollectorConfiguration Configuration { get; }
 
-        IReadOnlyList<string> MetricNames { get; }
+    IReadOnlyList<string> MetricNames { get; }
 
-        void Collect(IMetricsWriter writer);
-    }
+    void Collect(IMetricsWriter writer);
 }

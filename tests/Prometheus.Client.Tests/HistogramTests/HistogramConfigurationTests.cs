@@ -1,56 +1,55 @@
 using System;
 using Xunit;
 
-namespace Prometheus.Client.Tests.HistogramTests
+namespace Prometheus.Client.Tests.HistogramTests;
+
+public class HistogramConfigurationTests
 {
-    public class HistogramConfigurationTests
+    [Fact]
+    public void ShouldNotAllowReservedLabelNames()
     {
-        [Fact]
-        public void ShouldNotAllowReservedLabelNames()
+        HistogramConfiguration Create()
         {
-            HistogramConfiguration Create()
-            {
-                return new HistogramConfiguration(
-                    "test_name",
-                    string.Empty,
-                    new[] {"le"},
-                    null,
-                    false);
-            }
-
-            Assert.Throws<ArgumentException>(Create);
+            return new HistogramConfiguration(
+                "test_name",
+                string.Empty,
+                new[] {"le"},
+                null,
+                false);
         }
 
-        [Fact]
-        public void ShouldNotAllowEmptyBuckets()
-        {
-            HistogramConfiguration Create()
-            {
-                return new HistogramConfiguration(
-                    "test_name",
-                    string.Empty,
-                    Array.Empty<string>(),
-                    new double[0],
-                    false);
-            }
+        Assert.Throws<ArgumentException>(Create);
+    }
 
-            Assert.Throws<ArgumentException>(Create);
+    [Fact]
+    public void ShouldNotAllowEmptyBuckets()
+    {
+        HistogramConfiguration Create()
+        {
+            return new HistogramConfiguration(
+                "test_name",
+                string.Empty,
+                Array.Empty<string>(),
+                new double[0],
+                false);
         }
 
-        [Fact]
-        public void ShouldNotAllowWrongBuckets()
-        {
-            HistogramConfiguration Create()
-            {
-                return new HistogramConfiguration(
-                    "test_name",
-                    string.Empty,
-                    Array.Empty<string>(),
-                    new [] { 0d, -1d },
-                    false);
-            }
+        Assert.Throws<ArgumentException>(Create);
+    }
 
-            Assert.Throws<ArgumentException>(Create);
+    [Fact]
+    public void ShouldNotAllowWrongBuckets()
+    {
+        HistogramConfiguration Create()
+        {
+            return new HistogramConfiguration(
+                "test_name",
+                string.Empty,
+                Array.Empty<string>(),
+                new [] { 0d, -1d },
+                false);
         }
+
+        Assert.Throws<ArgumentException>(Create);
     }
 }

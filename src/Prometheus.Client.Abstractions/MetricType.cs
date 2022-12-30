@@ -1,15 +1,14 @@
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+public enum MetricType
 {
-    public enum MetricType
-    {
-        Counter = 0,
+    Counter = 0,
 
-        Gauge = 1,
+    Gauge = 1,
 
-        Summary = 2,
+    Summary = 2,
 
-        Untyped = 3,
+    Untyped = 3,
 
-        Histogram = 4
-    }
+    Histogram = 4
 }
