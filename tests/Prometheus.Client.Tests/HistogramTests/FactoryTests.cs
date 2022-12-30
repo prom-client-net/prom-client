@@ -139,5 +139,15 @@ namespace Prometheus.Client.Tests.HistogramTests
             Assert.Throws<ArgumentException>(() => factory.CreateHistogram("test_Histogram", string.Empty, ValueTuple.Create("le")));
             Assert.Throws<ArgumentException>(() => factory.CreateHistogram("test_Histogram", string.Empty, ("le", "label")));
         }
+
+        [Fact]
+        public void SingleLabel_ConvertToTuple()
+        {
+            var registry = new CollectorRegistry();
+            var factory = new MetricFactory(registry);
+
+            var gauge = factory.CreateHistogram("metricname", "help", "label");
+            Assert.Equal(typeof(ValueTuple<string>), gauge.LabelNames.GetType());
+        }
     }
 }

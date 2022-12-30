@@ -241,6 +241,11 @@ namespace Prometheus.Client
             return metric.Unlabelled;
         }
 
+        public IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(string name, string help, string labelName, bool includeTimestamp = false, double[] buckets = null)
+        {
+            return CreateHistogram(name, help, ValueTuple.Create(labelName), includeTimestamp, buckets);
+        }
+
         public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
 #if HasITuple
             where TLabels : struct, ITuple, IEquatable<TLabels>

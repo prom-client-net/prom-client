@@ -213,6 +213,16 @@ namespace Prometheus.Client
         /// <summary>
         ///     Create Histogram.
         /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="buckets">Buckets.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(string name, string help, string labelName, bool includeTimestamp = false, double[] buckets = null);
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
         /// <param name="name">Name.</param>
         /// <param name="help">Help text.</param>
         /// <param name="buckets">Buckets.</param>
