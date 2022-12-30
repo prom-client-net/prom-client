@@ -168,10 +168,16 @@ AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/prom-cl
 dotnet add package Prometheus.Client.AspNetCore
 ```
 
-Standalone host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
+DependencyInjection support: [Prometheus.Client.DependencyInjection](https://github.com/prom-client-net/prom-client-dependencyinjection)
 
 ```sh
-dotnet add package Prometheus.Client.MetricServer
+dotnet add package Prometheus.Client.DependencyInjection
+```
+
+Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations)
+
+```sh
+dotnet add package Prometheus.Client.HttpRequestDurations
 ```
 
 Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher)
@@ -180,10 +186,16 @@ Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.c
 dotnet add package Prometheus.Client.MetricPusher
 ```
 
-Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations)
+Standalone host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
 
 ```sh
-dotnet add package Prometheus.Client.HttpRequestDurations
+dotnet add package Prometheus.Client.MetricServer
+```
+
+HealthChecks Publisher [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks)
+
+```sh
+dotnet add package Prometheus.Client.HealthChecks
 ```
 
 ## Contribute
