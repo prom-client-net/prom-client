@@ -57,19 +57,5 @@ namespace Prometheus.Client
         {
             metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
         }
-
-        public static IMetricFamily<ISummary, ValueTuple<string>> CreateSummary(
-            this IMetricFactory factory,
-            string name,
-            string help,
-            string labelName,
-            bool includeTimestamp = false,
-            IReadOnlyList<QuantileEpsilonPair> objectives = null,
-            TimeSpan? maxAge = null,
-            int? ageBuckets = null,
-            int? bufCap = null)
-        {
-            return factory.CreateSummary(name, help, ValueTuple.Create(labelName), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
-        }
     }
 }

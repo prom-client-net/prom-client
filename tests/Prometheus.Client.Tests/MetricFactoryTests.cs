@@ -25,7 +25,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void ReleaseCallRegistry()
         {
-            var metricName = "some-metric";
+            var metricName = "some_metric";
             var registry = Substitute.For<ICollectorRegistry>();
             var factory = new MetricFactory(registry);
 
@@ -48,7 +48,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void Release2CallRegistry()
         {
-            var metricName = "some-metric";
+            var metricName = "some_metric";
             var metricFamily = Substitute.For<IMetricFamily<IMetric>>();
             metricFamily.Name.Returns(metricName);
 
@@ -73,7 +73,7 @@ namespace Prometheus.Client.Tests
         [Fact]
         public void Release3CallRegistry()
         {
-            var metricName = "some-metric";
+            var metricName = "some_metric";
             var metricFamily = Substitute.For<IMetricFamily<IMetric, (string label1, string label2)>>();
             metricFamily.Name.Returns(metricName);
 

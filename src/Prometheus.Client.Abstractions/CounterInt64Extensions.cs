@@ -106,11 +106,5 @@ namespace Prometheus.Client
         {
             metricFamily.Unlabelled.IncTo(value, timestamp);
         }
-
-        public static IMetricFamily<ICounter<long>, ValueTuple<string>> CreateCounterInt64(this IMetricFactory factory, string name, string help, string labelName,
-            bool includeTimestamp = false)
-        {
-            return factory.CreateCounterInt64(name, help, ValueTuple.Create(labelName), includeTimestamp);
-        }
     }
 }

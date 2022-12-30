@@ -22,6 +22,15 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create  Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
@@ -55,6 +64,15 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         ICounter<long> CreateCounterInt64(string name, string help, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create int-based Counter.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<ICounter<long>, ValueTuple<string>> CreateCounterInt64(string name, string help, string labelName, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create int-based Counter.
@@ -122,6 +140,15 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, params string[] labelNames);
@@ -133,6 +160,15 @@ namespace Prometheus.Client
         /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         IGauge<long> CreateGaugeInt64(string name, string help, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create int-based Gauge.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(string name, string help, string labelName, bool includeTimestamp = false);
 
         /// <summary>
         ///     Create int-based Gauge.
@@ -173,6 +209,16 @@ namespace Prometheus.Client
         /// <param name="buckets">Buckets.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         IHistogram CreateHistogram(string name, string help, bool includeTimestamp = false, double[] buckets = null);
+
+        /// <summary>
+        ///     Create Histogram.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="buckets">Buckets.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(string name, string help, string labelName, bool includeTimestamp = false, double[] buckets = null);
 
         /// <summary>
         ///     Create Histogram.
@@ -238,6 +284,15 @@ namespace Prometheus.Client
         /// </summary>
         /// <param name="name">Metric name.</param>
         /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(string name, string help, string labelName, bool includeTimestamp = false);
+
+        /// <summary>
+        ///     Create Untyped.
+        /// </summary>
+        /// <param name="name">Metric name.</param>
+        /// <param name="help">Help text.</param>
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
@@ -291,7 +346,13 @@ namespace Prometheus.Client
         /// <param name="maxAge"></param>
         /// <param name="ageBuckets"></param>
         /// <param name="bufCap"></param>
-        IMetricFamily<ISummary> CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+        IMetricFamily<ISummary> CreateSummary(
+            string name,
+            string help,
+            string[] labelNames,
+            IReadOnlyList<QuantileEpsilonPair> objectives,
+            TimeSpan maxAge,
+            int? ageBuckets,
             int? bufCap);
 
         /// <summary>
@@ -307,6 +368,27 @@ namespace Prometheus.Client
         ISummary CreateSummary(
             string name,
             string help,
+            bool includeTimestamp = false,
+            IReadOnlyList<QuantileEpsilonPair> objectives = null,
+            TimeSpan? maxAge = null,
+            int? ageBuckets = null,
+            int? bufCap = null);
+
+        /// <summary>
+        ///     Create Summary
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="help">Help text.</param>
+        /// <param name="labelName">Label name.</param>
+        /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
+        /// <param name="objectives">.</param>
+        /// <param name="maxAge"></param>
+        /// <param name="ageBuckets"></param>
+        /// <param name="bufCap"></param>
+        IMetricFamily<ISummary, ValueTuple<string>> CreateSummary(
+            string name,
+            string help,
+            string labelName,
             bool includeTimestamp = false,
             IReadOnlyList<QuantileEpsilonPair> objectives = null,
             TimeSpan? maxAge = null,
