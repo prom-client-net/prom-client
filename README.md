@@ -186,7 +186,7 @@ Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.c
 dotnet add package Prometheus.Client.MetricPusher
 ```
 
-Standalone host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
+Standalone Kestrel host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
 
 ```sh
 dotnet add package Prometheus.Client.MetricServer
@@ -207,11 +207,13 @@ Contributions to the package are always welcome!
 
 ## Supporters
 
-Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/):
-
+[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=75&v=4)](https://github.com/jetbrains)
 [![Promitor](https://avatars.githubusercontent.com/u/53140212?s=75&v=4)](https://github.com/promitor)
 
-[JetBrains](https://github.com/jetbrains) - you're cool! We much appreciate free licenses provided by JetBrains to support our library.
+We much appreciate free licenses provided by [JetBrains](https://github.com/jetbrains) to support our library.
+
+Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/):
+- [Promitor](https://github.com/promitor)
 
 ## License
 
