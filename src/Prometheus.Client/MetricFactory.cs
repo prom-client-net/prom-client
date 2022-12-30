@@ -361,7 +361,13 @@ namespace Prometheus.Client
             return CreateSummary(name, help, labelNames, includeTimestamp);
         }
 
-        public IMetricFamily<ISummary> CreateSummary(string name, string help, string[] labelNames, IReadOnlyList<QuantileEpsilonPair> objectives, TimeSpan maxAge, int? ageBuckets,
+        public IMetricFamily<ISummary> CreateSummary(
+            string name,
+            string help,
+            string[] labelNames,
+            IReadOnlyList<QuantileEpsilonPair> objectives,
+            TimeSpan maxAge,
+            int? ageBuckets,
             int? bufCap)
         {
             return CreateSummary(name, help, labelNames, false, objectives, maxAge, ageBuckets, bufCap);
@@ -378,6 +384,19 @@ namespace Prometheus.Client
         {
             var metric = CreateSummary(name, help, ValueTuple.Create(), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
             return metric.Unlabelled;
+        }
+
+        public IMetricFamily<ISummary, ValueTuple<string>> CreateSummary(
+            string name,
+            string help,
+            string labelName,
+            bool includeTimestamp = false,
+            IReadOnlyList<QuantileEpsilonPair> objectives = null,
+            TimeSpan? maxAge = null,
+            int? ageBuckets = null,
+            int? bufCap = null)
+        {
+            return CreateSummary(name, help, ValueTuple.Create(labelName), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
         }
 
         public IMetricFamily<ISummary, TLabels> CreateSummary<TLabels>(
