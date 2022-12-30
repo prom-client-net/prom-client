@@ -3,58 +3,57 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Prometheus.Client.Collectors;
 
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+public class MetricConfiguration : CollectorConfiguration
 {
-    public class MetricConfiguration : CollectorConfiguration
+    public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp)
+        : base(name)
     {
-        public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp)
-            : base(name)
+        Help = help;
+        IncludeTimestamp = includeTimestamp;
+        LabelNames = labels ?? Array.Empty<string>();
+
+        if (labels != null)
         {
-            Help = help;
-            IncludeTimestamp = includeTimestamp;
-            LabelNames = labels ?? Array.Empty<string>();
-
-            if (labels != null)
+            foreach (string labelName in labels)
             {
-                foreach (string labelName in labels)
-                {
-                    if (string.IsNullOrEmpty(labelName))
-                        throw new ArgumentException("Label name cannot be empty");
+                if (string.IsNullOrEmpty(labelName))
+                    throw new ArgumentException("Label name cannot be empty");
 
-                    if (!ValidateLabelName(labelName))
-                        throw new ArgumentException($"Invalid label name: {labelName}");
-                }
+                if (!ValidateLabelName(labelName))
+                    throw new ArgumentException($"Invalid label name: {labelName}");
             }
         }
+    }
 
-        public string Help { get; }
+    public string Help { get; }
 
-        public bool IncludeTimestamp { get; }
+    public bool IncludeTimestamp { get; }
 
-        public IReadOnlyList<string> LabelNames { get; }
+    public IReadOnlyList<string> LabelNames { get; }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool ValidateLabelName(string labelName)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ValidateLabelName(string labelName)
+    {
+        if (labelName.Length >= 2 && labelName[0] == '_' && labelName[1] == '_')
+            return false;
+
+        if (char.IsDigit(labelName[0]))
+            return false;
+
+        foreach (var ch in labelName)
         {
-            if (labelName.Length >= 2 && labelName[0] == '_' && labelName[1] == '_')
-                return false;
+            if ((ch >= 'a' && ch <= 'z')
+                || (ch >= 'A' && ch <= 'Z')
+                || char.IsDigit(ch)
+                || ch == '_'
+                || ch == ':')
+                continue;
 
-            if (char.IsDigit(labelName[0]))
-                return false;
-
-            foreach (var ch in labelName)
-            {
-                if ((ch >= 'a' && ch <= 'z')
-                    || (ch >= 'A' && ch <= 'Z')
-                    || char.IsDigit(ch)
-                    || ch == '_'
-                    || ch == ':')
-                    continue;
-
-                return false;
-            }
-
-            return true;
+            return false;
         }
+
+        return true;
     }
 }

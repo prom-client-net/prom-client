@@ -2,436 +2,435 @@ using System;
 using NSubstitute;
 using Xunit;
 
-namespace Prometheus.Client.Tests.GaugeTests
+namespace Prometheus.Client.Tests.GaugeTests;
+
+public class ExtensionsTests
 {
-    public class ExtensionsTests
+    [Fact]
+    public void IncWithTs()
     {
-        [Fact]
-        public void IncWithTs()
-        {
-            var metric = Substitute.For<IGauge>();
-            var ts = DateTimeOffset.UtcNow;
-            var inc = 2;
+        var metric = Substitute.For<IGauge>();
+        var ts = DateTimeOffset.UtcNow;
+        var inc = 2;
 
-            metric.Inc(inc, ts);
+        metric.Inc(inc, ts);
 
-            metric.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
-        }
-
-        [Fact]
-        public void IncToWithTs()
-        {
-            var metric = Substitute.For<IGauge>();
-            var ts = DateTimeOffset.UtcNow;
-            var value = 2;
+        metric.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
+    }
 
-            metric.IncTo(value, ts);
+    [Fact]
+    public void IncToWithTs()
+    {
+        var metric = Substitute.For<IGauge>();
+        var ts = DateTimeOffset.UtcNow;
+        var value = 2;
 
-            metric.Received().IncTo(value, ts.ToUnixTimeMilliseconds());
-        }
-
-        [Fact]
-        public void UnlabelledInc()
-        {
-            var family = MockFamily();
-            var inc = 2;
+        metric.IncTo(value, ts);
 
-            family.Inc(inc);
+        metric.Received().IncTo(value, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Inc(inc);
-        }
-
-        [Fact]
-        public void UnlabelledIncWithTs()
-        {
-            var family = MockFamily();
-            var ts = 123;
-            var inc = 2;
+    [Fact]
+    public void UnlabelledInc()
+    {
+        var family = MockFamily();
+        var inc = 2;
 
-            family.Inc(inc, ts);
+        family.Inc(inc);
 
-            family.Unlabelled.Received().Inc(inc, ts);
-        }
-
-        [Fact]
-        public void UnlabelledIncWithTsDate()
-        {
-            var family = MockFamily();
-            var ts = DateTimeOffset.UtcNow;
-            var inc = 2;
+        family.Unlabelled.Received().Inc(inc);
+    }
 
-            family.Inc(inc, ts);
+    [Fact]
+    public void UnlabelledIncWithTs()
+    {
+        var family = MockFamily();
+        var ts = 123;
+        var inc = 2;
 
-            family.Unlabelled.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
-        }
-
-        [Fact]
-        public void UnlabelledIncTo()
-        {
-            var family = MockFamily();
-            var val = 2;
+        family.Inc(inc, ts);
 
-            family.IncTo(val);
+        family.Unlabelled.Received().Inc(inc, ts);
+    }
 
-            family.Unlabelled.Received().IncTo(val);
-        }
-
-        [Fact]
-        public void UnlabelledIncToWithTs()
-        {
-            var family = MockFamily();
-            var ts = 123;
-            var val = 2;
+    [Fact]
+    public void UnlabelledIncWithTsDate()
+    {
+        var family = MockFamily();
+        var ts = DateTimeOffset.UtcNow;
+        var inc = 2;
 
-            family.IncTo(val, ts);
+        family.Inc(inc, ts);
 
-            family.Unlabelled.Received().IncTo(val, ts);
-        }
-
-        [Fact]
-        public void UnlabelledIncToWithTsDate()
-        {
-            var family = MockFamily();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.Unlabelled.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.IncTo(val, ts);
+    [Fact]
+    public void UnlabelledIncTo()
+    {
+        var family = MockFamily();
+        var val = 2;
 
-            family.Unlabelled.Received().IncTo(val, ts.ToUnixTimeMilliseconds());
-        }
-
-        [Fact]
-        public void UnlabelledTupleInc()
-        {
-            var family = MockFamilyTuple();
-            var inc = 2;
+        family.IncTo(val);
 
-            family.Inc(inc);
+        family.Unlabelled.Received().IncTo(val);
+    }
 
-            family.Unlabelled.Received().Inc(inc);
-        }
+    [Fact]
+    public void UnlabelledIncToWithTs()
+    {
+        var family = MockFamily();
+        var ts = 123;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleIncWithTs()
-        {
-            var family = MockFamilyTuple();
-            var ts = 123;
-            var inc = 2;
+        family.IncTo(val, ts);
 
-            family.Inc(inc, ts);
+        family.Unlabelled.Received().IncTo(val, ts);
+    }
 
-            family.Unlabelled.Received().Inc(inc, ts);
-        }
+    [Fact]
+    public void UnlabelledIncToWithTsDate()
+    {
+        var family = MockFamily();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleIncWithTsDate()
-        {
-            var family = MockFamilyTuple();
-            var ts = DateTimeOffset.UtcNow;
-            var inc = 2;
+        family.IncTo(val, ts);
 
-            family.Inc(inc, ts);
+        family.Unlabelled.Received().IncTo(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleInc()
+    {
+        var family = MockFamilyTuple();
+        var inc = 2;
 
-        [Fact]
-        public void UnlabelledTupleIncTo()
-        {
-            var family = MockFamilyTuple();
-            var val = 2;
+        family.Inc(inc);
 
-            family.IncTo(val);
+        family.Unlabelled.Received().Inc(inc);
+    }
+
+    [Fact]
+    public void UnlabelledTupleIncWithTs()
+    {
+        var family = MockFamilyTuple();
+        var ts = 123;
+        var inc = 2;
 
-            family.Unlabelled.Received().IncTo(val);
-        }
+        family.Inc(inc, ts);
 
-        [Fact]
-        public void UnlabelledTupleIncToWithTs()
-        {
-            var family = MockFamilyTuple();
-            var ts = 123;
-            var val = 2;
+        family.Unlabelled.Received().Inc(inc, ts);
+    }
+
+    [Fact]
+    public void UnlabelledTupleIncWithTsDate()
+    {
+        var family = MockFamilyTuple();
+        var ts = DateTimeOffset.UtcNow;
+        var inc = 2;
 
-            family.IncTo(val, ts);
+        family.Inc(inc, ts);
 
-            family.Unlabelled.Received().IncTo(val, ts);
-        }
+        family.Unlabelled.Received().Inc(inc, ts.ToUnixTimeMilliseconds());
+    }
+
+    [Fact]
+    public void UnlabelledTupleIncTo()
+    {
+        var family = MockFamilyTuple();
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleIncToWithTsDate()
-        {
-            var family = MockFamilyTuple();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.IncTo(val);
 
-            family.IncTo(val, ts);
+        family.Unlabelled.Received().IncTo(val);
+    }
 
-            family.Unlabelled.Received().IncTo(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleIncToWithTs()
+    {
+        var family = MockFamilyTuple();
+        var ts = 123;
+        var val = 2;
 
-        [Fact]
-        public void DecWithTs()
-        {
-            var metric = Substitute.For<IGauge>();
-            var ts = DateTimeOffset.UtcNow;
-            var dec = 2;
+        family.IncTo(val, ts);
 
-            metric.Dec(dec, ts);
+        family.Unlabelled.Received().IncTo(val, ts);
+    }
 
-            metric.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleIncToWithTsDate()
+    {
+        var family = MockFamilyTuple();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void DecToWithTs()
-        {
-            var metric = Substitute.For<IGauge>();
-            var ts = DateTimeOffset.UtcNow;
-            var value = 2;
+        family.IncTo(val, ts);
 
-            metric.DecTo(value, ts);
+        family.Unlabelled.Received().IncTo(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            metric.Received().DecTo(value, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void DecWithTs()
+    {
+        var metric = Substitute.For<IGauge>();
+        var ts = DateTimeOffset.UtcNow;
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledDec()
-        {
-            var family = MockFamily();
-            var dec = 2;
+        metric.Dec(dec, ts);
 
-            family.Dec(dec);
+        metric.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Dec(dec);
-        }
+    [Fact]
+    public void DecToWithTs()
+    {
+        var metric = Substitute.For<IGauge>();
+        var ts = DateTimeOffset.UtcNow;
+        var value = 2;
 
-        [Fact]
-        public void UnlabelledDecWithTs()
-        {
-            var family = MockFamily();
-            var ts = 123;
-            var dec = 2;
+        metric.DecTo(value, ts);
 
-            family.Dec(dec, ts);
+        metric.Received().DecTo(value, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Dec(dec, ts);
-        }
+    [Fact]
+    public void UnlabelledDec()
+    {
+        var family = MockFamily();
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledDecWithTsDate()
-        {
-            var family = MockFamily();
-            var ts = DateTimeOffset.UtcNow;
-            var dec = 2;
+        family.Dec(dec);
 
-            family.Dec(dec, ts);
+        family.Unlabelled.Received().Dec(dec);
+    }
 
-            family.Unlabelled.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledDecWithTs()
+    {
+        var family = MockFamily();
+        var ts = 123;
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledDecTo()
-        {
-            var family = MockFamily();
-            var val = 2;
+        family.Dec(dec, ts);
 
-            family.DecTo(val);
+        family.Unlabelled.Received().Dec(dec, ts);
+    }
 
-            family.Unlabelled.Received().DecTo(val);
-        }
+    [Fact]
+    public void UnlabelledDecWithTsDate()
+    {
+        var family = MockFamily();
+        var ts = DateTimeOffset.UtcNow;
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledDecToWithTs()
-        {
-            var family = MockFamily();
-            var ts = 123;
-            var val = 2;
+        family.Dec(dec, ts);
 
-            family.DecTo(val, ts);
+        family.Unlabelled.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().DecTo(val, ts);
-        }
+    [Fact]
+    public void UnlabelledDecTo()
+    {
+        var family = MockFamily();
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledDecToWithTsDate()
-        {
-            var family = MockFamily();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.DecTo(val);
 
-            family.DecTo(val, ts);
+        family.Unlabelled.Received().DecTo(val);
+    }
 
-            family.Unlabelled.Received().DecTo(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledDecToWithTs()
+    {
+        var family = MockFamily();
+        var ts = 123;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleDec()
-        {
-            var family = MockFamilyTuple();
-            var dec = 2;
+        family.DecTo(val, ts);
 
-            family.Dec(dec);
+        family.Unlabelled.Received().DecTo(val, ts);
+    }
 
-            family.Unlabelled.Received().Dec(dec);
-        }
+    [Fact]
+    public void UnlabelledDecToWithTsDate()
+    {
+        var family = MockFamily();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleDecWithTs()
-        {
-            var family = MockFamilyTuple();
-            var ts = 123;
-            var dec = 2;
+        family.DecTo(val, ts);
 
-            family.Dec(dec, ts);
+        family.Unlabelled.Received().DecTo(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Dec(dec, ts);
-        }
+    [Fact]
+    public void UnlabelledTupleDec()
+    {
+        var family = MockFamilyTuple();
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledTupleDecWithTsDate()
-        {
-            var family = MockFamilyTuple();
-            var ts = DateTimeOffset.UtcNow;
-            var dec = 2;
+        family.Dec(dec);
 
-            family.Dec(dec, ts);
+        family.Unlabelled.Received().Dec(dec);
+    }
 
-            family.Unlabelled.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleDecWithTs()
+    {
+        var family = MockFamilyTuple();
+        var ts = 123;
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledTupleDecTo()
-        {
-            var family = MockFamilyTuple();
-            var val = 2;
+        family.Dec(dec, ts);
 
-            family.DecTo(val);
+        family.Unlabelled.Received().Dec(dec, ts);
+    }
 
-            family.Unlabelled.Received().DecTo(val);
-        }
+    [Fact]
+    public void UnlabelledTupleDecWithTsDate()
+    {
+        var family = MockFamilyTuple();
+        var ts = DateTimeOffset.UtcNow;
+        var dec = 2;
 
-        [Fact]
-        public void UnlabelledTupleDecToWithTs()
-        {
-            var family = MockFamilyTuple();
-            var ts = 123;
-            var val = 2;
+        family.Dec(dec, ts);
 
-            family.DecTo(val, ts);
+        family.Unlabelled.Received().Dec(dec, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().DecTo(val, ts);
-        }
+    [Fact]
+    public void UnlabelledTupleDecTo()
+    {
+        var family = MockFamilyTuple();
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleDecToWithTsDate()
-        {
-            var family = MockFamilyTuple();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.DecTo(val);
 
-            family.DecTo(val, ts);
+        family.Unlabelled.Received().DecTo(val);
+    }
 
-            family.Unlabelled.Received().DecTo(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleDecToWithTs()
+    {
+        var family = MockFamilyTuple();
+        var ts = 123;
+        var val = 2;
 
-        [Fact]
-        public void SetWithTs()
-        {
-            var metric = Substitute.For<IGauge>();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.DecTo(val, ts);
 
-            metric.Set(val, ts);
+        family.Unlabelled.Received().DecTo(val, ts);
+    }
 
-            metric.Received().Set(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleDecToWithTsDate()
+    {
+        var family = MockFamilyTuple();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledSet()
-        {
-            var family = MockFamily();
-            var val = 2;
+        family.DecTo(val, ts);
 
-            family.Set(val);
+        family.Unlabelled.Received().DecTo(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Set(val);
-        }
+    [Fact]
+    public void SetWithTs()
+    {
+        var metric = Substitute.For<IGauge>();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledSetWithTs()
-        {
-            var family = MockFamily();
-            var ts = 123;
-            var val = 2;
+        metric.Set(val, ts);
 
-            family.Set(val, ts);
+        metric.Received().Set(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Set(val, ts);
-        }
+    [Fact]
+    public void UnlabelledSet()
+    {
+        var family = MockFamily();
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledSetWithTsDate()
-        {
-            var family = MockFamily();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.Set(val);
 
-            family.Set(val, ts);
+        family.Unlabelled.Received().Set(val);
+    }
 
-            family.Unlabelled.Received().Set(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledSetWithTs()
+    {
+        var family = MockFamily();
+        var ts = 123;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleSet()
-        {
-            var family = MockFamilyTuple();
-            var val = 2;
+        family.Set(val, ts);
 
-            family.Set(val);
+        family.Unlabelled.Received().Set(val, ts);
+    }
 
-            family.Unlabelled.Received().Set(val);
-        }
+    [Fact]
+    public void UnlabelledSetWithTsDate()
+    {
+        var family = MockFamily();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleSetWithTs()
-        {
-            var family = MockFamilyTuple();
-            var ts = 123;
-            var val = 2;
+        family.Set(val, ts);
 
-            family.Set(val, ts);
+        family.Unlabelled.Received().Set(val, ts.ToUnixTimeMilliseconds());
+    }
 
-            family.Unlabelled.Received().Set(val, ts);
-        }
+    [Fact]
+    public void UnlabelledTupleSet()
+    {
+        var family = MockFamilyTuple();
+        var val = 2;
 
-        [Fact]
-        public void UnlabelledTupleSetWithTsDate()
-        {
-            var family = MockFamilyTuple();
-            var ts = DateTimeOffset.UtcNow;
-            var val = 2;
+        family.Set(val);
 
-            family.Set(val, ts);
+        family.Unlabelled.Received().Set(val);
+    }
 
-            family.Unlabelled.Received().Set(val, ts.ToUnixTimeMilliseconds());
-        }
+    [Fact]
+    public void UnlabelledTupleSetWithTs()
+    {
+        var family = MockFamilyTuple();
+        var ts = 123;
+        var val = 2;
 
-        private IMetricFamily<IGauge> MockFamily()
-        {
-            var metric = Substitute.For<IGauge>();
-            var family = Substitute.For<IMetricFamily<IGauge>>();
-            family.Unlabelled.Returns(metric);
+        family.Set(val, ts);
 
-            return family;
-        }
+        family.Unlabelled.Received().Set(val, ts);
+    }
 
-        private IMetricFamily<IGauge, (string, string)> MockFamilyTuple()
-        {
-            var metric = Substitute.For<IGauge>();
-            var family = Substitute.For<IMetricFamily<IGauge, (string, string)>>();
-            family.Unlabelled.Returns(metric);
+    [Fact]
+    public void UnlabelledTupleSetWithTsDate()
+    {
+        var family = MockFamilyTuple();
+        var ts = DateTimeOffset.UtcNow;
+        var val = 2;
 
-            return family;
-        }
+        family.Set(val, ts);
+
+        family.Unlabelled.Received().Set(val, ts.ToUnixTimeMilliseconds());
+    }
+
+    private IMetricFamily<IGauge> MockFamily()
+    {
+        var metric = Substitute.For<IGauge>();
+        var family = Substitute.For<IMetricFamily<IGauge>>();
+        family.Unlabelled.Returns(metric);
+
+        return family;
+    }
+
+    private IMetricFamily<IGauge, (string, string)> MockFamilyTuple()
+    {
+        var metric = Substitute.For<IGauge>();
+        var family = Substitute.For<IMetricFamily<IGauge, (string, string)>>();
+        family.Unlabelled.Returns(metric);
+
+        return family;
     }
 }

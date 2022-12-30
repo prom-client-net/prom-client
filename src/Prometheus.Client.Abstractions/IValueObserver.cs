@@ -1,9 +1,8 @@
-namespace Prometheus.Client
-{
-    public interface IValueObserver
-    {
-        void Observe(double val);
+namespace Prometheus.Client;
 
-        void Observe(double val, long? timestamp);
-    }
+public interface IValueObserver
+{
+    void Observe(double val);
+
+    void Observe(double val, long? timestamp);
 }

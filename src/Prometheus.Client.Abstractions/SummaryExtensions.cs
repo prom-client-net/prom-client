@@ -4,58 +4,57 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 #endif
 
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+public static class SummaryExtensions
 {
-    public static class SummaryExtensions
+    public static void Observe(this ISummary observer, double val, DateTimeOffset timestamp)
     {
-        public static void Observe(this ISummary observer, double val, DateTimeOffset timestamp)
-        {
-            observer.Observe(val, timestamp.ToUnixTimeMilliseconds());
-        }
+        observer.Observe(val, timestamp.ToUnixTimeMilliseconds());
+    }
 
-        public static void Observe(this IMetricFamily<ISummary> metricFamily, double val)
-        {
-            metricFamily.Unlabelled.Observe(val);
-        }
+    public static void Observe(this IMetricFamily<ISummary> metricFamily, double val)
+    {
+        metricFamily.Unlabelled.Observe(val);
+    }
 
-        public static void Observe(this IMetricFamily<ISummary> metricFamily, double val, long timestamp)
-        {
-            metricFamily.Unlabelled.Observe(val, timestamp);
-        }
+    public static void Observe(this IMetricFamily<ISummary> metricFamily, double val, long timestamp)
+    {
+        metricFamily.Unlabelled.Observe(val, timestamp);
+    }
 
-        public static void Observe(this IMetricFamily<ISummary> metricFamily, double val, DateTimeOffset timestamp)
-        {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
-        }
+    public static void Observe(this IMetricFamily<ISummary> metricFamily, double val, DateTimeOffset timestamp)
+    {
+        metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
+    }
 
-        public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val)
+    public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val)
 #if HasITuple
-            where TLabels : struct, ITuple, IEquatable<TLabels>
+        where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
-        {
-            metricFamily.Unlabelled.Observe(val);
-        }
+    {
+        metricFamily.Unlabelled.Observe(val);
+    }
 
-        public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, long timestamp)
+    public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, long timestamp)
 #if HasITuple
-            where TLabels : struct, ITuple, IEquatable<TLabels>
+        where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
-        {
-            metricFamily.Unlabelled.Observe(val, timestamp);
-        }
+    {
+        metricFamily.Unlabelled.Observe(val, timestamp);
+    }
 
-        public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, DateTimeOffset timestamp)
+    public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, DateTimeOffset timestamp)
 #if HasITuple
-            where TLabels : struct, ITuple, IEquatable<TLabels>
+        where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
-        {
-            metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
-        }
+    {
+        metricFamily.Unlabelled.Observe(val, timestamp.ToUnixTimeMilliseconds());
     }
 }

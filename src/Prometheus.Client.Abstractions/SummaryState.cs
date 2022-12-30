@@ -1,20 +1,19 @@
 using System.Collections.Generic;
 
-namespace Prometheus.Client
+namespace Prometheus.Client;
+
+public readonly struct SummaryState
 {
-    public readonly struct SummaryState
+    public SummaryState(long count, double sum, IReadOnlyList<KeyValuePair<double, double>> quantiles)
     {
-        public SummaryState(long count, double sum, IReadOnlyList<KeyValuePair<double, double>> quantiles)
-        {
-            Count = count;
-            Sum = sum;
-            Quantiles = quantiles;
-        }
-
-        public long Count { get; }
-
-        public double Sum { get; }
-
-        public IReadOnlyList<KeyValuePair<double, double>> Quantiles { get; }
+        Count = count;
+        Sum = sum;
+        Quantiles = quantiles;
     }
+
+    public long Count { get; }
+
+    public double Sum { get; }
+
+    public IReadOnlyList<KeyValuePair<double, double>> Quantiles { get; }
 }

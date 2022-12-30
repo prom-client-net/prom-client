@@ -7,146 +7,145 @@ using System.Runtime.CompilerServices;
 using Prometheus.Client.Collectors;
 using Prometheus.Client.MetricsWriter;
 
-namespace Prometheus.Client
-{
-    public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : IMetricFamily<TMetric, TLabels>, IMetricFamily<TMetric>, ICollector
-        where TMetric : IMetric
-        where TImplementation : MetricBase<TConfig>, TMetric
-        where TConfig : MetricConfiguration
+namespace Prometheus.Client;
+
+public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : IMetricFamily<TMetric, TLabels>, IMetricFamily<TMetric>, ICollector
+    where TMetric : IMetric
+    where TImplementation : MetricBase<TConfig>, TMetric
+    where TConfig : MetricConfiguration
 #if HasITuple
-        where TLabels : struct, ITuple, IEquatable<TLabels>
+    where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
 #endif
+{
+    private readonly MetricType _metricType;
+    private readonly TConfig _configuration;
+    private readonly IReadOnlyList<string> _metricNames;
+    private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
+    private readonly Lazy<TImplementation> _unlabelled;
+    private readonly ConcurrentDictionary<int, TImplementation> _labelledMetrics;
+
+    public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
     {
-        private readonly MetricType _metricType;
-        private readonly TConfig _configuration;
-        private readonly IReadOnlyList<string> _metricNames;
-        private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
-        private readonly Lazy<TImplementation> _unlabelled;
-        private readonly ConcurrentDictionary<int, TImplementation> _labelledMetrics;
+        _metricType = metricType;
+        _configuration = configuration;
+        _metricNames = new[] { _configuration.Name };
+        _instanceFactory = instanceFactory;
+        _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
+        LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
+        if (configuration.LabelNames.Count > 0)
+            _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
+    }
 
-        public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
+    public string Name => _configuration.Name;
+
+    public IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled => EnumerateLabelled();
+
+    CollectorConfiguration ICollector.Configuration => _configuration;
+
+    IReadOnlyList<string> ICollector.MetricNames => _metricNames;
+
+    public TMetric Unlabelled => _unlabelled.Value;
+
+    public TLabels LabelNames { get; }
+
+    TMetric IMetricFamily<TMetric>.Unlabelled => _unlabelled.Value;
+
+    IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> IMetricFamily<TMetric>.Labelled => EnumerateLabelledAsStrings();
+
+    IReadOnlyList<string> IMetricFamily<TMetric>.LabelNames => _configuration.LabelNames;
+
+    TMetric IMetricFamily<TMetric>.WithLabels(params string[] labels)
+    {
+        if (_labelledMetrics == null)
+            throw new InvalidOperationException("Metric family does not have any labels");
+
+        if (labels.Length != _configuration.LabelNames.Count)
+            throw new ArgumentException("Wrong number of labels");
+
+        var key = LabelsHelper.GetHashCode(labels);
+
+        if (_labelledMetrics.TryGetValue(key, out var metric))
         {
-            _metricType = metricType;
-            _configuration = configuration;
-            _metricNames = new[] { _configuration.Name };
-            _instanceFactory = instanceFactory;
-            _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
-            LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
-            if (configuration.LabelNames.Count > 0)
-                _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
+            return metric;
         }
 
-        public string Name => _configuration.Name;
+        metric = _instanceFactory(_configuration, labels);
+        return _labelledMetrics.GetOrAdd(key, metric);
+    }
 
-        public IEnumerable<KeyValuePair<TLabels, TMetric>> Labelled => EnumerateLabelled();
+    TMetric IMetricFamily<TMetric>.RemoveLabelled(params string[] labels)
+    {
+        if (_labelledMetrics == null)
+            throw new InvalidOperationException("Metric family does not have any labels");
 
-        CollectorConfiguration ICollector.Configuration => _configuration;
+        if (labels.Length != _configuration.LabelNames.Count)
+            throw new ArgumentException("Wrong number of labels");
 
-        IReadOnlyList<string> ICollector.MetricNames => _metricNames;
+        var key = LabelsHelper.GetHashCode(labels);
+        _labelledMetrics.TryRemove(key, out var removed);
 
-        public TMetric Unlabelled => _unlabelled.Value;
+        return removed;
+    }
 
-        public TLabels LabelNames { get; }
+    public TMetric WithLabels(TLabels labels)
+    {
+        if (_labelledMetrics == null)
+            throw new InvalidOperationException("Metric family does not have any labels");
 
-        TMetric IMetricFamily<TMetric>.Unlabelled => _unlabelled.Value;
+        var key = LabelsHelper.GetHashCode(labels);
 
-        IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> IMetricFamily<TMetric>.Labelled => EnumerateLabelledAsStrings();
-
-        IReadOnlyList<string> IMetricFamily<TMetric>.LabelNames => _configuration.LabelNames;
-
-        TMetric IMetricFamily<TMetric>.WithLabels(params string[] labels)
+        if (_labelledMetrics.TryGetValue(key, out var metric))
         {
-            if (_labelledMetrics == null)
-                throw new InvalidOperationException("Metric family does not have any labels");
-
-            if (labels.Length != _configuration.LabelNames.Count)
-                throw new ArgumentException("Wrong number of labels");
-
-            var key = LabelsHelper.GetHashCode(labels);
-
-            if (_labelledMetrics.TryGetValue(key, out var metric))
-            {
-                return metric;
-            }
-
-            metric = _instanceFactory(_configuration, labels);
-            return _labelledMetrics.GetOrAdd(key, metric);
+            return metric;
         }
 
-        TMetric IMetricFamily<TMetric>.RemoveLabelled(params string[] labels)
+        metric = _instanceFactory(_configuration, LabelsHelper.ToArray(labels));
+        return _labelledMetrics.GetOrAdd(key, metric);
+    }
+
+    public TMetric RemoveLabelled(TLabels labels)
+    {
+        if (_labelledMetrics == null)
+            throw new InvalidOperationException("Metric family does not have any labels");
+
+        var key = LabelsHelper.GetHashCode(labels);
+        _labelledMetrics.TryRemove(key, out var removed);
+
+        return removed;
+    }
+
+    void ICollector.Collect(IMetricsWriter writer)
+    {
+        writer.WriteMetricHeader(_configuration.Name, _metricType, _configuration.Help);
+        if (_unlabelled.IsValueCreated)
+            _unlabelled.Value.Collect(writer);
+
+        if (_labelledMetrics != null)
         {
-            if (_labelledMetrics == null)
-                throw new InvalidOperationException("Metric family does not have any labels");
-
-            if (labels.Length != _configuration.LabelNames.Count)
-                throw new ArgumentException("Wrong number of labels");
-
-            var key = LabelsHelper.GetHashCode(labels);
-            _labelledMetrics.TryRemove(key, out var removed);
-
-            return removed;
+            foreach (var labelledMetric in _labelledMetrics)
+                labelledMetric.Value.Collect(writer);
         }
 
-        public TMetric WithLabels(TLabels labels)
-        {
-            if (_labelledMetrics == null)
-                throw new InvalidOperationException("Metric family does not have any labels");
+        writer.EndMetric();
+    }
 
-            var key = LabelsHelper.GetHashCode(labels);
+    private IEnumerable<KeyValuePair<TLabels, TMetric>> EnumerateLabelled()
+    {
+        if (_labelledMetrics == null)
+            yield break;
 
-            if (_labelledMetrics.TryGetValue(key, out var metric))
-            {
-                return metric;
-            }
+        foreach (var labelled in _labelledMetrics)
+            yield return new KeyValuePair<TLabels, TMetric>(LabelsHelper.FromArray<TLabels>(labelled.Value.LabelValues), labelled.Value);
+    }
 
-            metric = _instanceFactory(_configuration, LabelsHelper.ToArray(labels));
-            return _labelledMetrics.GetOrAdd(key, metric);
-        }
+    private IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> EnumerateLabelledAsStrings()
+    {
+        if (_labelledMetrics == null)
+            yield break;
 
-        public TMetric RemoveLabelled(TLabels labels)
-        {
-            if (_labelledMetrics == null)
-                throw new InvalidOperationException("Metric family does not have any labels");
-
-            var key = LabelsHelper.GetHashCode(labels);
-            _labelledMetrics.TryRemove(key, out var removed);
-
-            return removed;
-        }
-
-        void ICollector.Collect(IMetricsWriter writer)
-        {
-            writer.WriteMetricHeader(_configuration.Name, _metricType, _configuration.Help);
-            if (_unlabelled.IsValueCreated)
-                _unlabelled.Value.Collect(writer);
-
-            if (_labelledMetrics != null)
-            {
-                foreach (var labelledMetric in _labelledMetrics)
-                    labelledMetric.Value.Collect(writer);
-            }
-
-            writer.EndMetric();
-        }
-
-        private IEnumerable<KeyValuePair<TLabels, TMetric>> EnumerateLabelled()
-        {
-            if (_labelledMetrics == null)
-                yield break;
-
-            foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<TLabels, TMetric>(LabelsHelper.FromArray<TLabels>(labelled.Value.LabelValues), labelled.Value);
-        }
-
-        private IEnumerable<KeyValuePair<IReadOnlyList<string>, TMetric>> EnumerateLabelledAsStrings()
-        {
-            if (_labelledMetrics == null)
-                yield break;
-
-            foreach (var labelled in _labelledMetrics)
-                yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(labelled.Value.LabelValues, labelled.Value);
-        }
+        foreach (var labelled in _labelledMetrics)
+            yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(labelled.Value.LabelValues, labelled.Value);
     }
 }

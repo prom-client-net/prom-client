@@ -1,11 +1,10 @@
-namespace Prometheus.Client.HistogramImpl
+namespace Prometheus.Client.HistogramImpl;
+
+internal interface IHistogramBucketStore
 {
-    internal interface IHistogramBucketStore
-    {
-        void Observe(double value);
+    void Observe(double value);
 
-        void Reset();
+    void Reset();
 
-        ThreadSafeLong[] Buckets { get; }
-    }
+    ThreadSafeLong[] Buckets { get; }
 }

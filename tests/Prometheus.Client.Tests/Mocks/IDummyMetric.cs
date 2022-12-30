@@ -1,7 +1,6 @@
-namespace Prometheus.Client.Tests.Mocks
+namespace Prometheus.Client.Tests.Mocks;
+
+public interface IDummyMetric : IMetric
 {
-    public interface IDummyMetric : IMetric
-    {
-        void Observe(long? ts);
-    }
+    void Observe(long? ts);
 }

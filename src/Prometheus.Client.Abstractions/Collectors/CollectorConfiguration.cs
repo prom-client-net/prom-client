@@ -1,17 +1,16 @@
 using System;
 
-namespace Prometheus.Client.Collectors
+namespace Prometheus.Client.Collectors;
+
+public class CollectorConfiguration
 {
-    public class CollectorConfiguration
+    public CollectorConfiguration(string name)
     {
-        public CollectorConfiguration(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentNullException(nameof(name));
 
-            Name = name;
-        }
-
-        public string Name { get; }
+        Name = name;
     }
+
+    public string Name { get; }
 }
