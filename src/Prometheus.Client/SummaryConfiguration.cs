@@ -24,7 +24,7 @@ public class SummaryConfiguration : MetricConfiguration
         new QuantileEpsilonPair(0.99, 0.001)
     };
 
-    private static readonly double[] DefaultSortedObjectives = { 0.5, 0.9, 0.99 };
+    private static readonly double[] _defaultSortedObjectives = { 0.5, 0.9, 0.99 };
 
     // Default duration for which observations stay relevant
     private static readonly TimeSpan _defaultMaxAge = TimeSpan.FromMinutes(10);
@@ -46,7 +46,7 @@ public class SummaryConfiguration : MetricConfiguration
         if (Objectives == null || Objectives.Count == 0)
         {
             Objectives = DefaultObjectives;
-            SortedObjectives = DefaultSortedObjectives;
+            SortedObjectives = _defaultSortedObjectives;
         }
         else
         {

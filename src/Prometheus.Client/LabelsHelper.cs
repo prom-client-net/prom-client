@@ -46,18 +46,18 @@ internal static class LabelsHelper
 #if HasITuple
         return default(TTuple).Length;
 #else
-            int GetTupleSize(Type tupleType)
+        int GetTupleSize(Type tupleType)
+        {
+            var typeParams = tupleType.GenericTypeArguments;
+            if (typeParams.Length == 8)
             {
-                var typeParams = tupleType.GenericTypeArguments;
-                if (typeParams.Length == 8)
-                {
-                    return 7 + GetTupleSize(typeParams[7]);
-                }
-
-                return typeParams.Length;
+                return 7 + GetTupleSize(typeParams[7]);
             }
 
-            return GetTupleSize(typeof(TTuple));
+            return typeParams.Length;
+        }
+
+        return GetTupleSize(typeof(TTuple));
 #endif
     }
 
@@ -65,7 +65,7 @@ internal static class LabelsHelper
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
-            where TTuple : struct, IEquatable<TTuple>
+        where TTuple : struct, IEquatable<TTuple>
 #endif
     {
         return TupleHelper<TTuple>.GetTupleHashCode(values);
@@ -80,7 +80,7 @@ internal static class LabelsHelper
         for (var i = 0; i < values.Count; i++)
         {
             var val = values[i];
-            if(val == null)
+            if (val == null)
                 throw new ArgumentException("Label value cannot be empty");
 
             result = HashCombine(result, val.GetHashCode());
@@ -93,7 +93,7 @@ internal static class LabelsHelper
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
-            where TTuple : struct, IEquatable<TTuple>
+        where TTuple : struct, IEquatable<TTuple>
 #endif
     {
         if (!Validate(typeof(TTuple)))
@@ -106,7 +106,7 @@ internal static class LabelsHelper
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
-            where TTuple : struct, IEquatable<TTuple>
+        where TTuple : struct, IEquatable<TTuple>
 #endif
     {
         return TupleHelper<TTuple>.FromArray(values);
@@ -176,8 +176,8 @@ internal static class LabelsHelper
                 }
                 else
                 {
-                    if(tupleType.GenericTypeArguments[i] != typeof(string))
-                        throw new NotSupportedException($"Cannot use {tupleType.GenericTypeArguments[i] .Name} as label name");
+                    if (tupleType.GenericTypeArguments[i] != typeof(string))
+                        throw new NotSupportedException($"Cannot use {tupleType.GenericTypeArguments[i].Name} as label name");
 
                     args[i] = Expression.Property(source, "Item", Expression.Constant(offset + i));
                 }
@@ -235,25 +235,25 @@ internal static class LabelsHelper
 #if HasITuple
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
-            where TTuple : struct, IEquatable<TTuple>
+        where TTuple : struct, IEquatable<TTuple>
 #endif
     {
         private static readonly int _size;
         private static readonly Func<IReadOnlyList<string>, TTuple> _parser;
-        private static readonly Func<TTuple, string[], Func<string, int, string[], string[]>, string[]> FormatReducer;
-        private static readonly Func<TTuple, int, Func<string, int, int, int>, int> HashCodeReducer;
+        private static readonly Func<TTuple, string[], Func<string, int, string[], string[]>, string[]> _formatReducer;
+        private static readonly Func<TTuple, int, Func<string, int, int, int>, int> _hashCodeReducer;
 
         static TupleHelper()
         {
             _size = LabelsHelper.GetSize<TTuple>();
             _parser = LabelsHelper.GenerateParser<TTuple>();
-            FormatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
-            HashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
+            _formatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
+            _hashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
         }
 
         public static string[] ToArray(TTuple values)
         {
-            return FormatReducer(values, new string[_size], (item, index, aggregated) =>
+            return _formatReducer(values, new string[_size], (item, index, aggregated) =>
             {
                 aggregated[index] = item;
                 return aggregated;
@@ -262,10 +262,11 @@ internal static class LabelsHelper
 
         public static int GetTupleHashCode(TTuple values)
         {
-            return HashCodeReducer(values, 0, (item, _, aggregated) =>
+            return _hashCodeReducer(values, 0, (item, _, aggregated) =>
             {
-                if(item == null)
+                if (item == null)
                     throw new ArgumentException("Label value cannot be empty");
+
                 return HashCombine(aggregated, item.GetHashCode());
             });
         }

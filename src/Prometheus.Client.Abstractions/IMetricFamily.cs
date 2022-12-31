@@ -22,7 +22,7 @@ public interface IMetricFamily<TMetric, TLabels>
 #if HasITuple
     where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+    where TLabels : struct, IEquatable<TLabels>
 #endif
 {
     string Name { get; }

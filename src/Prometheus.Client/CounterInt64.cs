@@ -7,7 +7,7 @@ namespace Prometheus.Client;
 
 public sealed class CounterInt64 : MetricBase<MetricConfiguration>, ICounter<long>
 {
-    private ThreadSafeLong _value  = default;
+    private ThreadSafeLong _value;
 
     public CounterInt64(MetricConfiguration configuration, IReadOnlyList<string> labels)
         : base(configuration, labels)
