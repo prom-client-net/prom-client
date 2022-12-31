@@ -14,8 +14,8 @@ public sealed class Summary : MetricBase<SummaryConfiguration>, ISummary
     private static readonly ArrayPool<double> _arrayPool = ArrayPool<double>.Shared;
 
     private readonly QuantileStream _quantileStream;
-    private ThreadSafeDouble _sum = default;
-    private ThreadSafeLong _count = default;
+    private ThreadSafeDouble _sum;
+    private ThreadSafeLong _count;
 
     public Summary(SummaryConfiguration configuration, IReadOnlyList<string> labels, Func<DateTimeOffset> currentTimeProvider = null)
         : base(configuration, labels, currentTimeProvider)
