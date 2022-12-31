@@ -38,7 +38,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
@@ -91,7 +91,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
@@ -139,7 +139,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
@@ -197,7 +197,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<IGauge<long>, TLabels>>(name);
@@ -250,7 +250,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
@@ -313,7 +313,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
@@ -411,7 +411,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
@@ -474,7 +474,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         if (metricFamily == null)
@@ -510,7 +510,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         if (LabelsHelper.GetHashCode(metric.LabelNames) != LabelsHelper.GetHashCode(actualNames))
@@ -541,7 +541,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -555,7 +555,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -569,7 +569,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -583,7 +583,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -597,7 +597,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -611,7 +611,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,
@@ -625,7 +625,7 @@ public class MetricFactory : IMetricFactory
 #if HasITuple
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-            where TLabels : struct, IEquatable<TLabels>
+        where TLabels : struct, IEquatable<TLabels>
 #endif
     {
         return _registry.GetOrAdd(configuration,

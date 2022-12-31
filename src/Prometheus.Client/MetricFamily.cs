@@ -16,7 +16,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
 #if HasITuple
     where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
-        where TLabels : struct, IEquatable<TLabels>
+    where TLabels : struct, IEquatable<TLabels>
 #endif
 {
     private readonly MetricType _metricType;

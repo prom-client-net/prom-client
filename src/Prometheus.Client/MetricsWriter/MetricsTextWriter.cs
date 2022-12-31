@@ -241,7 +241,8 @@ internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelW
             throw new InvalidOperationException($"Cannot {callerMethod}. Current state: {_state}, expected states: {expectedStates}");
     }
 
-    private static readonly char[] _forbidden = new char[] { '\\', '\n', '"'};
+    private static readonly char[] _forbidden = new char[] { '\\', '\n', '"' };
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private string EscapeValue(string val)
     {
@@ -260,10 +261,10 @@ internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelW
     private void Write(double value)
     {
 #if HasNativeSpans
-            Span<char> buff = stackalloc char[32];
-            value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
+        Span<char> buff = stackalloc char[32];
+        value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
 
-            Write(buff.Slice(0, charsize));
+        Write(buff.Slice(0, charsize));
 #else
         Write(value.ToString(CultureInfo.InvariantCulture));
 #endif
@@ -283,15 +284,15 @@ internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelW
     }
 
 #if HasNativeSpans
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Write(ReadOnlySpan<char> value)
-        {
-            var size = _encoding.GetMaxByteCount(value.Length);
-            EnsureBufferCapacity(size);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void Write(ReadOnlySpan<char> value)
+    {
+        var size = _encoding.GetMaxByteCount(value.Length);
+        EnsureBufferCapacity(size);
 
-            size = _encoding.GetBytes(value, new Span<byte>(_buffer, _position, _buffer.Length - _position));
-            _position += size;
-        }
+        size = _encoding.GetBytes(value, new Span<byte>(_buffer, _position, _buffer.Length - _position));
+        _position += size;
+    }
 #endif
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
