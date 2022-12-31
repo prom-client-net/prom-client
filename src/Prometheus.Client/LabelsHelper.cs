@@ -240,20 +240,20 @@ internal static class LabelsHelper
     {
         private static readonly int _size;
         private static readonly Func<IReadOnlyList<string>, TTuple> _parser;
-        private static readonly Func<TTuple, string[], Func<string, int, string[], string[]>, string[]> FormatReducer;
-        private static readonly Func<TTuple, int, Func<string, int, int, int>, int> HashCodeReducer;
+        private static readonly Func<TTuple, string[], Func<string, int, string[], string[]>, string[]> _formatReducer;
+        private static readonly Func<TTuple, int, Func<string, int, int, int>, int> _hashCodeReducer;
 
         static TupleHelper()
         {
             _size = LabelsHelper.GetSize<TTuple>();
             _parser = LabelsHelper.GenerateParser<TTuple>();
-            FormatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
-            HashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
+            _formatReducer = LabelsHelper.MakeReducer<TTuple, string[]>();
+            _hashCodeReducer = LabelsHelper.MakeReducer<TTuple, int>();
         }
 
         public static string[] ToArray(TTuple values)
         {
-            return FormatReducer(values, new string[_size], (item, index, aggregated) =>
+            return _formatReducer(values, new string[_size], (item, index, aggregated) =>
             {
                 aggregated[index] = item;
                 return aggregated;
@@ -262,7 +262,7 @@ internal static class LabelsHelper
 
         public static int GetTupleHashCode(TTuple values)
         {
-            return HashCodeReducer(values, 0, (item, _, aggregated) =>
+            return _hashCodeReducer(values, 0, (item, _, aggregated) =>
             {
                 if(item == null)
                     throw new ArgumentException("Label value cannot be empty");
