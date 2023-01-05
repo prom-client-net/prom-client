@@ -1,9 +1,8 @@
 *.user
 *.opencover.xml
 *.orig
-
+*.nupkg
 .idea
-
 bin
 obj
 BenchmarkDotNet.Artifacts
