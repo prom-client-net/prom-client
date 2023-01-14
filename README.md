@@ -26,6 +26,17 @@ Find more details on [benchmarks description](https://github.com/prom-client-net
 dotnet add package Prometheus.Client
 ```
 
+### Extensions
+
+| Name | Description              |
+|---|--------------------------|
+| [Prometheus.Client.AspNetCore](https://github.com/prom-client-net/prom-client-aspnetcore) | ASP.NET Core middleware  |
+| [Prometheus.Client.DependencyInjection](https://github.com/prom-client-net/prom-client-dependencyinjection) | DependencyInjection support |
+| [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations) | Metrics logging of request durations |
+| [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher) | Push metrics to a PushGateway |
+| [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver) | Standalone Kestrel server |
+| [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks) | HealthChecks Publisher |
+
 ## Configuration
 
 [Examples](https://github.com/prom-client-net/prom-examples)
@@ -34,7 +45,7 @@ dotnet add package Prometheus.Client
 
 ## Quick start
 
-1) Add IMetricFactory and ICollectorRegistry into DI container with extension library Prometheus.Client.DependencyInjection
+- Add `IMetricFactory` and `ICollectorRegistry` into DI container with extension library `Prometheus.Client.DependencyInjection`
 
 ```c#
 public void ConfigureServices(IServiceCollection services)
@@ -43,9 +54,9 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-2) Add metrics endpoint
+- Add metrics endpoint
 
-With Prometheus.Client.AspNetCore:
+With `Prometheus.Client.AspNetCore`:
 
 ```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
@@ -54,7 +65,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 }
 ```
 
-Without extensions:
+Or without extension:
 
 ```c#
 [Route("[controller]")]
@@ -77,8 +88,8 @@ public class MetricsController : Controller
 }
 ```
 
-For collect http requests, use Prometheus.Client.HttpRequestDurations.
-It does not depend of Prometheus.Client.AspNetCore, however together it's very convenient to use:
+For collect http requests, use `Prometheus.Client.HttpRequestDurations`.
+It does not depend of `Prometheus.Client.AspNetCore`, however together it's very convenient to use:
 
 ```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
@@ -90,7 +101,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 ### Instrumenting
 
-Four types of metric are offered: Counter, Gauge, Summary and Histogram.
+Four types of metric are offered: `Counter`, `Gauge`, `Summary` and `Histogram`.
 See the documentation on [metric types](http://prometheus.io/docs/concepts/metric_types/)
 and [instrumentation best practices](http://prometheus.io/docs/practices/instrumentation/#counter-vs.-gauge-vs.-summary)
 on how to use them.
@@ -158,44 +169,6 @@ Since v4 there is alternative new way to provide a labels via ValueTuple that al
 var counter = metricFactory.CreateCounter("myCounter", "help text", labelNames: ("method", "endpoint"));
 counter.WithLabels(("GET", "/")).Inc();
 counter.WithLabels(("POST", "/cancel")).Inc();
-```
-
-## Extensions
-
-AspNetCore Middleware: [Prometheus.Client.AspNetCore](https://github.com/prom-client-net/prom-client-aspnetcore)
-
-```sh
-dotnet add package Prometheus.Client.AspNetCore
-```
-
-DependencyInjection support: [Prometheus.Client.DependencyInjection](https://github.com/prom-client-net/prom-client-dependencyinjection)
-
-```sh
-dotnet add package Prometheus.Client.DependencyInjection
-```
-
-Collect http requests duration: [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations)
-
-```sh
-dotnet add package Prometheus.Client.HttpRequestDurations
-```
-
-Push metrics to a PushGateway: [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher)
-
-```sh
-dotnet add package Prometheus.Client.MetricPusher
-```
-
-Standalone Kestrel host: [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver)
-
-```sh
-dotnet add package Prometheus.Client.MetricServer
-```
-
-HealthChecks Publisher [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks)
-
-```sh
-dotnet add package Prometheus.Client.HealthChecks
 ```
 
 ## Contribute
