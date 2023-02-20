@@ -2,8 +2,8 @@
 *.opencover.xml
 *.orig
 *.nupkg
+*.snupkg
 .idea
 bin
 obj
 BenchmarkDotNet.Artifacts
-.gitsigners
