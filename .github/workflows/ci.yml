@@ -60,8 +60,7 @@ jobs:
         with:
           name: nupkgs
       - name: 📦 Push to pkg.github.com
-        working-directory: nupkgs
-        run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
+        run: dotnet nuget push "**/*.nupkg" -s https://nuget.pkg.github.com/prom-client-net/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
   nuget:
     name: 🚀 Deploy to NuGet
     needs: [build]
@@ -73,5 +72,4 @@ jobs:
         with:
           name: nupkgs
       - name: 📦 Push to nuget.org
-        working-directory: nupkgs
-        run: dotnet nuget push "*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }}
+        run: dotnet nuget push "**/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }}
