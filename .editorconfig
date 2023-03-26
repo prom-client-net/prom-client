@@ -3,22 +3,11 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
+indent_size = 2
 indent_style = space
 max_line_length = 180
 insert_final_newline = true
 trim_trailing_whitespace = true
-
-[{*.csproj, *.props, .ruleset}]
-indent_size = 2
-
-[{*.yml, *.yaml}]
-indent_size = 2
-
-[*.json]
-indent_size = 2
-
-[{*.sh, *.ps1}]
-indent_size = 2
 
 [*.cs]
 indent_size = 4
@@ -72,12 +61,11 @@ csharp_style_conditional_delegate_call = true:suggestion
 csharp_new_line_before_else = true
 csharp_new_line_before_catch = true
 csharp_new_line_before_finally = true
-csharp_new_line_before_members_in_object_initializers = true
-csharp_new_line_before_members_in_anonymous_types = true
 
 ## Naming
 
-# private fields should be _camelCase
+### private fields should be _camelCase
+
 dotnet_naming_style.underscore_prefix.capitalization = camel_case
 dotnet_naming_style.underscore_prefix.required_prefix = _
 
