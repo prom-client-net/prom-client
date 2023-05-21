@@ -14,5 +14,14 @@
   ],
   "ignoreDeps": [
     "System.Text.Encodings.Web"
+  ],
+  "packageRules": [
+    {
+      "automerge": true,
+      "sourceUrlPrefixes": [
+        "https://github.com/coverlet-coverage"
+      ],
+      "groupName": "coverlet packages"
+    }
   ]
 }
