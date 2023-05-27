@@ -15,7 +15,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageOutputPath>nupkgs</PackageOutputPath>
-    <NoWarn>CS1591</NoWarn>
+    <NoWarn>CS1591;NETSDK1138</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
