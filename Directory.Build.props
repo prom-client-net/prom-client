@@ -16,6 +16,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageOutputPath>nupkgs</PackageOutputPath>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)/$(MSBuildProjectName).snk</AssemblyOriginatorKeyFile>
     <NoWarn>CS1591;NETSDK1138</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -33,6 +34,6 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
   <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir)\.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(SolutionDir)/.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 </Project>
