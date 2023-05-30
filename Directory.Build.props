@@ -3,6 +3,7 @@
     <LangVersion>11.0</LangVersion>
     <Authors>prom-client-net contributors</Authors>
     <Copyright>Copyright © prom-client-net</Copyright>
+    <PackageId>$(MSBuildProjectName)</PackageId>
     <PackageTags>prometheus;metrics</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
