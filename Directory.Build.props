@@ -17,27 +17,21 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageOutputPath>nupkgs</PackageOutputPath>
     <AssemblyOriginatorKeyFile>$(SolutionDir)$(SolutionName).snk</AssemblyOriginatorKeyFile>
+    <CodeAnalysisRuleSet>$(SolutionDir).ruleset</CodeAnalysisRuleSet>
     <NoWarn>CS1591;NETSDK1138</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)icon.png" Visible="false" Pack="true" PackagePath="" />
     <None Include="$(SolutionDir)README.md" Visible="false" Pack="true" PackagePath="" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)stylecop.json">
+    <AdditionalFiles Include="$(SolutionDir)stylecop.json" Visible="false">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(SolutionDir).ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
 </Project>
