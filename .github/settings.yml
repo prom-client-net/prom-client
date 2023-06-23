@@ -16,11 +16,11 @@ repository:
 labels:
   - name: dependencies
     color: '#0052cc'
-    description: Issues related to dependencies & Renovate
+    description: Dependencies & Renovate bot
 
   - name: bug
     color: '#d73a4a'
-    description: Something isn't working
+    description: Unexpected problem or unintended behavior
 
   - name: documentation
     color: '#0075ca'
@@ -28,31 +28,31 @@ labels:
 
   - name: duplicate
     color: '#cfd3d7'
-    description: This issue or pull request already exists
+    description: Duplicate
 
   - name: enhancement
     color: '#a2eeef'
-    description: New feature or request
+    description: Feature request
 
   - name: good first issue
     color: '#7057ff'
-    description: Good for newcomers
+    description: Good issue for first-time contributors
 
   - name: help wanted
     color: '#008672'
-    description: Extra attention is needed
+    description: Wants help
 
   - name: invalid
     color: '#e4e669'
-    description: This doesn't seem right
+    description: Not relevant
 
   - name: question
     color: '#d876e3'
-    description: Further information is requested
+    description: Needs more information
 
   - name: wontfix
     color: '#ffffff'
-    description: This will not be worked on
+    description: Work won't continue
 
   - name: vulnerability
     color: '#d1260f'
