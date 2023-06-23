@@ -15,48 +15,52 @@ repository:
 
 labels:
   - name: dependencies
-    color: '#0052cc'
-    description: Dependencies & Renovate bot
+    color: 0052CC
+    description:
 
   - name: bug
-    color: '#d73a4a'
-    description: Unexpected problem or unintended behavior
+    color: D73A4A
+    description:
 
   - name: documentation
-    color: '#0075ca'
-    description: Improvements or additions to documentation
+    color: 0075CA
+    description:
 
   - name: duplicate
-    color: '#cfd3d7'
-    description: Duplicate
+    color: CFD3D7
+    description:
 
   - name: enhancement
-    color: '#a2eeef'
-    description: Feature request
+    color: A2EEEF
+    description:
 
   - name: good first issue
-    color: '#7057ff'
-    description: Good issue for first-time contributors
+    color: 7057FF
+    description:
 
   - name: help wanted
-    color: '#008672'
-    description: Wants help
+    color: 008672
+    description:
 
   - name: invalid
-    color: '#e4e669'
-    description: Not relevant
+    color: E4E669
+    description:
 
   - name: question
-    color: '#d876e3'
-    description: Needs more information
+    color: D876E3
+    description:
 
   - name: wontfix
-    color: '#ffffff'
-    description: Work won't continue
+    color: FFFFFF
+    description:
 
   - name: vulnerability
-    color: '#d1260f'
-    description: Security vulnerability
+    color: D1260F
+    description:
+
+  - name: sync
+    color: 6E81A3
+    description:
 
 collaborators:
   - username: phnx47-bot
