@@ -7,28 +7,7 @@
     <NoWarn>$(NoWarn);CS0618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="UntypedTests\Resources\CounterTests_SuppressEmpty.txt" />
-    <None Remove="UntypedTests\Resources\GaugeTests_SuppressEmpty.txt" />
-    <None Remove="UntypedTests\Resources\HistogramTests_SuppressEmpty.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CounterInt64Tests\Resources\CounterTests_Collection.txt" />
-    <EmbeddedResource Include="CounterInt64Tests\Resources\CounterTests_Empty.txt" />
-    <EmbeddedResource Include="CounterInt64Tests\Resources\CounterTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="CounterTests\Resources\CounterTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="CounterTests\Resources\CounterTests_Collection.txt" />
-    <EmbeddedResource Include="CounterTests\Resources\CounterTests_Empty.txt" />
-    <EmbeddedResource Include="GaugeInt64Tests\Resources\GaugeTests_Collection.txt" />
-    <EmbeddedResource Include="GaugeInt64Tests\Resources\GaugeTests_Empty.txt" />
-    <EmbeddedResource Include="GaugeInt64Tests\Resources\GaugeTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_Collection.txt" />
-    <EmbeddedResource Include="GaugeTests\Resources\GaugeTests_Empty.txt" />
-    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_SuppressEmpty.txt" />
-    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_Collection.txt" />
-    <EmbeddedResource Include="HistogramTests\Resources\HistogramTests_Empty.txt" />
-    <EmbeddedResource Include="UntypedTests\Resources\UntypedTests_Collection.txt" />
-    <EmbeddedResource Include="UntypedTests\Resources\UntypedTests_Empty.txt" />
+    <EmbeddedResource Include="**\Resources\*.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0">
