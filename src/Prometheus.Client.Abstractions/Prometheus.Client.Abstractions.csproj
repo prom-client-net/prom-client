@@ -5,16 +5,8 @@
     <VersionPrefix>5.2.0</VersionPrefix>
     <Description>.NET client for Prometheus</Description>
     <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Prometheus.Client.Abstractions</AssemblyName>
-    <PackageId>Prometheus.Client.Abstractions</PackageId>
-    <AssemblyOriginatorKeyFile>../../Prometheus.Client.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="../../icon.png" Visible="false" Pack="true" PackagePath="" />
-    <None Include="../../README.md" Visible="false"  Pack="true" PackagePath="" />
-  </ItemGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans;</DefineConstants>
+    <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans</DefineConstants>
   </PropertyGroup>
 </Project>

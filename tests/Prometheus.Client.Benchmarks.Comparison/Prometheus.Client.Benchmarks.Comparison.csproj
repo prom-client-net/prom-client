@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
-    <NoWarn>SA1133;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);SA1133</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
