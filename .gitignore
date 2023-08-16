@@ -4,6 +4,7 @@
 *.nupkg
 *.snupkg
 .idea
+.vs
 bin
 obj
 BenchmarkDotNet.Artifacts
