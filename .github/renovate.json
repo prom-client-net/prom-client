@@ -19,7 +19,7 @@
   "packageRules": [
     {
       "automerge": true,
-      "sourceUrlPrefixes": [
+      "matchSourceUrlPrefixes": [
         "https://github.com/coverlet-coverage"
       ],
       "groupName": "coverlet packages"
