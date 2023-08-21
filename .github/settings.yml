@@ -69,3 +69,23 @@ collaborators:
 teams:
   - name: devs
     permission: maintain
+
+branches:
+  - name: main
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        dismissal_restrictions:
+          users: []
+          teams: []
+      required_status_checks:
+        strict: false
+        contexts: ['Build & Test']
+      enforce_admins: false
+      required_linear_history: false
+      restrictions:
+        apps: []
+        users: []
+        teams: []
