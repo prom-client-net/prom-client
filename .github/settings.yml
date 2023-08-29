@@ -68,7 +68,7 @@ collaborators:
     permission: admin
 teams:
   - name: devs
-    permission: maintain
+    permission: write
 
 branches:
   - name: main
