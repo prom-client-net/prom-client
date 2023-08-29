@@ -23,6 +23,12 @@
         "https://github.com/coverlet-coverage"
       ],
       "groupName": "coverlet packages"
+    },
+    {
+      "automerge": true,
+      "extends": [
+        "monorepo:vstest"
+      ]
     }
   ]
 }
