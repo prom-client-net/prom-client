@@ -13,8 +13,7 @@
     "@phnx47"
   ],
   "ignoreDeps": [
-    "System.Text.Encodings.Web",
-    "xunit.runner.visualstudio"
+    "System.Text.Encodings.Web"
   ],
   "packageRules": [
     {
@@ -29,6 +28,13 @@
       "extends": [
         "monorepo:vstest"
       ]
+    },
+    {
+      "automerge": true,
+      "matchSourceUrlPrefixes": [
+        "https://github.com/xunit"
+      ],
+      "groupName": "xunit packages"
     }
   ]
 }
