@@ -181,11 +181,8 @@ Contributions to the package are always welcome!
 ## Supporters
 
 [![JetBrains](https://avatars.githubusercontent.com/u/878437?s=75&v=4)](https://github.com/jetbrains)
-[![Promitor](https://avatars.githubusercontent.com/u/53140212?s=75&v=4)](https://github.com/promitor)
 
 We much appreciate free licenses provided by [JetBrains](https://github.com/jetbrains) to support our library.
-
-Thanks [Promitor](https://github.com/promitor) for supporting us via [GitHub Sponsors](https://github.com/sponsors/phnx47/).
 
 ## License
 
