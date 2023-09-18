@@ -26,15 +26,9 @@
     {
       "automerge": true,
       "extends": [
-        "monorepo:vstest"
+        "monorepo:vstest",
+        "monorepo:xunit-dotnet"
       ]
-    },
-    {
-      "automerge": true,
-      "matchSourceUrlPrefixes": [
-        "https://github.com/xunit"
-      ],
-      "groupName": "xunit packages"
     }
   ]
 }
