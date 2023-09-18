@@ -13,7 +13,7 @@ public class SummaryTests
     [InlineData(0)]
     [InlineData(1000000)]
     [InlineData(10000)]
-    public void TestSummaryConcurrency(int n)
+    public async Task TestSummaryConcurrency(int n)
     {
         var random = new Random(42);
         int mutations = (n % 10000) + 10000;
@@ -44,7 +44,7 @@ public class SummaryTests
             }));
         }
 
-        Task.WaitAll(tasks.ToArray());
+        await Task.WhenAll(tasks);
 
         Array.Sort(allVars);
 
