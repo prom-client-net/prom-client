@@ -34,8 +34,10 @@ dotnet add package Prometheus.Client
 | [Prometheus.Client.DependencyInjection](https://github.com/prom-client-net/prom-client-dependencyinjection) | DependencyInjection support |
 | [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations) | Metrics logging of request durations |
 | [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher) | Push metrics to a PushGateway |
-| [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver) | Standalone Kestrel server |
+| [Prometheus.Client.MetricPusher.HostedService](https://github.com/prom-client-net/prom-client-metricpusher-hostedservice) | MetricPusher as HostedService |
 | [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks) | HealthChecks Publisher |
+| [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver) | Standalone Kestrel server |
+| [Prometheus.Client.Owin](https://github.com/prom-client-net/prom-client-owin) | Owin handler |
 
 ## Configuration
 
