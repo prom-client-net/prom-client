@@ -64,7 +64,6 @@ labels:
 
 collaborators:
   - username: phnx47-bot
-    # Direct push to 'main' branch. Try integrate automerge like this https://github.com/marketplace/actions/enable-github-automerge
     permission: admin
 teams:
   - name: devs
@@ -73,19 +72,10 @@ teams:
 branches:
   - name: main
     protection:
-      required_pull_request_reviews:
-        required_approving_review_count: 1
-        dismiss_stale_reviews: true
-        require_code_owner_reviews: false
-        dismissal_restrictions:
-          users: []
-          teams: []
+      required_pull_request_reviews: null
       required_status_checks:
         strict: false
         contexts: ['Build & Test']
       enforce_admins: false
       required_linear_history: false
-      restrictions:
-        apps: []
-        users: []
-        teams: []
+      restrictions: null
