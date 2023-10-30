@@ -37,7 +37,7 @@ dotnet add package Prometheus.Client
 | [Prometheus.Client.MetricPusher.HostedService](https://github.com/prom-client-net/prom-client-metricpusher-hostedservice) | MetricPusher as HostedService |
 | [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks) | HealthChecks Publisher |
 | [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver) | Standalone Kestrel server |
-| [Prometheus.Client.Owin](https://github.com/prom-client-net/prom-client-owin) | Owin handler |
+| [Prometheus.Client.Owin](https://github.com/prom-client-net/prom-client-owin) | Owin middleware |
 
 ## Configuration
 
