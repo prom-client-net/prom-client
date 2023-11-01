@@ -12,9 +12,6 @@
   "assignees": [
     "@phnx47"
   ],
-  "ignoreDeps": [
-    "System.Text.Encodings.Web"
-  ],
   "packageRules": [
     {
       "automerge": true,
