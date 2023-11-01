@@ -64,7 +64,7 @@ labels:
 
 collaborators:
   - username: phnx47-bot
-    permission: admin
+    permission: push
 teams:
   - name: devs
     permission: push
