@@ -45,7 +45,12 @@ jobs:
 
       - name: Set Dev version
         if: github.ref == 'refs/heads/main'
-        run: echo "VERSION=$(git describe --long --tags | sed 's/^v//;0,/-/s//./')" >> $GITHUB_ENV
+        run: |
+          version="$(git describe --long --tags | sed 's/^v//;0,/-/s//./')"
+          if [ -z "${version}" ]; then
+            version="0.0.0.$(git rev-list --count HEAD)-g$(git rev-parse --short HEAD)"
+          fi
+          echo "VERSION=${version}" >> $GITHUB_ENV
 
       - name: Set Release version
         if: startsWith(github.ref, 'refs/tags/v')
