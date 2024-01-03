@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.11" />
-    <PackageReference Include="prometheus-net" Version="8.2.0" />
+    <PackageReference Include="prometheus-net" Version="8.2.1" />
   </ItemGroup>
 
   <ItemGroup>
