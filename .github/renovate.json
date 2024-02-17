@@ -26,6 +26,10 @@
         "monorepo:vstest",
         "monorepo:xunit-dotnet"
       ]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "enabled": false
     }
   ]
 }
