@@ -6,7 +6,4 @@
     <Description>.NET client for Prometheus</Description>
     <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans</DefineConstants>
-  </PropertyGroup>
 </Project>

@@ -1,5 +1,5 @@
 using System;
-#if HasITuple
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 
@@ -108,7 +108,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment = 1)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -118,7 +118,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -128,7 +128,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long increment, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -138,7 +138,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -148,7 +148,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -158,7 +158,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -168,7 +168,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement = 1)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -178,7 +178,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -188,7 +188,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Dec<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long decrement, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -198,7 +198,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -208,7 +208,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -218,7 +218,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void DecTo<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -228,7 +228,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -238,7 +238,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -248,7 +248,7 @@ public static class GaugeInt64Extensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IGauge<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
