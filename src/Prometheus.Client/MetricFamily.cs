@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-#if HasITuple
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 using Prometheus.Client.Collectors;
@@ -13,7 +13,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
     where TMetric : IMetric
     where TImplementation : MetricBase<TConfig>, TMetric
     where TConfig : MetricConfiguration
-#if HasITuple
+#if NET6_0_OR_GREATER
     where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
     where TLabels : struct, IEquatable<TLabels>

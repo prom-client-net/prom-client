@@ -1,5 +1,5 @@
 using System;
-#if HasITuple
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 
@@ -48,7 +48,7 @@ public static class CounterInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long increment = 1)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -58,7 +58,7 @@ public static class CounterInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long increment, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -68,7 +68,7 @@ public static class CounterInt64Extensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long increment, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -78,7 +78,7 @@ public static class CounterInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long value)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
@@ -88,7 +88,7 @@ public static class CounterInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long value, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
@@ -98,7 +98,7 @@ public static class CounterInt64Extensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter<long>, TLabels> metricFamily, long value, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>

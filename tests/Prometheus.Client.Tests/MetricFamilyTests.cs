@@ -217,15 +217,15 @@ public class MetricFamilyTests
         Assert.Throws<NotSupportedException>(() => CreateMetricFamily(("1", "2", "3", "4", "5", "6", "7", 8)));
     }
 
-    private IMetricFamily<IDummyMetric> CreateMetricFamily()
+    private static IMetricFamily<IDummyMetric> CreateMetricFamily()
     {
-        var config = new MetricConfiguration("dummy_metric", string.Empty, new string[0], false);
+        var config = new MetricConfiguration("dummy_metric", string.Empty, Array.Empty<string>(), false);
         return new MetricFamily<IDummyMetric, DummyMetric, ValueTuple, MetricConfiguration>(
             config, MetricType.Untyped,
             (configuration, list) => new DummyMetric(configuration, list, null));
     }
 
-    private IMetricFamily<IDummyMetric> CreateMetricFamily(string label1, string label2)
+    private static IMetricFamily<IDummyMetric> CreateMetricFamily(string label1, string label2)
     {
         var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, false);
         return new MetricFamily<IDummyMetric, DummyMetric, (string, string), MetricConfiguration>(
@@ -234,7 +234,11 @@ public class MetricFamilyTests
     }
 
     private MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration> CreateMetricFamily<TLabels>(TLabels labels)
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
+#else
+        where TLabels : struct, IEquatable<TLabels>
+#endif
     {
         var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), false);
         return new MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration>(

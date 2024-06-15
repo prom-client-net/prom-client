@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-#if HasITuple
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 
@@ -29,7 +29,7 @@ public static class SummaryExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -39,7 +39,7 @@ public static class SummaryExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, long timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -49,7 +49,7 @@ public static class SummaryExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<ISummary, TLabels> metricFamily, double val, DateTimeOffset timestamp)
-#if HasITuple
+#if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>

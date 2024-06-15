@@ -11,7 +11,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Prometheus.Client.Abstractions\Prometheus.Client.Abstractions.csproj" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans</DefineConstants>
-  </PropertyGroup>
 </Project>

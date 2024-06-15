@@ -32,7 +32,7 @@ internal static class CollectionTestHelper
 
             using (var streamReader = new StreamReader(stream))
             {
-                formattedText = streamReader.ReadToEnd();
+                formattedText = await streamReader.ReadToEndAsync();
             }
         }
 
@@ -41,10 +41,8 @@ internal static class CollectionTestHelper
 
     private static string GetFileContent(string resourcePath)
     {
-        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath);
-        using (var reader = new StreamReader(stream))
-        {
-            return reader.ReadToEnd();
-        }
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath)!;
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd().ToUnixLineEndings();
     }
 }
