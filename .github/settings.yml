@@ -68,7 +68,7 @@ branches:
       required_pull_request_reviews: null
       required_status_checks:
         strict: false
-        contexts: ['Build & Test']
+        contexts: ['Build & Test (Windows)', 'Build, Test & Pack (Linux)']
       enforce_admins: false
       required_linear_history: false
       restrictions: null
