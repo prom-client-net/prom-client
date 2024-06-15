@@ -1,21 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
     <NoWarn>$(NoWarn);SA1133</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageReference Include="prometheus-net" Version="8.2.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Prometheus.Client\Prometheus.Client.csproj" />
   </ItemGroup>
-
   <Target Name="DisableLegacyExtantions" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Prometheus.NetStandard'">
@@ -23,5 +19,4 @@
       </ReferencePath>
     </ItemGroup>
   </Target>
-
 </Project>

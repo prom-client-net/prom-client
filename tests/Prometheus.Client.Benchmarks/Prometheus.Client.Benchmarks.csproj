@@ -1,18 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);SA1133</NoWarn>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Prometheus.Client\Prometheus.Client.csproj" />
   </ItemGroup>
-
 </Project>
