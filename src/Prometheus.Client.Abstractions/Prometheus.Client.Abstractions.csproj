@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Prometheus.Client</RootNamespace>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <VersionPrefix>5.2.0</VersionPrefix>
     <Description>.NET client for Prometheus</Description>
     <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>$(DefineConstants);HasITuple;HasNativeSpans</DefineConstants>
   </PropertyGroup>
 </Project>
