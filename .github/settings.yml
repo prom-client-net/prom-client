@@ -55,13 +55,6 @@ labels:
     color: 6E81A3
     description:
 
-collaborators:
-  - username: phnx47-bot
-    permission: push
-teams:
-  - name: devs
-    permission: push
-
 branches:
   - name: main
     protection:
