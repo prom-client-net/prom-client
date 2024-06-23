@@ -51,11 +51,8 @@ jobs:
             7.0.x
             8.0.x
 
-      - name: Restore
-        run: dotnet restore
-
       - name: Build
-        run: dotnet build --no-restore -c Release -p:ContinuousIntegrationBuild=true
+        run: dotnet build -c Release -p:ContinuousIntegrationBuild=true
 
       - name: Run tests
         run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
