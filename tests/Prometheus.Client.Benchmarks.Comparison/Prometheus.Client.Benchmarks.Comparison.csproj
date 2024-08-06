@@ -6,7 +6,7 @@
     <NoWarn>$(NoWarn);SA1133</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageReference Include="prometheus-net" Version="8.2.1" />
   </ItemGroup>
   <ItemGroup>
