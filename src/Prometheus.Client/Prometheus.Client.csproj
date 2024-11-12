@@ -5,7 +5,7 @@
     <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
