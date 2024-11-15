@@ -45,7 +45,7 @@ jobs:
         run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
 
       - name: Publish to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
