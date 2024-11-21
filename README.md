@@ -1,15 +1,24 @@
 # Prometheus.Client
 
+[asp-net-core]: https://github.com/prom-client-net/prom-client-aspnetcore
+[dependency-injection]: https://github.com/prom-client-net/prom-client-dependencyinjection
+[http-request-durations]: https://github.com/prom-client-net/prom-client-httprequestdurations
+[metric-pusher]: https://github.com/prom-client-net/prom-client-metricpusher
+[metric-pusher-hosted-service]: https://github.com/prom-client-net/prom-client-metricpusher-hostedservice
+[health-checks]: https://github.com/prom-client-net/prom-client-healthchecks
+[metric-server]: https://github.com/prom-client-net/prom-client-metricserver
+[owin]: (https://github.com/prom-client-net/prom-client-owin)
+
 [![ci](https://img.shields.io/github/actions/workflow/status/prom-client-net/prom-client/ci.yml?branch=main&label=ci&logo=github&style=flat-square)](https://github.com/prom-client-net/prom-client/actions/workflows/ci.yml)
 [![nuget](https://img.shields.io/nuget/v/Prometheus.Client?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Prometheus.Client)
 [![nuget](https://img.shields.io/nuget/dt/Prometheus.Client?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Prometheus.Client)
 [![codecov](https://img.shields.io/codecov/c/github/prom-client-net/prom-client?logo=codecov&style=flat-square)](https://app.codecov.io/gh/prom-client-net/prom-client)
-[![codefactor](https://img.shields.io/codefactor/grade/github/prom-client-net/prom-client?logo=codefactor&style=flat-square)](https://www.codefactor.io/repository/github/prom-client-net/prom-client)
 [![license](https://img.shields.io/github/license/prom-client-net/prom-client?style=flat-square)](https://github.com/prom-client-net/prom-client/blob/main/LICENSE)
 
 .NET Client library for [prometheus.io](https://prometheus.io/)
 
-It was started as a fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net), but over time the library was evolved into a different product. Our main goals:
+It is hard fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net) in early 2017 that evolved into a different library.
+Our main goals:
 
 - Keep possibility of rapid development.
 - Extensibility is one of the core values, together with performance and minimal allocation.
@@ -28,16 +37,16 @@ dotnet add package Prometheus.Client
 
 ### Extensions
 
-| Name | Description              |
-|---|--------------------------|
-| [Prometheus.Client.AspNetCore](https://github.com/prom-client-net/prom-client-aspnetcore) | ASP.NET Core middleware  |
-| [Prometheus.Client.DependencyInjection](https://github.com/prom-client-net/prom-client-dependencyinjection) | DependencyInjection support |
-| [Prometheus.Client.HttpRequestDurations](https://github.com/prom-client-net/prom-client-httprequestdurations) | Metrics logging of request durations |
-| [Prometheus.Client.MetricPusher](https://github.com/prom-client-net/prom-client-metricpusher) | Push metrics to a PushGateway |
-| [Prometheus.Client.MetricPusher.HostedService](https://github.com/prom-client-net/prom-client-metricpusher-hostedservice) | MetricPusher as HostedService |
-| [Prometheus.Client.HealthChecks](https://github.com/prom-client-net/prom-client-healthchecks) | HealthChecks Publisher |
-| [Prometheus.Client.MetricServer](https://github.com/prom-client-net/prom-client-metricserver) | Standalone Kestrel server |
-| [Prometheus.Client.Owin](https://github.com/prom-client-net/prom-client-owin) | Owin middleware |
+| Name                                                                         | Description                            |
+|------------------------------------------------------------------------------|----------------------------------------|
+| [Prometheus.Client.AspNetCore][asp-net-core]                                 | ASP.NET Core middleware                |
+| [Prometheus.Client.DependencyInjection][dependency-injection]                | DependencyInjection support            |
+| [Prometheus.Client.HttpRequestDurations][http-request-durations]             | Metrics logging of request durations   |
+| [Prometheus.Client.MetricPusher][metric-pusher]                              | Push metrics to Prometheus PushGateway |
+| [Prometheus.Client.MetricPusher.HostedService][metric-pusher-hosted-service] | MetricPusher as HostedService          |
+| [Prometheus.Client.HealthChecks][health-checks]                              | HealthChecks Publisher                 |
+| [Prometheus.Client.MetricServer][metric-server]                              | Standalone Kestrel server              |
+| [Prometheus.Client.Owin][owin]                                               | Owin middleware                        |
 
 ## Configuration
 
@@ -45,29 +54,9 @@ dotnet add package Prometheus.Client
 
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
 
-## Quick start
+## Use
 
-- Add `IMetricFactory` and `ICollectorRegistry` into DI container with extension library `Prometheus.Client.DependencyInjection`
-
-```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddMetricFactory();
-}
-```
-
-- Add metrics endpoint
-
-With `Prometheus.Client.AspNetCore`:
-
-```c#
-public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
-{
-    app.UsePrometheusServer();
-}
-```
-
-Or without extension:
+Add metrics endpoint without extension:
 
 ```c#
 [Route("[controller]")]
@@ -90,8 +79,26 @@ public class MetricsController : Controller
 }
 ```
 
-For collect http requests, use `Prometheus.Client.HttpRequestDurations`.
-It does not depend of `Prometheus.Client.AspNetCore`, however together it's very convenient to use:
+Add metrics endpoint with [Prometheus.Client.AspNetCore][asp-net-core]:
+
+```c#
+public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
+{
+    app.UsePrometheusServer();
+}
+```
+
+`IMetricFactory` and `ICollectorRegistry` can be added to DI container with [Prometheus.Client.DependencyInjection][dependency-injection]:
+
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMetricFactory();
+}
+```
+
+For collect http requests, use [Prometheus.Client.HttpRequestDurations][http-request-durations].
+It does not depend on [Prometheus.Client.AspNetCore][asp-net-core], however together it's very convenient to use:
 
 ```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
