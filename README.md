@@ -7,7 +7,7 @@
 [metric-pusher-hosted-service]: https://github.com/prom-client-net/prom-client-metricpusher-hostedservice
 [health-checks]: https://github.com/prom-client-net/prom-client-healthchecks
 [metric-server]: https://github.com/prom-client-net/prom-client-metricserver
-[owin]: (https://github.com/prom-client-net/prom-client-owin)
+[owin]: https://github.com/prom-client-net/prom-client-owin
 
 [![ci](https://img.shields.io/github/actions/workflow/status/prom-client-net/prom-client/ci.yml?branch=main&label=ci&logo=github&style=flat-square)](https://github.com/prom-client-net/prom-client/actions/workflows/ci.yml)
 [![nuget](https://img.shields.io/nuget/v/Prometheus.Client?logo=nuget&style=flat-square)](https://www.nuget.org/packages/Prometheus.Client)
@@ -17,7 +17,8 @@
 
 .NET Client library for [prometheus.io](https://prometheus.io/)
 
-It is hard fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net) in early 2017 that evolved into a different library.
+It is hard fork of [prometheus-net](https://github.com/prometheus-net/prometheus-net) from early 2017 that has since evolved into a different library.
+
 Our main goals:
 
 - Keep possibility of rapid development.
@@ -40,7 +41,7 @@ dotnet add package Prometheus.Client
 | Name                                                                         | Description                            |
 |------------------------------------------------------------------------------|----------------------------------------|
 | [Prometheus.Client.AspNetCore][asp-net-core]                                 | ASP.NET Core middleware                |
-| [Prometheus.Client.DependencyInjection][dependency-injection]                | DependencyInjection support            |
+| [Prometheus.Client.DependencyInjection][dependency-injection]                | Dependency Injection extensions        |
 | [Prometheus.Client.HttpRequestDurations][http-request-durations]             | Metrics logging of request durations   |
 | [Prometheus.Client.MetricPusher][metric-pusher]                              | Push metrics to Prometheus PushGateway |
 | [Prometheus.Client.MetricPusher.HostedService][metric-pusher-hosted-service] | MetricPusher as HostedService          |
@@ -48,13 +49,11 @@ dotnet add package Prometheus.Client
 | [Prometheus.Client.MetricServer][metric-server]                              | Standalone Kestrel server              |
 | [Prometheus.Client.Owin][owin]                                               | Owin middleware                        |
 
-## Configuration
+## Use
 
 [Examples](https://github.com/prom-client-net/prom-examples)
 
 [Prometheus Docs](https://prometheus.io/docs/introduction/overview/)
-
-## Use
 
 Add metrics endpoint without extension:
 
