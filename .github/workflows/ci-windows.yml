@@ -1,0 +1,21 @@
+name: CI Windows
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build & Test (Windows)
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: dotnet test -c Release -p:CollectCoverage=false
