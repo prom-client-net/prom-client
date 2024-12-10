@@ -75,7 +75,7 @@ jobs:
         with:
           name: nupkgs
       - name: Push to pkg.github.com
-        run: dotnet nuget push "**/*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GH_FULL_PAT }}
+        run: dotnet nuget push "**/*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
 
   nuget:
     name: Deploy to NuGet
