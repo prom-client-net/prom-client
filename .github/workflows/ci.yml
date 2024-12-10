@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run tests
-        run: dotnet test -c Release --filter FullyQualifiedName\!~Tests.Integration -p:CollectCoverage=false
+        run: dotnet test -c Release -p:CollectCoverage=false
 
   build-linux:
     name: Build, Test & Pack (Linux)
@@ -42,7 +42,7 @@ jobs:
         run: dotnet build -c Release -p:ContinuousIntegrationBuild=true
 
       - name: Run tests
-        run: dotnet test --no-build -c Release --filter FullyQualifiedName\!~Tests.Integration -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
+        run: dotnet test --no-build -c Release -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
 
       - name: Publish to Codecov
         uses: codecov/codecov-action@v5
