@@ -1,4 +1,4 @@
-name: Labeled
+name: PR Labeled
 
 on:
   pull_request:
