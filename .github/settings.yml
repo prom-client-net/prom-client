@@ -8,51 +8,51 @@ repository:
 
 labels:
   - name: dependencies
-    color: 0052CC
+    color: '0052CC'
     description:
 
   - name: bug
-    color: D73A4A
+    color: 'D73A4A'
     description:
 
   - name: documentation
-    color: 0075CA
+    color: '0075CA'
     description:
 
   - name: duplicate
-    color: CFD3D7
+    color: 'CFD3D7'
     description:
 
   - name: enhancement
-    color: A2EEEF
+    color: 'A2EEEF'
     description:
 
   - name: good first issue
-    color: 7057FF
+    color: '7057FF'
     description:
 
   - name: help wanted
-    color: 008672
+    color: '008672'
     description:
 
   - name: invalid
-    color: E4E669
+    color: 'E4E669'
     description:
 
   - name: question
-    color: D876E3
+    color: 'D876E3'
     description:
 
   - name: wontfix
-    color: FFFFFF
+    color: 'FFFFFF'
     description:
 
   - name: vulnerability
-    color: D1260F
+    color: 'D1260F'
     description:
 
   - name: sync
-    color: 6E81A3
+    color: '6E81A3'
     description:
 
 branches:
@@ -61,7 +61,7 @@ branches:
       required_pull_request_reviews: null
       required_status_checks:
         strict: false
-        contexts: ['Build, Test & Pack (Linux)']
+        contexts: ['Build, Test & Pack']
       enforce_admins: false
       required_linear_history: false
       restrictions: null
