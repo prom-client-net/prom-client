@@ -15,10 +15,10 @@
   "packageRules": [
     {
       "automerge": true,
-      "matchSourceUrlPrefixes": [
-        "https://github.com/coverlet-coverage"
-      ],
-      "groupName": "coverlet packages"
+      "groupName": "coverlet packages",
+      "matchSourceUrls": [
+        "https://github.com/coverlet-coverage{/,}**"
+      ]
     },
     {
       "automerge": true,
@@ -28,7 +28,9 @@
       ]
     },
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "enabled": false
     }
   ]
