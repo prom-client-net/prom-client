@@ -13,21 +13,52 @@ jobs:
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
+  pack:
+    name: Create NuGet packages
+    needs: [build]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set Dev version
+        if: github.ref == 'refs/heads/main'
+        run: |
+          version="$(git describe --long --tags | sed 's/^v//;0,/-/s//./')"
+          if [ -z "${version}" ]; then
+            version="0.0.0.$(git rev-list --count HEAD)-g$(git rev-parse --short HEAD)"
+          fi
+          echo "VERSION=${version}" >> $GITHUB_ENV
+
+      - name: Set Release version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Pack artifacts
+        run: dotnet pack -p:PackageVersion="${{ env.VERSION }}" -o packages
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: packages/*nupkg
+
   github:
     name: Deploy to GitHub
-    needs: [build]
+    needs: [pack]
     runs-on: ubuntu-24.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: nupkgs
+          name: packages
       - name: Push to pkg.github.com
-        run: dotnet nuget push "**/*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
+        run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
 
-  nuget:
-    name: Deploy to NuGet
-    needs: [build]
+  release:
+    name: Create GitHub release
+    needs: [pack]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     steps:
@@ -36,10 +67,22 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: nupkgs
+          name: packages
+          path: packages
       - name: Create GitHub Release
-        run: gh release create ${{ github.ref_name }} **/*nupkg
+        run: gh release create ${{ github.ref_name }} packages/*nupkg
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  nuget:
+    name: Deploy to NuGet
+    needs: [release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
       - name: Push to nuget.org
-        run: dotnet nuget push "**/*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }}
+        run: dotnet nuget push "*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }}
