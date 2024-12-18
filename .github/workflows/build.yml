@@ -24,7 +24,7 @@ jobs:
             8.0.x
 
       - name: Build
-        run: dotnet build -c Release -p:ContinuousIntegrationBuild=true
+        run: dotnet build -c Release
 
       - name: Run tests with Coverage
         run: dotnet test --no-build -c Release -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
