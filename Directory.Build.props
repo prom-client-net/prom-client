@@ -20,6 +20,9 @@
     <CodeAnalysisRuleSet>$(SolutionDir).ruleset</CodeAnalysisRuleSet>
     <NoWarn>CS1591;NETSDK1138</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)icon.png" Visible="false" Pack="true" PackagePath="" />
     <None Include="$(SolutionDir)README.md" Visible="false" Pack="true" PackagePath="" />
