@@ -54,7 +54,11 @@ jobs:
         with:
           name: packages
       - name: Push to pkg.github.com
-        run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GH_FULL_PAT }} --skip-duplicate
+        run: |
+          dotnet nuget push "*.nupkg" \
+            --skip-duplicate \
+            -k ${{ secrets.GITHUB_TOKEN }} \
+            -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
 
   release:
     name: Create GitHub release
@@ -85,4 +89,7 @@ jobs:
         with:
           name: packages
       - name: Push to nuget.org
-        run: dotnet nuget push "*.nupkg" -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_DEPLOY_KEY }}
+        run: |
+          dotnet nuget push "*.nupkg" \
+            -k ${{ secrets.NUGET_DEPLOY_KEY }} \
+            -s https://api.nuget.org/v3/index.json
