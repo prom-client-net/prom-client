@@ -1,5 +1,7 @@
 # General Use Case Benchmarks
 
+![General use case benchmarks](generalcase.png)
+
 ## Legend
 * **NoLabels** - 10 000 calls to resolve a metric (1000 unique metrics) without labels and then performing observation method.
 * **WithLabels** - 10 000 calls to resolve a metric (1000 unique metrics) with labels and then performing observation method for unlabelled sample.
@@ -27,7 +29,7 @@
 |      WithLabelsAndSamples_Tuple | 131.681 ms | 1.8447 ms | 2.1243 ms | 132.430 ms |  0.63 |    0.03 |          - |     - |     - |     49.62 KB |
 | WithLabelsAndSamples_Int64Array | 166.056 ms | 2.4496 ms | 2.8210 ms | 167.168 ms |  0.79 |    0.03 | 11000.0000 |     - |     - |     47395 KB |
 | WithLabelsAndSamples_Int64Tuple | 128.643 ms | 1.3117 ms | 1.5105 ms | 129.282 ms |  0.62 |    0.02 |          - |     - |     - |     48.84 KB |
-  
+
 </details>
 
 <details>

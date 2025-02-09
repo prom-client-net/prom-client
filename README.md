@@ -25,12 +25,9 @@ Our main goals:
 - Extensibility is one of the core values, together with performance and minimal allocation.
 - We are open for suggestions and new ideas, contribution is always welcomed.
 
-## Performance comparison with prometheus-net
+You can find the [benchmark descriptions](https://github.com/prom-client-net/prom-client/blob/main/docs/benchmarks).
 
-![General use case benchmarks](https://raw.githubusercontent.com/prom-client-net/prom-client/main/docs/benchmarks/generalcase.png)
-Find more details on [benchmarks description](https://github.com/prom-client-net/prom-client/blob/main/docs/benchmarks/GeneralUseCase.md)
-
-## Installation
+## Install
 
 ```sh
 dotnet add package Prometheus.Client
@@ -39,7 +36,7 @@ dotnet add package Prometheus.Client
 ### Extensions
 
 | Name                                                                         | Description                            |
-|------------------------------------------------------------------------------|----------------------------------------|
+| ---------------------------------------------------------------------------- | -------------------------------------- |
 | [Prometheus.Client.AspNetCore][asp-net-core]                                 | ASP.NET Core middleware                |
 | [Prometheus.Client.DependencyInjection][dependency-injection]                | Dependency Injection extensions        |
 | [Prometheus.Client.HttpRequestDurations][http-request-durations]             | Metrics logging of request durations   |
