@@ -24,7 +24,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
     private readonly IReadOnlyList<string> _metricNames;
     private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
     private readonly Lazy<TImplementation> _unlabelled;
-    private readonly ConcurrentDictionary<int, TImplementation> _labelledMetrics;
+    private readonly ConcurrentDictionary<MetricKey, TImplementation> _labelledMetrics;
 
     public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
     {
@@ -35,7 +35,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
         _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
         LabelNames = LabelsHelper.FromArray<TLabels>(configuration.LabelNames);
         if (configuration.LabelNames.Count > 0)
-            _labelledMetrics = new ConcurrentDictionary<int, TImplementation>();
+            _labelledMetrics = new ConcurrentDictionary<MetricKey, TImplementation>();
     }
 
     public string Name => _configuration.Name;
@@ -64,7 +64,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
         if (labels.Length != _configuration.LabelNames.Count)
             throw new ArgumentException("Wrong number of labels");
 
-        var key = LabelsHelper.GetHashCode(labels);
+        var key = new MetricKey(labels);
 
         if (_labelledMetrics.TryGetValue(key, out var metric))
         {
@@ -83,7 +83,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
         if (labels.Length != _configuration.LabelNames.Count)
             throw new ArgumentException("Wrong number of labels");
 
-        var key = LabelsHelper.GetHashCode(labels);
+        var key = new MetricKey(labels);
         _labelledMetrics.TryRemove(key, out var removed);
 
         return removed;
@@ -94,7 +94,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
         if (_labelledMetrics == null)
             throw new InvalidOperationException("Metric family does not have any labels");
 
-        var key = LabelsHelper.GetHashCode(labels);
+        var key = new MetricKey(labels);
 
         if (_labelledMetrics.TryGetValue(key, out var metric))
         {
@@ -110,7 +110,7 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
         if (_labelledMetrics == null)
             throw new InvalidOperationException("Metric family does not have any labels");
 
-        var key = LabelsHelper.GetHashCode(labels);
+        var key = new MetricKey(labels);
         _labelledMetrics.TryRemove(key, out var removed);
 
         return removed;
@@ -147,5 +147,33 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
 
         foreach (var labelled in _labelledMetrics)
             yield return new KeyValuePair<IReadOnlyList<string>, TMetric>(labelled.Value.LabelValues, labelled.Value);
+    }
+
+    private readonly struct MetricKey : IEquatable<MetricKey>
+    {
+        private readonly int _hash1;
+        private readonly int _hash2;
+
+        public MetricKey(TLabels labels)
+        {
+            _hash1 = LabelsHelper.GetHashCode(labels, 0);
+            _hash2 = LabelsHelper.GetHashCode(labels, 42);
+        }
+
+        public MetricKey(params string[] labels)
+        {
+            _hash1 = LabelsHelper.GetHashCode(labels, 0);
+            _hash2 = LabelsHelper.GetHashCode(labels, 42);
+        }
+
+        public override int GetHashCode()
+        {
+            return _hash1;
+        }
+
+        public bool Equals(MetricKey other)
+        {
+            return _hash1 == other._hash1 && _hash2 == other._hash2;
+        }
     }
 }
