@@ -12,7 +12,7 @@ public abstract class MetricBase<TConfig>
     protected readonly TConfig Configuration;
     private readonly bool _includeTimestamp;
     private readonly bool _computeTimestamp;
-    private TimeSpan _timeToLive;
+    private readonly TimeSpan _timeToLive;
     private readonly Func<DateTimeOffset> _currentTimeProvider;
     private long _timestamp;
 
