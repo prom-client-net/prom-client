@@ -7,11 +7,12 @@ namespace Prometheus.Client;
 
 public class MetricConfiguration : CollectorConfiguration
 {
-    public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp)
+    public MetricConfiguration(string name, string help, string[] labels, bool includeTimestamp, TimeSpan timeToLive)
         : base(name)
     {
         Help = help;
         IncludeTimestamp = includeTimestamp;
+        TimeToLive = timeToLive == TimeSpan.MaxValue ? TimeSpan.Zero : timeToLive;
         LabelNames = labels ?? Array.Empty<string>();
 
         if (labels != null)
@@ -30,6 +31,8 @@ public class MetricConfiguration : CollectorConfiguration
     public string Help { get; }
 
     public bool IncludeTimestamp { get; }
+
+    public TimeSpan TimeToLive { get; }
 
     public IReadOnlyList<string> LabelNames { get; }
 

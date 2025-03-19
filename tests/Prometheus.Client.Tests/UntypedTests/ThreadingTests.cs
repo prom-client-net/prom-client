@@ -36,7 +36,7 @@ public class ThreadingTests
 
     private IUntyped CreateUntyped()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
         return new Untyped(config, Array.Empty<string>());
     }
 }

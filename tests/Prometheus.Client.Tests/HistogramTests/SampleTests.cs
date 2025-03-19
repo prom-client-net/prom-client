@@ -140,7 +140,7 @@ public class SampleTests
 
     private IHistogram CreateHistogram(double[] buckets = null)
     {
-        var config = new HistogramConfiguration("test", string.Empty, Array.Empty<string>(), buckets, false);
+        var config = new HistogramConfiguration("test", string.Empty, Array.Empty<string>(), buckets, false, TimeSpan.Zero);
         return new Histogram(config, Array.Empty<string>());
     }
 }

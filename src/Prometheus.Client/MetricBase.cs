@@ -11,6 +11,8 @@ public abstract class MetricBase<TConfig>
 {
     protected readonly TConfig Configuration;
     private readonly bool _includeTimestamp;
+    private readonly bool _computeTimestamp;
+    private TimeSpan _timeToLive;
     private readonly Func<DateTimeOffset> _currentTimeProvider;
     private long _timestamp;
 
@@ -18,7 +20,9 @@ public abstract class MetricBase<TConfig>
     {
         Configuration = config;
         _currentTimeProvider = currentTimeProvider;
+        _timeToLive = config.TimeToLive;
         _includeTimestamp = config.IncludeTimestamp;
+        _computeTimestamp = _includeTimestamp || _timeToLive > TimeSpan.Zero;
 
         LabelValues = labelValues;
     }
@@ -46,13 +50,23 @@ public abstract class MetricBase<TConfig>
         return _currentTimeProvider();
     }
 
+    public bool IsExpired()
+    {
+        if (_timeToLive == TimeSpan.Zero)
+            return false;
+
+        long now = GetUtcNow().ToUnixTimeMilliseconds();
+        long last = Interlocked.Read(ref _timestamp);
+        return TimeSpan.FromMilliseconds(now - last) > _timeToLive;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected void TrackObservation(long? timestamp = null)
     {
-        if (!_includeTimestamp)
+        if (!_computeTimestamp)
             return;
 
-        var now = GetUtcNow().ToUnixTimeMilliseconds();
+        long now = GetUtcNow().ToUnixTimeMilliseconds();
 
         if (!timestamp.HasValue)
         {

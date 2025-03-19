@@ -75,7 +75,7 @@ public class HistogramCreationBenchmarks : ComparisonBenchmarkBase
     public void SingleWithSharedLabels()
     {
         for (var i = 0; i < _metricsPerIteration; i++)
-            OurMetricFactory.CreateHistogram("testhistogram", HelpText, false, null, _labelNames);
+            OurMetricFactory.CreateHistogram("testhistogram", HelpText, false, TimeSpan.Zero, null, _labelNames);
     }
 
     [Benchmark(Baseline = true)]

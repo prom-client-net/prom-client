@@ -23,18 +23,18 @@ public class MetricFactory : IMetricFactory
         _registry = registry;
     }
 
-    public ICounter CreateCounter(string name, string help, bool includeTimestamp = false)
+    public ICounter CreateCounter(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        var metric = CreateCounter(name, help, ValueTuple.Create(), includeTimestamp);
+        var metric = CreateCounter(name, help, ValueTuple.Create(), includeTimestamp, timeToLive);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(string name, string help, string labelName, bool includeTimestamp = false)
+    public IMetricFamily<ICounter, ValueTuple<string>> CreateCounter(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        return CreateCounter(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        return CreateCounter(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive);
     }
 
-    public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
+    public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -44,7 +44,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive);
             metric = CreateCounterInternal<TLabels>(configuration);
         }
         else
@@ -57,15 +57,20 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<ICounter> CreateCounter(string name, string help, params string[] labelNames)
     {
-        return CreateCounter(name, help, false, labelNames);
+        return CreateCounter(name, help, false, TimeSpan.Zero, labelNames);
     }
 
     public IMetricFamily<ICounter> CreateCounter(string name, string help, bool includeTimestamp = false, params string[] labelNames)
     {
+        return CreateCounter(name, help, includeTimestamp, TimeSpan.Zero, labelNames);
+    }
+
+    public IMetricFamily<ICounter> CreateCounter(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
+    {
         var metric = TryGetByName<IMetricFamily<ICounter>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, timeToLive);
             metric = GetCounterFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -76,18 +81,18 @@ public class MetricFactory : IMetricFactory
         return metric;
     }
 
-    public ICounter<long> CreateCounterInt64(string name, string help, bool includeTimestamp = false)
+    public ICounter<long> CreateCounterInt64(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        var metric = CreateCounterInt64(name, help, ValueTuple.Create(), includeTimestamp);
+        var metric = CreateCounterInt64(name, help, ValueTuple.Create(), includeTimestamp, timeToLive);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<ICounter<long>, ValueTuple<string>> CreateCounterInt64(string name, string help, string labelName, bool includeTimestamp = false)
+    public IMetricFamily<ICounter<long>, ValueTuple<string>> CreateCounterInt64(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        return CreateCounterInt64(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        return CreateCounterInt64(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive);
     }
 
-    public IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
+    public IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -97,7 +102,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive);
             metric = CreateCounterInt64Internal<TLabels>(configuration);
         }
         else
@@ -110,15 +115,20 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, params string[] labelNames)
     {
-        return CreateCounterInt64(name, help, false, labelNames);
+        return CreateCounterInt64(name, help, false, TimeSpan.Zero, labelNames);
     }
 
     public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, bool includeTimestamp = false, params string[] labelNames)
     {
+        return CreateCounterInt64(name, help, includeTimestamp, TimeSpan.Zero, labelNames);
+    }
+
+    public IMetricFamily<ICounter<long>> CreateCounterInt64(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
+    {
         var metric = TryGetByName<IMetricFamily<ICounter<long>>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, timeToLive);
             metric = GetCounterInt64Factory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -129,13 +139,13 @@ public class MetricFactory : IMetricFactory
         return metric;
     }
 
-    public IGauge CreateGauge(string name, string help, bool includeTimestamp = false)
+    public IGauge CreateGauge(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        var metric = CreateGauge(name, help, ValueTuple.Create(), includeTimestamp);
+        var metric = CreateGauge(name, help, ValueTuple.Create(), includeTimestamp, timeToLive);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
+    public IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -145,7 +155,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive);
             metric = CreateGaugeInternal<TLabels>(configuration);
         }
         else
@@ -158,20 +168,25 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<IGauge> CreateGauge(string name, string help, params string[] labelNames)
     {
-        return CreateGauge(name, help, false, labelNames);
+        return CreateGauge(name, help, false, TimeSpan.Zero, labelNames);
     }
 
-    public IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(string name, string help, string labelName, bool includeTimestamp = false)
+    public IMetricFamily<IGauge, ValueTuple<string>> CreateGauge(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        return CreateGauge(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        return CreateGauge(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive);
     }
 
     public IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, params string[] labelNames)
     {
+        return CreateGauge(name, help, includeTimestamp, TimeSpan.Zero, labelNames);
+    }
+
+    public IMetricFamily<IGauge> CreateGauge(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
+    {
         var metric = TryGetByName<IMetricFamily<IGauge>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, timeToLive);
             metric = GetGaugeFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -182,18 +197,18 @@ public class MetricFactory : IMetricFactory
         return metric;
     }
 
-    public IGauge<long> CreateGaugeInt64(string name, string help, bool includeTimestamp = false)
+    public IGauge<long> CreateGaugeInt64(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        var metric = CreateGaugeInt64(name, help, ValueTuple.Create(), includeTimestamp);
+        var metric = CreateGaugeInt64(name, help, ValueTuple.Create(), includeTimestamp, timeToLive);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(string name, string help, string labelName, bool includeTimestamp = false)
+    public IMetricFamily<IGauge<long>, ValueTuple<string>> CreateGaugeInt64(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        return CreateGaugeInt64(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        return CreateGaugeInt64(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive);
     }
 
-    public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
+    public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -203,7 +218,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge<long>, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive);
             metric = CreateGaugeInt64Internal<TLabels>(configuration);
         }
         else
@@ -216,15 +231,20 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, params string[] labelNames)
     {
-        return CreateGaugeInt64(name, help, false, labelNames);
+        return CreateGaugeInt64(name, help, false, TimeSpan.Zero, labelNames);
     }
 
     public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, bool includeTimestamp = false, params string[] labelNames)
     {
+        return CreateGaugeInt64(name, help, includeTimestamp, TimeSpan.Zero, labelNames);
+    }
+
+    public IMetricFamily<IGauge<long>> CreateGaugeInt64(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
+    {
         var metric = TryGetByName<IMetricFamily<IGauge<long>>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, timeToLive);
             metric = GetGaugeInt64Factory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -235,18 +255,18 @@ public class MetricFactory : IMetricFactory
         return metric;
     }
 
-    public IHistogram CreateHistogram(string name, string help, bool includeTimestamp = false, double[] buckets = null)
+    public IHistogram CreateHistogram(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, double[] buckets = null)
     {
-        var metric = CreateHistogram(name, help, ValueTuple.Create(), includeTimestamp, buckets);
+        var metric = CreateHistogram(name, help, ValueTuple.Create(), includeTimestamp, timeToLive, buckets);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(string name, string help, string labelName, bool includeTimestamp = false, double[] buckets = null)
+    public IMetricFamily<IHistogram, ValueTuple<string>> CreateHistogram(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default, double[] buckets = null)
     {
-        return CreateHistogram(name, help, ValueTuple.Create(labelName), includeTimestamp, buckets);
+        return CreateHistogram(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive, buckets);
     }
 
-    public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
+    public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default, double[] buckets = null)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -256,7 +276,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labelNames), buckets, includeTimestamp);
+            var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labelNames), buckets, includeTimestamp, timeToLive);
             metric = CreateHistogramInternal<TLabels>(configuration);
         }
         else
@@ -269,25 +289,35 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<IHistogram> CreateHistogram(string name, string help, params string[] labelNames)
     {
-        return CreateHistogram(name, help, false, null, labelNames);
+        return CreateHistogram(name, help, false, TimeSpan.Zero, null, labelNames);
     }
 
     public IMetricFamily<IHistogram> CreateHistogram(string name, string help, bool includeTimestamp = false, params string[] labelNames)
     {
-        return CreateHistogram(name, help, includeTimestamp, null, labelNames);
+        return CreateHistogram(name, help, includeTimestamp, TimeSpan.Zero, null, labelNames);
+    }
+
+    public IMetricFamily<IHistogram> CreateHistogram(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
+    {
+        return CreateHistogram(name, help, includeTimestamp, timeToLive, null, labelNames);
     }
 
     public IMetricFamily<IHistogram> CreateHistogram(string name, string help, double[] buckets = null, params string[] labelNames)
     {
-        return CreateHistogram(name, help, false, buckets, labelNames);
+        return CreateHistogram(name, help, false, TimeSpan.Zero, buckets, labelNames);
     }
 
     public IMetricFamily<IHistogram> CreateHistogram(string name, string help, bool includeTimestamp = false, double[] buckets = null, params string[] labelNames)
     {
+        return CreateHistogram(name, help, includeTimestamp, TimeSpan.Zero, buckets, labelNames);
+    }
+
+    public IMetricFamily<IHistogram> CreateHistogram(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, double[] buckets = null, params string[] labelNames)
+    {
         var metric = TryGetByName<IMetricFamily<IHistogram>>(name);
         if (metric == null)
         {
-            var configuration = new HistogramConfiguration(name, help, labelNames, buckets, includeTimestamp);
+            var configuration = new HistogramConfiguration(name, help, labelNames, buckets, includeTimestamp, timeToLive);
             metric = GetHistogramFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -298,18 +328,18 @@ public class MetricFactory : IMetricFactory
         return metric;
     }
 
-    public IUntyped CreateUntyped(string name, string help, bool includeTimestamp = false)
+    public IUntyped CreateUntyped(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        var metric = CreateUntyped(name, help, ValueTuple.Create(), includeTimestamp);
+        var metric = CreateUntyped(name, help, ValueTuple.Create(), includeTimestamp, timeToLive);
         return metric.Unlabelled;
     }
 
-    public IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(string name, string help, string labelName, bool includeTimestamp = false)
+    public IMetricFamily<IUntyped, ValueTuple<string>> CreateUntyped(string name, string help, string labelName, bool includeTimestamp = false, TimeSpan timeToLive = default)
     {
-        return CreateUntyped(name, help, ValueTuple.Create(labelName), includeTimestamp);
+        return CreateUntyped(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive);
     }
 
-    public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
+    public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, TimeSpan timeToLive = default)
 #if NET6_0_OR_GREATER
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
@@ -319,7 +349,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive);
             metric = CreateUntypedInternal<TLabels>(configuration);
         }
         else
@@ -332,15 +362,15 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<IUntyped> CreateUntyped(string name, string help, params string[] labelNames)
     {
-        return CreateUntyped(name, help, false, labelNames);
+        return CreateUntyped(name, help, false, TimeSpan.Zero, labelNames);
     }
 
-    public IMetricFamily<IUntyped> CreateUntyped(string name, string help, bool includeTimestamp = false, params string[] labelNames)
+    public IMetricFamily<IUntyped> CreateUntyped(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
     {
         var metric = TryGetByName<IMetricFamily<IUntyped>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, timeToLive);
             metric = GetUntypedFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -353,12 +383,12 @@ public class MetricFactory : IMetricFactory
 
     public IMetricFamily<ISummary> CreateSummary(string name, string help, params string[] labelNames)
     {
-        return CreateSummary(name, help, false, labelNames);
+        return CreateSummary(name, help, false, TimeSpan.Zero, labelNames);
     }
 
-    public IMetricFamily<ISummary> CreateSummary(string name, string help, bool includeTimestamp = false, params string[] labelNames)
+    public IMetricFamily<ISummary> CreateSummary(string name, string help, bool includeTimestamp = false, TimeSpan timeToLive = default, params string[] labelNames)
     {
-        return CreateSummary(name, help, labelNames, includeTimestamp);
+        return CreateSummary(name, help, labelNames, includeTimestamp, timeToLive);
     }
 
     public IMetricFamily<ISummary> CreateSummary(
@@ -370,19 +400,20 @@ public class MetricFactory : IMetricFactory
         int? ageBuckets,
         int? bufCap)
     {
-        return CreateSummary(name, help, labelNames, false, objectives, maxAge, ageBuckets, bufCap);
+        return CreateSummary(name, help, labelNames, false, TimeSpan.Zero, objectives, maxAge, ageBuckets, bufCap);
     }
 
     public ISummary CreateSummary(
         string name,
         string help,
         bool includeTimestamp = false,
+        TimeSpan timeToLive = default,
         IReadOnlyList<QuantileEpsilonPair> objectives = null,
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
         int? bufCap = null)
     {
-        var metric = CreateSummary(name, help, ValueTuple.Create(), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+        var metric = CreateSummary(name, help, ValueTuple.Create(), includeTimestamp, timeToLive, objectives, maxAge, ageBuckets, bufCap);
         return metric.Unlabelled;
     }
 
@@ -391,12 +422,13 @@ public class MetricFactory : IMetricFactory
         string help,
         string labelName,
         bool includeTimestamp = false,
+        TimeSpan timeToLive = default,
         IReadOnlyList<QuantileEpsilonPair> objectives = null,
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
         int? bufCap = null)
     {
-        return CreateSummary(name, help, ValueTuple.Create(labelName), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+        return CreateSummary(name, help, ValueTuple.Create(labelName), includeTimestamp, timeToLive, objectives, maxAge, ageBuckets, bufCap);
     }
 
     public IMetricFamily<ISummary, TLabels> CreateSummary<TLabels>(
@@ -404,6 +436,7 @@ public class MetricFactory : IMetricFactory
         string help,
         TLabels labelNames,
         bool includeTimestamp = false,
+        TimeSpan timeToLive = default,
         IReadOnlyList<QuantileEpsilonPair> objectives = null,
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
@@ -417,7 +450,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+            var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, timeToLive, objectives, maxAge, ageBuckets, bufCap);
             metric = CreateSummaryInternal<TLabels>(configuration);
         }
         else
@@ -433,6 +466,7 @@ public class MetricFactory : IMetricFactory
         string help,
         string[] labelNames,
         bool includeTimestamp,
+        TimeSpan timeToLive = default,
         IReadOnlyList<QuantileEpsilonPair> objectives = null,
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
@@ -441,7 +475,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ISummary>>(name);
         if (metric == null)
         {
-            var configuration = new SummaryConfiguration(name, help, labelNames, includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+            var configuration = new SummaryConfiguration(name, help, labelNames, includeTimestamp, timeToLive, objectives, maxAge, ageBuckets, bufCap);
             metric = GetSummaryFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else

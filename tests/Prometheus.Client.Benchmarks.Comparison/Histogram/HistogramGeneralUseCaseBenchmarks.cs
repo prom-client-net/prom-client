@@ -1,3 +1,4 @@
+using System;
 using BenchmarkDotNet.Attributes;
 
 namespace Prometheus.Client.Benchmarks.Comparison.Histogram;
@@ -63,7 +64,7 @@ public class HistogramGeneralUseCaseBenchmarks : ComparisonBenchmarkBase
     {
         for (var i = 0; i < _metricsCount; i++)
         {
-            var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, false,"foo", "bar", "baz");
+            var histogram = OurMetricFactory.CreateHistogram(_metricNames[i], HelpText, false, TimeSpan.Zero, "foo", "bar", "baz");
             histogram.Observe(i / 100d);
         }
     }

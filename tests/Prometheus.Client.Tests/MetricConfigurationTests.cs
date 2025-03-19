@@ -10,7 +10,7 @@ public class MetricConfigurationTests
     [InlineData("")]
     public void ThrowOnInvalidCollectorName(string collectorName)
     {
-        Assert.Throws<ArgumentNullException>(() => new MetricConfiguration(collectorName, string.Empty, null, false));
+        Assert.Throws<ArgumentNullException>(() => new MetricConfiguration(collectorName, string.Empty, null, false, TimeSpan.Zero));
     }
 
     [Theory]
@@ -24,6 +24,6 @@ public class MetricConfigurationTests
     [InlineData("__label")]
     public void ThrowOnInvalidLabels(string label)
     {
-        Assert.Throws<ArgumentException>(() => new MetricConfiguration("test_metric", string.Empty, new[] { label }, false));
+        Assert.Throws<ArgumentException>(() => new MetricConfiguration("test_metric", string.Empty, new[] { label }, false, TimeSpan.Zero));
     }
 }
