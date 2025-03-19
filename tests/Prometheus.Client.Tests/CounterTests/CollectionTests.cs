@@ -55,7 +55,6 @@ public class CollectionTests
 
                 counterWithTtl.Unlabelled.Inc(10.1);
                 counterWithTtl.WithLabels(("any", "2")).Inc(5.2);
-
             }, $"{_resourcesNamespace}.CounterTests_Collection.txt");
     }
 }
