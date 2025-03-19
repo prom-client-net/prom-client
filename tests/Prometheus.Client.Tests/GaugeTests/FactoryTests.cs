@@ -22,6 +22,7 @@ public class FactoryTests
         Assert.Throws<InvalidOperationException>(() => _factory.CreateGauge("test_gauge", string.Empty, "label1", "testlabel"));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateGauge("test_gauge", string.Empty, new[] { "label1" }));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateGauge("test_gauge", string.Empty, "label1", "label2", "label3"));
+        Assert.Throws<InvalidOperationException>(() => _factory.CreateGauge("test_gauge", string.Empty, false, "label1", "label2", "label3"));
     }
 
     [Fact]

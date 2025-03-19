@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Prometheus.Client.Tests.Mocks;
 using Xunit;
 

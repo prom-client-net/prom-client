@@ -18,6 +18,7 @@ public class FactoryTests
         Assert.Throws<InvalidOperationException>(() => factory.CreateCounterInt64("test_counter", string.Empty, "label1", "testlabel"));
         Assert.Throws<InvalidOperationException>(() => factory.CreateCounterInt64("test_counter", string.Empty, new[] { "label1" }));
         Assert.Throws<InvalidOperationException>(() => factory.CreateCounterInt64("test_counter", string.Empty, "label1", "label2", "label3"));
+        Assert.Throws<InvalidOperationException>(() => factory.CreateCounterInt64("test_counter", string.Empty, false, "label1", "label2", "label3"));
     }
 
     [Fact]
