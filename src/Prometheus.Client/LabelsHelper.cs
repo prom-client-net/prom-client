@@ -61,19 +61,19 @@ internal static class LabelsHelper
 #endif
     }
 
-    public static int GetHashCode<TTuple>(TTuple values)
+    public static int GetHashCode<TTuple>(TTuple values, int seed = 0)
 #if NET6_0_OR_GREATER
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
 #endif
     {
-        return TupleHelper<TTuple>.GetTupleHashCode(values);
+        return TupleHelper<TTuple>.GetTupleHashCode(values, seed);
     }
 
-    public static int GetHashCode(IReadOnlyList<string> values)
+    public static int GetHashCode(IReadOnlyList<string> values, int seed = 0)
     {
-        var result = 0;
+        var result = seed;
 
         // ReSharper disable once ForCanBeConvertedToForeach
         // do not use for-each here, it allocates which is easy to avoid by for loop
@@ -260,9 +260,9 @@ internal static class LabelsHelper
             });
         }
 
-        public static int GetTupleHashCode(TTuple values)
+        public static int GetTupleHashCode(TTuple values, int seed)
         {
-            return _hashCodeReducer(values, 0, (item, _, aggregated) =>
+            return _hashCodeReducer(values, seed, (item, _, aggregated) =>
             {
                 if (item == null)
                     throw new ArgumentException("Label value cannot be empty");
