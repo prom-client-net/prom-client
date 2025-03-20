@@ -172,7 +172,7 @@ public class SampleTests
 
     private IGauge CreateGauge()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
         return new Gauge(config, Array.Empty<string>());
     }
 }

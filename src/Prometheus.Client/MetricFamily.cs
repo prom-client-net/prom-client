@@ -23,8 +23,8 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
     private readonly TConfig _configuration;
     private readonly IReadOnlyList<string> _metricNames;
     private readonly Func<TConfig, IReadOnlyList<string>, TImplementation> _instanceFactory;
-    private readonly Lazy<TImplementation> _unlabelled;
     private readonly ConcurrentDictionary<MetricKey, TImplementation> _labelledMetrics;
+    private Lazy<TImplementation> _unlabelled;
 
     public MetricFamily(TConfig configuration, MetricType metricType, Func<TConfig, IReadOnlyList<string>, TImplementation> instanceFactory)
     {
@@ -120,12 +120,29 @@ public sealed class MetricFamily<TMetric, TImplementation, TLabels, TConfig> : I
     {
         writer.WriteMetricHeader(_configuration.Name, _metricType, _configuration.Help);
         if (_unlabelled.IsValueCreated)
-            _unlabelled.Value.Collect(writer);
+        {
+            if (_unlabelled.Value.IsExpired())
+            {
+                _unlabelled = new Lazy<TImplementation>(() => _instanceFactory(_configuration, default));
+            }
+            else
+            {
+                _unlabelled.Value.Collect(writer);
+            }
+        }
 
         if (_labelledMetrics != null)
         {
             foreach (var labelledMetric in _labelledMetrics)
+            {
+                if (labelledMetric.Value.IsExpired())
+                {
+                    _labelledMetrics.TryRemove(labelledMetric.Key, out _);
+                    continue;
+                }
+
                 labelledMetric.Value.Collect(writer);
+            }
         }
 
         writer.EndMetric();

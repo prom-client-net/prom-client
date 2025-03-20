@@ -61,7 +61,7 @@ public class SampleTests
 
     private CounterInt64 CreateCounter()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
         return new CounterInt64(config, Array.Empty<string>());
     }
 }

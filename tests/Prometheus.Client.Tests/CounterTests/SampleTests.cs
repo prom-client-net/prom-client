@@ -79,7 +79,7 @@ public class SampleTests
 
     private Counter CreateCounter()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
         return new Counter(config, Array.Empty<string>());
     }
 }

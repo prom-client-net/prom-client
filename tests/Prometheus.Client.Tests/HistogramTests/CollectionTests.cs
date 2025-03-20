@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -11,7 +12,7 @@ public class CollectionTests
     public Task EmptyCollection()
     {
         return CollectionTestHelper.TestCollectionAsync(factory => {
-            factory.CreateHistogram("hist1", "help", false, new[] { 1.0, 2.0, 3.0 });
+            factory.CreateHistogram("hist1", "help", false, TimeSpan.Zero, new[] { 1.0, 2.0, 3.0 });
         }, $"{_resourcesNamespace}.HistogramTests_Empty.txt");
     }
 

@@ -219,7 +219,7 @@ public class MetricFamilyTests
 
     private static IMetricFamily<IDummyMetric> CreateMetricFamily()
     {
-        var config = new MetricConfiguration("dummy_metric", string.Empty, Array.Empty<string>(), false);
+        var config = new MetricConfiguration("dummy_metric", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
         return new MetricFamily<IDummyMetric, DummyMetric, ValueTuple, MetricConfiguration>(
             config, MetricType.Untyped,
             (configuration, list) => new DummyMetric(configuration, list, null));
@@ -227,7 +227,7 @@ public class MetricFamilyTests
 
     private static IMetricFamily<IDummyMetric> CreateMetricFamily(string label1, string label2)
     {
-        var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, false);
+        var config = new MetricConfiguration("dummy_metric", string.Empty, new[] {label1, label2}, false, TimeSpan.Zero);
         return new MetricFamily<IDummyMetric, DummyMetric, (string, string), MetricConfiguration>(
             config, MetricType.Untyped,
             (configuration, list) => new DummyMetric(configuration, list, null));
@@ -240,7 +240,7 @@ public class MetricFamilyTests
         where TLabels : struct, IEquatable<TLabels>
 #endif
     {
-        var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), false);
+        var config = new MetricConfiguration("dummy_metric", string.Empty, LabelsHelper.ToArray(labels), false, TimeSpan.Zero);
         return new MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration>(
             config, MetricType.Untyped,
             (configuration, list) => new DummyMetric(configuration, list, null));

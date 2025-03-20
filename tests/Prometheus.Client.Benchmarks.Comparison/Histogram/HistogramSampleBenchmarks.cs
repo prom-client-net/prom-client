@@ -1,4 +1,5 @@
 extern alias Their;
+using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 
@@ -23,7 +24,7 @@ public class HistogramSampleBenchmarks : ComparisonBenchmarkBase
     public void Setup()
     {
         _histogramDefaultBuckets = OurMetricFactory.CreateHistogram("testhistogram1", HelpText);
-        _histogramManyBuckets = OurMetricFactory.CreateHistogram("testhistogram2", HelpText, false, _bucketsMany);
+        _histogramManyBuckets = OurMetricFactory.CreateHistogram("testhistogram2", HelpText, false, TimeSpan.Zero, _bucketsMany);
 
         _theirHistogramDefaultBuckets = TheirMetricFactory.CreateHistogram("testhistogram1", HelpText);
         _theirHistogramManyBuckets = TheirMetricFactory.CreateHistogram("testhistogram2", HelpText, new Their.Prometheus.HistogramConfiguration() { Buckets = _bucketsMany});

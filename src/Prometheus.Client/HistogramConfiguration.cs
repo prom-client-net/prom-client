@@ -16,8 +16,8 @@ public class HistogramConfiguration : MetricConfiguration
         _defaultFormattedBuckets = GetFormattedBuckets(_defaultBuckets);
     }
 
-    public HistogramConfiguration(string name, string help, string[] labels, double[] buckets, bool includeTimestamp)
-        : base(name, help, labels, includeTimestamp)
+    public HistogramConfiguration(string name, string help, string[] labels, double[] buckets, bool includeTimestamp, TimeSpan timeToLive)
+        : base(name, help, labels, includeTimestamp, timeToLive)
     {
         if (LabelNames.Any(l => l == "le"))
             throw new ArgumentException("'le' is a reserved label name");

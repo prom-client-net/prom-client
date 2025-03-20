@@ -36,11 +36,12 @@ public class SummaryConfiguration : MetricConfiguration
         string help,
         string[] labelNames,
         bool includeTimestamp,
+        TimeSpan timeToLive,
         IReadOnlyList<QuantileEpsilonPair> objectives = null,
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
         int? bufCap = null)
-        : base(name, help, labelNames, includeTimestamp)
+        : base(name, help, labelNames, includeTimestamp, timeToLive)
     {
         Objectives = objectives;
         if (Objectives == null || Objectives.Count == 0)
