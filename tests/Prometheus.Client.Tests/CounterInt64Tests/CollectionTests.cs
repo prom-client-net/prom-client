@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -29,7 +28,7 @@ public class CollectionTests
     public Task Collection()
     {
         return CollectionTestHelper.TestCollectionAsync(factory => {
-            var counter = factory.CreateCounterInt64("test", "with help text", false, TimeSpan.Zero, "category");
+            var counter = factory.CreateCounterInt64("test", "with help text", false, "category");
             counter.Unlabelled.Inc();
             counter.WithLabels("some").Inc(2);
 

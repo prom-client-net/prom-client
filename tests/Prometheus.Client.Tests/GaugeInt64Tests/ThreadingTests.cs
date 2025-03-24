@@ -36,7 +36,7 @@ public class ThreadingTests
 
     private IGauge<long> CreateGauge()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), false);
         return new GaugeInt64(config, Array.Empty<string>());
     }
 }

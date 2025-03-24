@@ -37,7 +37,7 @@ public class ThreadingTests
 
     private Summary CreateSummary()
     {
-        var config = new SummaryConfiguration("test", string.Empty, Array.Empty<string>(), false, TimeSpan.Zero);
+        var config = new SummaryConfiguration("test", string.Empty, Array.Empty<string>(), false);
         return new Summary(config, Array.Empty<string>());
     }
 }
