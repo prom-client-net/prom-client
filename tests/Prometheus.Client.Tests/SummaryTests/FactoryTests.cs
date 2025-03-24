@@ -21,7 +21,6 @@ public class FactoryTests
         Assert.Throws<InvalidOperationException>(() => _factory.CreateSummary("test_histogram", string.Empty, "label1", "testlabel"));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateSummary("test_histogram", string.Empty, new[] { "label1" }));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateSummary("test_histogram", string.Empty, "label1", "label2", "label3"));
-        Assert.Throws<InvalidOperationException>(() => _factory.CreateSummary("test_histogram", string.Empty, false, TimeSpan.Zero, "label1", "label2", "label3"));
     }
 
     [Fact]

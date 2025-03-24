@@ -43,12 +43,15 @@ public class CollectionTests
     [Fact]
     public Task RemoveExpiredSerieDueToTtl()
     {
-        return CollectionTestHelper.TestCollectionAsync(factory => {
-                var counterWithoutTtl = factory.CreateCounter("test", "with help text", "category");
+        return CollectionTestHelper.TestCollectionAsync(registry =>
+            {
+                var factoryWithoutTtl = new MetricFactory(registry);
+                var counterWithoutTtl = factoryWithoutTtl.CreateCounter("test", "with help text", "category");
                 counterWithoutTtl.Unlabelled.Inc();
                 counterWithoutTtl.WithLabels("some").Inc(2.1);
 
-                var counterWithTtl = factory.CreateCounter("nextcounter", "with help text", ("group", "type"), timeToLive: TimeSpan.FromSeconds(1));
+                var factoryWithTtl = new MetricFactory(registry, TimeSpan.FromSeconds(1));
+                var counterWithTtl = factoryWithTtl.CreateCounter("nextcounter", "with help text", ("group", "type"));
                 counterWithTtl.WithLabels(("old", "serie")).Inc(8.7);
 
                 Thread.Sleep(1100);

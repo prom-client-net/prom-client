@@ -10,6 +10,7 @@ public class MetricFactory : IMetricFactory
 {
     private readonly ICollectorRegistry _registry;
     private readonly object _factoryProxyLock = new();
+    private readonly TimeSpan _timeToLive;
     private Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter>>[] _counterFactoryProxies;
     private Func<MetricFactory, MetricConfiguration, IMetricFamily<ICounter<long>>>[] _counterInt64FactoryProxies;
     private Func<MetricFactory, MetricConfiguration, IMetricFamily<IGauge>>[] _gaugeFactoryProxies;
@@ -21,6 +22,18 @@ public class MetricFactory : IMetricFactory
     public MetricFactory(ICollectorRegistry registry)
     {
         _registry = registry;
+        _timeToLive = TimeSpan.Zero;
+    }
+
+    /// <summary>
+    /// Create an instance of MetricFactory with a time-to-live for metrics
+    /// </summary>
+    /// <param name="registry">Metric collector registry</param>
+    /// <param name="timeToLive">Remove metric if not set/incremented for the given duration</param>
+    public MetricFactory(ICollectorRegistry registry, TimeSpan timeToLive)
+    {
+        _registry = registry;
+        _timeToLive = timeToLive;
     }
 
     public ICounter CreateCounter(string name, string help, bool includeTimestamp = false)
@@ -44,7 +57,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive);
             metric = CreateCounterInternal<TLabels>(configuration);
         }
         else
@@ -65,7 +78,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, _timeToLive);
             metric = GetCounterFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -97,7 +110,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter<long>, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive);
             metric = CreateCounterInt64Internal<TLabels>(configuration);
         }
         else
@@ -118,7 +131,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ICounter<long>>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, _timeToLive);
             metric = GetCounterInt64Factory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -145,7 +158,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive);
             metric = CreateGaugeInternal<TLabels>(configuration);
         }
         else
@@ -171,7 +184,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, _timeToLive);
             metric = GetGaugeFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -203,7 +216,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge<long>, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive);
             metric = CreateGaugeInt64Internal<TLabels>(configuration);
         }
         else
@@ -224,7 +237,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IGauge<long>>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, _timeToLive);
             metric = GetGaugeInt64Factory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -256,7 +269,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IHistogram, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labelNames), buckets, includeTimestamp);
+            var configuration = new HistogramConfiguration(name, help, LabelsHelper.ToArray(labelNames), buckets, includeTimestamp, _timeToLive);
             metric = CreateHistogramInternal<TLabels>(configuration);
         }
         else
@@ -287,7 +300,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IHistogram>>(name);
         if (metric == null)
         {
-            var configuration = new HistogramConfiguration(name, help, labelNames, buckets, includeTimestamp);
+            var configuration = new HistogramConfiguration(name, help, labelNames, buckets, includeTimestamp, _timeToLive);
             metric = GetHistogramFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -319,7 +332,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IUntyped, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive);
             metric = CreateUntypedInternal<TLabels>(configuration);
         }
         else
@@ -340,7 +353,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<IUntyped>>(name);
         if (metric == null)
         {
-            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp);
+            var configuration = new MetricConfiguration(name, help, labelNames, includeTimestamp, _timeToLive);
             metric = GetUntypedFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else
@@ -417,7 +430,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ISummary, TLabels>>(name);
         if (metric == null)
         {
-            var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+            var configuration = new SummaryConfiguration(name, help, LabelsHelper.ToArray(labelNames), includeTimestamp, _timeToLive, objectives, maxAge, ageBuckets, bufCap);
             metric = CreateSummaryInternal<TLabels>(configuration);
         }
         else
@@ -441,7 +454,7 @@ public class MetricFactory : IMetricFactory
         var metric = TryGetByName<IMetricFamily<ISummary>>(name);
         if (metric == null)
         {
-            var configuration = new SummaryConfiguration(name, help, labelNames, includeTimestamp, objectives, maxAge, ageBuckets, bufCap);
+            var configuration = new SummaryConfiguration(name, help, labelNames, includeTimestamp, _timeToLive, objectives, maxAge, ageBuckets, bufCap);
             metric = GetSummaryFactory(labelNames?.Length ?? 0)(this, configuration);
         }
         else

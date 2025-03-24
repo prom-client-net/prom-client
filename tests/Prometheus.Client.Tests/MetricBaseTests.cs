@@ -13,7 +13,7 @@ public class MetricBaseTests
     [InlineData(1586594808L, 1586594700L, 1586594700L)]
     public void TimestampTests(long now, long? ts, long expectedTs)
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true, TimeSpan.Zero);
 
         var metric = new DummyMetric(config, Array.Empty<string>(), () => DateTimeOffset.FromUnixTimeMilliseconds(now));
         metric.Observe(ts);
@@ -46,7 +46,7 @@ public class MetricBaseTests
     [Fact]
     public void ShouldIgnoreTsIfCurrentIsMore()
     {
-        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true);
+        var config = new MetricConfiguration("test", string.Empty, Array.Empty<string>(), true, TimeSpan.Zero);
 
         var metric = new DummyMetric(config, Array.Empty<string>(), null);
         metric.Observe(1586594808);

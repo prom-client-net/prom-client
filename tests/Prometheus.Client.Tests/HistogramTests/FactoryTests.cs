@@ -22,9 +22,7 @@ public class FactoryTests
         Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, new[] { "label1" }));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, "label1", "label2", "label3"));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, false, "label1", "label2", "label3"));
-        Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, false, TimeSpan.Zero, "label1", "label2", "label3"));
         Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, false, Array.Empty<double>(), "label1", "label2", "label3"));
-        Assert.Throws<InvalidOperationException>(() => _factory.CreateHistogram("test_histogram", string.Empty, false, TimeSpan.Zero, Array.Empty<double>(), "label1", "label2", "label3"));
     }
 
     [Fact]

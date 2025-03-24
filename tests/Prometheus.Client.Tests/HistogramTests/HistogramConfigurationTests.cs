@@ -15,7 +15,8 @@ public class HistogramConfigurationTests
                 string.Empty,
                 new[] {"le"},
                 null,
-                false);
+                false,
+                TimeSpan.Zero);
         }
 
         Assert.Throws<ArgumentException>(Create);
@@ -31,7 +32,8 @@ public class HistogramConfigurationTests
                 string.Empty,
                 Array.Empty<string>(),
                 new double[0],
-                false);
+                false,
+                TimeSpan.Zero);
         }
 
         Assert.Throws<ArgumentException>(Create);
@@ -47,7 +49,8 @@ public class HistogramConfigurationTests
                 string.Empty,
                 Array.Empty<string>(),
                 new [] { 0d, -1d },
-                false);
+                false,
+                TimeSpan.Zero);
         }
 
         Assert.Throws<ArgumentException>(Create);
