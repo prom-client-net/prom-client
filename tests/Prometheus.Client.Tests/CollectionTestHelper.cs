@@ -10,12 +10,20 @@ namespace Prometheus.Client.Tests;
 
 internal static class CollectionTestHelper
 {
-    public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
+    public static Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
+    {
+        return TestCollectionAsync(registry =>
+        {
+            var factory = new MetricFactory(registry);
+            metricsSetup(factory);
+        }, resourceName);
+    }
+
+    public static async Task TestCollectionAsync(Action<ICollectorRegistry> setup, string resourceName)
     {
         var registry = new CollectorRegistry();
-        var factory = new MetricFactory(registry);
 
-        metricsSetup(factory);
+        setup(registry);
 
         string formattedText;
 
