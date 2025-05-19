@@ -185,9 +185,9 @@ Contributions to the package are always welcome!
 
 ## Supporters
 
-[![JetBrains](https://avatars.githubusercontent.com/u/878437?s=75&v=4)](https://github.com/jetbrains)
+[Entity Framework Extensions](https://entityframework-extensions.net) is a major sponsor and is proud to contribute to this project.
 
-We much appreciate free licenses provided by [JetBrains](https://github.com/jetbrains) to support our library.
+[![Entity Framework Extensions](https://raw.githubusercontent.com/prom-client-net/prom-client/main/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert)
 
 ## License
 
