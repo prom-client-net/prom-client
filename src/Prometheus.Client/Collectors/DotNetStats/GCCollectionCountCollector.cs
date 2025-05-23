@@ -4,6 +4,9 @@ using Prometheus.Client.MetricsWriter;
 
 namespace Prometheus.Client.Collectors.DotNetStats;
 
+/// <summary>
+/// Collector for GC collection count.
+/// </summary>
 public class GCCollectionCountCollector : ICollector
 {
     private const string _help = "GC collection count";
@@ -23,7 +26,7 @@ public class GCCollectionCountCollector : ICollector
     {
         _name = prefixName + "dotnet_collection_count_total";
         Configuration = new CollectorConfiguration(nameof(GCCollectionCountCollector));
-        MetricNames = new[] { _name };
+        MetricNames = [_name];
         _genNames = new string[GC.MaxGeneration + 1];
         for (var gen = 0; gen <= GC.MaxGeneration; gen++)
             _genNames[gen] = gen.ToString();
