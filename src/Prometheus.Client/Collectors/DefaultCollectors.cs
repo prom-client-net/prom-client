@@ -29,7 +29,7 @@ public static class DefaultCollectors
     public static ICollectorRegistry UseDefaultCollectors(this ICollectorRegistry registry, string prefixName, bool addLegacyMetrics)
     {
         registry.UseDotNetStats(prefixName, addLegacyMetrics);
-        registry.UseProcessStats(prefixName, addLegacyMetrics);
+        registry.UseProcessStats(prefixName);
 
         return registry;
     }
