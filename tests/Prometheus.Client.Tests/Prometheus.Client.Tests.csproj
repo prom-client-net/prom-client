@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Unix'">net6.0;net8.0</TargetFrameworks>
-    <TargetFrameworks Condition="'$(OS)' != 'Unix'">net462;net47;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Unix'">net462;net47;net481;net6.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <InvariantGlobalization>true</InvariantGlobalization>
     <NoWarn>$(NoWarn);CS0618</NoWarn>
