@@ -3,6 +3,9 @@
   "extends": [":dependencyDashboard", ":semanticPrefixFixDepsChoreOthers", "group:monorepos", "workarounds:all"],
   "labels": ["dependencies"],
   "assignees": ["phnx47"],
+  "semanticCommits": "disabled",
+  "commitMessageAction": "Bump",
+  "commitMessageTopic": "{{depName}}",
   "packageRules": [
     {
       "automerge": true,
