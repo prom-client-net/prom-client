@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [":dependencyDashboard", ":semanticPrefixFixDepsChoreOthers", "group:monorepos", "workarounds:all"],
+  "extends": [":dependencyDashboard", "group:monorepos"],
   "labels": ["dependencies"],
   "assignees": ["phnx47"],
   "semanticCommits": "disabled",
