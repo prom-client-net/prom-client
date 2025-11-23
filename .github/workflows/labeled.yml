@@ -13,7 +13,7 @@ permissions:
 jobs:
   automerge:
     name: Enable auto-merge
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     if: github.actor == 'phnx47-bot' && contains(github.event.pull_request.labels.*.name, 'sync')
     steps:
       - name: Checkout
