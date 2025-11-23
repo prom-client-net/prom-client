@@ -7,6 +7,11 @@ on:
     tags:
       - "v*"
 
+permissions:
+  id-token: write
+  contents: write
+  packages: write
+
 jobs:
   build:
     name: CI Build
@@ -88,8 +93,13 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           name: packages
+      - name: NuGet Login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: phnx47
       - name: Push to nuget.org
         run: |
           dotnet nuget push "*.nupkg" \
-            -k ${{ secrets.NUGET_DEPLOY_KEY }} \
+            -k ${{ steps.login.outputs.NUGET_API_KEY }} \
             -s https://api.nuget.org/v3/index.json
