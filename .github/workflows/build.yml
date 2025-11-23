@@ -10,7 +10,10 @@ on:
 jobs:
   build:
     name: Build & Test
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
@@ -22,14 +25,21 @@ jobs:
           dotnet-version: |
             6.0.x
             8.0.x
+            10.0.x
 
       - name: Build
         run: dotnet build -c Release
 
+      - name: Run tests without Coverage
+        if: startsWith(matrix.os, 'windows')
+        run: dotnet test --no-build -c Release -p:CollectCoverage=false
+
       - name: Run tests with Coverage
+        if: startsWith(matrix.os, 'ubuntu')
         run: dotnet test --no-build -c Release -p:CollectCoverage=true -e:CoverletOutputFormat=opencover
 
       - name: Publish to Codecov
+        if: startsWith(matrix.os, 'ubuntu')
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true

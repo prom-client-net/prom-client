@@ -16,7 +16,7 @@ jobs:
   pack:
     name: Create NuGet packages
     needs: [build]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -47,7 +47,7 @@ jobs:
   github:
     name: Deploy to GitHub
     needs: [pack]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v6
@@ -64,7 +64,7 @@ jobs:
     name: Create GitHub release
     needs: [pack]
     if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -82,7 +82,7 @@ jobs:
     name: Deploy to NuGet
     needs: [release]
     if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v6
