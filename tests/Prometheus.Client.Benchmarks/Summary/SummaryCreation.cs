@@ -16,9 +16,9 @@ public class SummaryCreation
     }
 
     [Benchmark]
-    public ISummary Creation(int i)
+    public ISummary Creation()
     {
-        return _factory.CreateSummary($"summary1_{i.ToString()}", string.Empty);
+        return _factory.CreateSummary("summary1", string.Empty);
     }
 
     [Benchmark]
