@@ -6,6 +6,7 @@
   "semanticCommits": "disabled",
   "commitMessageAction": "Bump",
   "commitMessageTopic": "{{depName}}",
+  "ignoreDeps": ["Microsoft.SourceLink.GitHub", "StyleCop.Analyzers"],
   "packageRules": [
     {
       "automerge": true,
