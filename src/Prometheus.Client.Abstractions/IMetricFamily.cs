@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
 
@@ -19,7 +19,7 @@ public interface IMetricFamily<TMetric>
 
 public interface IMetricFamily<TMetric, TLabels>
     where TMetric : IMetric
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
     where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
     where TLabels : struct, IEquatable<TLabels>

@@ -1,5 +1,5 @@
 using System;
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
 
@@ -28,7 +28,7 @@ public static class UntypedExtensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -38,7 +38,7 @@ public static class UntypedExtensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val, int timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -48,7 +48,7 @@ public static class UntypedExtensions
     }
 
     public static void Set<TLabels>(this IMetricFamily<IUntyped, TLabels> metricFamily, double val, DateTimeOffset timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>

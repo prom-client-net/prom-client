@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462;net47;netstandard2.0;net8.0</TargetFrameworks>
     <Description>.NET client for Prometheus</Description>
-    <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netcoreapp2.1'))
+    OR $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+    <DefineConstants>$(DefineConstants);HAS_NATIVE_SPAN</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net47' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Memory" Version="4.6.3" />

@@ -6,6 +6,9 @@
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS0618</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netcoreapp2.0')) Or $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net471')) Or $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+    <DefineConstants>$(DefineConstants);HAS_ITUPLE</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="**\Resources\*.txt" />
   </ItemGroup>

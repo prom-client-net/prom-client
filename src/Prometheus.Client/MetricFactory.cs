@@ -48,7 +48,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -101,7 +101,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -149,7 +149,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -207,7 +207,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -260,7 +260,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -323,7 +323,7 @@ public class MetricFactory : IMetricFactory
     }
 
     public IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -421,7 +421,7 @@ public class MetricFactory : IMetricFactory
         TimeSpan? maxAge = null,
         int? ageBuckets = null,
         int? bufCap = null)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -484,7 +484,7 @@ public class MetricFactory : IMetricFactory
 
     public void Release<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metricFamily)
         where TMetric : IMetric
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -520,7 +520,7 @@ public class MetricFactory : IMetricFactory
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void ValidateLabelNames<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metric, TLabels actualNames)
         where TMetric : IMetric
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -551,7 +551,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<ICounter, Counter, TLabels, MetricConfiguration> CreateCounterInternal<TLabels>(MetricConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -565,7 +565,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<ICounter<long>, CounterInt64, TLabels, MetricConfiguration> CreateCounterInt64Internal<TLabels>(MetricConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -579,7 +579,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<IGauge, Gauge, TLabels, MetricConfiguration> CreateGaugeInternal<TLabels>(MetricConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -593,7 +593,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<IGauge<long>, GaugeInt64, TLabels, MetricConfiguration> CreateGaugeInt64Internal<TLabels>(MetricConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -607,7 +607,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<IHistogram, Histogram, TLabels, HistogramConfiguration> CreateHistogramInternal<TLabels>(HistogramConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -621,7 +621,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<IUntyped, Untyped, TLabels, MetricConfiguration> CreateUntypedInternal<TLabels>(MetricConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -635,7 +635,7 @@ public class MetricFactory : IMetricFactory
     }
 
     internal MetricFamily<ISummary, Summary, TLabels, SummaryConfiguration> CreateSummaryInternal<TLabels>(SummaryConfiguration configuration)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>

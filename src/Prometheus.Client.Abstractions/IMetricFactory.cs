@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
 
@@ -34,7 +34,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter, TLabels> CreateCounter<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -82,7 +82,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<ICounter<long>, TLabels> CreateCounterInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -121,7 +121,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IGauge, TLabels> CreateGauge<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -178,7 +178,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IGauge<long>, TLabels> CreateGaugeInt64<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -229,7 +229,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IHistogram, TLabels> CreateHistogram<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false, double[] buckets = null)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -296,7 +296,7 @@ namespace Prometheus.Client
         /// <param name="includeTimestamp">Include unix timestamp for metric.</param>
         /// <param name="labelNames">Label names</param>
         IMetricFamily<IUntyped, TLabels> CreateUntyped<TLabels>(string name, string help, TLabels labelNames, bool includeTimestamp = false)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -415,7 +415,7 @@ namespace Prometheus.Client
             TimeSpan? maxAge = null,
             int? ageBuckets = null,
             int? bufCap = null)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
@@ -449,7 +449,7 @@ namespace Prometheus.Client
 
         void Release<TMetric, TLabels>(IMetricFamily<TMetric, TLabels> metricFamily)
             where TMetric : IMetric
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
             where TLabels : struct, ITuple, IEquatable<TLabels>;
 #else
             where TLabels : struct, IEquatable<TLabels>;
