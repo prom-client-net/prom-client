@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Unix'">net8.0;net10.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(OS)' != 'Unix'">net462;net472;net481;net8.0;net10.0</TargetFrameworks>
+    <OutputType Condition="'$(OS)' != 'Unix' AND '$(TargetFramework)' != 'net462'">Exe</OutputType>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS0618</NoWarn>
   </PropertyGroup>
