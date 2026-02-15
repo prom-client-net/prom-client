@@ -1,5 +1,3 @@
-using System;
-
 namespace Prometheus.Client.Collectors.DotNetStats;
 
 public static class CollectorRegistryExtensions

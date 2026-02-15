@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 #if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
