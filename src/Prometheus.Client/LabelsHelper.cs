@@ -37,13 +37,13 @@ internal static class LabelsHelper
     }
 
     public static int GetSize<TTuple>()
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
 #endif
     {
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         return default(TTuple).Length;
 #else
         int GetTupleSize(Type tupleType)
@@ -62,7 +62,7 @@ internal static class LabelsHelper
     }
 
     public static int GetHashCode<TTuple>(TTuple values, int seed = 0)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
@@ -90,7 +90,7 @@ internal static class LabelsHelper
     }
 
     public static string[] ToArray<TTuple>(TTuple values)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
@@ -103,7 +103,7 @@ internal static class LabelsHelper
     }
 
     public static TTuple FromArray<TTuple>(IReadOnlyList<string> values)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
@@ -113,7 +113,7 @@ internal static class LabelsHelper
     }
 
     private static Func<TTuple, TAggregate, Func<string, int, TAggregate, TAggregate>, TAggregate> MakeReducer<TTuple, TAggregate>()
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
@@ -154,7 +154,7 @@ internal static class LabelsHelper
     }
 
     private static Func<IReadOnlyList<string>, TTuple> GenerateParser<TTuple>()
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>
@@ -232,7 +232,7 @@ internal static class LabelsHelper
     }
 
     private static class TupleHelper<TTuple>
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TTuple : struct, ITuple, IEquatable<TTuple>
 #else
         where TTuple : struct, IEquatable<TTuple>

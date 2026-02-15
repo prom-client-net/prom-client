@@ -1,0 +1,13 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  <PropertyGroup>
+    <TargetFrameworks>net462;net47;netstandard2.0;net8.0</TargetFrameworks>
+    <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup
+    Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netcoreapp2.0'))
+    OR $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net471'))
+    OR $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+    <DefineConstants>$(DefineConstants);HAS_ITUPLE</DefineConstants>
+  </PropertyGroup>
+</Project>

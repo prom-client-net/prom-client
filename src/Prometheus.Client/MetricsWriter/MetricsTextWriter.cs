@@ -260,7 +260,7 @@ internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelW
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Write(double value)
     {
-#if NET6_0_OR_GREATER
+#if HAS_NATIVE_SPAN
         Span<char> buff = stackalloc char[32];
         value.TryFormat(buff, out var charsize, provider: CultureInfo.InvariantCulture);
 
@@ -283,7 +283,7 @@ internal sealed class MetricsTextWriter : IMetricsWriter, ISampleWriter, ILabelW
         return writtenData;
     }
 
-#if NET6_0_OR_GREATER
+#if HAS_NATIVE_SPAN
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Write(ReadOnlySpan<char> value)
     {

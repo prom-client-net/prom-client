@@ -1,5 +1,5 @@
 using System;
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
 
@@ -28,7 +28,7 @@ public static class HistogramExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -38,7 +38,7 @@ public static class HistogramExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val, long timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -48,7 +48,7 @@ public static class HistogramExtensions
     }
 
     public static void Observe<TLabels>(this IMetricFamily<IHistogram, TLabels> metricFamily, double val, DateTimeOffset timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>

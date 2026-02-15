@@ -234,7 +234,7 @@ public class MetricFamilyTests
     }
 
     private MetricFamily<IDummyMetric, DummyMetric, TLabels, MetricConfiguration> CreateMetricFamily<TLabels>(TLabels labels)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>

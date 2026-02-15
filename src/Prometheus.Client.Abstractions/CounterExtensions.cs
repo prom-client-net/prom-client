@@ -1,5 +1,5 @@
 using System;
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
 using System.Runtime.CompilerServices;
 #endif
 
@@ -48,7 +48,7 @@ public static class CounterExtensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment = 1)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -58,7 +58,7 @@ public static class CounterExtensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment, long timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -68,7 +68,7 @@ public static class CounterExtensions
     }
 
     public static void Inc<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double increment, DateTimeOffset timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
         where TLabels : struct, IEquatable<TLabels>
@@ -78,7 +78,7 @@ public static class CounterExtensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
@@ -88,7 +88,7 @@ public static class CounterExtensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, long timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>
@@ -98,7 +98,7 @@ public static class CounterExtensions
     }
 
     public static void IncTo<TLabels>(this IMetricFamily<ICounter, TLabels> metricFamily, double value, DateTimeOffset timestamp)
-#if NET6_0_OR_GREATER
+#if HAS_ITUPLE
         where TLabels : struct, ITuple, IEquatable<TLabels>
 #else
             where TLabels : struct, IEquatable<TLabels>

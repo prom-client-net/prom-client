@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Prometheus.Client</RootNamespace>
-    <TargetFrameworks>net462;net47;netstandard2.0;net8.0</TargetFrameworks>
     <Description>Abstractions for Prometheus.Client</Description>
-    <RepositoryUrl>https://github.com/prom-client-net/prom-client</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="System.ValueTuple" Version="4.6.1" />
