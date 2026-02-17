@@ -10,6 +10,11 @@
   "packageRules": [
     {
       "automerge": true,
+      "groupName": "prom-client",
+      "matchSourceUrls": ["https://github.com/prom-client-net{/,}**"]
+    },
+    {
+      "automerge": true,
       "groupName": "coverlet packages",
       "matchSourceUrls": ["https://github.com/coverlet-coverage{/,}**"]
     },
