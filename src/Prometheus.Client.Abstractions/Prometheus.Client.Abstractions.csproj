@@ -4,6 +4,6 @@
     <Description>Abstractions for Prometheus.Client</Description>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="System.ValueTuple" Version="4.6.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
   </ItemGroup>
 </Project>
