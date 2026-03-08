@@ -20,6 +20,19 @@ public static class ValueObserverExtensions
         }
     }
 
+    public static void ObserveDuration(this IValueObserver observer, Action method, Action<Exception> exceptionHandler)
+    {
+        var ts = Stopwatch.GetTimestamp();
+        try
+        {
+            method();
+        }
+        finally
+        {
+            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+        }
+    }
+
     public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method)
     {
         var ts = Stopwatch.GetTimestamp();
@@ -30,6 +43,19 @@ public static class ValueObserverExtensions
         finally
         {
             observer.Observe(GetDuration(ts));
+        }
+    }
+
+    public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, Action<Exception> exceptionHandler)
+    {
+        var ts = Stopwatch.GetTimestamp();
+        try
+        {
+            return method();
+        }
+        finally
+        {
+            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
         }
     }
 
@@ -46,6 +72,19 @@ public static class ValueObserverExtensions
         }
     }
 
+    public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, Action<Exception> exceptionHandler)
+    {
+        var ts = Stopwatch.GetTimestamp();
+        try
+        {
+            await method().ConfigureAwait(false);
+        }
+        finally
+        {
+            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+        }
+    }
+
     public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method)
     {
         var ts = Stopwatch.GetTimestamp();
@@ -59,6 +98,19 @@ public static class ValueObserverExtensions
         }
     }
 
+    public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, Action<Exception> exceptionHandler)
+    {
+        var ts = Stopwatch.GetTimestamp();
+        try
+        {
+            return await method().ConfigureAwait(false);
+        }
+        finally
+        {
+            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double GetDuration(long startTs)
     {
@@ -66,5 +118,23 @@ public static class ValueObserverExtensions
         var frequency = (double)Stopwatch.Frequency;
 
         return elapsed / frequency;
+    }
+
+    private static void ObserveHandlingException(IValueObserver observer, double duration, Action<Exception> exceptionHandler)
+    {
+        if (exceptionHandler is null)
+        {
+            observer.Observe(duration);
+            return;
+        }
+
+        try
+        {
+            observer.Observe(duration);
+        }
+        catch (Exception ex)
+        {
+            exceptionHandler(ex);
+        }
     }
 }
