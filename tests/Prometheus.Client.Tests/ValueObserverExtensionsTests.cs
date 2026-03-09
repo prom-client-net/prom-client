@@ -102,7 +102,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_WithHandler_ObservesOnSuccess()
+    public void ObserveDuration_Action_WithOnObserveException_ObservesOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
         var called = false;
@@ -114,7 +114,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Func_WithHandler_ReturnsResultAndObserves()
+    public void ObserveDuration_Func_WithOnObserveException_ReturnsResultAndObserves()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -125,7 +125,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_WithHandler_ObservesOnSuccess()
+    public async Task ObserveDurationAsync_Action_WithOnObserveException_ObservesOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
         var called = false;
@@ -141,7 +141,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Func_WithHandler_ReturnsResultAndObserves()
+    public async Task ObserveDurationAsync_Func_WithOnObserveException_ReturnsResultAndObserves()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -152,7 +152,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_NullHandler_ObservesDirectly()
+    public void ObserveDuration_Action_NullOnObserveException_ObservesDirectly()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -162,7 +162,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_NullHandler_ObserveException_Throws()
+    public void ObserveDuration_Action_NullOnObserveException_ObserveException_Throws()
     {
         var observer = Substitute.For<IValueObserver>();
         observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
@@ -172,7 +172,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Func_NullHandler_ObservesDirectly()
+    public void ObserveDuration_Func_NullOnObserveException_ObservesDirectly()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -183,7 +183,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_NullHandler_ObservesDirectly()
+    public async Task ObserveDurationAsync_Action_NullOnObserveException_ObservesDirectly()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -193,7 +193,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Func_NullHandler_ObservesDirectly()
+    public async Task ObserveDurationAsync_Func_NullOnObserveException_ObservesDirectly()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -204,7 +204,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_MethodException_StillObservesWithHandler()
+    public void ObserveDuration_Action_MethodException_StillObservesWithOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -215,7 +215,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_ObserveException_PassedToHandler()
+    public void ObserveDuration_Action_ObserveException_PassedToOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");
@@ -228,7 +228,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Func_MethodException_StillObservesWithHandler()
+    public void ObserveDuration_Func_MethodException_StillObservesWithOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -239,7 +239,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Func_ObserveException_PassedToHandler_ResultReturned()
+    public void ObserveDuration_Func_ObserveException_PassedToOnObserveException_ResultReturned()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");
@@ -253,7 +253,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_MethodException_StillObservesWithHandler()
+    public async Task ObserveDurationAsync_Action_MethodException_StillObservesWithOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -266,7 +266,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_ObserveException_PassedToHandler()
+    public async Task ObserveDurationAsync_Action_ObserveException_PassedToOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");
@@ -279,7 +279,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Func_MethodException_StillObservesWithHandler()
+    public async Task ObserveDurationAsync_Func_MethodException_StillObservesWithOnObserveException()
     {
         var observer = Substitute.For<IValueObserver>();
 
@@ -292,7 +292,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Func_ObserveException_PassedToHandler_ResultReturned()
+    public async Task ObserveDurationAsync_Func_ObserveException_PassedToOnObserveException_ResultReturned()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");
@@ -306,7 +306,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_BothThrow_MethodExceptionPropagates_HandlerCalled()
+    public void ObserveDuration_Action_BothThrow_MethodExceptionPropagates_OnObserveExceptionCalled()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");
@@ -320,7 +320,7 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_BothThrow_MethodExceptionPropagates_HandlerCalled()
+    public async Task ObserveDurationAsync_Action_BothThrow_MethodExceptionPropagates_OnObserveExceptionCalled()
     {
         var observer = Substitute.For<IValueObserver>();
         var observeEx = new InvalidOperationException("observe");

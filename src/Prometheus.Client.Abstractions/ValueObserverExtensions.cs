@@ -20,7 +20,7 @@ public static class ValueObserverExtensions
         }
     }
 
-    public static void ObserveDuration(this IValueObserver observer, Action method, Action<Exception> exceptionHandler)
+    public static void ObserveDuration(this IValueObserver observer, Action method, Action<Exception> onObserveException)
     {
         var ts = Stopwatch.GetTimestamp();
         try
@@ -29,7 +29,7 @@ public static class ValueObserverExtensions
         }
         finally
         {
-            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+            ObserveHandlingException(observer, GetDuration(ts), onObserveException);
         }
     }
 
@@ -46,7 +46,7 @@ public static class ValueObserverExtensions
         }
     }
 
-    public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, Action<Exception> exceptionHandler)
+    public static T ObserveDuration<T>(this IValueObserver observer, Func<T> method, Action<Exception> onObserveException)
     {
         var ts = Stopwatch.GetTimestamp();
         try
@@ -55,7 +55,7 @@ public static class ValueObserverExtensions
         }
         finally
         {
-            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+            ObserveHandlingException(observer, GetDuration(ts), onObserveException);
         }
     }
 
@@ -72,7 +72,7 @@ public static class ValueObserverExtensions
         }
     }
 
-    public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, Action<Exception> exceptionHandler)
+    public static async Task ObserveDurationAsync(this IValueObserver observer, Func<Task> method, Action<Exception> onObserveException)
     {
         var ts = Stopwatch.GetTimestamp();
         try
@@ -81,7 +81,7 @@ public static class ValueObserverExtensions
         }
         finally
         {
-            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+            ObserveHandlingException(observer, GetDuration(ts), onObserveException);
         }
     }
 
@@ -98,7 +98,7 @@ public static class ValueObserverExtensions
         }
     }
 
-    public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, Action<Exception> exceptionHandler)
+    public static async Task<T> ObserveDurationAsync<T>(this IValueObserver observer, Func<Task<T>> method, Action<Exception> onObserveException)
     {
         var ts = Stopwatch.GetTimestamp();
         try
@@ -107,7 +107,7 @@ public static class ValueObserverExtensions
         }
         finally
         {
-            ObserveHandlingException(observer, GetDuration(ts), exceptionHandler);
+            ObserveHandlingException(observer, GetDuration(ts), onObserveException);
         }
     }
 
@@ -120,9 +120,9 @@ public static class ValueObserverExtensions
         return elapsed / frequency;
     }
 
-    private static void ObserveHandlingException(IValueObserver observer, double duration, Action<Exception> exceptionHandler)
+    private static void ObserveHandlingException(IValueObserver observer, double duration, Action<Exception> onObserveException)
     {
-        if (exceptionHandler is null)
+        if (onObserveException is null)
         {
             observer.Observe(duration);
             return;
@@ -136,7 +136,7 @@ public static class ValueObserverExtensions
         {
             try
             {
-                exceptionHandler(ex);
+                onObserveException(ex);
             }
             catch
             {
