@@ -191,6 +191,16 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
+    public void ObserveDuration_Func_NullOnObserveException_ObserveException_Throws()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        Assert.Throws<InvalidOperationException>(() =>
+            observer.ObserveDuration(() => 42, null));
+    }
+
+    [Fact]
     public async Task ObserveDurationAsync_Action_NullOnObserveException_ObservesDirectly()
     {
         var observer = Substitute.For<IValueObserver>();
@@ -209,6 +219,26 @@ public class ValueObserverExtensionsTests
 
         Assert.Equal(42, result);
         observer.Received(1).Observe(Arg.Is<double>(d => d >= 0));
+    }
+
+    [Fact]
+    public async Task ObserveDurationAsync_Action_NullOnObserveException_ObserveException_Throws()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            observer.ObserveDurationAsync(() => Task.CompletedTask, null));
+    }
+
+    [Fact]
+    public async Task ObserveDurationAsync_Func_NullOnObserveException_ObserveException_Throws()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            observer.ObserveDurationAsync(() => Task.FromResult(42), null));
     }
 
     [Fact]
