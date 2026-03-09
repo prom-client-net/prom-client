@@ -102,52 +102,60 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
-    public void ObserveDuration_Action_WithOnObserveException_ObservesOnSuccess()
+    public void ObserveDuration_Action_WithOnObserveException_NotCalledOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
         var called = false;
+        Exception handledException = null;
 
-        observer.ObserveDuration(() => called = true, _ => { });
+        observer.ObserveDuration(() => called = true, ex => handledException = ex);
 
         Assert.True(called);
+        Assert.Null(handledException);
         observer.Received(1).Observe(Arg.Is<double>(d => d >= 0));
     }
 
     [Fact]
-    public void ObserveDuration_Func_WithOnObserveException_ReturnsResultAndObserves()
+    public void ObserveDuration_Func_WithOnObserveException_NotCalledOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
+        Exception handledException = null;
 
-        var result = observer.ObserveDuration(() => 42, _ => { });
+        var result = observer.ObserveDuration(() => 42, ex => handledException = ex);
 
         Assert.Equal(42, result);
+        Assert.Null(handledException);
         observer.Received(1).Observe(Arg.Is<double>(d => d >= 0));
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Action_WithOnObserveException_ObservesOnSuccess()
+    public async Task ObserveDurationAsync_Action_WithOnObserveException_NotCalledOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
         var called = false;
+        Exception handledException = null;
 
         await observer.ObserveDurationAsync(() =>
         {
             called = true;
             return Task.CompletedTask;
-        }, _ => { });
+        }, ex => handledException = ex);
 
         Assert.True(called);
+        Assert.Null(handledException);
         observer.Received(1).Observe(Arg.Is<double>(d => d >= 0));
     }
 
     [Fact]
-    public async Task ObserveDurationAsync_Func_WithOnObserveException_ReturnsResultAndObserves()
+    public async Task ObserveDurationAsync_Func_WithOnObserveException_NotCalledOnSuccess()
     {
         var observer = Substitute.For<IValueObserver>();
+        Exception handledException = null;
 
-        var result = await observer.ObserveDurationAsync(() => Task.FromResult(42), _ => { });
+        var result = await observer.ObserveDurationAsync(() => Task.FromResult(42), ex => handledException = ex);
 
         Assert.Equal(42, result);
+        Assert.Null(handledException);
         observer.Received(1).Observe(Arg.Is<double>(d => d >= 0));
     }
 
