@@ -134,7 +134,14 @@ public static class ValueObserverExtensions
         }
         catch (Exception ex)
         {
-            exceptionHandler(ex);
+            try
+            {
+                exceptionHandler(ex);
+            }
+            catch
+            {
+                // Swallow exceptions from the handler to avoid masking the original exception
+            }
         }
     }
 }
