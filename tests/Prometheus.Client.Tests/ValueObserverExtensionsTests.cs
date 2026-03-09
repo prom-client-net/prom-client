@@ -334,5 +334,34 @@ public class ValueObserverExtensionsTests
 
         Assert.Same(observeEx, handledException);
     }
-}
 
+    [Fact]
+    public void ObserveDuration_Func_BothThrow_MethodExceptionPropagates_OnObserveExceptionCalled()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        var observeEx = new InvalidOperationException("observe");
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(observeEx);
+
+        Exception handledException = null;
+        Assert.Throws<InvalidOperationException>(() =>
+            observer.ObserveDuration<int>(() => throw new InvalidOperationException("method"), ex => handledException = ex));
+
+        Assert.Same(observeEx, handledException);
+    }
+
+    [Fact]
+    public async Task ObserveDurationAsync_Func_BothThrow_MethodExceptionPropagates_OnObserveExceptionCalled()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        var observeEx = new InvalidOperationException("observe");
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(observeEx);
+
+        Exception handledException = null;
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            observer.ObserveDurationAsync(
+                () => Task.FromException<int>(new InvalidOperationException("method")),
+                ex => handledException = ex));
+
+        Assert.Same(observeEx, handledException);
+    }
+}
