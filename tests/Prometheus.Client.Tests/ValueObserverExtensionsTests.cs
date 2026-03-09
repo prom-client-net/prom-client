@@ -314,6 +314,46 @@ public class ValueObserverExtensionsTests
     }
 
     [Fact]
+    public void ObserveDuration_Action_OnObserveException_HandlerThrows_ExceptionSwallowed()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        observer.ObserveDuration(() => { }, _ => throw new Exception("handler"));
+    }
+
+    [Fact]
+    public void ObserveDuration_Func_OnObserveException_HandlerThrows_ExceptionSwallowed()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        var result = observer.ObserveDuration(() => 42, _ => throw new Exception("handler"));
+
+        Assert.Equal(42, result);
+    }
+
+    [Fact]
+    public async Task ObserveDurationAsync_Action_OnObserveException_HandlerThrows_ExceptionSwallowed()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        await observer.ObserveDurationAsync(() => Task.CompletedTask, _ => throw new Exception("handler"));
+    }
+
+    [Fact]
+    public async Task ObserveDurationAsync_Func_OnObserveException_HandlerThrows_ExceptionSwallowed()
+    {
+        var observer = Substitute.For<IValueObserver>();
+        observer.When(o => o.Observe(Arg.Any<double>())).Throw(new InvalidOperationException("observe"));
+
+        var result = await observer.ObserveDurationAsync(() => Task.FromResult(42), _ => throw new Exception("handler"));
+
+        Assert.Equal(42, result);
+    }
+
+    [Fact]
     public void ObserveDuration_Func_BothThrow_MethodExceptionPropagates_OnObserveExceptionCalled()
     {
         var observer = Substitute.For<IValueObserver>();
