@@ -140,7 +140,7 @@ public static class ValueObserverExtensions
             }
             catch
             {
-                // Swallow exceptions from the handler to avoid masking the original exception
+                // Swallow exceptions from the handler so ObserveDuration* does not throw due to handler failures
             }
         }
     }
