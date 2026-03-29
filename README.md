@@ -185,9 +185,9 @@ Contributions to the package are always welcome!
 
 ## Supporters
 
-[Entity Framework Extensions](https://entityframework-extensions.net) is a major sponsor and is proud to contribute to this project.
+[Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=phnx47&utm_medium=Prometheus.Client) is a major sponsor and is proud to contribute to this project.
 
-[![Entity Framework Extensions](https://raw.githubusercontent.com/prom-client-net/prom-client/main/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert)
+[![Entity Framework Extensions](https://raw.githubusercontent.com/prom-client-net/prom-client/main/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert?utm_source=phnx47&utm_medium=Prometheus.Client)
 
 ## License
 
