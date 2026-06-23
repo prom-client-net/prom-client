@@ -25,6 +25,11 @@
     {
       "matchManagers": ["github-actions"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["xunit.runner.visualstudio"],
+      "matchCurrentValue": "2.8.*",
+      "enabled": false
     }
   ]
 }
